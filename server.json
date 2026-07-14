@@ -3,7 +3,7 @@
   "name": "io.github.deepagentlabs/deep-agentic-core-mcp",
   "title": "Deep Agentic Core MCP",
   "description": "Unified MCP server for AgenticLens and Agentic Chaos capabilities.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "url": "https://github.com/DeepAgentLabs/deep-agentic-core-mcp",
     "source": "github"
@@ -12,7 +12,7 @@
     {
       "registryType": "pypi",
       "identifier": "deep-agentic-core-mcp",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "transport": {
         "type": "stdio"
       }
