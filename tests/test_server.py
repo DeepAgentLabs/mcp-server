@@ -8,7 +8,7 @@ from deep_agentic_core_mcp.server import _TOOL_DISPATCH, TOOLS, server
 
 
 def test_server_has_name() -> None:
-    assert server.name == "io.github.deepagentlabs/deep-agentic-core-mcp"
+    assert server.name == "io.github.DeepAgentLabs/deep-agentic-core-mcp"
 
 
 def test_tools_registered() -> None:
