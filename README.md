@@ -9,7 +9,7 @@ ecosystem. It is designed to expose a single MCP interface that combines:
 The goal is one MCP server, one package, and one registry identity rather than
 separate MCP servers for each product surface.
 
-<!-- mcp-name: io.github.deepagentlabs/deep-agentic-core-mcp -->
+<!-- mcp-name: io.github.DeepAgentLabs/deep-agentic-core-mcp -->
 
 ## Idea
 
