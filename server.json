@@ -5,7 +5,7 @@
   "description": "Unified MCP server for AgenticLens and Agentic Chaos capabilities.",
   "version": "0.1.2",
   "repository": {
-    "url": "https://github.com/DeepAgentLabs/deep-agentic-core-mcp",
+    "url": "https://github.com/DeepAgentLabs/mcp-server",
     "source": "github"
   },
   "packages": [

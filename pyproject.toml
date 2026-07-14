@@ -41,9 +41,9 @@ dev = [
 deep-agentic-core-mcp = "deep_agentic_core_mcp.server:main"
 
 [project.urls]
-Homepage = "https://github.com/DeepAgentLabs/deep-agentic-core-mcp"
-Repository = "https://github.com/DeepAgentLabs/deep-agentic-core-mcp"
-Issues = "https://github.com/DeepAgentLabs/deep-agentic-core-mcp/issues"
+Homepage = "https://github.com/DeepAgentLabs/mcp-server"
+Repository = "https://github.com/DeepAgentLabs/mcp-server"
+Issues = "https://github.com/DeepAgentLabs/mcp-server/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/deep_agentic_core_mcp"]
