@@ -1,0 +1,18 @@
+{
+  "name": "sample-agentic-workflow",
+  "description": "Placeholder workflow artifact for early MCP resource examples.",
+  "steps": [
+    {
+      "name": "Planner",
+      "type": "planner"
+    },
+    {
+      "name": "Retriever",
+      "type": "retriever"
+    },
+    {
+      "name": "Final Answer",
+      "type": "final_response"
+    }
+  ]
+}
