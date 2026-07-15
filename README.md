@@ -6,6 +6,10 @@ ecosystem. It is designed to expose a single MCP interface that combines:
 - `agenticlens` style workflow inspection, profiling, and analysis
 - `agentic-chaos` style resilience testing and fault-injection workflows
 
+It sits above the **AI Operations Workflow Specification**, exposing a unified
+MCP-native control surface over the shared operational model used by the
+reference implementations.
+
 The goal is one MCP server, one package, and one registry identity rather than
 separate MCP servers for each product surface.
 
@@ -18,6 +22,7 @@ libraries:
 
 - `agenticlens` remains the core profiling and analysis engine
 - `agentic-chaos` remains the core chaos and resilience engine
+- the `AI Operations Workflow Specification` remains the shared data contract
 - `deep-agentic-core-mcp` becomes the MCP-native interface that hosts can call
 
 That means MCP clients can connect once and access both observability and chaos

@@ -10,6 +10,13 @@ Build one public MCP server for the DeepAgentLabs ecosystem that unifies:
 The result should feel like a coherent platform surface rather than two loosely
 connected products.
 
+The product boundary should mirror the PyPI ecosystem:
+
+- `agenticlens` observes, evaluates, explains, and recommends
+- `agentic-chaos` injects, validates, tests, and proves resilience
+- `deep-agentic-core-mcp` exposes those capabilities through one MCP-native
+  control surface
+
 ## Phase 0: Foundation
 
 Status: current
@@ -51,11 +58,15 @@ Goals:
 - wire `agenticlens` into the MCP server through adapter functions
 - expose a first analysis-oriented tool surface
 - support reading workflow JSON artifacts
+- support operational-intelligence features as they land in `agenticlens`
 
 Possible tools:
 
 - `lens.analyze_workflow`
 - `lens.report_summary`
+- `lens.compare_runs`
+- `lens.slo_summary`
+- `lens.audit_report`
 
 Success criteria:
 
@@ -87,11 +98,14 @@ Goals:
 - combine observability and chaos into joined workflows
 - compare baseline and chaos runs
 - expose reusable resources and prompts
+- surface incident, evaluation, and readiness evidence through one interface
 
 Possible tools:
 
 - `core.compare_runs`
 - `core.export_report`
+- `core.incident_summary`
+- `core.release_check`
 
 ## Phase 5: Publishing and Adoption
 
