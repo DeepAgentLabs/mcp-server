@@ -17,6 +17,29 @@ The product boundary should mirror the PyPI ecosystem:
 - `deep-agentic-core-mcp` exposes those capabilities through one MCP-native
   control surface
 
+At a high level, this MCP server should let a host or agent interact with the
+ecosystem in terms of developer needs, not repo boundaries. The surface should
+eventually make it easy to:
+
+- inspect a run
+- analyze prompts, tools, and retrieval
+- compare workflows
+- run chaos experiments
+- summarize incidents and reliability findings
+- expose readiness evidence through one MCP-native interface
+
+The MCP server should treat the **AI Operations Specification** as the
+canonical contract for ecosystem data exchange.
+
+That means:
+
+- MCP tools should read AI Operations Specification artifacts such as
+  `workflow.json`
+- MCP responses should be grounded in the same operational objects and semantic
+  events
+- exports or derived reports should come from the shared specification rather
+  than package-specific hidden formats
+
 ## Phase 0: Foundation
 
 Status: current
@@ -72,6 +95,8 @@ Success criteria:
 
 - a saved workflow artifact can be analyzed through MCP
 - recommendations are returned in a host-friendly schema
+- the analyzed artifact remains traceable to the AI Operations Specification
+  contract
 
 ## Phase 3: Agentic Chaos Integration
 
@@ -90,6 +115,8 @@ Success criteria:
 
 - a target script or workflow can be exercised with selected faults
 - results can be summarized alongside normal run output
+- chaos results are readable as or convertible to AI Operations Specification
+  artifacts
 
 ## Phase 4: Unified Workflows
 
@@ -99,6 +126,8 @@ Goals:
 - compare baseline and chaos runs
 - expose reusable resources and prompts
 - surface incident, evaluation, and readiness evidence through one interface
+- expose a high-level control surface for the main developer questions:
+  what happened, what changed, what failed, and is this workflow ready
 
 Possible tools:
 
@@ -125,3 +154,21 @@ Goals:
 - Should `deep-agentic-core-mcp` be a thin wrapper package or eventually own
   workflow orchestration logic directly?
 - Is stdio-only enough for v0, or do we want a remote deployment path early?
+
+## Capability North Star
+
+Over time, the MCP surface should expose the ecosystem around a few clear
+domains:
+
+- run and workflow analysis
+- LLM, prompt, and context analysis
+- tool, MCP, and retrieval analysis
+- agent and memory analysis
+- reliability and incident analysis
+- resilience testing and chaos execution
+- evaluation and readiness reporting
+
+Developers contributing to the MCP server should be able to ask:
+
+`Which AI Operations Specification object or artifact does this tool read,
+return, or transform?`
