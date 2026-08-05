@@ -3,6 +3,7 @@
 import json
 
 import pytest
+from mcp.types import CallToolRequestParams
 
 from deep_agentic_core_mcp.server import _TOOL_DISPATCH, TOOLS, server
 
@@ -26,8 +27,8 @@ def test_tool_dispatch_covers_all_tools() -> None:
 async def test_handle_list_tools() -> None:
     from deep_agentic_core_mcp.server import handle_list_tools
 
-    tools = await handle_list_tools()
-    names = {t.name for t in tools}
+    result = await handle_list_tools(None, None)  # type: ignore[arg-type]
+    names = {t.name for t in result.tools}
     assert "core.health" in names
     assert "core.version" in names
 
@@ -36,8 +37,9 @@ async def test_handle_list_tools() -> None:
 async def test_handle_call_tool_health() -> None:
     from deep_agentic_core_mcp.server import handle_call_tool
 
-    result = await handle_call_tool("core.health", {})
-    payload = json.loads(result[0].text)
+    params = CallToolRequestParams(name="core.health")
+    result = await handle_call_tool(None, params)  # type: ignore[arg-type]
+    payload = json.loads(result.content[0].text)
     assert payload["status"] == "ok"
 
 
@@ -45,8 +47,9 @@ async def test_handle_call_tool_health() -> None:
 async def test_handle_call_tool_version() -> None:
     from deep_agentic_core_mcp.server import handle_call_tool
 
-    result = await handle_call_tool("core.version", {})
-    payload = json.loads(result[0].text)
+    params = CallToolRequestParams(name="core.version")
+    result = await handle_call_tool(None, params)  # type: ignore[arg-type]
+    payload = json.loads(result.content[0].text)
     assert "version" in payload
 
 
@@ -54,6 +57,7 @@ async def test_handle_call_tool_version() -> None:
 async def test_handle_call_tool_unknown() -> None:
     from deep_agentic_core_mcp.server import handle_call_tool
 
-    result = await handle_call_tool("nonexistent.tool", {})
-    payload = json.loads(result[0].text)
+    params = CallToolRequestParams(name="nonexistent.tool")
+    result = await handle_call_tool(None, params)  # type: ignore[arg-type]
+    payload = json.loads(result.content[0].text)
     assert "error" in payload

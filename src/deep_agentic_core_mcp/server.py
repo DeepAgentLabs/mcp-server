@@ -5,21 +5,23 @@ import json
 from collections.abc import Callable
 from typing import Any
 
-from mcp.server import Server
+from mcp.server import Server, ServerRequestContext
 from mcp.server.stdio import stdio_server
-from mcp.types import Resource, TextContent, Tool
-from pydantic import AnyUrl
+from mcp.types import (
+    CallToolRequestParams,
+    CallToolResult,
+    ListResourcesResult,
+    ListToolsResult,
+    PaginatedRequestParams,
+    Resource,
+    TextContent,
+    Tool,
+)
 
 from deep_agentic_core_mcp.config import SERVER_NAME
 from deep_agentic_core_mcp.resources.catalog import list_resources as _catalog_resources
 from deep_agentic_core_mcp.tools.core import health, version
 from deep_agentic_core_mcp.tools.registry import list_tools as _registry_tools
-
-# ---------------------------------------------------------------------------
-# Server instance
-# ---------------------------------------------------------------------------
-
-server = Server(SERVER_NAME)
 
 # ---------------------------------------------------------------------------
 # Tool dispatch
@@ -36,15 +38,12 @@ _TOOL_DISPATCH: dict[str, Callable[[], dict[str, str]]] = {
 
 
 def _build_tools() -> list[Tool]:
-    """Build Tool objects from the central tool registry.
-
-    Only tools with a registered handler are advertised.
-    """
+    """Build Tool objects from the central tool registry."""
     return [
         Tool(
             name=entry["name"],
             description=entry["description"],
-            inputSchema={"type": "object", "properties": {}, "additionalProperties": False},
+            input_schema={"type": "object", "properties": {}, "additionalProperties": False},
         )
         for entry in _registry_tools()
         if entry["name"] in _TOOL_DISPATCH
@@ -55,9 +54,9 @@ def _build_resources() -> list[Resource]:
     """Build Resource objects from the central resource catalog."""
     return [
         Resource(
-            uri=AnyUrl(entry["uri"]),
+            uri=entry["uri"],
             name=entry["name"],
-            mimeType="application/json",
+            mime_type="application/json",
         )
         for entry in _catalog_resources()
     ]
@@ -71,27 +70,45 @@ RESOURCES: list[Resource] = _build_resources()
 # ---------------------------------------------------------------------------
 
 
-@server.list_tools()  # type: ignore[no-untyped-call, untyped-decorator]
-async def handle_list_tools() -> list[Tool]:
+async def handle_list_tools(
+    ctx: ServerRequestContext[Any], params: PaginatedRequestParams | None
+) -> ListToolsResult:
     """Advertise available tools."""
-    return TOOLS
+    return ListToolsResult(tools=TOOLS)
 
 
-@server.call_tool()  # type: ignore[untyped-decorator]
-async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[TextContent]:
+async def handle_call_tool(
+    ctx: ServerRequestContext[Any], params: CallToolRequestParams
+) -> CallToolResult:
     """Dispatch tool calls and return JSON results."""
-    handler = _TOOL_DISPATCH.get(name)
+    handler = _TOOL_DISPATCH.get(params.name)
     if handler is None:
-        return [TextContent(type="text", text=json.dumps({"error": f"Unknown tool: {name}"}))]
+        error_msg = json.dumps({"error": f"Unknown tool: {params.name}"})
+        return CallToolResult(
+            content=[TextContent(type="text", text=error_msg)],
+            is_error=True,
+        )
     result = handler()
-    return [TextContent(type="text", text=json.dumps(result))]
+    return CallToolResult(content=[TextContent(type="text", text=json.dumps(result))])
 
 
-@server.list_resources()  # type: ignore[no-untyped-call, untyped-decorator]
-async def handle_list_resources() -> list[Resource]:
+async def handle_list_resources(
+    ctx: ServerRequestContext[Any], params: PaginatedRequestParams | None
+) -> ListResourcesResult:
     """Advertise available resources."""
-    return RESOURCES
+    return ListResourcesResult(resources=RESOURCES)
 
+
+# ---------------------------------------------------------------------------
+# Server instance
+# ---------------------------------------------------------------------------
+
+server = Server(
+    SERVER_NAME,
+    on_list_tools=handle_list_tools,
+    on_call_tool=handle_call_tool,
+    on_list_resources=handle_list_resources,
+)
 
 # ---------------------------------------------------------------------------
 # Entrypoint
