@@ -155,6 +155,32 @@ For PyPI-based verification, the `mcp-name` marker above must match the
 4. Add the first `agenticlens` and `agentic-chaos` adapter-backed tools.
 5. Add examples and publishable packaging checks.
 
+## What's Next
+
+Upcoming capabilities (see [ROADMAP.md](ROADMAP.md) for full details):
+
+- **Session management** — sequential tool calls share context without
+  resending artifacts
+- **Rich diagnostics** — `core.health` returns adapter availability, dependency
+  versions, and config validation
+- **Tool annotations** — category, prerequisites, duration, and mutation
+  metadata on every tool
+- **Prompt registry** — reusable prompt templates for analysis, comparison, and
+  experiment workflows
+- **Integration verification** — `core.verify` checks agenticlens and
+  agentic-chaos connectivity
+
+## Development
+
+A `Makefile` provides shorthand for common tasks:
+
+```bash
+make install     # install dev dependencies
+make check       # run all quality gates (lint + format + typecheck + test)
+make test-cov    # tests with coverage report
+make help        # list all available targets
+```
+
 ## Notes
 
 This scaffold assumes the intended GitHub namespace is
