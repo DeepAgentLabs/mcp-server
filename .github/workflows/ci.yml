@@ -13,6 +13,26 @@ jobs:
         python-version: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: mcp-server
+
+      - name: Check out agenticlens
+        uses: actions/checkout@v4
+        with:
+          repository: DeepAgentLabs/agenticlens
+          path: agenticlens
+
+      - name: Check out agentic-chaos
+        uses: actions/checkout@v4
+        with:
+          repository: DeepAgentLabs/agentic-chaos
+          path: agentic-chaos
+
+      - name: Check out ai-operations-spec
+        uses: actions/checkout@v4
+        with:
+          repository: DeepAgentLabs/ai-operations-spec
+          path: ai-operations-spec
 
       - name: Install uv
         uses: astral-sh/setup-uv@v3
@@ -23,18 +43,23 @@ jobs:
         run: uv python install ${{ matrix.python-version }}
 
       - name: Install dependencies
+        working-directory: mcp-server
         run: uv sync --extra dev --python ${{ matrix.python-version }}
 
       - name: Lint (ruff check)
+        working-directory: mcp-server
         run: uv run ruff check .
 
       - name: Format check (ruff format)
+        working-directory: mcp-server
         run: uv run ruff format --check .
 
       - name: Type check (mypy)
+        working-directory: mcp-server
         run: uv run mypy
 
       - name: Test (pytest)
+        working-directory: mcp-server
         run: uv run pytest
 
   package:
@@ -42,6 +67,26 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: mcp-server
+
+      - name: Check out agenticlens
+        uses: actions/checkout@v4
+        with:
+          repository: DeepAgentLabs/agenticlens
+          path: agenticlens
+
+      - name: Check out agentic-chaos
+        uses: actions/checkout@v4
+        with:
+          repository: DeepAgentLabs/agentic-chaos
+          path: agentic-chaos
+
+      - name: Check out ai-operations-spec
+        uses: actions/checkout@v4
+        with:
+          repository: DeepAgentLabs/ai-operations-spec
+          path: ai-operations-spec
 
       - name: Install uv
         uses: astral-sh/setup-uv@v3
@@ -52,9 +97,11 @@ jobs:
         run: uv python install 3.12
 
       - name: Install dependencies
+        working-directory: mcp-server
         run: uv sync --extra dev --python 3.12
 
       - name: Build distributions
+        working-directory: mcp-server
         run: |
           uv run python -m build
           uv run python -m twine check dist/*
