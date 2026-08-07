@@ -61,8 +61,8 @@ def _build_tools() -> list[Tool]:
     return [
         Tool(
             name=entry["name"],
-            description=entry["description"],
-            inputSchema=entry["input_schema"],
+            description=str(entry["description"]),
+            input_schema=entry["input_schema"],
         )
         for entry in _registry_tools()
         if entry["name"] in _TOOL_DISPATCH
@@ -75,7 +75,7 @@ def _build_resources() -> list[Resource]:
         Resource(
             uri=entry["uri"],
             name=entry["name"],
-            mimeType="application/json",
+            mime_type="application/json",
         )
         for entry in _catalog_resources()
     ]
@@ -128,14 +128,14 @@ async def handle_read_resource(uri: str) -> list[TextResourceContents]:
         return [
             TextResourceContents(
                 uri=uri,
-                mimeType="application/json",
+                mime_type="application/json",
                 text=json.dumps({"error": f"Unknown resource: {uri}"}),
             )
         ]
     return [
         TextResourceContents(
             uri=uri,
-            mimeType="application/json",
+            mime_type="application/json",
             text=json.dumps(payload, indent=2),
         )
     ]
@@ -155,7 +155,7 @@ async def _on_call_tool(_: Any, params: CallToolRequestParams) -> CallToolResult
         except json.JSONDecodeError:
             payload = {}
         is_error = bool(payload.get("error"))
-    return CallToolResult(content=content, structuredContent=None, isError=is_error)
+    return CallToolResult(content=list(content), structured_content=None, is_error=is_error)
 
 
 async def _on_list_resources(_: Any, params: PaginatedRequestParams) -> ListResourcesResult:
@@ -164,7 +164,7 @@ async def _on_list_resources(_: Any, params: PaginatedRequestParams) -> ListReso
 
 
 async def _on_read_resource(_: Any, params: ReadResourceRequestParams) -> ReadResourceResult:
-    return ReadResourceResult(contents=await handle_read_resource(str(params.uri)))
+    return ReadResourceResult(contents=list(await handle_read_resource(str(params.uri))))
 
 
 server.add_request_handler("tools/list", PaginatedRequestParams, _on_list_tools)

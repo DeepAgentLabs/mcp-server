@@ -1,7 +1,9 @@
 """Central tool metadata registry."""
 
+from typing import Any
 
-def list_tools() -> list[dict[str, object]]:
+
+def list_tools() -> list[dict[str, Any]]:
     """Return the current tool inventory for the server."""
     return [
         {

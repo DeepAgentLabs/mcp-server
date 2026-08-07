@@ -19,7 +19,7 @@ CLAIM = "Aligned with AI Operations Specification v0.4-draft as observed on 2026
 
 
 def _load_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(path.read_text(encoding="utf-8"))  # type: ignore[no-any-return]
 
 
 SCHEMA_DOCUMENTS = {path.name: _load_json(path) for path in SCHEMA_DIR.glob("*.schema.json")}
