@@ -38,7 +38,6 @@ def analyze_workflow(artifact: dict[str, Any]) -> dict[str, Any]:
         ),
         "estimated_cost_savings": RecommendationEngine.estimated_cost_savings(recommendations),
         "recommendations": [
-            recommendation.model_dump(mode="json")
-            for recommendation in recommendations
+            recommendation.model_dump(mode="json") for recommendation in recommendations
         ],
     }

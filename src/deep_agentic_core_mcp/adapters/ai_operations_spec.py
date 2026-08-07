@@ -140,9 +140,10 @@ def semantic_validate_run(artifact: dict[str, Any]) -> list[str]:
         if _count_edges(relationships, "observed-in", source_id=occurrence["id"]) != 1:
             errors.append(f"Occurrence {occurrence['id']} must be observed in exactly one Step")
     for evidence in artifact.get("evidence", []):
-        if evidence["type"] == "evaluation" and _count_edges(
-            relationships, "evaluates", source_id=evidence["id"]
-        ) < 1:
+        if (
+            evidence["type"] == "evaluation"
+            and _count_edges(relationships, "evaluates", source_id=evidence["id"]) < 1
+        ):
             errors.append(f"Evaluation {evidence['id']} must identify a target")
 
     workflow_id = artifact.get("workflow_id")
