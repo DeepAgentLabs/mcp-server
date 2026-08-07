@@ -2,10 +2,9 @@
 
 from typing import Any
 
-from deep_agentic_core_mcp.adapters.agenticlens import (
-    analyze_workflow as adapter_analyze_workflow,
-    describe_capabilities,
-)
+from deep_agentic_core_mcp.adapters.agenticlens import analyze_workflow as adapter_analyze_workflow
+from deep_agentic_core_mcp.adapters.agenticlens import describe_capabilities
+
 
 def capabilities() -> dict[str, list[str]]:
     """Return lens capabilities."""

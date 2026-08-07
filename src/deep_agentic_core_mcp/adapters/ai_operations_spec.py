@@ -131,7 +131,10 @@ def semantic_validate_run(artifact: dict[str, Any]) -> list[str]:
                 errors.append(f"{relationship['id']} declares the wrong type for {endpoint['id']}")
 
     for step in artifact.get("steps", []):
-        if _count_edges(relationships, "contains", source_id=artifact["id"], target_id=step["id"]) != 1:
+        contains = _count_edges(
+            relationships, "contains", source_id=artifact["id"], target_id=step["id"]
+        )
+        if contains != 1:
             errors.append(f"Step {step['id']} must be contained by its Run exactly once")
     for occurrence in artifact.get("occurrences", []):
         if _count_edges(relationships, "observed-in", source_id=occurrence["id"]) != 1:

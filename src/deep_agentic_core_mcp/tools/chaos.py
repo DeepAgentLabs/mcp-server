@@ -2,10 +2,9 @@
 
 from typing import Any
 
-from deep_agentic_core_mcp.adapters.agentic_chaos import (
-    describe_capabilities,
-    list_faults as adapter_list_faults,
-)
+from deep_agentic_core_mcp.adapters.agentic_chaos import describe_capabilities
+from deep_agentic_core_mcp.adapters.agentic_chaos import list_faults as adapter_list_faults
+
 
 def capabilities() -> dict[str, list[str]]:
     """Return chaos capabilities."""

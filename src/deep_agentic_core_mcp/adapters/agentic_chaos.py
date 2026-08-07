@@ -8,7 +8,7 @@ from deep_agentic_core_mcp.adapters import ensure_repo_on_path
 
 ensure_repo_on_path("agentic-chaos")
 
-from agentic_chaos.chaos.faults import FAULT_REGISTRY
+from agentic_chaos.chaos.faults import FAULT_REGISTRY  # noqa: E402
 
 
 def describe_capabilities() -> list[str]:

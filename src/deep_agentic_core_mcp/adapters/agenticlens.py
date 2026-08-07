@@ -8,8 +8,8 @@ from deep_agentic_core_mcp.adapters import ensure_repo_on_path
 
 ensure_repo_on_path("agenticlens")
 
-from agenticlens.models.workflow import Workflow
-from agenticlens.recommenders.engine import RecommendationEngine
+from agenticlens.models.workflow import Workflow  # noqa: E402
+from agenticlens.recommenders.engine import RecommendationEngine  # noqa: E402
 
 
 def describe_capabilities() -> list[str]:
@@ -37,5 +37,8 @@ def analyze_workflow(artifact: dict[str, Any]) -> dict[str, Any]:
             workflow, recommendations
         ),
         "estimated_cost_savings": RecommendationEngine.estimated_cost_savings(recommendations),
-        "recommendations": [recommendation.model_dump(mode="json") for recommendation in recommendations],
+        "recommendations": [
+            recommendation.model_dump(mode="json")
+            for recommendation in recommendations
+        ],
     }

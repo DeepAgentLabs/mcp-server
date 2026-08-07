@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from deep_agentic_core_mcp.adapters.ai_operations_spec import describe_capabilities
 from deep_agentic_core_mcp.adapters.ai_operations_spec import (
-    describe_capabilities,
     validate_artifact as adapter_validate_artifact,
 )
 

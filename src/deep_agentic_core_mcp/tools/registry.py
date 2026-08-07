@@ -36,7 +36,10 @@ def list_tools() -> list[dict[str, object]]:
         {
             "name": "spec.validate_artifact",
             "title": "Validate AI Operations Artifact",
-            "description": "Validate a workflow or run artifact against the AI Operations v0.4 draft.",
+            "description": (
+                "Validate a workflow or run artifact against the"
+                " AI Operations v0.4 draft."
+            ),
             "input_schema": {
                 "type": "object",
                 "properties": {"artifact": {"type": "object"}},
