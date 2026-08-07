@@ -22,8 +22,10 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
+  "jsonschema>=4.23,<5",
   "mcp>=1.10.0",
   "pydantic>=2.0,<3",
+  "referencing>=0.35,<1",
 ]
 
 [project.optional-dependencies]

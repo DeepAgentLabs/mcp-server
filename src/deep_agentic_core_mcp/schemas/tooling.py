@@ -9,6 +9,10 @@ class ToolDescriptor(BaseModel):
     name: str
     title: str
     description: str
+    input_schema: dict[str, object] = Field(
+        default_factory=dict,
+        description="JSON Schema describing tool arguments.",
+    )
 
 
 class ResourceDescriptor(BaseModel):
