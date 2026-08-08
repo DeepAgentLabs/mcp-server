@@ -70,3 +70,11 @@ objects (`ListToolsResult`, `CallToolResult`, `ListResourcesResult`).
 ## Pre-push Checklist
 
 Run `make check` before every push. It runs: lint → format-check → typecheck → test.
+
+## Release
+
+1. Bump version in `pyproject.toml`, `src/deep_agentic_core_mcp/__init__.py`, and `CHANGELOG.md`
+2. Commit: `git commit -am "release: vX.Y.Z"`
+3. Tag: `git tag vX.Y.Z`
+4. Push: `git push origin main --tags`
+5. Create a GitHub Release — the workflow publishes to PyPI and the MCP Registry
