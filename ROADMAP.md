@@ -74,14 +74,35 @@ Success criteria:
 - host can discover at least one tool
 - smoke tests cover imports and server boot
 
-## Phase 2: AgenticLens Integration
+## Phase 2: Session Management & Diagnostics
 
 Goals:
+
+- add lightweight in-memory session state so sequential tool calls share context
+- expand `core.health` into rich diagnostics (adapter availability, dependency
+  versions, loaded tools/resources, config validation, last successful runs)
+- add tool metadata and annotations (category, prerequisites, expected duration,
+  whether the tool mutates session state)
+- implement prompt registry support — expose reusable prompt templates as MCP
+  prompts/resources for analysis, comparison, and experiment workflows
+- add integration verification flow — a `core.verify` tool that checks
+  agenticlens and agentic-chaos connectivity and reports readiness
+
+Success criteria:
+
+- `lens.profile` → `chaos.run` → `lens.compare` can share a session without
+  the client resending artifacts
+- `core.health` returns structured diagnostics, not just `{"status": "ok"}`
+- MCP clients can discover tool categories, prerequisites, and output types
+- a new contributor can run `core.verify` and see what's connected
+
+## Phase 3: AgenticLens Integration
 
 - wire `agenticlens` into the MCP server through adapter functions
 - expose a first analysis-oriented tool surface
 - support reading workflow JSON artifacts
 - support operational-intelligence features as they land in `agenticlens`
+- return provenance-rich responses so MCP clients get explainable outputs
 
 Possible tools:
 
@@ -95,6 +116,7 @@ Success criteria:
 
 - a saved workflow artifact can be analyzed through MCP
 - recommendations are returned in a host-friendly schema
+- every finding includes source provenance (step, span, artifact)
 - the analyzed artifact remains traceable to the AI Operations Specification
   contract
 
@@ -145,6 +167,15 @@ Goals:
 - authenticate with the MCP Registry
 - publish `server.json`
 - add CI for package build and registry publishing
+
+## Phase 6: Operational Intelligence
+
+Goals:
+
+- add guided onboarding wizard for first-time setup
+- add saved artifact browsing through MCP resources
+- add explainable report recall and session history
+- add report and investigation narrative generation
 
 ## Open Questions
 
