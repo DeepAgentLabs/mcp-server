@@ -40,11 +40,13 @@ objects (`ListToolsResult`, `CallToolResult`, `ListResourcesResult`).
 | `src/deep_agentic_core_mcp/config.py` | Server identity and shared constants |
 | `src/deep_agentic_core_mcp/tools/` | Tool implementations (`core.py`) and registry (`registry.py`) |
 | `src/deep_agentic_core_mcp/resources/` | MCP resource definitions and catalog |
-| `src/deep_agentic_core_mcp/prompts/` | Reusable prompt templates (planned) |
+| `src/deep_agentic_core_mcp/prompts/` | Reusable prompt templates, wired into `prompts/list`/`prompts/get` |
 | `src/deep_agentic_core_mcp/schemas/` | Request/response contracts |
 | `src/deep_agentic_core_mcp/services/` | Shared orchestration logic |
 | `src/deep_agentic_core_mcp/adapters/` | Integration boundaries to agenticlens and agentic-chaos |
 | `tests/` | Pytest tests (asyncio_mode=auto) |
+| `scripts/generate_tools_doc.py` | Generates `docs/tools.md` from `tools/registry.py` |
+| `docs/tools.md` | **Generated** — never hand-edit, run `make docs` |
 | `server.json` | MCP Registry metadata |
 | `Makefile` | Local dev automation |
 
@@ -56,9 +58,11 @@ objects (`ListToolsResult`, `CallToolResult`, `ListResourcesResult`).
 ## Adding a New Tool
 
 1. Add implementation in `tools/` (return a dict)
-2. Register in `tools/registry.py` (name + description)
+2. Register in `tools/registry.py` (name, description, and the metadata
+   fields: `category`, `prerequisites`, `expected_duration`, `mutates_session`)
 3. Add handler entry in `server.py` `_TOOL_DISPATCH`
 4. Add test in `tests/test_server.py`
+5. Run `make docs` to regenerate `docs/tools.md`
 
 ## Package Boundaries
 
@@ -70,6 +74,9 @@ objects (`ListToolsResult`, `CallToolResult`, `ListResourcesResult`).
 ## Pre-push Checklist
 
 Run `make check` before every push. It runs: lint → format-check → typecheck → test.
+If `tools/registry.py` changed, also run `make docs-check` (regenerates
+`docs/tools.md` and fails if that changed anything you didn't commit) —
+not part of `check` itself so the default gate stays fast.
 
 ## Release
 

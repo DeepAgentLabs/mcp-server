@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help install lint format format-check typecheck test test-cov clean build check
+.PHONY: help install lint format format-check typecheck test test-cov clean build check docs docs-check
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
@@ -32,5 +32,11 @@ clean: ## Remove build artifacts
 
 build: ## Build package distributions
 	uv run python -m build
+
+docs: ## Regenerate generated docs (docs/tools.md) from tools/registry.py
+	uv run python scripts/generate_tools_doc.py
+
+docs-check: docs ## Fail if docs/tools.md is out of date (regenerates, then diffs)
+	git diff --exit-code docs/tools.md
 
 check: lint format-check typecheck test ## Run all quality gates
