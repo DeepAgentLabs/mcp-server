@@ -44,7 +44,9 @@ jobs:
 
       - name: Install dependencies
         working-directory: mcp-server
-        run: uv sync --extra dev --python ${{ matrix.python-version }}
+        run: |
+          uv sync --extra dev --python ${{ matrix.python-version }}
+          uv pip install -e ../agenticlens -e ../agentic-chaos
 
       - name: Lint (ruff check)
         working-directory: mcp-server
@@ -98,7 +100,9 @@ jobs:
 
       - name: Install dependencies
         working-directory: mcp-server
-        run: uv sync --extra dev --python 3.12
+        run: |
+          uv sync --extra dev --python 3.12
+          uv pip install -e ../agenticlens -e ../agentic-chaos
 
       - name: Build distributions
         working-directory: mcp-server

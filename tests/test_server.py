@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 
 import pytest
-from mcp.types import CallToolRequestParams
 
 from deep_agentic_core_mcp.server import _TOOL_DISPATCH, TOOLS, server
 
@@ -38,8 +37,8 @@ def test_tool_dispatch_covers_all_tools() -> None:
 async def test_handle_list_tools() -> None:
     from deep_agentic_core_mcp.server import handle_list_tools
 
-    result = await handle_list_tools(None, None)  # type: ignore[arg-type]
-    names = {t.name for t in result.tools}
+    result = await handle_list_tools()
+    names = {t.name for t in result}
     assert "core.health" in names
     assert "core.version" in names
 
@@ -48,9 +47,8 @@ async def test_handle_list_tools() -> None:
 async def test_handle_call_tool_health() -> None:
     from deep_agentic_core_mcp.server import handle_call_tool
 
-    params = CallToolRequestParams(name="core.health")
-    result = await handle_call_tool(None, params)  # type: ignore[arg-type]
-    payload = json.loads(result.content[0].text)
+    result = await handle_call_tool("core.health", None)
+    payload = json.loads(result[0].text)
     assert payload["status"] == "ok"
 
 
@@ -58,9 +56,8 @@ async def test_handle_call_tool_health() -> None:
 async def test_handle_call_tool_version() -> None:
     from deep_agentic_core_mcp.server import handle_call_tool
 
-    params = CallToolRequestParams(name="core.version")
-    result = await handle_call_tool(None, params)  # type: ignore[arg-type]
-    payload = json.loads(result.content[0].text)
+    result = await handle_call_tool("core.version", None)
+    payload = json.loads(result[0].text)
     assert "version" in payload
 
 
@@ -134,7 +131,6 @@ async def test_handle_call_tool_validate_semantic_invalid_run() -> None:
 async def test_handle_call_tool_unknown() -> None:
     from deep_agentic_core_mcp.server import handle_call_tool
 
-    params = CallToolRequestParams(name="nonexistent.tool")
-    result = await handle_call_tool(None, params)  # type: ignore[arg-type]
-    payload = json.loads(result.content[0].text)
+    result = await handle_call_tool("nonexistent.tool", None)
+    payload = json.loads(result[0].text)
     assert "error" in payload
