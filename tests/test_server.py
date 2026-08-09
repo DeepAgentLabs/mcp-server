@@ -13,6 +13,9 @@ ROOT = Path(__file__).resolve().parents[2]
 SPEC_V04 = ROOT / "ai-operations-spec" / "specification" / "v0.4" / "examples"
 AGENTICLENS_ARTIFACTS = ROOT / "agenticlens" / "examples" / "pitch_demo" / "artifacts"
 CHAOS_TARGET_SCRIPT = "mcp-server/examples/chaos_target.py"
+CHAOS_EXIT_ZERO_SCRIPT = "mcp-server/examples/chaos_exit_zero.py"
+CHAOS_EXIT_NONZERO_SCRIPT = "mcp-server/examples/chaos_exit_nonzero.py"
+CHAOS_EXIT_STRING_SCRIPT = "mcp-server/examples/chaos_exit_string.py"
 
 WORKFLOW_ARTIFACT = {
     "name": "Support workflow",
@@ -319,6 +322,46 @@ async def test_handle_call_tool_run_experiment_rejects_unknown_fault() -> None:
     payload = json.loads(result[0].text)
     assert payload["ok"] is False
     assert "error" in payload
+
+
+@pytest.mark.asyncio
+async def test_handle_call_tool_run_experiment_treats_system_exit_zero_as_success() -> None:
+    from deep_agentic_core_mcp.server import handle_call_tool
+
+    result = await handle_call_tool(
+        "chaos.run_experiment",
+        {"script": CHAOS_EXIT_ZERO_SCRIPT, "faults": ["silent_degradation"]},
+    )
+    payload = json.loads(result[0].text)
+    assert payload["ok"] is True
+    assert payload["timed_out"] is False
+    assert payload["crashed"] is None
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("script", "exit_code"),
+    [
+        (CHAOS_EXIT_NONZERO_SCRIPT, "2"),
+        (CHAOS_EXIT_STRING_SCRIPT, "boom"),
+    ],
+)
+async def test_handle_call_tool_run_experiment_reports_failing_system_exit(
+    script: str,
+    exit_code: str,
+) -> None:
+    from deep_agentic_core_mcp.server import handle_call_tool
+
+    result = await handle_call_tool(
+        "chaos.run_experiment",
+        {"script": script, "faults": ["silent_degradation"]},
+    )
+    payload = json.loads(result[0].text)
+    assert payload["ok"] is False
+    assert payload["timed_out"] is False
+    assert payload["crashed"] is not None
+    assert "SystemExit" in payload["crashed"]
+    assert exit_code in payload["crashed"]
 
 
 # ---------------------------------------------------------------------------
