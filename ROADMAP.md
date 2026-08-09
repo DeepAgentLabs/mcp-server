@@ -23,6 +23,46 @@ Current shipped version: `0.2.0` (2026-08-08) — see [CHANGELOG.md](CHANGELOG.m
 - **Phase 5: Publishing and Adoption** 🚧 Planned
 - **Phase 6: Operational Intelligence** 🚧 Planned
 
+## Cross-Project Dependencies
+
+This server is an orchestration layer across sibling projects, so roadmap
+status should explicitly account for upstream and downstream dependencies.
+
+- `agenticlens`
+  Provides workflow analysis, evaluation, comparison, and reporting behavior
+  surfaced through `lens.*` tools.
+- `agentic-chaos`
+  Provides resilience/fault injection behavior surfaced through `chaos.*`
+  tools.
+- `ai-operations-spec`
+  Provides the canonical artifact model and validation rules surfaced through
+  `spec.*` tools and used as the ecosystem exchange contract.
+
+For roadmap work, distinguish:
+
+- `Depends on`: a sibling capability or spec milestone that must exist first.
+- `Blocked by`: a hard upstream constraint that prevents shipping the feature.
+- `Coordinate with`: sibling repos whose docs, examples, or contracts should
+  be updated together.
+- `Validate in`: sibling CLIs, fixtures, or adapters that should be checked
+  before the item is marked done.
+
+## Definition of Done
+
+A roadmap item is done only when all applicable work is complete:
+
+- implementation is merged and reachable through the intended MCP tool,
+  prompt, or resource surface
+- tests cover the behavior, including integration boundaries where practical
+- user-facing examples and generated docs are added or updated
+- `README.md` and this roadmap are updated when the feature changes user
+  expectations or milestone status
+- sibling-project dependencies and end-to-end checks are recorded for any
+  cross-repo tool surface
+- release metadata (`pyproject.toml`,
+  `src/deep_agentic_core_mcp/__init__.py`, `CHANGELOG.md`) is updated when the
+  work is part of a release-ready change set
+
 ## Vision
 
 Build one public MCP server for the DeepAgentLabs ecosystem that unifies:
@@ -197,6 +237,12 @@ Success criteria:
 - chaos results are readable as or convertible to AI Operations Specification
   artifacts — still open; `chaos.run_experiment`'s output is `ChaosReport`-shaped
   but not yet run through `spec.validate_artifact`
+- [ ] script-path allow/deny-list for `chaos.run_experiment`, layered on top
+  of the existing workspace-root confinement — an opt-in instance-level
+  allowlist (e.g. `MCP_SERVER_ALLOWED_SCRIPT_GLOBS`) plus a deny-list, modeled
+  on `devops-open-agent`'s layered MCP-server allowlist/whitelist/blacklist
+  pattern; tracked as a prerequisite for widening `chaos.run_experiment`
+  exposure beyond trusted local stdio clients (see Known Limitations)
 
 ## Phase 3c: AI Operations Specification Conformance
 
@@ -289,6 +335,17 @@ Goals:
   or make handlers genuinely async) before any remote/multi-session/SSE
   transport (Phase 4+) is added — it would otherwise let one slow call stall
   every other client.
+- **`chaos.run_experiment` has no allowlist beyond workspace-path
+  confinement.** Any script inside the workspace root can be executed today;
+  there's no further restriction on *which* scripts within that root are
+  permitted, and per `SECURITY.md` the tool doesn't authenticate or authorize
+  the calling client either. `devops-open-agent` solves the equivalent
+  problem for its own MCP integration with a layered allow/deny-list
+  (instance-level allowlist + per-user whitelist + per-user blacklist) —
+  the same shape (see Phase 3b) is a reasonable model here. Like the
+  async-blocking limitation above, this should be closed before any
+  remote/multi-client transport (Phase 4+) is considered, not concurrently
+  with it.
 
 ## Documentation Backlog
 
