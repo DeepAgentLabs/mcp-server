@@ -107,11 +107,14 @@ def run_experiment(
     script_path = _resolve_sandboxed_script(script)
     resolved_faults = resolve_faults(faults)  # raises ValueError on unknown fault names
 
-    def _run() -> tuple[Any, Exception | None]:
+    def _run() -> tuple[Any, BaseException | None]:
         with chaos_session(resolved_faults) as session:
-            crashed: Exception | None = None
+            crashed: BaseException | None = None
             try:
                 runpy.run_path(str(script_path), run_name="__main__")
+            except SystemExit as exc:
+                if exc.code not in (None, 0):
+                    crashed = exc
             except Exception as exc:  # noqa: BLE001 - reported back, not swallowed silently
                 crashed = exc
         return session, crashed
@@ -119,7 +122,7 @@ def run_experiment(
     started_at = datetime.now(timezone.utc)
     timed_out = False
     session = None
-    crashed: Exception | None = None
+    crashed: BaseException | None = None
     # Deliberately not a `with` block: ThreadPoolExecutor.__exit__ calls
     # shutdown(wait=True), which would block for the worker thread to finish
     # regardless of the timeout below - defeating the whole point of it.
