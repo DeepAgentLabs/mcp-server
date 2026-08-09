@@ -12,24 +12,24 @@ jobs:
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: mcp-server
 
       - name: Check out agenticlens
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agenticlens
           path: agenticlens
 
       - name: Check out agentic-chaos
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agentic-chaos
           path: agentic-chaos
 
       - name: Check out ai-operations-spec
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/ai-operations-spec
           path: ai-operations-spec
@@ -68,24 +68,24 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: mcp-server
 
       - name: Check out agenticlens
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agenticlens
           path: agenticlens
 
       - name: Check out agentic-chaos
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agentic-chaos
           path: agentic-chaos
 
       - name: Check out ai-operations-spec
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/ai-operations-spec
           path: ai-operations-spec

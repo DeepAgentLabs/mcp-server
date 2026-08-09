@@ -1,18 +1,97 @@
 {
-  "name": "sample-agentic-workflow",
-  "description": "Placeholder workflow artifact for early MCP resource examples.",
+  "name": "Support workflow: refund policy question",
+  "start_time": "2026-08-08T09:00:00Z",
+  "end_time": "2026-08-08T09:00:12Z",
   "steps": [
     {
-      "name": "Planner",
-      "type": "planner"
+      "name": "Plan support response",
+      "type": "planner",
+      "provider": "anthropic",
+      "model": "claude-sonnet-5",
+      "metrics": {
+        "prompt_tokens": 320,
+        "completion_tokens": 80,
+        "total_tokens": 400,
+        "latency": 0.9,
+        "cost": 0.0021
+      }
     },
     {
-      "name": "Retriever",
-      "type": "retriever"
+      "name": "Search knowledge base",
+      "type": "retriever",
+      "metrics": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "latency": 0.4
+      },
+      "metadata": {
+        "chunk_count": 14,
+        "avg_tokens_per_chunk": 180,
+        "retrieved_chunks": [
+          "Refunds are issued within 5-7 business days of approval.",
+          "Store credit is available as an alternative to a cash refund.",
+          "Digital goods are non-refundable once downloaded."
+        ]
+      }
     },
     {
-      "name": "Final Answer",
-      "type": "final_response"
+      "name": "Look up order status",
+      "type": "tool_call",
+      "metrics": {
+        "prompt_tokens": 40,
+        "completion_tokens": 15,
+        "total_tokens": 55,
+        "latency": 0.3,
+        "cost": 0.0003
+      },
+      "metadata": {
+        "tool_name": "search_docs",
+        "tool_args": { "query": "refund policy" }
+      }
+    },
+    {
+      "name": "Re-check order status",
+      "type": "tool_call",
+      "metrics": {
+        "prompt_tokens": 40,
+        "completion_tokens": 15,
+        "total_tokens": 55,
+        "latency": 0.3,
+        "cost": 0.0003
+      },
+      "metadata": {
+        "tool_name": "search_docs",
+        "tool_args": { "query": "refund policy" }
+      }
+    },
+    {
+      "name": "Draft response",
+      "type": "llm_call",
+      "provider": "anthropic",
+      "model": "claude-sonnet-5",
+      "metrics": {
+        "prompt_tokens": 5400,
+        "completion_tokens": 210,
+        "total_tokens": 5610,
+        "latency": 2.1,
+        "cost": 0.0298
+      },
+      "metadata": {
+        "history_tokens": 5000
+      }
+    },
+    {
+      "name": "Final answer",
+      "type": "final_response",
+      "metrics": {
+        "prompt_tokens": 0,
+        "completion_tokens": 120,
+        "total_tokens": 120,
+        "latency": 0.5,
+        "cost": 0.0006
+      }
     }
-  ]
+  ],
+  "chaos_events": []
 }

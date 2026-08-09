@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from deep_agentic_core_mcp.adapters import AdapterUnavailableError
 from deep_agentic_core_mcp.adapters.ai_operations_spec import describe_capabilities
 from deep_agentic_core_mcp.adapters.ai_operations_spec import (
     validate_artifact as adapter_validate_artifact,
@@ -19,4 +20,7 @@ def validate_artifact(arguments: dict[str, Any] | None) -> dict[str, Any]:
     """Validate a workflow or run artifact against the v0.4 draft."""
     if not arguments or "artifact" not in arguments:
         return {"ok": False, "error": "Missing required 'artifact' argument"}
-    return adapter_validate_artifact(arguments["artifact"])
+    try:
+        return adapter_validate_artifact(arguments["artifact"])
+    except AdapterUnavailableError as exc:
+        return {"ok": False, "error": str(exc)}
