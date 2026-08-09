@@ -64,6 +64,18 @@ objects (`ListToolsResult`, `CallToolResult`, `ListResourcesResult`).
 4. Add test in `tests/test_server.py`
 5. Run `make docs` to regenerate `docs/tools.md`
 
+## Feature Completion Expectations
+
+- Every behavior change must include tests.
+- User-facing tools and workflows must include or update examples in
+  `README.md`, generated tool docs, or test fixtures that demonstrate expected
+  usage.
+- When a roadmap item or milestone meaningfully changes status, update
+  `README.md` and the roadmap document in the same change.
+- When work is packaged as a release-ready change, also update
+  `pyproject.toml`, `src/deep_agentic_core_mcp/__init__.py`, and
+  `CHANGELOG.md`.
+
 ## Package Boundaries
 
 - This server is a **thin orchestration layer** — reuse agenticlens and
