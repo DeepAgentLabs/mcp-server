@@ -45,35 +45,41 @@ Planned capability areas:
 - Python-first: package and publish through PyPI
 - Thin orchestration layer: reuse `agenticlens` and `agentic-chaos` instead of
   re-implementing their logic
-- Local-first: work well as a stdio MCP server for developer workflows
+- Local-first: work well as a stdio MCP server for developer workflows —
+  this matters because `chaos.run_experiment` executes real code (see
+  [SECURITY.md](SECURITY.md)), so this server is meant for trusted,
+  local/stdio use, not exposure to untrusted clients
 - Expandable: leave room for a later remote deployment mode if needed
 
-## Initial Scope
+## MCP Surface (current, `0.2.0`)
 
-The first milestone is foundation only:
+- `core.health` — rich diagnostics: adapter availability/version, loaded
+  tool/resource/prompt counts, workspace root, recent successful calls
+- `core.version` — server package version
+- `core.verify` — checks agenticlens/agentic-chaos/ai-operations-spec
+  connectivity and reports readiness
+- `core.session_state` — inspect what the active session has accumulated
+- `lens.analyze_workflow` — run AgenticLens recommendations against a
+  workflow artifact
+- `lens.report_summary` — render a Markdown workflow report
+- `lens.compare_runs` — compare baseline/candidate trace runs for
+  regressions
+- `lens.slo_summary` — apply release-gate style SLO thresholds to an
+  evaluation report
+- `lens.audit_report` — case-by-case evaluation detail, optionally with HTML
+- `chaos.list_faults` — list the supported fault types
+- `chaos.run_experiment` — run a workspace-sandboxed target script under
+  selected faults ([executes real code — see `SECURITY.md`](SECURITY.md))
+- `spec.validate_artifact` — validate a workflow/run artifact against the AI
+  Operations v0.4 draft
 
-- repository structure
-- packaging metadata
-- MCP registry metadata
-- roadmap and product framing
-- minimal server entrypoint and tool layout
+Sequential tool calls can share context via an optional `session_id`
+argument, backed by an in-memory session store — see `ROADMAP.md` Phase 2.
 
-The first working implementation can stay intentionally small while the shape of
-the tool surface stabilizes.
-
-## Proposed MCP Surface
-
-Possible first tool groups:
-
-- `lens.profile_workflow`
-- `lens.analyze_workflow`
-- `chaos.run_experiment`
-- `chaos.list_faults`
-- `core.health`
-- `core.version`
-
-These names are placeholders, but the structure matters: one server can expose
-multiple tools without needing multiple MCP packages or registry entries.
+See [ROADMAP.md](ROADMAP.md) for what's shipped per phase and what's still
+open, and [docs/tools.md](docs/tools.md) for full input schemas and
+per-tool metadata (generated from `tools/registry.py`, run `make docs` to
+refresh it after changing that file).
 
 ## Repository Layout
 
@@ -85,9 +91,13 @@ mcp-server/
 ├── server.json
 ├── .gitignore
 ├── docs/
-│   └── architecture.md
+│   ├── architecture.md
+│   └── tools.md          # generated - see scripts/generate_tools_doc.py
 ├── examples/
-│   └── sample_workflow.json
+│   ├── sample_workflow.json
+│   └── chaos_target.py
+├── scripts/
+│   └── generate_tools_doc.py
 ├── src/
 │   └── deep_agentic_core_mcp/
 │       ├── __init__.py
@@ -104,20 +114,26 @@ mcp-server/
 │       │   └── tooling.py
 │       ├── services/
 │       │   ├── __init__.py
-│       │   └── registry.py
+│       │   ├── registry.py
+│       │   └── session.py
 │       ├── adapters/
 │       │   ├── __init__.py
 │       │   ├── agentic_chaos.py
-│       │   └── agenticlens.py
+│       │   ├── agenticlens.py
+│       │   └── ai_operations_spec.py
 │       └── tools/
 │           ├── __init__.py
 │           ├── registry.py
 │           ├── chaos.py
 │           ├── core.py
-│           └── lens.py
+│           ├── lens.py
+│           └── spec.py
 └── tests/
+    ├── test_degraded_boot.py
     ├── test_imports.py
-    └── test_registry.py
+    ├── test_registry.py
+    ├── test_server.py
+    └── test_session.py
 ```
 
 ## MCP-Oriented Structure
@@ -130,12 +146,11 @@ MCP server:
   workflow examples
 - `prompts/` for reusable prompt templates exposed through the server
 - `schemas/` for typed request and response contracts
-- `services/` for shared orchestration logic that keeps tool modules thin
-- `adapters/` for integration boundaries to `agenticlens` and
-  `agentic-chaos`
-
-The implementation is still early, but the file structure now reflects that
-shape so we can add functionality without reshuffling the repo later.
+- `services/` for shared orchestration logic that keeps tool modules thin,
+  including the in-memory session store (`services/session.py`)
+- `adapters/` for integration boundaries to `agenticlens`, `agentic-chaos`,
+  and `ai-operations-spec` — each degrades to `"available": false` rather
+  than crashing server boot if its sibling repo is missing
 
 ## Packaging and Publishing Model
 
@@ -147,28 +162,21 @@ shape so we can add functionality without reshuffling the repo later.
 For PyPI-based verification, the `mcp-name` marker above must match the
 `name` field in `server.json`.
 
-## Near-Term Build Order
-
-1. Lock the canonical namespace and package metadata.
-2. Implement the stdio MCP server entrypoint.
-3. Add a minimal `core.health` tool.
-4. Add the first `agenticlens` and `agentic-chaos` adapter-backed tools.
-5. Add examples and publishable packaging checks.
-
 ## What's Next
 
-Upcoming capabilities (see [ROADMAP.md](ROADMAP.md) for full details):
+Phase 2 (session management, rich diagnostics, tool annotations, prompt
+registry, `core.verify`) and Phase 3b (Agentic Chaos) are complete as of
+`0.2.0`. What's still open (see [ROADMAP.md](ROADMAP.md) for full detail):
 
-- **Session management** — sequential tool calls share context without
-  resending artifacts
-- **Rich diagnostics** — `core.health` returns adapter availability, dependency
-  versions, and config validation
-- **Tool annotations** — category, prerequisites, duration, and mutation
-  metadata on every tool
-- **Prompt registry** — reusable prompt templates for analysis, comparison, and
-  experiment workflows
-- **Integration verification** — `core.verify` checks agenticlens and
-  agentic-chaos connectivity
+- **Phase 3a (AgenticLens)** — provenance verification on
+  `lens.analyze_workflow`'s response shape
+- **Phase 3c (AI Operations Specification)** — multi-version schema support
+  and conformance-style reporting, both blocked on upstream `ai-operations-spec`
+  work landing first
+- **Phase 4 (Unified Workflows)** — joined observability + chaos workflows,
+  incident/readiness reporting, a higher-level control surface
+- **Phase 5/6** — PyPI + MCP Registry publishing, operational intelligence
+  features
 
 ## Development
 
@@ -178,6 +186,8 @@ A `Makefile` provides shorthand for common tasks:
 make install     # install dev dependencies
 make check       # run all quality gates (lint + format + typecheck + test)
 make test-cov    # tests with coverage report
+make docs        # regenerate docs/tools.md from tools/registry.py
+make docs-check  # fail if docs/tools.md is out of date
 make help        # list all available targets
 ```
 

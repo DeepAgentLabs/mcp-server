@@ -10,22 +10,45 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 
-from deep_agentic_core_mcp.adapters import ensure_repo_on_path
+from deep_agentic_core_mcp.adapters import AdapterUnavailableError, ensure_repo_on_path
 
-SPEC_REPO = ensure_repo_on_path("ai-operations-spec", src=False)
-SPEC_V04_DIR = SPEC_REPO / "specification" / "v0.4"
-SCHEMA_DIR = SPEC_V04_DIR / "schemas"
 CLAIM = "Aligned with AI Operations Specification v0.4-draft as observed on 2026-08-07."
+
+_IMPORT_ERROR: Exception | None = None
+SCHEMA_DOCUMENTS: dict[str, dict[str, Any]] = {}
+REGISTRY: Registry = Registry()
 
 
 def _load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))  # type: ignore[no-any-return]
 
 
-SCHEMA_DOCUMENTS = {path.name: _load_json(path) for path in SCHEMA_DIR.glob("*.schema.json")}
-REGISTRY = Registry().with_resources(
-    (schema["$id"], Resource.from_contents(schema)) for schema in SCHEMA_DOCUMENTS.values()
-)
+try:
+    SPEC_REPO = ensure_repo_on_path("ai-operations-spec", src=False)
+    SPEC_V04_DIR = SPEC_REPO / "specification" / "v0.4"
+    SCHEMA_DIR = SPEC_V04_DIR / "schemas"
+    SCHEMA_DOCUMENTS = {path.name: _load_json(path) for path in SCHEMA_DIR.glob("*.schema.json")}
+    if not SCHEMA_DOCUMENTS:
+        raise FileNotFoundError(f"no v0.4 schema documents found under {SCHEMA_DIR}")
+    REGISTRY = Registry().with_resources(
+        (schema["$id"], Resource.from_contents(schema)) for schema in SCHEMA_DOCUMENTS.values()
+    )
+except Exception as exc:  # noqa: BLE001 - captured for core.verify/core.health reporting
+    _IMPORT_ERROR = exc
+
+
+def _require_available() -> None:
+    if _IMPORT_ERROR is not None:
+        raise AdapterUnavailableError("ai_operations_spec", _IMPORT_ERROR)
+
+
+def probe() -> dict[str, Any]:
+    """Report whether the ai-operations-spec schemas are reachable."""
+    return {
+        "available": _IMPORT_ERROR is None,
+        "version": "v0.4" if _IMPORT_ERROR is None else None,
+        "error": None if _IMPORT_ERROR is None else str(_IMPORT_ERROR),
+    }
 
 
 def describe_capabilities() -> list[str]:
@@ -33,29 +56,49 @@ def describe_capabilities() -> list[str]:
     return ["validate_artifact", "semantic_validate_run"]
 
 
+# Single source of truth for schema-file -> MCP resource mapping, so the
+# advertised resource list (`list_schema_resources`) and its actual content
+# (`schema_resource_content`) can never drift out of sync with each other or
+# with what's really in `SCHEMA_DOCUMENTS`. Both derive from this and skip
+# any file that isn't loaded (e.g. because the sibling repo is unavailable),
+# rather than assuming all three are always present.
+_SCHEMA_RESOURCES: dict[str, tuple[str, str]] = {
+    "workflow.schema.json": (
+        "resource://schemas/aiops/v0.4/workflow",
+        "AI Operations v0.4 workflow schema",
+    ),
+    "run.schema.json": (
+        "resource://schemas/aiops/v0.4/run",
+        "AI Operations v0.4 run schema",
+    ),
+    "common.schema.json": (
+        "resource://schemas/aiops/v0.4/common",
+        "AI Operations v0.4 common schema",
+    ),
+}
+
+
 def list_schema_resources() -> list[dict[str, str]]:
-    """Expose the draft schema assets as MCP resources."""
+    """Expose the draft schema assets as MCP resources - only those actually loaded."""
     return [
-        {
-            "uri": "resource://schemas/aiops/v0.4/workflow",
-            "name": "AI Operations v0.4 workflow schema",
-            "kind": "json-schema",
-        },
-        {
-            "uri": "resource://schemas/aiops/v0.4/run",
-            "name": "AI Operations v0.4 run schema",
-            "kind": "json-schema",
-        },
-        {
-            "uri": "resource://schemas/aiops/v0.4/common",
-            "name": "AI Operations v0.4 common schema",
-            "kind": "json-schema",
-        },
+        {"uri": uri, "name": name, "kind": "json-schema"}
+        for filename, (uri, name) in _SCHEMA_RESOURCES.items()
+        if filename in SCHEMA_DOCUMENTS
     ]
+
+
+def schema_resource_content() -> dict[str, dict[str, Any]]:
+    """Map each available schema resource's URI to its document, for resources/read."""
+    return {
+        uri: SCHEMA_DOCUMENTS[filename]
+        for filename, (uri, _name) in _SCHEMA_RESOURCES.items()
+        if filename in SCHEMA_DOCUMENTS
+    }
 
 
 def validate_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
     """Validate a draft workflow or run artifact structurally and semantically."""
+    _require_available()
     artifact_type = artifact.get("artifact_type")
     if artifact_type not in {"workflow", "run"}:
         return {
