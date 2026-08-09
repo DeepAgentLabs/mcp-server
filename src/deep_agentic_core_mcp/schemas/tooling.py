@@ -13,6 +13,17 @@ class ToolDescriptor(BaseModel):
         default_factory=dict,
         description="JSON Schema describing tool arguments.",
     )
+    category: str = Field(default="core", description="Rough grouping (core, lens, chaos, spec).")
+    prerequisites: list[str] = Field(
+        default_factory=list,
+        description="Adapter names that must be available for the tool to succeed.",
+    )
+    expected_duration: str = Field(
+        default="fast", description="Rough duration hint: instant, fast, or slow."
+    )
+    mutates_session: bool = Field(
+        default=False, description="Whether the call writes to the in-memory session store."
+    )
 
 
 class ResourceDescriptor(BaseModel):
@@ -28,3 +39,7 @@ class PromptDescriptor(BaseModel):
 
     name: str
     description: str
+    arguments: list[dict[str, object]] = Field(
+        default_factory=list,
+        description="MCP PromptArgument-shaped entries (name, description, required).",
+    )

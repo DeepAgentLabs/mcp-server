@@ -1,5 +1,68 @@
 # Roadmap
 
+## Release Status
+
+Current shipped version: `0.2.0` (2026-08-08) — see [CHANGELOG.md](CHANGELOG.md).
+
+- **Phase 0: Foundation** ✅ Complete
+- **Phase 1: Minimal MCP Server** ✅ Complete — `core.health`/`core.version`
+  shipped in `0.1.2`
+- **Phase 2: Session Management & Diagnostics** ✅ Complete — session state,
+  rich `core.health` diagnostics, tool metadata/annotations, `core.verify`,
+  and real `prompts/list`/`prompts/get` support all shipped in `0.2.0`
+- **Phase 3a: AgenticLens Integration** 🏗️ In progress — `lens.analyze_workflow`
+  shipped in `0.1.3`; `lens.report_summary`, `lens.compare_runs`,
+  `lens.slo_summary`, and `lens.audit_report` shipped in `0.2.0`
+- **Phase 3b: Agentic Chaos Integration** ✅ Complete — `chaos.list_faults`
+  shipped in `0.1.3`; `chaos.run_experiment` shipped in `0.2.0`
+- **Phase 3c: AI Operations Specification Conformance** 🏗️ In progress —
+  `spec.validate_artifact` and schema resources shipped in `0.1.3`, ahead of
+  where this roadmap originally planned them; remaining work still blocked on
+  upstream (see below)
+- **Phase 4: Unified Workflows** 🚧 Planned
+- **Phase 5: Publishing and Adoption** 🚧 Planned
+- **Phase 6: Operational Intelligence** 🚧 Planned
+
+## Cross-Project Dependencies
+
+This server is an orchestration layer across sibling projects, so roadmap
+status should explicitly account for upstream and downstream dependencies.
+
+- `agenticlens`
+  Provides workflow analysis, evaluation, comparison, and reporting behavior
+  surfaced through `lens.*` tools.
+- `agentic-chaos`
+  Provides resilience/fault injection behavior surfaced through `chaos.*`
+  tools.
+- `ai-operations-spec`
+  Provides the canonical artifact model and validation rules surfaced through
+  `spec.*` tools and used as the ecosystem exchange contract.
+
+For roadmap work, distinguish:
+
+- `Depends on`: a sibling capability or spec milestone that must exist first.
+- `Blocked by`: a hard upstream constraint that prevents shipping the feature.
+- `Coordinate with`: sibling repos whose docs, examples, or contracts should
+  be updated together.
+- `Validate in`: sibling CLIs, fixtures, or adapters that should be checked
+  before the item is marked done.
+
+## Definition of Done
+
+A roadmap item is done only when all applicable work is complete:
+
+- implementation is merged and reachable through the intended MCP tool,
+  prompt, or resource surface
+- tests cover the behavior, including integration boundaries where practical
+- user-facing examples and generated docs are added or updated
+- `README.md` and this roadmap are updated when the feature changes user
+  expectations or milestone status
+- sibling-project dependencies and end-to-end checks are recorded for any
+  cross-repo tool surface
+- release metadata (`pyproject.toml`,
+  `src/deep_agentic_core_mcp/__init__.py`, `CHANGELOG.md`) is updated when the
+  work is part of a release-ready change set
+
 ## Vision
 
 Build one public MCP server for the DeepAgentLabs ecosystem that unifies:
@@ -42,7 +105,7 @@ That means:
 
 ## Phase 0: Foundation
 
-Status: current
+Status: complete
 
 Goals:
 
@@ -61,6 +124,8 @@ Deliverables:
 
 ## Phase 1: Minimal MCP Server
 
+Status: complete — `core.health` and `core.version` shipped in 0.1.2.
+
 Goals:
 
 - create a runnable stdio MCP server
@@ -76,27 +141,48 @@ Success criteria:
 
 ## Phase 2: Session Management & Diagnostics
 
+Status: complete, shipped in 0.2.0. In-memory session state
+(`services/session.py`, `core.session_state`), rich `core.health`
+diagnostics, tool metadata/annotations, `core.verify`, and real
+`prompts/list`/`prompts/get` support (the 0.1.3 prompt registry was data
+only and was never wired into the server) all landed together.
+
 Goals:
 
-- add lightweight in-memory session state so sequential tool calls share context
-- expand `core.health` into rich diagnostics (adapter availability, dependency
-  versions, loaded tools/resources, config validation, last successful runs)
-- add tool metadata and annotations (category, prerequisites, expected duration,
+- ✅ add lightweight in-memory session state so sequential tool calls share context
+- ✅ expand `core.health` into rich diagnostics (adapter availability, dependency
+  versions, loaded tools/resources/prompts, workspace root, last successful calls)
+- ✅ add tool metadata and annotations (category, prerequisites, expected duration,
   whether the tool mutates session state)
-- implement prompt registry support — expose reusable prompt templates as MCP
-  prompts/resources for analysis, comparison, and experiment workflows
-- add integration verification flow — a `core.verify` tool that checks
-  agenticlens and agentic-chaos connectivity and reports readiness
+- ✅ implement prompt registry support — `prompts/list`/`prompts/get` are wired
+  into the server, with real arguments and rendered templates
+- ✅ add integration verification flow — a `core.verify` tool that checks
+  agenticlens, agentic-chaos, and ai-operations-spec connectivity and reports
+  readiness
 
 Success criteria:
 
-- `lens.profile` → `chaos.run` → `lens.compare` can share a session without
-  the client resending artifacts
-- `core.health` returns structured diagnostics, not just `{"status": "ok"}`
-- MCP clients can discover tool categories, prerequisites, and output types
-- a new contributor can run `core.verify` and see what's connected
+- ✅ `lens.analyze_workflow` → `lens.compare_runs` → `chaos.run_experiment` can
+  share a session (via an optional `session_id` argument) without the client
+  resending artifacts — the roadmap's original `lens.profile`/`chaos.run`
+  names don't exist as MCP tools, so this is verified against the tool names
+  that actually ship
+- ✅ `core.health` returns structured diagnostics, not just `{"status": "ok"}`
+- ✅ MCP clients can discover tool categories, prerequisites, and output types
+  (via `Tool._meta`/`Tool.annotations`)
+- ✅ a new contributor can run `core.verify` and see what's connected
+- as a prerequisite for the above, adapters now degrade instead of crashing
+  server boot when a sibling repo is missing/broken (`AdapterUnavailableError`,
+  per-adapter `probe()`) — `core.verify`/`core.health` couldn't report
+  "not connected" otherwise
 
-## Phase 3: AgenticLens Integration
+## Phase 3a: AgenticLens Integration
+
+Status: in progress — `lens.analyze_workflow` and the `agenticlens` adapter
+layer shipped in 0.1.3; `lens.report_summary`, `lens.compare_runs`,
+`lens.slo_summary`, and `lens.audit_report` shipped in 0.2.0, each backed by
+real `agenticlens` capability (`MarkdownExporter`, `comparison.runner`,
+`evaluation.gate`, `evaluation.html_report`) rather than reimplemented logic.
 
 - wire `agenticlens` into the MCP server through adapter functions
 - expose a first analysis-oriented tool surface
@@ -106,39 +192,88 @@ Success criteria:
 
 Possible tools:
 
-- `lens.analyze_workflow`
-- `lens.report_summary`
-- `lens.compare_runs`
-- `lens.slo_summary`
-- `lens.audit_report`
+- [x] `lens.analyze_workflow` — shipped in 0.1.3
+- [x] `lens.report_summary` — shipped in 0.2.0
+- [x] `lens.compare_runs` — shipped in 0.2.0
+- [x] `lens.slo_summary` — shipped in 0.2.0
+- [x] `lens.audit_report` — shipped in 0.2.0
 
 Success criteria:
 
 - a saved workflow artifact can be analyzed through MCP
 - recommendations are returned in a host-friendly schema
-- every finding includes source provenance (step, span, artifact)
+- every finding includes source provenance (step, span, artifact) — not yet
+  verified against `lens.analyze_workflow`'s current response shape
 - the analyzed artifact remains traceable to the AI Operations Specification
   contract
 
-## Phase 3: Agentic Chaos Integration
+Remaining work: this phase is functionally complete against agenticlens's
+current API surface; provenance verification above is still open.
+
+## Phase 3b: Agentic Chaos Integration
+
+Status: complete, shipped in 0.2.0. `chaos.list_faults` and the
+`agentic-chaos` adapter layer shipped in 0.1.3; `chaos.run_experiment`
+shipped in 0.2.0, running a workspace-sandboxed target script inside a real
+`chaos_session()` (mirroring the agentic-chaos CLI's `chaos run`), with a
+`timeout_seconds` guard and a documented limitation that Python cannot force
+-kill the worker thread on timeout.
 
 Goals:
 
-- wire `agentic-chaos` into the MCP server through adapter functions
-- expose fault listing and experiment execution
-- return structured experiment results
+- ✅ wire `agentic-chaos` into the MCP server through adapter functions
+- ✅ expose fault listing and experiment execution
+- ✅ return structured experiment results
 
 Possible tools:
 
-- `chaos.list_faults`
-- `chaos.run_experiment`
+- [x] `chaos.list_faults` — shipped in 0.1.3
+- [x] `chaos.run_experiment` — shipped in 0.2.0
 
 Success criteria:
 
-- a target script or workflow can be exercised with selected faults
-- results can be summarized alongside normal run output
+- ✅ a target script or workflow can be exercised with selected faults
+- ✅ results can be summarized alongside normal run output
 - chaos results are readable as or convertible to AI Operations Specification
-  artifacts
+  artifacts — still open; `chaos.run_experiment`'s output is `ChaosReport`-shaped
+  but not yet run through `spec.validate_artifact`
+- [ ] script-path allow/deny-list for `chaos.run_experiment`, layered on top
+  of the existing workspace-root confinement — an opt-in instance-level
+  allowlist (e.g. `MCP_SERVER_ALLOWED_SCRIPT_GLOBS`) plus a deny-list, modeled
+  on `devops-open-agent`'s layered MCP-server allowlist/whitelist/blacklist
+  pattern; tracked as a prerequisite for widening `chaos.run_experiment`
+  exposure beyond trusted local stdio clients (see Known Limitations)
+
+## Phase 3c: AI Operations Specification Conformance
+
+Status: in progress — delivered ahead of where this roadmap had it planned.
+
+Goals:
+
+- wire `ai-operations-spec` into the MCP server through adapter functions
+- expose structural and semantic artifact validation
+- expose the specification's schemas as MCP resources so hosts can fetch the
+  contract directly instead of vendoring copies
+
+Delivered in 0.1.3:
+
+- `spec.validate_artifact` tool, validating workflow/run artifacts against
+  the AI Operations v0.4 draft
+- MCP resource endpoints for the v0.4 workflow, run, and common schemas
+- a `resources/read` handler returning resource contents
+- an `ai-operations-spec` adapter layer
+
+Remaining work (re-checked during the 0.2.0 pass, still blocked upstream):
+
+- validation coverage beyond the v0.4 draft (versioned/multi-version support)
+  — `ai-operations-spec`'s `v0.1`–`v0.3` directories don't have populated
+  `schemas/` yet, only `v0.4` does, so there's nothing to switch between
+- conformance-style reporting that distinguishes spec-defined pass/fail rules
+  from server-specific presentation, mirroring `agenticlens`'s own
+  conformance direction — no defined conformance-rule format exists upstream
+  to wire against yet
+- resource coverage for additional artifact and schema types as the
+  specification grows
 
 ## Phase 4: Unified Workflows
 
@@ -185,6 +320,52 @@ Goals:
 - Should `deep-agentic-core-mcp` be a thin wrapper package or eventually own
   workflow orchestration logic directly?
 - Is stdio-only enough for v0, or do we want a remote deployment path early?
+  If yes, see the known limitation directly below — it needs to be fixed
+  first, not concurrently.
+
+## Known Limitations
+
+- **Tool handlers are synchronous and block the event loop.** `handle_call_tool`
+  in `server.py` calls each tool handler directly (not via `asyncio.to_thread()`
+  or similar), so a slow call — most notably `chaos.run_experiment`, which can
+  run for up to `timeout_seconds` (default 30s) — blocks the server from
+  processing anything else for its duration, including cancellation/other
+  requests from the same client. Harmless for today's single-client stdio
+  transport, but this must be fixed (wrap dispatch in `asyncio.to_thread()`,
+  or make handlers genuinely async) before any remote/multi-session/SSE
+  transport (Phase 4+) is added — it would otherwise let one slow call stall
+  every other client.
+- **`chaos.run_experiment` has no allowlist beyond workspace-path
+  confinement.** Any script inside the workspace root can be executed today;
+  there's no further restriction on *which* scripts within that root are
+  permitted, and per `SECURITY.md` the tool doesn't authenticate or authorize
+  the calling client either. `devops-open-agent` solves the equivalent
+  problem for its own MCP integration with a layered allow/deny-list
+  (instance-level allowlist + per-user whitelist + per-user blacklist) —
+  the same shape (see Phase 3b) is a reasonable model here. Like the
+  async-blocking limitation above, this should be closed before any
+  remote/multi-client transport (Phase 4+) is considered, not concurrently
+  with it.
+
+## Documentation Backlog
+
+Identified while writing `docs/tools.md` in `0.2.0` and re-flagged by a
+subsequent review; deliberately deferred rather than missed. All three are
+about *using* the server (a new integrator's first fifteen minutes), not
+about the tool surface itself, which `docs/tools.md` already covers:
+
+- **`docs/getting-started.md`** — install + MCP client config (e.g. Claude
+  Desktop) + a first `core.health`/`lens.analyze_workflow` call, walked
+  through end to end.
+- **Session workflow walkthrough** — `lens.analyze_workflow` ->
+  `lens.compare_runs` -> `chaos.run_experiment` sharing a `session_id`.
+  Phase 2's headline feature (see above); currently only demonstrated in
+  test code (`tests/test_server.py`), not in any doc a new integrator would
+  read.
+- **Prompts overview** — what the 3 shipped prompts (`lens.workflow_summary`,
+  `lens.compare_summary`, `chaos.experiment_brief`) actually render, given an
+  example set of arguments. Currently only discoverable by reading
+  `prompts/registry.py` directly.
 
 ## Capability North Star
 
