@@ -112,6 +112,9 @@ def run_experiment(
             crashed: Exception | None = None
             try:
                 runpy.run_path(str(script_path), run_name="__main__")
+            except SystemExit as exc:
+                if exc.code not in (None, 0):
+                    crashed = exc
             except Exception as exc:  # noqa: BLE001 - reported back, not swallowed silently
                 crashed = exc
         return session, crashed
