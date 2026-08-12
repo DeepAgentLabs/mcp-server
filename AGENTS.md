@@ -1,5 +1,57 @@
 ## deep-agentic-core-mcp Development Reference
 
+## Ecosystem Context
+
+### Role in DeepAgentLabs
+
+`deep-agentic-core-mcp` is the MCP-native control surface for DeepAgentLabs. It
+exposes spec-aligned operational artifacts and selected capabilities from the
+ecosystem through a unified interface for hosts, agents, and external systems.
+
+### Owns
+
+- MCP server wiring, handler registration, tool/resource exposure, and transport
+  boundaries
+- Thin orchestration that composes capabilities from sibling packages without
+  redefining their core logic
+- The contract for how DeepAgentLabs capabilities are presented through MCP
+
+### Does Not Own
+
+- The canonical operational model or schema definitions — those belong in
+  `ai-operations-spec`
+- Primary instrumentation, trace analysis, or evaluation logic — those belong
+  in `agenticlens`
+- Fault injection and resilience simulation logic — those belong in
+  `agentic-chaos`
+- Agent-decision supervision or governance policy logic — those belong in
+  `agentic-sidecar`
+
+### Integrates With
+
+- `ai-operations-spec` so returned artifacts and tool semantics align with the
+  shared contract
+- `agenticlens` as a source of analysis, provenance, and workflow evidence
+- `agentic-chaos` as a source of resilience and degradation workflows
+- `agentic-sidecar` when supervised-decision capabilities need MCP exposure in
+  the future
+
+### Current Roadmap Focus
+
+The next major work is provenance verification on `lens.analyze_workflow`,
+multi-version AIOS schema support, and more unified observability-plus-chaos
+workflows. Changes here should strengthen composition and interoperability, not
+duplicate implementation logic from sibling repos.
+
+### Before You Build Here
+
+- Prefer adapting and exposing sibling-package behavior over rebuilding it in
+  server-local modules
+- If a new concept changes artifact meaning or shape across the ecosystem,
+  update `ai-operations-spec` first
+- Keep this package thin: MCP is the access layer, not the place to invent a
+  second analysis engine, chaos engine, or policy runtime
+
 ## Build and Run
 
 - Install: `make install` (runs `uv sync --extra dev`)
