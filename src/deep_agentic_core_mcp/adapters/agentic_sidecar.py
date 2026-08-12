@@ -8,6 +8,7 @@ from typing import Any
 from deep_agentic_core_mcp.adapters import AdapterUnavailableError, ensure_repo_on_path
 
 _IMPORT_ERROR: Exception | None = None
+_package_root: Path | None = None
 _version: str | None = None
 _repo_root: Path | None = None
 
@@ -39,6 +40,7 @@ try:
 
     import agentic_sidecar as _agentic_sidecar_pkg
 
+    _package_root = Path(_agentic_sidecar_pkg.__file__).resolve().parent
     _version = _agentic_sidecar_pkg.__version__
 except Exception as exc:  # noqa: BLE001 - captured for core.verify/core.health reporting
     _IMPORT_ERROR = exc
@@ -98,17 +100,16 @@ def _list_python_stems(package_root: Path, subdir: str) -> list[str]:
 def module_inventory() -> dict[str, Any]:
     """Return the current scaffold inventory exposed by the sidecar package."""
     _require_available()
-    if _repo_root is None:
-        raise AdapterUnavailableError("agentic_sidecar", RuntimeError("repo root unavailable"))
+    if _package_root is None:
+        raise AdapterUnavailableError("agentic_sidecar", RuntimeError("package root unavailable"))
 
-    package_root = _repo_root / "src" / "agentic_sidecar"
-    modules = _list_package_modules(package_root)
+    modules = _list_package_modules(_package_root)
     return {
         "package": "agentic-sidecar",
         "version": _version,
         "package_status": _CURRENT_STATUS["package_status"],
         "top_level_modules": modules,
-        "framework_adapters": _list_python_stems(package_root, "adapters"),
-        "integrations": _list_python_stems(package_root, "integrations"),
+        "framework_adapters": _list_python_stems(_package_root, "adapters"),
+        "integrations": _list_python_stems(_package_root, "integrations"),
         "planned_runtime_modules": list(_PLANNED_MODULES),
     }
