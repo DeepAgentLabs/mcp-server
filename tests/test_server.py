@@ -94,7 +94,9 @@ async def test_handle_call_tool_health() -> None:
 
     result = await handle_call_tool("core.health", None)
     payload = json.loads(result[0].text)
-    expected_status = "ok" if all(info["available"] for info in payload["adapters"].values()) else "degraded"
+    expected_status = (
+        "ok" if all(info["available"] for info in payload["adapters"].values()) else "degraded"
+    )
     assert payload["status"] == expected_status
 
 
