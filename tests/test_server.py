@@ -45,6 +45,12 @@ def _load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _sidecar_available() -> bool:
+    from deep_agentic_core_mcp.tools.core import health
+
+    return bool(health()["adapters"]["agentic_sidecar"]["available"])
+
+
 @pytest.fixture(autouse=True)
 def _isolated_default_session():
     """Keep the shared in-memory session from leaking state between tests."""
@@ -63,6 +69,7 @@ def test_tools_registered() -> None:
     assert "core.version" in tool_names
     assert "lens.analyze_workflow" in tool_names
     assert "chaos.list_faults" in tool_names
+    assert "sidecar.status" in tool_names
     assert "spec.validate_artifact" in tool_names
 
 
@@ -87,7 +94,10 @@ async def test_handle_call_tool_health() -> None:
 
     result = await handle_call_tool("core.health", None)
     payload = json.loads(result[0].text)
-    assert payload["status"] == "ok"
+    expected_status = (
+        "ok" if all(info["available"] for info in payload["adapters"].values()) else "degraded"
+    )
+    assert payload["status"] == expected_status
 
 
 @pytest.mark.asyncio
@@ -174,8 +184,14 @@ async def test_handle_call_tool_verify() -> None:
 
     result = await handle_call_tool("core.verify", {})
     payload = json.loads(result[0].text)
-    assert payload["ok"] is True
-    assert set(payload["adapters"]) == {"agenticlens", "agentic_chaos", "ai_operations_spec"}
+    expected_adapters = {
+        "agenticlens",
+        "agentic_chaos",
+        "agentic_sidecar",
+        "ai_operations_spec",
+    }
+    assert set(payload["adapters"]) == expected_adapters
+    assert payload["ok"] is all(info["available"] for info in payload["adapters"].values())
 
 
 @pytest.mark.asyncio
@@ -336,6 +352,43 @@ async def test_handle_call_tool_run_experiment_treats_system_exit_zero_as_succes
     assert payload["ok"] is True
     assert payload["timed_out"] is False
     assert payload["crashed"] is None
+
+
+# ---------------------------------------------------------------------------
+# Phase 3d: Agentic Sidecar discovery additions
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_handle_call_tool_sidecar_status() -> None:
+    from deep_agentic_core_mcp.server import handle_call_tool
+
+    result = await handle_call_tool("sidecar.status", {})
+    payload = json.loads(result[0].text)
+    if _sidecar_available():
+        assert payload["ok"] is True
+        assert payload["package"] == "agentic-sidecar"
+        assert payload["package_status"] == "scaffold"
+        assert payload["runtime_ready"] is False
+    else:
+        assert payload["ok"] is False
+        assert "error" in payload
+
+
+@pytest.mark.asyncio
+async def test_handle_call_tool_sidecar_module_inventory() -> None:
+    from deep_agentic_core_mcp.server import handle_call_tool
+
+    result = await handle_call_tool("sidecar.module_inventory", {})
+    payload = json.loads(result[0].text)
+    if _sidecar_available():
+        assert payload["ok"] is True
+        assert "core" in payload["top_level_modules"]
+        assert "langgraph" in payload["framework_adapters"]
+        assert "agenticlens" in payload["integrations"]
+    else:
+        assert payload["ok"] is False
+        assert "error" in payload
 
 
 @pytest.mark.asyncio

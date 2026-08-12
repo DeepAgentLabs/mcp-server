@@ -43,6 +43,7 @@ from deep_agentic_core_mcp.tools.lens import (
     slo_summary,
 )
 from deep_agentic_core_mcp.tools.registry import list_tools as _registry_tools
+from deep_agentic_core_mcp.tools.sidecar import module_inventory, status
 from deep_agentic_core_mcp.tools.spec import validate_artifact
 
 # ---------------------------------------------------------------------------
@@ -67,6 +68,8 @@ _TOOL_DISPATCH: dict[str, Callable[[dict[str, Any] | None], dict[str, Any]]] = {
     "lens.audit_report": audit_report,
     "chaos.list_faults": list_faults,
     "chaos.run_experiment": run_experiment,
+    "sidecar.status": status,
+    "sidecar.module_inventory": module_inventory,
     "spec.validate_artifact": validate_artifact,
 }
 

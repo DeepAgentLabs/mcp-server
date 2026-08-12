@@ -3,7 +3,7 @@
 
 # Tool Reference
 
-12 tools, generated from `tools/registry.py` - the same data MCP
+14 tools, generated from `tools/registry.py` - the same data MCP
 clients see via `tools/list`. See [README.md](../README.md) for a one-line-per-tool
 overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
@@ -58,7 +58,7 @@ Input schema:
 
 ### `core.verify` — Verify Integrations
 
-Check connectivity to agenticlens, agentic-chaos, and ai-operations-spec, and report readiness.
+Check connectivity to agenticlens, agentic-chaos, agentic-sidecar, and ai-operations-spec, and report readiness.
 
 | | |
 | --- | --- |
@@ -335,6 +335,50 @@ Input schema:
     "script",
     "faults"
   ],
+  "additionalProperties": false
+}
+```
+
+## Agentic Sidecar (`sidecar.*`)
+
+### `sidecar.module_inventory` — Sidecar Module Inventory
+
+List the current scaffolded modules, framework adapters, and integration placeholders present in agentic-sidecar.
+
+| | |
+| --- | --- |
+| Category | `sidecar` |
+| Prerequisites | `agentic_sidecar` |
+| Expected duration | instant |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {},
+  "additionalProperties": false
+}
+```
+
+### `sidecar.status` — Sidecar Status
+
+Report whether agentic-sidecar is importable and whether its decision runtime is actually ready yet.
+
+| | |
+| --- | --- |
+| Category | `sidecar` |
+| Prerequisites | `agentic_sidecar` |
+| Expected duration | instant |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {},
   "additionalProperties": false
 }
 ```

@@ -3,6 +3,7 @@
 from typing import Any
 
 from deep_agentic_core_mcp.adapters import agentic_chaos as agentic_chaos_adapter
+from deep_agentic_core_mcp.adapters import agentic_sidecar as agentic_sidecar_adapter
 from deep_agentic_core_mcp.adapters import agenticlens as agenticlens_adapter
 from deep_agentic_core_mcp.adapters import ai_operations_spec as ai_operations_spec_adapter
 from deep_agentic_core_mcp.adapters import workspace_root
@@ -15,6 +16,7 @@ from deep_agentic_core_mcp.tools.registry import list_tools
 _ADAPTER_PROBES = {
     "agenticlens": agenticlens_adapter.probe,
     "agentic_chaos": agentic_chaos_adapter.probe,
+    "agentic_sidecar": agentic_sidecar_adapter.probe,
     "ai_operations_spec": ai_operations_spec_adapter.probe,
 }
 

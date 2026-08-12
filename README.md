@@ -5,6 +5,7 @@ ecosystem. It is designed to expose a single MCP interface that combines:
 
 - `agenticlens` style workflow inspection, profiling, and analysis
 - `agentic-chaos` style resilience testing and fault-injection workflows
+- `agentic-sidecar` style supervision-readiness and module-surface discovery
 
 It sits above the **AI Operations Workflow Specification**, exposing a unified
 MCP-native control surface over the shared operational model used by the
@@ -22,11 +23,12 @@ libraries:
 
 - `agenticlens` remains the core profiling and analysis engine
 - `agentic-chaos` remains the core chaos and resilience engine
+- `agentic-sidecar` remains the core decision-supervision and governance engine
 - the `AI Operations Workflow Specification` remains the shared data contract
 - `deep-agentic-core-mcp` becomes the MCP-native interface that hosts can call
 
-That means MCP clients can connect once and access both observability and chaos
-testing capabilities through one server.
+That means MCP clients can connect once and access observability, chaos, and
+sidecar discovery capabilities through one server.
 
 ## What This Server Should Eventually Do
 
@@ -35,6 +37,8 @@ Planned capability areas:
 - profile an agentic workflow and return structured telemetry summaries
 - analyze workflow artifacts and surface optimization recommendations
 - run controlled chaos experiments against target workflows
+- expose sidecar readiness and scaffold inventory while the upstream runtime
+  is still under construction
 - compare normal versus chaos runs
 - expose shared resources such as workflow schemas, run metadata, and saved
   reports
@@ -43,8 +47,8 @@ Planned capability areas:
 
 - One MCP identity: publish a single server to the MCP Registry
 - Python-first: package and publish through PyPI
-- Thin orchestration layer: reuse `agenticlens` and `agentic-chaos` instead of
-  re-implementing their logic
+- Thin orchestration layer: reuse `agenticlens`, `agentic-chaos`, and
+  `agentic-sidecar` instead of re-implementing their logic
 - Local-first: work well as a stdio MCP server for developer workflows —
   this matters because `chaos.run_experiment` executes real code (see
   [SECURITY.md](SECURITY.md)), so this server is meant for trusted,
@@ -56,7 +60,7 @@ Planned capability areas:
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
 - `core.version` — server package version
-- `core.verify` — checks agenticlens/agentic-chaos/ai-operations-spec
+- `core.verify` — checks agenticlens/agentic-chaos/agentic-sidecar/ai-operations-spec
   connectivity and reports readiness
 - `core.session_state` — inspect what the active session has accumulated
 - `lens.analyze_workflow` — run AgenticLens recommendations against a
@@ -70,6 +74,10 @@ Planned capability areas:
 - `chaos.list_faults` — list the supported fault types
 - `chaos.run_experiment` — run a workspace-sandboxed target script under
   selected faults ([executes real code — see `SECURITY.md`](SECURITY.md))
+- `sidecar.status` — report whether `agentic-sidecar` is connected and
+  whether its runtime is implemented yet
+- `sidecar.module_inventory` — inspect the current scaffolded sidecar
+  modules, framework adapters, and integration placeholders
 - `spec.validate_artifact` — validate a workflow/run artifact against the AI
   Operations v0.4 draft
 
@@ -120,6 +128,7 @@ mcp-server/
 │       │   ├── __init__.py
 │       │   ├── agentic_chaos.py
 │       │   ├── agenticlens.py
+│       │   ├── agentic_sidecar.py
 │       │   └── ai_operations_spec.py
 │       └── tools/
 │           ├── __init__.py
@@ -127,6 +136,7 @@ mcp-server/
 │           ├── chaos.py
 │           ├── core.py
 │           ├── lens.py
+│           ├── sidecar.py
 │           └── spec.py
 └── tests/
     ├── test_degraded_boot.py
@@ -149,8 +159,9 @@ MCP server:
 - `services/` for shared orchestration logic that keeps tool modules thin,
   including the in-memory session store (`services/session.py`)
 - `adapters/` for integration boundaries to `agenticlens`, `agentic-chaos`,
-  and `ai-operations-spec` — each degrades to `"available": false` rather
-  than crashing server boot if its sibling repo is missing
+  `agentic-sidecar`, and `ai-operations-spec` — each degrades to
+  `"available": false` rather than crashing server boot if its sibling repo is
+  missing
 
 ## Packaging and Publishing Model
 
@@ -170,6 +181,9 @@ registry, `core.verify`) and Phase 3b (Agentic Chaos) are complete as of
 
 - **Phase 3a (AgenticLens)** — provenance verification on
   `lens.analyze_workflow`'s response shape
+- **Phase 3d (Agentic Sidecar Discovery)** — now implemented in the current
+  development line; richer sidecar control surfaces still depend on upstream
+  runtime milestones landing first
 - **Phase 3c (AI Operations Specification)** — multi-version schema support
   and conformance-style reporting, both blocked on upstream `ai-operations-spec`
   work landing first
