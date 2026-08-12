@@ -13,6 +13,7 @@ def test_tool_registry_has_core_health() -> None:
     assert "core.health" in names
     assert "lens.analyze_workflow" in names
     assert "chaos.list_faults" in names
+    assert "sidecar.status" in names
     assert "spec.validate_artifact" in names
 
 
@@ -26,12 +27,13 @@ def test_tool_registry_has_phase_2_and_3_additions() -> None:
         "lens.slo_summary",
         "lens.audit_report",
         "chaos.run_experiment",
+        "sidecar.module_inventory",
     } <= names
 
 
 def test_tool_registry_entries_carry_metadata() -> None:
     for tool in list_tools():
-        assert tool["category"] in {"core", "lens", "chaos", "spec"}
+        assert tool["category"] in {"core", "lens", "chaos", "sidecar", "spec"}
         assert isinstance(tool["prerequisites"], list)
         assert tool["expected_duration"] in {"instant", "fast", "slow"}
         assert isinstance(tool["mutates_session"], bool)

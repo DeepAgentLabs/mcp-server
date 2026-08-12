@@ -15,6 +15,9 @@ Current shipped version: `0.2.0` (2026-08-08) — see [CHANGELOG.md](CHANGELOG.m
   `lens.slo_summary`, and `lens.audit_report` shipped in `0.2.0`
 - **Phase 3b: Agentic Chaos Integration** ✅ Complete — `chaos.list_faults`
   shipped in `0.1.3`; `chaos.run_experiment` shipped in `0.2.0`
+- **Phase 3d: Agentic Sidecar Discovery** ✅ Complete — `sidecar.status`
+  and `sidecar.module_inventory` ship in the current development line as
+  MCP-visible discovery/readiness tools
 - **Phase 3c: AI Operations Specification Conformance** 🏗️ In progress —
   `spec.validate_artifact` and schema resources shipped in `0.1.3`, ahead of
   where this roadmap originally planned them; remaining work still blocked on
@@ -34,6 +37,11 @@ status should explicitly account for upstream and downstream dependencies.
 - `agentic-chaos`
   Provides resilience/fault injection behavior surfaced through `chaos.*`
   tools.
+- `agentic-sidecar`
+  Provides decision-supervision and governance behavior. Today the MCP server
+  only exposes discovery/readiness information because the sidecar runtime is
+  still scaffold-only upstream; richer `sidecar.*` control surfaces depend on
+  that package shipping real runtime behavior first.
 - `ai-operations-spec`
   Provides the canonical artifact model and validation rules surfaced through
   `spec.*` tools and used as the ecosystem exchange contract.
@@ -69,6 +77,7 @@ Build one public MCP server for the DeepAgentLabs ecosystem that unifies:
 
 - workflow observability from `agenticlens`
 - resilience testing from `agentic-chaos`
+- decision-supervision surfaces from `agentic-sidecar`
 
 The result should feel like a coherent platform surface rather than two loosely
 connected products.
@@ -77,6 +86,7 @@ The product boundary should mirror the PyPI ecosystem:
 
 - `agenticlens` observes, evaluates, explains, and recommends
 - `agentic-chaos` injects, validates, tests, and proves resilience
+- `agentic-sidecar` governs, challenges, and escalates agent decisions
 - `deep-agentic-core-mcp` exposes those capabilities through one MCP-native
   control surface
 
@@ -88,6 +98,7 @@ eventually make it easy to:
 - analyze prompts, tools, and retrieval
 - compare workflows
 - run chaos experiments
+- inspect sidecar readiness and governance surface
 - summarize incidents and reliability findings
 - expose readiness evidence through one MCP-native interface
 
@@ -157,8 +168,8 @@ Goals:
 - ✅ implement prompt registry support — `prompts/list`/`prompts/get` are wired
   into the server, with real arguments and rendered templates
 - ✅ add integration verification flow — a `core.verify` tool that checks
-  agenticlens, agentic-chaos, and ai-operations-spec connectivity and reports
-  readiness
+  agenticlens, agentic-chaos, agentic-sidecar, and ai-operations-spec
+  connectivity and reports readiness
 
 Success criteria:
 
@@ -243,6 +254,32 @@ Success criteria:
   on `devops-open-agent`'s layered MCP-server allowlist/whitelist/blacklist
   pattern; tracked as a prerequisite for widening `chaos.run_experiment`
   exposure beyond trusted local stdio clients (see Known Limitations)
+
+## Phase 3d: Agentic Sidecar Discovery
+
+Status: complete in the current development line. `agentic-sidecar` is still a
+scaffold upstream, so this phase intentionally exposes discovery/readiness
+information rather than pretending a decision runtime already exists.
+
+Goals:
+
+- wire `agentic-sidecar` into the MCP server through a degrading adapter
+- expose a first `sidecar.*` surface that is honest about scaffold vs runtime
+- let MCP hosts discover the sidecar module/adapters/integrations footprint
+  without importing the sibling repo themselves
+
+Tools:
+
+- [x] `sidecar.status`
+- [x] `sidecar.module_inventory`
+
+Success criteria:
+
+- `core.verify` and `core.health` report `agentic-sidecar` separately from the
+  other siblings
+- MCP clients can distinguish "package importable" from "runtime implemented"
+- the server surfaces current scaffold inventory without reimplementing sidecar
+  logic locally
 
 ## Phase 3c: AI Operations Specification Conformance
 

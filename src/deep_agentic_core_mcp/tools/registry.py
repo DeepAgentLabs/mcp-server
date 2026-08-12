@@ -17,7 +17,7 @@ def list_tools() -> list[dict[str, Any]]:
     each entry carries server-specific metadata surfaced to hosts via
     `Tool._meta`/`Tool.annotations` in `server.py`:
 
-    - `category`: rough grouping (`core`, `lens`, `chaos`, `spec`)
+    - `category`: rough grouping (`core`, `lens`, `chaos`, `sidecar`, `spec`)
     - `prerequisites`: adapter names (see `adapters/`) that must be
       available for the tool to succeed
     - `expected_duration`: `"instant" | "fast" | "slow"`, a rough hint for
@@ -50,8 +50,8 @@ def list_tools() -> list[dict[str, Any]]:
         {
             "name": "core.verify",
             "title": "Verify Integrations",
-            "description": "Check connectivity to agenticlens, agentic-chaos, and "
-            "ai-operations-spec, and report readiness.",
+            "description": "Check connectivity to agenticlens, agentic-chaos, "
+            "agentic-sidecar, and ai-operations-spec, and report readiness.",
             "input_schema": {"type": "object", "properties": {}, "additionalProperties": False},
             "category": "core",
             "prerequisites": [],
@@ -193,6 +193,28 @@ def list_tools() -> list[dict[str, Any]]:
             "prerequisites": ["agentic_chaos"],
             "expected_duration": "slow",
             "mutates_session": True,
+        },
+        {
+            "name": "sidecar.status",
+            "title": "Sidecar Status",
+            "description": "Report whether agentic-sidecar is importable and whether "
+            "its decision runtime is actually ready yet.",
+            "input_schema": {"type": "object", "properties": {}, "additionalProperties": False},
+            "category": "sidecar",
+            "prerequisites": ["agentic_sidecar"],
+            "expected_duration": "instant",
+            "mutates_session": False,
+        },
+        {
+            "name": "sidecar.module_inventory",
+            "title": "Sidecar Module Inventory",
+            "description": "List the current scaffolded modules, framework adapters, "
+            "and integration placeholders present in agentic-sidecar.",
+            "input_schema": {"type": "object", "properties": {}, "additionalProperties": False},
+            "category": "sidecar",
+            "prerequisites": ["agentic_sidecar"],
+            "expected_duration": "instant",
+            "mutates_session": False,
         },
         {
             "name": "spec.validate_artifact",

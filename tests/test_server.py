@@ -63,6 +63,7 @@ def test_tools_registered() -> None:
     assert "core.version" in tool_names
     assert "lens.analyze_workflow" in tool_names
     assert "chaos.list_faults" in tool_names
+    assert "sidecar.status" in tool_names
     assert "spec.validate_artifact" in tool_names
 
 
@@ -175,7 +176,12 @@ async def test_handle_call_tool_verify() -> None:
     result = await handle_call_tool("core.verify", {})
     payload = json.loads(result[0].text)
     assert payload["ok"] is True
-    assert set(payload["adapters"]) == {"agenticlens", "agentic_chaos", "ai_operations_spec"}
+    assert set(payload["adapters"]) == {
+        "agenticlens",
+        "agentic_chaos",
+        "agentic_sidecar",
+        "ai_operations_spec",
+    }
 
 
 @pytest.mark.asyncio
@@ -336,6 +342,35 @@ async def test_handle_call_tool_run_experiment_treats_system_exit_zero_as_succes
     assert payload["ok"] is True
     assert payload["timed_out"] is False
     assert payload["crashed"] is None
+
+
+# ---------------------------------------------------------------------------
+# Phase 3d: Agentic Sidecar discovery additions
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_handle_call_tool_sidecar_status() -> None:
+    from deep_agentic_core_mcp.server import handle_call_tool
+
+    result = await handle_call_tool("sidecar.status", {})
+    payload = json.loads(result[0].text)
+    assert payload["ok"] is True
+    assert payload["package"] == "agentic-sidecar"
+    assert payload["package_status"] == "scaffold"
+    assert payload["runtime_ready"] is False
+
+
+@pytest.mark.asyncio
+async def test_handle_call_tool_sidecar_module_inventory() -> None:
+    from deep_agentic_core_mcp.server import handle_call_tool
+
+    result = await handle_call_tool("sidecar.module_inventory", {})
+    payload = json.loads(result[0].text)
+    assert payload["ok"] is True
+    assert "core" in payload["top_level_modules"]
+    assert "langgraph" in payload["framework_adapters"]
+    assert "agenticlens" in payload["integrations"]
 
 
 @pytest.mark.asyncio
