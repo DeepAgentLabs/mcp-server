@@ -34,7 +34,8 @@ ecosystem through a unified interface for hosts, agents, and external systems.
 - `agenticlens` as a source of analysis, provenance, and workflow evidence
 - `agentic-chaos` as a source of resilience and degradation workflows
 - `agentic-sidecar` when supervised-decision capabilities need MCP exposure in
-  the future
+  the future. At the ecosystem-role level, Sidecar is the **SUPERVISE** layer,
+  while its concrete functionality spans both supervision and governance.
 
 ### Current Roadmap Focus
 
@@ -124,6 +125,9 @@ objects (`ListToolsResult`, `CallToolResult`, `ListResourcesResult`).
   usage.
 - When a roadmap item or milestone meaningfully changes status, update
   `README.md` and the roadmap document in the same change.
+- If that milestone or release changes the public ecosystem story, also update
+  the shared org-profile docs in the `.github` repository:
+  `profile/README.md` and, when relevant, `profile/ROADMAP.md`.
 - When work is packaged as a release-ready change, also update
   `pyproject.toml`, `src/deep_agentic_core_mcp/__init__.py`, and
   `CHANGELOG.md`.
@@ -146,6 +150,7 @@ not part of `check` itself so the default gate stays fast.
 
 1. Bump version in `pyproject.toml`, `src/deep_agentic_core_mcp/__init__.py`, and `CHANGELOG.md`
 2. Commit: `git commit -am "release: vX.Y.Z"`
-3. Tag: `git tag vX.Y.Z`
+3. Tag: create an annotated `vX.Y.Z` tag and use the latest `CHANGELOG.md`
+   release section as the tag description
 4. Push: `git push origin main --tags`
 5. Create a GitHub Release — the workflow publishes to PyPI and the MCP Registry

@@ -6,6 +6,7 @@ ecosystem. It is designed to expose a single MCP interface that combines:
 - `agenticlens` style workflow inspection, profiling, and analysis
 - `agentic-chaos` style resilience testing and fault-injection workflows
 - `agentic-sidecar` style supervision-readiness and module-surface discovery
+- future `agenticops-control-tower` style operator-facing control-plane access
 
 It sits above the **AI Operations Workflow Specification**, exposing a unified
 MCP-native control surface over the shared operational model used by the
@@ -24,11 +25,13 @@ libraries:
 - `agenticlens` remains the core profiling and analysis engine
 - `agentic-chaos` remains the core chaos and resilience engine
 - `agentic-sidecar` remains the core decision-supervision and governance engine
+- `agenticops-control-tower` remains the future operator-facing control plane
 - the `AI Operations Workflow Specification` remains the shared data contract
 - `deep-agentic-core-mcp` becomes the MCP-native interface that hosts can call
 
-That means MCP clients can connect once and access observability, chaos, and
-sidecar discovery capabilities through one server.
+That means MCP clients can connect once and access observability, chaos,
+sidecar discovery, and later Control Tower-aligned operations surfaces through
+one server.
 
 ## What This Server Should Eventually Do
 
@@ -39,6 +42,8 @@ Planned capability areas:
 - run controlled chaos experiments against target workflows
 - expose sidecar readiness and scaffold inventory while the upstream runtime
   is still under construction
+- eventually expose Control Tower inventory and operator-facing control
+  surfaces once that sibling package ships them
 - compare normal versus chaos runs
 - expose shared resources such as workflow schemas, run metadata, and saved
   reports
@@ -189,6 +194,9 @@ registry, `core.verify`) and Phase 3b (Agentic Chaos) are complete as of
   work landing first
 - **Phase 4 (Unified Workflows)** — joined observability + chaos workflows,
   incident/readiness reporting, a higher-level control surface
+- **Future Control Tower coordination** — once `agenticops-control-tower`
+  ships real control-plane APIs, MCP should expose those operator-facing
+  surfaces without reimplementing them here
 - **Phase 5/6** — PyPI + MCP Registry publishing, operational intelligence
   features
 
