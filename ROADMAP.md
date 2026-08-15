@@ -45,6 +45,10 @@ status should explicitly account for upstream and downstream dependencies.
 - `ai-operations-spec`
   Provides the canonical artifact model and validation rules surfaced through
   `spec.*` tools and used as the ecosystem exchange contract.
+- `agenticops-control-tower`
+  Provides the future operator-facing control plane. Once that sibling package
+  ships real APIs, MCP should expose those surfaces as connectors rather than
+  reimplementing control-plane behavior locally.
 
 For roadmap work, distinguish:
 
@@ -87,6 +91,8 @@ The product boundary should mirror the PyPI ecosystem:
 - `agenticlens` observes, evaluates, explains, and recommends
 - `agentic-chaos` injects, validates, tests, and proves resilience
 - `agentic-sidecar` governs, challenges, and escalates agent decisions
+- `agenticops-control-tower` operates the deployed ecosystem through a control
+  plane
 - `deep-agentic-core-mcp` exposes those capabilities through one MCP-native
   control surface
 
