@@ -328,6 +328,10 @@ Goals:
 - surface incident, evaluation, and readiness evidence through one interface
 - expose a high-level control surface for the main developer questions:
   what happened, what changed, what failed, and is this workflow ready
+- define the first Control Tower integration path once
+  `agenticops-control-tower` ships a real control API, starting with
+  read-only operator queries and keeping authorization-sensitive write
+  operations out of scope until audit/auth boundaries are clear
 
 Possible tools:
 
@@ -335,6 +339,18 @@ Possible tools:
 - `core.export_report`
 - `core.incident_summary`
 - `core.release_check`
+- `control_tower.list_agents`
+- `control_tower.list_unhealthy_agents`
+- `control_tower.capability_summary`
+
+Control Tower integration notes:
+
+- `deep-agentic-core-mcp` should connect to `agenticops-control-tower` as a
+  control-plane connector, not reimplement control-plane logic locally
+- first scope should mirror `agenticops-control-tower`'s planned MCP
+  connector direction: inventory, health, version, and posture queries
+- write-capable Control Tower actions should come only after the sibling
+  package exposes stable authorization and audit semantics
 
 ## Phase 5: Publishing and Adoption
 
