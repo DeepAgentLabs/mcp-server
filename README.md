@@ -60,7 +60,7 @@ Planned capability areas:
   local/stdio use, not exposure to untrusted clients
 - Expandable: leave room for a later remote deployment mode if needed
 
-## MCP Surface (current, `0.2.0`)
+## MCP Surface (current, `0.2.0` plus unreleased work)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -80,9 +80,11 @@ Planned capability areas:
 - `chaos.run_experiment` — run a workspace-sandboxed target script under
   selected faults ([executes real code — see `SECURITY.md`](SECURITY.md))
 - `sidecar.status` — report whether `agentic-sidecar` is connected and
-  whether its runtime is implemented yet
+  whether its runtime is implemented yet (**shipped after the `0.2.0` tag,
+  not yet in a released version — no version bump or CHANGELOG entry yet**)
 - `sidecar.module_inventory` — inspect the current scaffolded sidecar
-  modules, framework adapters, and integration placeholders
+  modules, framework adapters, and integration placeholders (**same
+  unreleased status as `sidecar.status` above**)
 - `spec.validate_artifact` — validate a workflow/run artifact against the AI
   Operations v0.4 draft
 

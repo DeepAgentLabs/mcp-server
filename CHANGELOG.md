@@ -4,6 +4,17 @@ All notable changes to this project will be documented here.
 
 This project follows [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- `sidecar.status` and `sidecar.module_inventory` tools, wiring `agentic-sidecar`
+  into the MCP server through a degrading adapter (Phase 3d). These report
+  connectivity and scaffold/module inventory only, since the `agentic-sidecar`
+  decision runtime is not implemented upstream yet. Not yet part of a tagged
+  release — `pyproject.toml` and `src/deep_agentic_core_mcp/__init__.py` remain
+  at `0.2.0` pending a version bump (see [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md)).
+
 ## 0.2.0 - 2026-08-08
 
 ### Added

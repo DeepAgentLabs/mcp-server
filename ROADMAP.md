@@ -1,8 +1,19 @@
 # Roadmap
 
+See [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md) for an evidence-based audit of the
+claims below against actual source, tests, and release metadata (dated
+2026-09-11). It confirmed the phase statuses here are accurate with one
+correction: Phase 3d's `sidecar.*` tools are real and tested but were never
+released — they landed in commits after the `v0.2.0` tag with no
+`CHANGELOG.md` entry or version bump. The "Release Status" line and Phase 3d
+entry below have been updated accordingly; see the audit for full detail.
+
 ## Release Status
 
 Current shipped version: `0.2.0` (2026-08-08) — see [CHANGELOG.md](CHANGELOG.md).
+Note: `sidecar.status`/`sidecar.module_inventory` (Phase 3d) are implemented
+and tested on `main` but postdate this tag and are not yet part of a
+released version — see [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md) for detail.
 
 - **Phase 0: Foundation** ✅ Complete
 - **Phase 1: Minimal MCP Server** ✅ Complete — `core.health`/`core.version`
@@ -15,9 +26,11 @@ Current shipped version: `0.2.0` (2026-08-08) — see [CHANGELOG.md](CHANGELOG.m
   `lens.slo_summary`, and `lens.audit_report` shipped in `0.2.0`
 - **Phase 3b: Agentic Chaos Integration** ✅ Complete — `chaos.list_faults`
   shipped in `0.1.3`; `chaos.run_experiment` shipped in `0.2.0`
-- **Phase 3d: Agentic Sidecar Discovery** ✅ Complete — `sidecar.status`
-  and `sidecar.module_inventory` ship in the current development line as
-  MCP-visible discovery/readiness tools
+- **Phase 3d: Agentic Sidecar Discovery** ✅ Implemented, **not yet
+  released** — `sidecar.status` and `sidecar.module_inventory` are merged to
+  `main` and tested as MCP-visible discovery/readiness tools, but they were
+  added after the `v0.2.0` tag with no corresponding `CHANGELOG.md` entry or
+  version bump yet (see [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md))
 - **Phase 3c: AI Operations Specification Conformance** 🏗️ In progress —
   `spec.validate_artifact` and schema resources shipped in `0.1.3`, ahead of
   where this roadmap originally planned them; remaining work still blocked on
@@ -263,7 +276,10 @@ Success criteria:
 
 ## Phase 3d: Agentic Sidecar Discovery
 
-Status: complete in the current development line. `agentic-sidecar` is still a
+Status: implemented and merged to `main`, tested, and wired into the server —
+but **not yet part of a released version** (see
+[ROADMAP_AUDIT.md](ROADMAP_AUDIT.md)): it landed after the `v0.2.0` tag
+without a `CHANGELOG.md` entry or version bump. `agentic-sidecar` is still a
 scaffold upstream, so this phase intentionally exposes discovery/readiness
 information rather than pretending a decision runtime already exists.
 
