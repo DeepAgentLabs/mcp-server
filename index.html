@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>DeepAgentLabs MCP Server | One MCP server. Multiple agentic capabilities.</title>
+
+  <meta
+    name="description"
+    content="A unified MCP interface for workflow analysis, resilience testing, diagnostics, and agentic system readiness."
+  />
+
+  <meta
+    property="og:title"
+    content="DeepAgentLabs MCP Server"
+  />
+
+  <meta
+    property="og:description"
+    content="One MCP server. Multiple agentic capabilities."
+  />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://deepagentlabs.io/deep-agentic-core-mcp/" />
+  <meta property="og:image" content="https://deepagentlabs.io/deep-agentic-core-mcp/og.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Material Symbols -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    rel="stylesheet"
+  />
+
+  <!-- IMPORTANT: relative path -->
+  <link rel="stylesheet" href="site.css" />
+</head>
+
+<body>
+
+  <!-- =========================================================
+       NAVIGATION
+  ========================================================== -->
+
+  <header class="site-header">
+    <div class="nav-container">
+
+      <a href="#" class="brand">
+        <div class="brand-mark">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            aria-hidden="true"
+          >
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 12 12 17 22 12"></polyline>
+            <polyline points="2 17 12 22 22 17"></polyline>
+          </svg>
+        </div>
+
+        <div class="brand-text">
+          <span>DeepAgentLabs</span>
+          <small>MCP SERVER</small>
+        </div>
+      </a>
+
+      <nav class="desktop-nav">
+        <a href="#capabilities">Capabilities</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#use-cases">Use Cases</a>
+        <a href="#quick-start">Quick Start</a>
+      </nav>
+
+      <div class="nav-actions">
+
+        <a
+          href="https://github.com/DeepAgentLabs/mcp-server"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="nav-button secondary"
+        >
+          GitHub
+        </a>
+
+        <a
+          href="http://127.0.0.1:8000/deep-agentic-core-mcp/"
+          class="nav-button primary"
+        >
+          Documentation
+        </a>
+
+        <button
+          class="mobile-menu-button"
+          id="mobile-menu-button"
+          aria-label="Open navigation"
+        >
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+
+    <div class="mobile-nav" id="mobile-nav">
+
+      <a href="#capabilities">Capabilities</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#use-cases">Use Cases</a>
+      <a href="#quick-start">Quick Start</a>
+
+      <div class="mobile-nav-buttons">
+
+        <a
+          href="https://github.com/DeepAgentLabs/mcp-server"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+
+        <a href="docs/">
+          Documentation
+        </a>
+
+      </div>
+    </div>
+  </header>
+
+
+  <!-- =========================================================
+       MAIN
+  ========================================================== -->
+
+  <main>
+
+    <!-- Ambient background -->
+
+    <div class="ambient ambient-purple"></div>
+    <div class="ambient ambient-cyan"></div>
+
+
+    <!-- =======================================================
+         HERO
+    ======================================================== -->
+
+    <section class="hero section-container">
+
+      <div class="hero-content">
+
+        <div class="version-badge">
+          <span class="status-dot"></span>
+          <span>ALPHA · v0.2.0</span>
+          <span class="badge-divider">|</span>
+          <span>deep-agentic-core-mcp</span>
+        </div>
+
+        <h1>
+          One MCP server.
+          <span>Multiple agentic capabilities.</span>
+        </h1>
+
+        <p class="hero-description">
+          A unified MCP interface for workflow analysis, resilience testing,
+          diagnostics, and agentic system readiness across the
+          DeepAgentLabs ecosystem.
+        </p>
+
+        <div class="hero-actions">
+
+          <a href="docs/" class="button button-primary">
+            <span>Explore Documentation</span>
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </a>
+
+          <a
+            href="https://github.com/DeepAgentLabs/mcp-server"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="button button-secondary"
+          >
+            <span class="material-symbols-outlined">code</span>
+            <span>View on GitHub</span>
+          </a>
+
+        </div>
+
+        <div class="hero-meta">
+
+          <span>
+            <span class="material-symbols-outlined">terminal</span>
+            Python
+          </span>
+
+          <span>
+            <span class="material-symbols-outlined">swap_horiz</span>
+            MCP / stdio
+          </span>
+
+          <span>
+            <span class="material-symbols-outlined">extension</span>
+            14 MCP tools
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- Hero visual -->
+
+      <div class="hero-visual">
+
+        <div class="terminal-card">
+
+          <div class="terminal-header">
+
+            <div class="terminal-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+
+            <span class="terminal-title">
+              deep-agentic-core-mcp
+            </span>
+
+            <span class="runtime-badge">
+              LOCAL
+            </span>
+
+          </div>
+
+
+          <div class="network">
+
+            <div class="network-glow"></div>
+
+            <div class="network-line line-top"></div>
+            <div class="network-line line-right"></div>
+            <div class="network-line line-bottom"></div>
+            <div class="network-line line-left"></div>
+
+            <div class="network-node node-client">
+              MCP Client / Host
+            </div>
+
+            <div class="network-node node-lens">
+              AgenticLens
+            </div>
+
+            <div class="network-node node-chaos">
+              Agentic Chaos
+            </div>
+
+            <div class="network-node node-sidecar">
+              Agentic Sidecar
+            </div>
+
+            <div class="network-node node-core">
+              Core Diagnostics
+            </div>
+
+            <div class="network-center">
+              <span class="material-symbols-outlined">
+                hub
+              </span>
+              <strong>MCP SERVER</strong>
+              <small>v0.2.0</small>
+            </div>
+
+          </div>
+
+
+          <div class="terminal-footer">
+
+            <span>
+              <span class="live-dot"></span>
+              Server ready
+            </span>
+
+            <span>
+              stdio
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         CAPABILITIES
+    ======================================================== -->
+
+    <section
+      id="capabilities"
+      class="section section-container"
+    >
+
+      <div class="section-heading">
+
+        <span class="eyebrow">
+          CAPABILITIES
+        </span>
+
+        <h2>
+          One interface.
+          <span>Multiple capabilities.</span>
+        </h2>
+
+        <p>
+          Access the capabilities of the DeepAgentLabs ecosystem through
+          a single MCP server interface.
+        </p>
+
+      </div>
+
+
+      <div class="capability-grid">
+
+
+        <!-- AgenticLens -->
+
+        <article class="capability-card lens-card">
+
+          <div class="card-top">
+
+            <div class="capability-icon">
+              <span class="material-symbols-outlined">
+                analytics
+              </span>
+            </div>
+
+            <span class="capability-status stable">
+              AVAILABLE
+            </span>
+
+          </div>
+
+          <h3>AgenticLens</h3>
+
+          <p>
+            Analyze agentic workflows and inspect execution evidence,
+            reporting, comparisons, and SLO-oriented summaries.
+          </p>
+
+          <div class="tool-list">
+
+            <span>lens.analyze_workflow</span>
+            <span>lens.report_summary</span>
+            <span>lens.compare_runs</span>
+            <span>lens.audit_report</span>
+            <span>lens.slo_summary</span>
+
+          </div>
+
+        </article>
+
+
+        <!-- Agentic Chaos -->
+
+        <article class="capability-card chaos-card">
+
+          <div class="card-top">
+
+            <div class="capability-icon">
+              <span class="material-symbols-outlined">
+                warning
+              </span>
+            </div>
+
+            <span class="capability-status stable">
+              AVAILABLE
+            </span>
+
+          </div>
+
+          <h3>Agentic Chaos</h3>
+
+          <p>
+            Run controlled resilience experiments against a sandboxed
+            target using supported fault types.
+          </p>
+
+          <div class="tool-list">
+
+            <span>chaos.list_faults</span>
+            <span>chaos.run_experiment</span>
+
+          </div>
+
+        </article>
+
+
+        <!-- Sidecar -->
+
+        <article class="capability-card sidecar-card">
+
+          <div class="card-top">
+
+            <div class="capability-icon">
+              <span class="material-symbols-outlined">
+                account_tree
+              </span>
+            </div>
+
+            <span class="capability-status experimental">
+              SCAFFOLD
+            </span>
+
+          </div>
+
+          <h3>Agentic Sidecar</h3>
+
+          <p>
+            Inspect Sidecar package status and module inventory to
+            understand current supervision-readiness and runtime state.
+          </p>
+
+          <div class="tool-list">
+
+            <span>sidecar.status</span>
+            <span>sidecar.module_inventory</span>
+
+          </div>
+
+        </article>
+
+
+        <!-- Core -->
+
+        <article class="capability-card core-card">
+
+          <div class="card-top">
+
+            <div class="capability-icon">
+              <span class="material-symbols-outlined">
+                monitoring
+              </span>
+            </div>
+
+            <span class="capability-status stable">
+              AVAILABLE
+            </span>
+
+          </div>
+
+          <h3>Core Diagnostics</h3>
+
+          <p>
+            Inspect server health, version information, verification
+            status, session state, and MCP server capabilities.
+          </p>
+
+          <div class="tool-list">
+
+            <span>core.health</span>
+            <span>core.verify</span>
+            <span>core.version</span>
+            <span>core.session_state</span>
+
+          </div>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         ARCHITECTURE
+    ======================================================== -->
+
+    <section
+      id="architecture"
+      class="section architecture-section"
+    >
+
+      <div class="section-container">
+
+        <div class="section-heading centered">
+
+          <span class="eyebrow">
+            ARCHITECTURE
+          </span>
+
+          <h2>
+            One MCP surface for the
+            <span>DeepAgentLabs ecosystem.</span>
+          </h2>
+
+          <p>
+            The server provides a shared MCP interface to capabilities
+            exposed by the surrounding DeepAgentLabs packages.
+          </p>
+
+        </div>
+
+
+        <div class="architecture-diagram">
+
+          <div class="architecture-node client-node">
+
+            <span class="material-symbols-outlined">
+              computer
+            </span>
+
+            <strong>MCP Client / Host</strong>
+
+            <small>
+              MCP requests
+            </small>
+
+          </div>
+
+
+          <div class="architecture-arrow">
+            <span></span>
+            <small>MCP</small>
+            <span></span>
+          </div>
+
+
+          <div class="architecture-node server-node">
+
+            <span class="material-symbols-outlined">
+              hub
+            </span>
+
+            <strong>DeepAgentLabs MCP Server</strong>
+
+            <small>
+              deep-agentic-core-mcp · v0.2.0
+            </small>
+
+          </div>
+
+
+          <div class="architecture-arrow vertical">
+            <span></span>
+            <small>Capabilities</small>
+            <span></span>
+          </div>
+
+
+          <div class="architecture-services">
+
+            <div class="service-card">
+
+              <span class="material-symbols-outlined">
+                analytics
+              </span>
+
+              <strong>AgenticLens</strong>
+
+              <small>
+                Workflow analysis & reporting
+              </small>
+
+            </div>
+
+
+            <div class="service-card">
+
+              <span class="material-symbols-outlined">
+                warning
+              </span>
+
+              <strong>Agentic Chaos</strong>
+
+              <small>
+                Controlled resilience testing
+              </small>
+
+            </div>
+
+
+            <div class="service-card">
+
+              <span class="material-symbols-outlined">
+                account_tree
+              </span>
+
+              <strong>Agentic Sidecar</strong>
+
+              <small>
+                Status & module discovery
+              </small>
+
+            </div>
+
+
+            <div class="service-card muted-service">
+
+              <span class="material-symbols-outlined">
+                description
+              </span>
+
+              <strong>AI Operations Spec</strong>
+
+              <small>
+                Validation capability when schemas are available
+              </small>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         WORKFLOW
+    ======================================================== -->
+
+    <section
+      id="workflow"
+      class="section section-container"
+    >
+
+      <div class="section-heading">
+
+        <span class="eyebrow">
+          WORKFLOW
+        </span>
+
+        <h2>
+          From request
+          <span>to evidence.</span>
+        </h2>
+
+        <p>
+          A simple way to understand how an MCP client interacts with
+          the server and receives structured results.
+        </p>
+
+      </div>
+
+
+      <div class="workflow">
+
+        <div class="workflow-step">
+
+          <div class="workflow-number">01</div>
+
+          <span class="material-symbols-outlined">
+            computer
+          </span>
+
+          <h3>MCP Client</h3>
+
+          <p>
+            A compatible MCP host sends a request.
+          </p>
+
+        </div>
+
+
+        <div class="workflow-connector"></div>
+
+
+        <div class="workflow-step">
+
+          <div class="workflow-number">02</div>
+
+          <span class="material-symbols-outlined">
+            hub
+          </span>
+
+          <h3>MCP Server</h3>
+
+          <p>
+            The server routes the request to the relevant capability.
+          </p>
+
+        </div>
+
+
+        <div class="workflow-connector"></div>
+
+
+        <div class="workflow-step">
+
+          <div class="workflow-number">03</div>
+
+          <span class="material-symbols-outlined">
+            query_stats
+          </span>
+
+          <h3>Analyze / Test / Inspect</h3>
+
+          <p>
+            Existing package capabilities perform the requested operation.
+          </p>
+
+        </div>
+
+
+        <div class="workflow-connector"></div>
+
+
+        <div class="workflow-step">
+
+          <div class="workflow-number">04</div>
+
+          <span class="material-symbols-outlined">
+            data_object
+          </span>
+
+          <h3>Structured Results</h3>
+
+          <p>
+            Results are returned through the MCP interface.
+          </p>
+
+        </div>
+
+
+        <div class="workflow-connector"></div>
+
+
+        <div class="workflow-step">
+
+          <div class="workflow-number">05</div>
+
+          <span class="material-symbols-outlined">
+            verified
+          </span>
+
+          <h3>Developer Evidence</h3>
+
+          <p>
+            Developers can inspect the resulting workflow evidence.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================================
+         USE CASE
+    ======================================================== -->
+
+    <section
+      id="use-cases"
+      class="section use-case-section"
+    >
+
+      <div class="section-container">
+
+        <div class="use-case-header">
+
+          <div>
+
+            <span class="eyebrow">
+              USE CASE
+            </span>
+
+            <h2>
+              AI Travel Planner
+            </h2>
+
+            <p>
+              A representative workflow demonstrating how the MCP server
+              can be used to analyze and test an agentic workflow.
+            </p>
+
+          </div>
+
+          <span class="simulation-badge">
+            SIMULATED WORKFLOW
+          </span>
+
+        </div>
+
+
+        <div class="travel-grid">
+
+
+          <!-- Workflow -->
+
+          <div class="travel-flow">
+
+            <div class="travel-node">
+              <span class="material-symbols-outlined">
+                person
+              </span>
+              <strong>User Request</strong>
+              <small>Plan a 3-day trip to Goa</small>
+            </div>
+
+
+            <div class="travel-arrow">↓</div>
+
+
+            <div class="travel-tools">
+
+              <div>
+                <span class="material-symbols-outlined">
+                  flight
+                </span>
+                Flight Search
+              </div>
+
+              <div>
+                <span class="material-symbols-outlined">
+                  hotel
+                </span>
+                Hotel Search
+              </div>
+
+              <div>
+                <span class="material-symbols-outlined">
+                  cloud
+                </span>
+                Weather Check
+              </div>
+
+            </div>
+
+
+            <div class="travel-arrow">↓</div>
+
+
+            <div class="travel-node">
+
+              <span class="material-symbols-outlined">
+                route
+              </span>
+
+              <strong>Itinerary Generation</strong>
+
+            </div>
+
+
+            <div class="travel-arrow">↓</div>
+
+
+            <div class="travel-result">
+
+              <div>
+                <span class="material-symbols-outlined">
+                  analytics
+                </span>
+              </div>
+
+              <div>
+                <strong>AgenticLens Analysis</strong>
+                <small>Workflow evidence and metrics</small>
+              </div>
+
+            </div>
+
+
+            <div class="travel-arrow">↓</div>
+
+
+            <div class="travel-result chaos-result">
+
+              <div>
+                <span class="material-symbols-outlined">
+                  science
+                </span>
+              </div>
+
+              <div>
+                <strong>Chaos Experiment</strong>
+                <small>Controlled resilience testing</small>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- Terminal -->
+
+          <div class
