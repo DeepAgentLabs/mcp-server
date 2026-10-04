@@ -10,10 +10,9 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Current shipped version: `0.2.0` (2026-08-08) — see [CHANGELOG.md](CHANGELOG.md).
-Note: `sidecar.status`/`sidecar.module_inventory` (Phase 3d) are implemented
-and tested on `main` but postdate this tag and are not yet part of a
-released version — see [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md) for detail.
+Release version: `0.3.0` (2026-10-04) — see [CHANGELOG.md](CHANGELOG.md).
+This release includes HTTP/signup support and Sidecar discovery tools; the
+2026-09-11 audit above describes the earlier `0.2.0` release state.
 
 - **Phase 0: Foundation** ✅ Complete
 - **Phase 1: Minimal MCP Server** ✅ Complete — `core.health`/`core.version`
@@ -26,11 +25,9 @@ released version — see [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md) for detail.
   `lens.slo_summary`, and `lens.audit_report` shipped in `0.2.0`
 - **Phase 3b: Agentic Chaos Integration** ✅ Complete — `chaos.list_faults`
   shipped in `0.1.3`; `chaos.run_experiment` shipped in `0.2.0`
-- **Phase 3d: Agentic Sidecar Discovery** ✅ Implemented, **not yet
-  released** — `sidecar.status` and `sidecar.module_inventory` are merged to
-  `main` and tested as MCP-visible discovery/readiness tools, but they were
-  added after the `v0.2.0` tag with no corresponding `CHANGELOG.md` entry or
-  version bump yet (see [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md))
+- **Phase 3d: Agentic Sidecar Discovery** ✅ Complete — `sidecar.status` and
+  `sidecar.module_inventory` are included in `0.3.0` as discovery/readiness
+  tools. The upstream decision runtime remains unimplemented.
 - **Phase 3c: AI Operations Specification Conformance** 🏗️ In progress —
   `spec.validate_artifact` and schema resources shipped in `0.1.3`, ahead of
   where this roadmap originally planned them; remaining work still blocked on
@@ -49,20 +46,18 @@ hashes in DynamoDB. Remote chaos execution remains disabled.
 
 As of 2026-10-04, the hosted service is running at
 `https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
-These transport/signup changes are not in the existing PyPI `0.2.0` release.
+Transport/signup and Sidecar discovery are included in the `0.3.0` release.
 
-- **Package publishing:** the version-tag workflow publishes to PyPI, creates a
-  GitHub Release, and publishes MCP Registry metadata. This existing automation
-  is separate from the remaining adoption work in Phase 5.
-- **AWS continuous deployment:** implemented in the CI workflow, with ECR image
-  publishing, an image-only CloudFormation update, and authenticated smoke
-  checks after successful `main` checks. Secrets and the ECS prerequisite are
-  configured. PR #18 has passed CI but remains open; the first automated AWS
-  deployment is pending merge and verification.
-- **Remaining delivery work:** merge and verify the first AWS CI deployment,
-  publish a versioned package containing HTTP support, and continue the Phase 5
-  registry/adoption work. Neither a `main` push nor an AWS deployment publishes
-  a new PyPI version; pushing a `v*` tag triggers the package release.
+- **Package publishing:** version tags run the full CI matrix and packaging
+  checks before publishing to PyPI, creating the GitHub Release, and publishing
+  MCP Registry metadata. Adoption work remains in Phase 5.
+- **AWS continuous deployment:** the first main-triggered deployment was
+  verified successfully on 2026-10-04. Starting with `0.3.0`, AWS deployment
+  follows successful PyPI publication in the version-tag release workflow.
+  Pushes/merges to `main` and manual CI checks do not deploy AWS.
+- **Remaining delivery work:** continue Phase 5 registry/adoption work, and
+  improve release rollback and hosted operational coverage. Keep package and
+  hosted deployment versions aligned through the shared release tag.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for release steps and
 [deploy/aws/CI-CD.md](deploy/aws/CI-CD.md) for AWS deployment behavior.
@@ -304,12 +299,10 @@ Success criteria:
 
 ## Phase 3d: Agentic Sidecar Discovery
 
-Status: implemented and merged to `main`, tested, and wired into the server —
-but **not yet part of a released version** (see
-[ROADMAP_AUDIT.md](ROADMAP_AUDIT.md)): it landed after the `v0.2.0` tag
-without a `CHANGELOG.md` entry or version bump. `agentic-sidecar` is still a
-scaffold upstream, so this phase intentionally exposes discovery/readiness
-information rather than pretending a decision runtime already exists.
+Status: complete, included in `0.3.0`. The tools were implemented after the
+`v0.2.0` tag (see the historical [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md)).
+`agentic-sidecar` remains a scaffold upstream, so this phase exposes discovery
+and readiness information rather than a decision runtime.
 
 Goals:
 

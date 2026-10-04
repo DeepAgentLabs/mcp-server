@@ -58,43 +58,47 @@ uses DynamoDB for user records and hashed API keys. HTTP disables chaos script
 execution. Preserve local behavior and verify HTTP authentication and user
 isolation when changing shared tool dispatch.
 
-The HTTP/signup changes are unreleased source work, rather than features of the
-existing PyPI `0.2.0` release. See [docs/user-guide.md](docs/user-guide.md) for
+HTTP/signup support is included from `0.3.0`; the earlier PyPI `0.2.0`
+release supports local stdio. See [docs/user-guide.md](docs/user-guide.md) for
 client examples and [docs/remote-hosting.md](docs/remote-hosting.md) for configuration.
 Docker definitions belong in `deploy/docker/`; AWS templates belong in `deploy/aws/`.
 Never commit credentials, generated API keys, or local deployment state.
 
 ## CI and AWS deployment
 
-Pull requests run lint, format, typing, tests across Python 3.10–3.13, and package
-build checks. Pushes/merges to `main` and manual CI runs on `main` deploy the AWS
-service after these checks succeed. CI publishes an immutable ECR image, updates
-the existing CloudFormation deployment, and verifies hosted MCP authentication
-and integration readiness. It preserves infrastructure parameters and rejects
-unrelated infrastructure changes.
+Pull requests, pushes to `main`, and manual CI runs perform lint, format, typing,
+tests across Python 3.10–3.13, and package build checks without deploying AWS.
+A pushed `v*` version tag runs the same validation before package publication.
+After PyPI succeeds, the release workflow deploys the tagged source to AWS.
+It publishes an immutable ECR image, updates the existing CloudFormation
+stack, and verifies MCP authentication and integration readiness. It preserves
+infrastructure parameters and rejects unrelated infrastructure changes.
 
 AWS deployment requires repository secrets `AWS_ACCESS_KEY_ID`,
 `AWS_SECRET_ACCESS_KEY`, and `MCP_SMOKE_KEY`. See
 [deploy/aws/CI-CD.md](deploy/aws/CI-CD.md) for permissions and operational limits.
 Infrastructure changes use the separate reviewed operator deployment flow.
-An AWS deployment does not publish a package version to PyPI.
+AWS deployment is a downstream release job; it does not publish to PyPI itself.
 
 ## Releases
 
 Package releases start when a `v*` version tag is pushed. Creating a GitHub
 Release manually is not the trigger. `release-pypi.yml` publishes to PyPI using
 Trusted Publishing (OIDC), creates the GitHub Release from the changelog, and
-then publishes to the MCP Registry.
+then publishes to the MCP Registry. AWS deployment runs after successful PyPI
+publication.
 
 1. On a feature branch, update `pyproject.toml`,
-   `src/deep_agentic_core_mcp/__init__.py`, and a dated
+   `src/deep_agentic_core_mcp/__init__.py`, both version fields in `server.json`,
+   and `uv.lock` (`uv lock`), plus a dated
    `## X.Y.Z - YYYY-MM-DD` section in `CHANGELOG.md`.
 2. Run `make check`, commit the release preparation, and merge through a PR.
 3. From the updated `main`, create an annotated `vX.Y.Z` tag on the merge commit.
    Use the matching changelog section as its message with
    `git tag -a vX.Y.Z -F <release-notes-file> --cleanup=verbatim`.
 4. Push that tag: `git push origin vX.Y.Z`.
-5. Verify the PyPI, GitHub Release, and MCP Registry workflow jobs.
+5. Approve the existing `pypi` environment gate when required, then verify PyPI,
+   GitHub Release, MCP Registry, and AWS deployment jobs.
 
-The version-tag workflow does not deploy AWS. AWS runs independently on the
-`main` push from the merge, so hosted fixes can ship before the next PyPI release.
+AWS updates through CI only as part of a version-tag release after PyPI succeeds.
+A `main` push does not publish a package or deploy the hosted service.

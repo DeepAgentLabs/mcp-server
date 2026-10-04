@@ -114,22 +114,21 @@ objects (`ListToolsResult`, `CallToolResult`, `ListResourcesResult`).
 
 Maintain both transports in this repository. The base PyPI package provides
 local stdio; the optional `http` extra adds hosted Streamable HTTP dependencies.
-The HTTP/signup implementation is unreleased source work until a new version tag
-publishes it; do not imply that PyPI `0.2.0` already includes these changes.
+HTTP/signup support is included from `0.3.0`; PyPI `0.2.0` provides local stdio.
 
 HTTP requires bearer authentication and Redis-backed user-scoped workflow state.
 The AWS deployment uses DynamoDB for user records and hashed keys. HTTP always
 rejects `chaos.run_experiment`; local stdio retains trusted local execution.
 Test transport-specific authorization and state isolation when changing dispatch.
 
-- Pull requests run CI checks and package builds without deploying to AWS.
-- Pushes/merges to `main` (or manual CI runs on `main`) deploy the AWS service
-  after checks pass. Deployment changes only the immutable image parameter in
-  the existing stack. Infrastructure changes use the separate operator flow.
-- Pushing a `v*` tag runs `release-pypi.yml`: PyPI publication, GitHub Release,
-  and MCP Registry publication. It does not run the AWS deployment job.
-- AWS deployments do not require a package version bump or publish to PyPI.
-  A package release still requires the version/changelog steps below.
+- Pull requests, pushes to `main`, and manual CI runs perform checks and package
+  builds without deploying AWS or publishing to PyPI.
+- Pushing a `v*` tag runs `release-pypi.yml`: the full test matrix and packaging
+  checks, PyPI publication, GitHub Release, MCP Registry publication, and AWS
+  deployment. AWS depends on successful PyPI publication and deploys the tagged
+  source using an immutable image. Infrastructure changes use the operator flow.
+- Prepare matching versions in `pyproject.toml`, `__init__.py`, `server.json`,
+  and `uv.lock`, plus dated changelog notes, before pushing the release tag.
 - Keep Docker files under `deploy/docker/` and infrastructure under `deploy/aws/`.
   Keep credentials and local deployment state out of Git. Document configuration
   in [deploy/aws/CI-CD.md](deploy/aws/CI-CD.md) and client behavior in
@@ -180,7 +179,8 @@ tag-driven release automation happens after.
 
 **1. Pre-release (on the feature branch, before merge):** Bump version in
 `pyproject.toml`, `src/deep_agentic_core_mcp/__init__.py`, and
-`CHANGELOG.md` (a dated release section under `[Unreleased]`). Commit as
+`server.json`, `uv.lock`, and `CHANGELOG.md` (a dated release section under
+`[Unreleased]`). Commit as
 part of the branch's normal history; goes in with the rest of the PR.
 
 **2. Release (on `main`, once that branch has merged):**
@@ -200,6 +200,7 @@ from the same tag and does all of the following:
 - publishes the package to PyPI via Trusted Publishing (OIDC)
 - creates the GitHub Release object for `vX.Y.Z`
 - publishes the server to the MCP Registry
+- deploys the tagged source to AWS after PyPI publication succeeds
 
 The GitHub Release title is the tag name, and its body is copied from the
 matching `CHANGELOG.md` section so the changelog, tag, PyPI release,
