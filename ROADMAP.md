@@ -39,6 +39,34 @@ released version — see [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md) for detail.
 - **Phase 5: Publishing and Adoption** 🚧 Planned
 - **Phase 6: Operational Intelligence** 🚧 Planned
 
+## Local and Hosted Delivery Status
+
+The project maintains one codebase with two entry points: local stdio through
+`deep-agentic-core-mcp` and optional multi-user Streamable HTTP through
+`deep-agentic-core-mcp-http`. Hosted HTTP uses bearer keys and Redis-backed
+user-scoped workflow state; the AWS signup service stores user records and key
+hashes in DynamoDB. Remote chaos execution remains disabled.
+
+As of 2026-10-04, the hosted service is running at
+`https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
+These transport/signup changes are not in the existing PyPI `0.2.0` release.
+
+- **Package publishing:** the version-tag workflow publishes to PyPI, creates a
+  GitHub Release, and publishes MCP Registry metadata. This existing automation
+  is separate from the remaining adoption work in Phase 5.
+- **AWS continuous deployment:** implemented in the CI workflow, with ECR image
+  publishing, an image-only CloudFormation update, and authenticated smoke
+  checks after successful `main` checks. Secrets and the ECS prerequisite are
+  configured. PR #18 has passed CI but remains open; the first automated AWS
+  deployment is pending merge and verification.
+- **Remaining delivery work:** merge and verify the first AWS CI deployment,
+  publish a versioned package containing HTTP support, and continue the Phase 5
+  registry/adoption work. Neither a `main` push nor an AWS deployment publishes
+  a new PyPI version; pushing a `v*` tag triggers the package release.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for release steps and
+[deploy/aws/CI-CD.md](deploy/aws/CI-CD.md) for AWS deployment behavior.
+
 ## Cross-Project Dependencies
 
 This server is an orchestration layer across sibling projects, so roadmap
@@ -394,33 +422,30 @@ Goals:
   releases only?
 - Should `deep-agentic-core-mcp` be a thin wrapper package or eventually own
   workflow orchestration logic directly?
-- Is stdio-only enough for v0, or do we want a remote deployment path early?
-  If yes, see the known limitation directly below — it needs to be fixed
-  first, not concurrently.
+- ~~Is stdio-only enough for v0, or do we want a remote deployment path early?~~
+  Resolved: an optional Streamable HTTP transport (`transport_http.py`, the
+  `http` extra) now ships alongside stdio, sharing the same tool surface.
+  HTTP now requires per-user bearer credentials and shared Redis state,
+  enforces user isolation and storage quotas, and uses stateless transport.
+  AWS infrastructure now includes a DynamoDB-backed public key signup portal,
+  immediate key rotation/revocation, and migration of existing user identities.
+  Verified email signup, account recovery, OAuth onboarding, and billing remain future work.
 
 ## Known Limitations
 
-- **Tool handlers are synchronous and block the event loop.** `handle_call_tool`
-  in `server.py` calls each tool handler directly (not via `asyncio.to_thread()`
-  or similar), so a slow call — most notably `chaos.run_experiment`, which can
-  run for up to `timeout_seconds` (default 30s) — blocks the server from
-  processing anything else for its duration, including cancellation/other
-  requests from the same client. Harmless for today's single-client stdio
-  transport, but this must be fixed (wrap dispatch in `asyncio.to_thread()`,
-  or make handlers genuinely async) before any remote/multi-session/SSE
-  transport (Phase 4+) is added — it would otherwise let one slow call stall
-  every other client.
+- ~~Tool handlers are synchronous and block the event loop.~~ Resolved:
+  `handle_call_tool` now runs each handler via `asyncio.to_thread()`, so a
+  slow call (notably `chaos.run_experiment`) no longer blocks the event loop
+  from serving other concurrent clients — a precondition for the Streamable
+  HTTP transport added below.
 - **`chaos.run_experiment` has no allowlist beyond workspace-path
-  confinement.** Any script inside the workspace root can be executed today;
-  there's no further restriction on *which* scripts within that root are
-  permitted, and per `SECURITY.md` the tool doesn't authenticate or authorize
-  the calling client either. `devops-open-agent` solves the equivalent
-  problem for its own MCP integration with a layered allow/deny-list
-  (instance-level allowlist + per-user whitelist + per-user blacklist) —
-  the same shape (see Phase 3b) is a reasonable model here. Like the
-  async-blocking limitation above, this should be closed before any
-  remote/multi-client transport (Phase 4+) is considered, not concurrently
-  with it.
+  confinement.** Any script inside the workspace root can still be executed
+  under stdio/local use, and the tool still doesn't authenticate or
+  authorize the calling client itself (see `SECURITY.md`). The remote-transport
+  gate disables this tool by default. Authenticated HTTP dispatch now always
+  rejects execution, including with the legacy remote-chaos override enabled.
+  Isolated workers and explicit authorization remain prerequisites for a
+  future remote execution feature.
 
 ## Documentation Backlog
 

@@ -315,6 +315,38 @@ async def test_handle_call_tool_run_experiment_honors_timeout() -> None:
 
 
 @pytest.mark.asyncio
+async def test_handle_call_tool_run_experiment_disabled_under_remote_transport(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from deep_agentic_core_mcp.server import handle_call_tool
+
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_REMOTE", "1")
+    result = await handle_call_tool(
+        "chaos.run_experiment",
+        {"script": CHAOS_TARGET_SCRIPT, "faults": ["silent_degradation"]},
+    )
+    payload = json.loads(result[0].text)
+    assert payload["ok"] is False
+    assert "remote transport" in payload["error"]
+
+
+@pytest.mark.asyncio
+async def test_handle_call_tool_run_experiment_remote_allowed_opt_in(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from deep_agentic_core_mcp.server import handle_call_tool
+
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_REMOTE", "1")
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_ALLOW_REMOTE_CHAOS", "1")
+    result = await handle_call_tool(
+        "chaos.run_experiment",
+        {"script": CHAOS_TARGET_SCRIPT, "faults": ["silent_degradation"]},
+    )
+    payload = json.loads(result[0].text)
+    assert payload["ok"] is True
+
+
+@pytest.mark.asyncio
 async def test_handle_call_tool_run_experiment_rejects_path_outside_workspace() -> None:
     from deep_agentic_core_mcp.server import handle_call_tool
 

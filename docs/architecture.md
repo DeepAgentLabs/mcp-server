@@ -27,3 +27,16 @@ The package is organized around six layers:
 - Prevents tool modules from becoming large orchestration files.
 - Makes it easier to expose prompts and resources alongside tools.
 - Gives us a clean place to add typed contracts before networked or remote use.
+
+## Remote request flow
+
+`transport_http.py` authenticates each HTTP request, validates its transport
+headers, and attaches the trusted user identity and session backend to ASGI
+request scope. MCP passes that request to `_on_call_tool`; identity is read there
+rather than relying on context inherited by SDK background tasks.
+
+Dispatch opens a tenant transaction in a worker thread. `session_scope` binds
+session reads and writes to that snapshot; local stdio calls retain their
+process-local store. Redis commits use WATCH/EXEC, return conflicts instead of
+losing updates, and enforce per-user expiry and storage quotas. HTTP transport
+is stateless, so replicas need shared storage but no MCP session affinity.

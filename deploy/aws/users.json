@@ -1,0 +1,37 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Durable MCP user identities and hashed bearer keys; separate stack enables migration before service rollout.",
+  "Metadata": {
+    "AWSToolsMetrics": {"AWSAgentToolkit": "aws-cloudformation@3"},
+    "com.aws.cloudformation.Context": {"documentation": "deploy/aws/README.md"}
+  },
+  "Resources": {
+    "Users": {
+      "Type": "AWS::DynamoDB::Table",
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain",
+      "Properties": {
+        "BillingMode": "PAY_PER_REQUEST",
+        "AttributeDefinitions": [{"AttributeName": "pk", "AttributeType": "S"}],
+        "KeySchema": [{"AttributeName": "pk", "KeyType": "HASH"}],
+        "SSESpecification": {"SSEEnabled": true},
+        "PointInTimeRecoverySpecification": {"PointInTimeRecoveryEnabled": true},
+        "Tags": [{"Key": "Project", "Value": "deep-agentic-core-mcp"}]
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Store generated user IDs, display names, key hashes and revocation status",
+          "must": [
+            "Never persist plaintext bearer keys, passwords or verified-identity claims",
+            "Retain user records on stack deletion; enable recovery",
+            "One active key per user; consistent reads enforce rotation and revocation"
+          ]
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "UsersTableName": {"Value": {"Ref": "Users"}},
+    "UsersTableArn": {"Value": {"Fn::GetAtt": ["Users", "Arn"]}}
+  }
+}
