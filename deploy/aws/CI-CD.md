@@ -17,7 +17,7 @@ Configure repository secrets in `DeepAgentLabs/mcp-server`:
 These secrets have been installed using the operator's AWS profile. Region
 `us-east-2` is configured in the workflow. Never put credentials in the repo.
 
-The scoped IAM policy is [ci-policy.json](ci-policy.json). It allows ECR publishing,
+The scoped IAM policy is managed in AWS IAM. It allows ECR publishing,
 CloudFormation change sets on the existing deployment, ECS revision/service
 updates, and passing the two existing runtime roles. Infrastructure provisioning
 and database access are handled separately using the operator profile.
