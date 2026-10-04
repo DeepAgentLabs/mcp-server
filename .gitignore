@@ -1,11 +1,19 @@
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.venv/
-venv/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
+.coverage
+dist/
+build/
 *.egg-info/
+.venv/
+__pycache__/
+*.pyc
+.secrets/
+deploy/aws/deployment-state.json
+deploy/aws/parameters.json
+
+# Documentation build and alternate Python environments
 site/
+venv/
+*.pyo
+*.pyd

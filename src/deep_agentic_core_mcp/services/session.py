@@ -1,16 +1,15 @@
-"""Lightweight in-memory session state shared across sequential tool calls.
+"""Workflow state for local clients and authenticated remote transactions.
 
-The MCP server runs as a single stdio process per client, so a simple
-module-level store keyed by an optional `session_id` (defaulting to
-`"default"`) is enough to let tools such as `lens.analyze_workflow` ->
-`lens.compare_runs` -> `chaos.run_experiment` share artifacts without the
-client resending them on every call. This intentionally does not persist
-across process restarts.
+Stdio uses a process-local store. Remote calls bind a tenant-scoped snapshot
+through session_scope; their storage backend commits it when the tool completes.
 """
 
 from __future__ import annotations
 
 from collections import deque
+from collections.abc import Iterator
+from contextlib import contextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any
@@ -45,11 +44,29 @@ class SessionState:
 
 
 _SESSIONS: dict[str, SessionState] = {}
+_ACTIVE: ContextVar[dict[str, SessionState] | None] = ContextVar("user_sessions", default=None)
+
+
+@contextmanager
+def session_scope(states: dict[str, SessionState]) -> Iterator[None]:
+    """Bind tool state to an authenticated user's transaction."""
+    token = _ACTIVE.set(states)
+    try:
+        yield
+    finally:
+        _ACTIVE.reset(token)
+
+
+def _store() -> dict[str, SessionState]:
+    active = _ACTIVE.get()
+    return _SESSIONS if active is None else active
 
 
 def get_session(session_id: str = DEFAULT_SESSION_ID) -> SessionState:
     """Return the session state for `session_id`, creating it if needed."""
-    return _SESSIONS.setdefault(session_id, SessionState())
+    if not isinstance(session_id, str) or not session_id or len(session_id) > 128:
+        raise ValueError("session_id must be a nonempty string of at most 128 characters")
+    return _store().setdefault(session_id, SessionState())
 
 
 def record_call(session_id: str, tool: str, ok: bool, note: str = "") -> None:
@@ -77,9 +94,9 @@ def last_successful_calls(session_id: str = DEFAULT_SESSION_ID) -> dict[str, str
 
 def reset_session(session_id: str = DEFAULT_SESSION_ID) -> None:
     """Discard a session's stored state."""
-    _SESSIONS.pop(session_id, None)
+    _store().pop(session_id, None)
 
 
 def all_sessions() -> dict[str, SessionState]:
     """Return every tracked session, for diagnostics."""
-    return dict(_SESSIONS)
+    return dict(_store())

@@ -1,0 +1,19 @@
+# Standalone AWS image; build context is this repository.
+FROM python:3.12-slim
+WORKDIR /app
+COPY pyproject.toml README.md ./
+COPY src ./src
+RUN pip install --no-cache-dir ".[http]" "agenticlens==0.5.0"
+COPY scripts/fetch_schema_assets.py /tmp/fetch_schema_assets.py
+RUN python /tmp/fetch_schema_assets.py /opt/workspace/ai-operations-spec/specification/v0.4/schemas
+RUN useradd --create-home --uid 10001 mcp
+RUN mkdir -p /tmp/mcp && chown mcp:mcp /tmp/mcp
+VOLUME ["/tmp/mcp"]
+USER mcp
+ENV DEEP_AGENTIC_CORE_MCP_HTTP_HOST=0.0.0.0 \
+    DEEP_AGENTIC_CORE_MCP_HTTP_PORT=8000 \
+    DEEP_AGENTIC_CORE_MCP_WORKSPACE_ROOT=/opt/workspace \
+    PYTHONDONTWRITEBYTECODE=1 \
+    TMPDIR=/tmp/mcp
+EXPOSE 8000
+CMD ["deep-agentic-core-mcp-http"]

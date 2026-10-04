@@ -1,0 +1,1257 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Multi-user MCP on Fargate with encrypted Valkey and HTTPS CloudFront access to a private load balancer.",
+  "Metadata": {
+    "AWSToolsMetrics": {
+      "AWSAgentToolkit": "aws-cloudformation@3"
+    },
+    "com.aws.cloudformation.Context": {
+      "ref": [
+        {
+          "at": "deploy/aws/README.md",
+          "has": "deployment architecture and lifecycle"
+        }
+      ]
+    }
+  },
+  "Parameters": {
+    "ImageUri": {
+      "Type": "String",
+      "AllowedPattern": ".+@sha256:[a-f0-9]{64}",
+      "Description": "Immutable image digest built from the reviewed source"
+    },
+    "RepositoryArn": {
+      "Type": "String",
+      "AllowedPattern": "arn:aws:ecr:.+",
+      "Description": "Repository containing the service image"
+    },
+    "CloudFrontPrefixList": {
+      "Type": "String",
+      "AllowedPattern": "pl-[a-f0-9]+",
+      "Description": "Regional CloudFront origin-facing managed prefix list"
+    },
+    "DesiredCount": {
+      "Type": "Number",
+      "Default": 1,
+      "MinValue": 1,
+      "MaxValue": 4
+    },
+    "UsersTableName": {
+      "Type": "String",
+      "AllowedPattern": "[A-Za-z0-9_.-]{3,255}",
+      "Description": "DynamoDB table from the users stack; migrate keys before rolling out"
+    },
+    "CustomDomain": {
+      "Type": "String",
+      "Default": "",
+      "AllowedPattern": "^$|[a-z0-9][a-z0-9.-]+\\.[a-z]{2,}",
+      "Description": "Optional lowercase viewer domain"
+    },
+    "CertificateArn": {
+      "Type": "String",
+      "Default": "",
+      "AllowedPattern": "^$|arn:aws:acm:us-east-1:[0-9]{12}:certificate/[a-f0-9-]+",
+      "Description": "Issued ACM certificate in us-east-1 for the viewer domain"
+    }
+  },
+  "Resources": {
+    "Vpc": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.73.0.0/16",
+        "EnableDnsSupport": true,
+        "EnableDnsHostnames": true
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Dedicated network keeps service resources separate from existing applications",
+          "must": []
+        }
+      }
+    },
+    "Gateway": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {},
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Outbound access for container image pulls; private origins remain inaccessible from the internet",
+          "must": []
+        }
+      }
+    },
+    "GatewayAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "InternetGatewayId": {
+          "Ref": "Gateway"
+        }
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Attach gateway required by CloudFront VPC origins",
+          "must": []
+        }
+      }
+    },
+    "PublicA": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "CidrBlock": "10.73.0.0/24",
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Separate application egress from private load balancer and cache",
+          "must": []
+        }
+      }
+    },
+    "PublicB": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "CidrBlock": "10.73.1.0/24",
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Separate application egress from private load balancer and cache",
+          "must": []
+        }
+      }
+    },
+    "PrivateA": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "CidrBlock": "10.73.10.0/24",
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Separate application egress from private load balancer and cache",
+          "must": []
+        }
+      }
+    },
+    "PrivateB": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "CidrBlock": "10.73.11.0/24",
+        "AvailabilityZone": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "MapPublicIpOnLaunch": false
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Separate application egress from private load balancer and cache",
+          "must": []
+        }
+      }
+    },
+    "PublicRoutes": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        }
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Only application subnets have an outbound internet route",
+          "must": []
+        }
+      }
+    },
+    "InternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PublicRoutes"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "Gateway"
+        }
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Permit outbound HTTPS for image pulls and service startup",
+          "must": []
+        }
+      },
+      "DependsOn": "GatewayAttachment"
+    },
+    "PublicARoute": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PublicA"
+        },
+        "RouteTableId": {
+          "Ref": "PublicRoutes"
+        }
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Apply internet egress only to the application subnet",
+          "must": []
+        }
+      }
+    },
+    "PublicBRoute": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "PublicB"
+        },
+        "RouteTableId": {
+          "Ref": "PublicRoutes"
+        }
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Apply internet egress only to the application subnet",
+          "must": []
+        }
+      }
+    },
+    "LoadBalancerSecurity": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "GroupDescription": "Private ALB reachable only through CloudFront",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 80,
+            "ToPort": 80,
+            "SourcePrefixListId": {
+              "Ref": "CloudFrontPrefixList"
+            }
+          }
+        ]
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "CloudFront is the sole external entry point",
+          "must": [
+            "Do not allow unrestricted inbound traffic"
+          ]
+        }
+      }
+    },
+    "TaskSecurity": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "GroupDescription": "MCP tasks accept requests only from the private ALB",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 8000,
+            "ToPort": 8000,
+            "SourceSecurityGroupId": {
+              "Ref": "LoadBalancerSecurity"
+            }
+          }
+        ]
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Task public addresses provide egress only; no direct client ingress",
+          "must": [
+            "Only ALB may reach port 8000"
+          ]
+        }
+      }
+    },
+    "CacheSecurity": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "GroupDescription": "Valkey accessible only to MCP tasks",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 6379,
+            "ToPort": 6379,
+            "SourceSecurityGroupId": {
+              "Ref": "TaskSecurity"
+            }
+          }
+        ]
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Tenant state stays private to service tasks",
+          "must": [
+            "Only task security group may access cache"
+          ]
+        }
+      }
+    },
+    "CacheSubnets": {
+      "Type": "AWS::ElastiCache::SubnetGroup",
+      "Properties": {
+        "Description": "Private subnets for MCP workflow state",
+        "SubnetIds": [
+          {
+            "Ref": "PrivateA"
+          },
+          {
+            "Ref": "PrivateB"
+          }
+        ]
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Place session storage in subnets without internet routes",
+          "must": []
+        }
+      }
+    },
+    "CachePassword": {
+      "Type": "AWS::SecretsManager::Secret",
+      "Properties": {
+        "GenerateSecretString": {
+          "PasswordLength": 48,
+          "ExcludePunctuation": true
+        }
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Generate the Valkey credential without exposing it in templates",
+          "must": [
+            "Coordinate credential rotation with cache and URL secret"
+          ]
+        }
+      },
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "SessionCache": {
+      "Type": "AWS::ElastiCache::ReplicationGroup",
+      "Properties": {
+        "ReplicationGroupDescription": "Private temporary workflow sessions for MCP users",
+        "Engine": "valkey",
+        "EngineVersion": "8.2",
+        "CacheNodeType": "cache.t4g.micro",
+        "NumCacheClusters": 1,
+        "AutomaticFailoverEnabled": false,
+        "MultiAZEnabled": false,
+        "CacheSubnetGroupName": {
+          "Ref": "CacheSubnets"
+        },
+        "SecurityGroupIds": [
+          {
+            "Ref": "CacheSecurity"
+          }
+        ],
+        "AtRestEncryptionEnabled": true,
+        "TransitEncryptionEnabled": true,
+        "TransitEncryptionMode": "required",
+        "AuthToken": {
+          "Fn::Sub": "{{resolve:secretsmanager:${CachePassword}:SecretString}}"
+        },
+        "SnapshotRetentionLimit": 1
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Single-node cluster-mode-disabled Valkey matches WATCH/EXEC session transactions",
+          "must": [
+            "Require TLS and AUTH; retain state on stack deletion",
+            "Single node is an initial launch, not high availability"
+          ]
+        }
+      },
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "RedisUrl": {
+      "Type": "AWS::SecretsManager::Secret",
+      "Properties": {
+        "SecretString": {
+          "Fn::Sub": "rediss://:{{resolve:secretsmanager:${CachePassword}:SecretString}}@${SessionCache.PrimaryEndPoint.Address}:6379/0"
+        }
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Store connection credential in a secret consumed by ECS",
+          "must": [
+            "Never expose this value through stack outputs"
+          ]
+        }
+      },
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "Logs": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "RetentionInDays": 14
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Collect service startup and operational logs",
+          "must": [
+            "Never log request credentials"
+          ]
+        }
+      }
+    },
+    "Cluster": {
+      "Type": "AWS::ECS::Cluster",
+      "Properties": {
+        "ClusterSettings": [
+          {
+            "Name": "containerInsights",
+            "Value": "enabled"
+          }
+        ]
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Run the stateless HTTP service on Fargate",
+          "must": []
+        }
+      }
+    },
+    "TaskRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole",
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceAccount": {
+                    "Ref": "AWS::AccountId"
+                  }
+                },
+                "ArnLike": {
+                  "aws:SourceArn": {
+                    "Fn::Sub": "arn:${AWS::Partition}:ecs:${AWS::Region}:${AWS::AccountId}:*"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "UserKeyLifecycle",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:GetItem",
+                    "dynamodb:PutItem",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:DeleteItem"
+                  ],
+                  "Resource": {
+                    "Fn::Sub": "arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${UsersTableName}"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Authenticate and manage user keys in the dedicated DynamoDB table",
+          "must": [
+            "Do not add broad administrative permissions",
+            "No scans, other tables, or account administration permissions"
+          ]
+        }
+      }
+    },
+    "ExecutionRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs-tasks.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole",
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceAccount": {
+                    "Ref": "AWS::AccountId"
+                  }
+                },
+                "ArnLike": {
+                  "aws:SourceArn": {
+                    "Fn::Sub": "arn:${AWS::Partition}:ecs:${AWS::Region}:${AWS::AccountId}:*"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "PullImageReadSecretsWriteLogs",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "ecr:GetAuthorizationToken",
+                  "Resource": "*"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "ecr:BatchGetImage",
+                    "ecr:GetDownloadUrlForLayer",
+                    "ecr:BatchCheckLayerAvailability"
+                  ],
+                  "Resource": {
+                    "Ref": "RepositoryArn"
+                  }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": {
+                    "Fn::GetAtt": [
+                      "Logs",
+                      "Arn"
+                    ]
+                  }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": "secretsmanager:GetSecretValue",
+                  "Resource": [
+                    {
+                      "Ref": "RedisUrl"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "ECS pulls the image, reads only the Valkey URL secret, and writes service logs",
+          "must": [
+            "Scope resource access to this deployment"
+          ]
+        }
+      }
+    },
+    "LoadBalancer": {
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Properties": {
+        "Scheme": "internal",
+        "Type": "application",
+        "Subnets": [
+          {
+            "Ref": "PrivateA"
+          },
+          {
+            "Ref": "PrivateB"
+          }
+        ],
+        "SecurityGroups": [
+          {
+            "Ref": "LoadBalancerSecurity"
+          }
+        ],
+        "LoadBalancerAttributes": [
+          {
+            "Key": "idle_timeout.timeout_seconds",
+            "Value": "120"
+          }
+        ]
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Private origin for HTTPS edge traffic",
+          "must": [
+            "No public load-balancer endpoint"
+          ]
+        }
+      }
+    },
+    "Targets": {
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties": {
+        "VpcId": {
+          "Ref": "Vpc"
+        },
+        "Port": 8000,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "HealthCheckPath": "/healthz",
+        "HealthCheckIntervalSeconds": 30,
+        "HealthyThresholdCount": 2,
+        "UnhealthyThresholdCount": 3,
+        "TargetGroupAttributes": [
+          {
+            "Key": "deregistration_delay.timeout_seconds",
+            "Value": "30"
+          }
+        ]
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Route to Fargate ENIs and check session and authentication storage readiness",
+          "must": []
+        }
+      }
+    },
+    "Listener": {
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+      "Properties": {
+        "LoadBalancerArn": {
+          "Ref": "LoadBalancer"
+        },
+        "Port": 80,
+        "Protocol": "HTTP",
+        "DefaultActions": [
+          {
+            "Type": "forward",
+            "TargetGroupArn": {
+              "Ref": "Targets"
+            }
+          }
+        ]
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Private VPC hop after CloudFront HTTPS termination",
+          "must": []
+        }
+      }
+    },
+    "VpcOrigin": {
+      "Type": "AWS::CloudFront::VpcOrigin",
+      "Properties": {
+        "VpcOriginEndpointConfig": {
+          "Name": {
+            "Fn::Sub": "${AWS::StackName}-origin"
+          },
+          "Arn": {
+            "Ref": "LoadBalancer"
+          },
+          "HTTPPort": 80,
+          "HTTPSPort": 443,
+          "OriginProtocolPolicy": "http-only",
+          "OriginSSLProtocols": [
+            "TLSv1.2"
+          ]
+        }
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "CloudFront connects privately to the load balancer",
+          "must": [
+            "Origin remains private"
+          ]
+        }
+      },
+      "DependsOn": [
+        "Listener",
+        "GatewayAttachment"
+      ]
+    },
+    "Distribution": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "Enabled": true,
+          "Comment": {
+            "Fn::Sub": "${AWS::StackName} authenticated MCP"
+          },
+          "HttpVersion": "http2",
+          "PriceClass": "PriceClass_100",
+          "Origins": [
+            {
+              "Id": "mcp",
+              "DomainName": {
+                "Fn::GetAtt": [
+                  "LoadBalancer",
+                  "DNSName"
+                ]
+              },
+              "VpcOriginConfig": {
+                "VpcOriginId": {
+                  "Fn::GetAtt": [
+                    "VpcOrigin",
+                    "Id"
+                  ]
+                },
+                "OriginReadTimeout": 60
+              }
+            }
+          ],
+          "DefaultCacheBehavior": {
+            "TargetOriginId": "mcp",
+            "ViewerProtocolPolicy": "https-only",
+            "AllowedMethods": [
+              "GET",
+              "HEAD",
+              "OPTIONS",
+              "PUT",
+              "POST",
+              "PATCH",
+              "DELETE"
+            ],
+            "CachedMethods": [
+              "GET",
+              "HEAD"
+            ],
+            "CachePolicyId": "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
+            "OriginRequestPolicyId": "b689b0a8-53d0-40ab-baf2-68738e2966ac",
+            "ResponseHeadersPolicyId": "67f7725c-6f97-4210-82d7-5512b31e9d03",
+            "Compress": false
+          },
+          "ViewerCertificate": {
+            "Fn::If": [
+              "HasCustomDomain",
+              {
+                "AcmCertificateArn": {
+                  "Ref": "CertificateArn"
+                },
+                "SslSupportMethod": "sni-only",
+                "MinimumProtocolVersion": "TLSv1.2_2021"
+              },
+              {
+                "CloudFrontDefaultCertificate": true
+              }
+            ]
+          },
+          "CustomErrorResponses": [
+            {
+              "ErrorCode": 400,
+              "ErrorCachingMinTTL": 0
+            },
+            {
+              "ErrorCode": 403,
+              "ErrorCachingMinTTL": 0
+            },
+            {
+              "ErrorCode": 404,
+              "ErrorCachingMinTTL": 0
+            },
+            {
+              "ErrorCode": 405,
+              "ErrorCachingMinTTL": 0
+            },
+            {
+              "ErrorCode": 414,
+              "ErrorCachingMinTTL": 0
+            },
+            {
+              "ErrorCode": 416,
+              "ErrorCachingMinTTL": 0
+            },
+            {
+              "ErrorCode": 500,
+              "ErrorCachingMinTTL": 0
+            },
+            {
+              "ErrorCode": 501,
+              "ErrorCachingMinTTL": 0
+            },
+            {
+              "ErrorCode": 502,
+              "ErrorCachingMinTTL": 0
+            },
+            {
+              "ErrorCode": 503,
+              "ErrorCachingMinTTL": 0
+            },
+            {
+              "ErrorCode": 504,
+              "ErrorCachingMinTTL": 0
+            }
+          ],
+          "Aliases": {
+            "Fn::If": [
+              "HasCustomDomain",
+              [
+                {
+                  "Ref": "CustomDomain"
+                }
+              ],
+              {
+                "Ref": "AWS::NoValue"
+              }
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Public HTTPS endpoint with an optional custom domain and us-east-1 ACM viewer certificate",
+          "must": [
+            "Disable caching and forward Authorization and protocol headers",
+            "Wait for DNS validation before attaching a custom-domain certificate"
+          ]
+        },
+        "cfn-lint": {
+          "config": {
+            "ignore_checks": [
+              "W1030"
+            ]
+          }
+        }
+      }
+    },
+    "TaskDefinition": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "Cpu": "256",
+        "Memory": "512",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": [
+          "FARGATE"
+        ],
+        "RuntimePlatform": {
+          "CpuArchitecture": "X86_64",
+          "OperatingSystemFamily": "LINUX"
+        },
+        "ExecutionRoleArn": {
+          "Fn::GetAtt": [
+            "ExecutionRole",
+            "Arn"
+          ]
+        },
+        "TaskRoleArn": {
+          "Fn::GetAtt": [
+            "TaskRole",
+            "Arn"
+          ]
+        },
+        "ContainerDefinitions": [
+          {
+            "Name": "mcp",
+            "Image": {
+              "Ref": "ImageUri"
+            },
+            "Essential": true,
+            "ReadonlyRootFilesystem": true,
+            "PortMappings": [
+              {
+                "ContainerPort": 8000,
+                "Protocol": "tcp"
+              }
+            ],
+            "Environment": [
+              {
+                "Name": "DEEP_AGENTIC_CORE_MCP_ALLOWED_HOSTS",
+                "Value": {
+                  "Fn::Join": [
+                    ",",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "LoadBalancer",
+                          "DNSName"
+                        ]
+                      },
+                      {
+                        "Fn::GetAtt": [
+                          "Distribution",
+                          "DomainName"
+                        ]
+                      },
+                      {
+                        "Fn::If": [
+                          "HasCustomDomain",
+                          {
+                            "Ref": "CustomDomain"
+                          },
+                          {
+                            "Ref": "AWS::NoValue"
+                          }
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              },
+              {
+                "Name": "DEEP_AGENTIC_CORE_MCP_USERS_TABLE",
+                "Value": {
+                  "Ref": "UsersTableName"
+                }
+              },
+              {
+                "Name": "DEEP_AGENTIC_CORE_MCP_PUBLIC_URL",
+                "Value": {
+                  "Fn::If": [
+                    "HasCustomDomain",
+                    {
+                      "Fn::Sub": "https://${CustomDomain}"
+                    },
+                    {
+                      "Fn::Sub": "https://${Distribution.DomainName}"
+                    }
+                  ]
+                }
+              },
+              {
+                "Name": "DEEP_AGENTIC_CORE_MCP_TRUSTED_PROXY_HOPS",
+                "Value": "2"
+              },
+              {
+                "Name": "AWS_DEFAULT_REGION",
+                "Value": {
+                  "Ref": "AWS::Region"
+                }
+              },
+              {
+                "Name": "DEEP_AGENTIC_CORE_MCP_ALLOWED_ORIGINS",
+                "Value": {
+                  "Fn::If": [
+                    "HasCustomDomain",
+                    {
+                      "Fn::Sub": "https://${CustomDomain},https://${Distribution.DomainName}"
+                    },
+                    {
+                      "Fn::Sub": "https://${Distribution.DomainName}"
+                    }
+                  ]
+                }
+              }
+            ],
+            "Secrets": [
+              {
+                "Name": "DEEP_AGENTIC_CORE_MCP_REDIS_URL",
+                "ValueFrom": {
+                  "Ref": "RedisUrl"
+                }
+              }
+            ],
+            "LogConfiguration": {
+              "LogDriver": "awslogs",
+              "Options": {
+                "awslogs-group": {
+                  "Ref": "Logs"
+                },
+                "awslogs-region": {
+                  "Ref": "AWS::Region"
+                },
+                "awslogs-stream-prefix": "mcp"
+              }
+            },
+            "MountPoints": [
+              {
+                "SourceVolume": "temp",
+                "ContainerPath": "/tmp/mcp",
+                "ReadOnly": false
+              }
+            ]
+          }
+        ],
+        "Volumes": [
+          {
+            "Name": "temp"
+          }
+        ],
+        "Family": {
+          "Fn::Sub": "${AWS::StackName}-task"
+        }
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Immutable reviewed image; DynamoDB authenticates users and ECS injects only the cache credential",
+          "must": [
+            "No credentials in image or environment literals",
+            "Root filesystem read-only; temporary exports use a separate writable volume",
+            "Keep a stable task family so CI permissions can scope every revision"
+          ]
+        }
+      }
+    },
+    "Service": {
+      "Type": "AWS::ECS::Service",
+      "Properties": {
+        "Cluster": {
+          "Ref": "Cluster"
+        },
+        "TaskDefinition": {
+          "Ref": "TaskDefinition"
+        },
+        "DesiredCount": {
+          "Ref": "DesiredCount"
+        },
+        "LaunchType": "FARGATE",
+        "PlatformVersion": "LATEST",
+        "HealthCheckGracePeriodSeconds": 90,
+        "DeploymentConfiguration": {
+          "DeploymentCircuitBreaker": {
+            "Enable": true,
+            "Rollback": true
+          },
+          "MinimumHealthyPercent": 100,
+          "MaximumPercent": 200
+        },
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "AssignPublicIp": "ENABLED",
+            "Subnets": [
+              {
+                "Ref": "PublicA"
+              },
+              {
+                "Ref": "PublicB"
+              }
+            ],
+            "SecurityGroups": [
+              {
+                "Ref": "TaskSecurity"
+              }
+            ]
+          }
+        },
+        "LoadBalancers": [
+          {
+            "ContainerName": "mcp",
+            "ContainerPort": 8000,
+            "TargetGroupArn": {
+              "Ref": "Targets"
+            }
+          }
+        ]
+      },
+      "Metadata": {
+        "com.aws.cloudformation.Context": {
+          "why": "Single initial worker; shared tenant state supports increasing replicas",
+          "must": [
+            "Only private ALB accepts client traffic"
+          ]
+        }
+      },
+      "DependsOn": [
+        "Listener",
+        "InternetRoute",
+        "PublicARoute",
+        "PublicBRoute"
+      ]
+    }
+  },
+  "Outputs": {
+    "McpUrl": {
+      "Value": {
+        "Fn::If": [
+          "HasCustomDomain",
+          {
+            "Fn::Sub": "https://${CustomDomain}/mcp"
+          },
+          {
+            "Fn::Sub": "https://${Distribution.DomainName}/mcp"
+          }
+        ]
+      }
+    },
+    "HealthUrl": {
+      "Value": {
+        "Fn::If": [
+          "HasCustomDomain",
+          {
+            "Fn::Sub": "https://${CustomDomain}/healthz"
+          },
+          {
+            "Fn::Sub": "https://${Distribution.DomainName}/healthz"
+          }
+        ]
+      }
+    },
+    "ClusterName": {
+      "Value": {
+        "Ref": "Cluster"
+      }
+    },
+    "ServiceName": {
+      "Value": {
+        "Fn::GetAtt": [
+          "Service",
+          "Name"
+        ]
+      }
+    },
+    "DistributionId": {
+      "Value": {
+        "Ref": "Distribution"
+      }
+    },
+    "LogGroup": {
+      "Value": {
+        "Ref": "Logs"
+      }
+    },
+    "CacheId": {
+      "Value": {
+        "Ref": "SessionCache"
+      }
+    },
+    "UsersTableName": {
+      "Value": {
+        "Ref": "UsersTableName"
+      }
+    },
+    "SignupUrl": {
+      "Value": {
+        "Fn::If": [
+          "HasCustomDomain",
+          {
+            "Fn::Sub": "https://${CustomDomain}/signup"
+          },
+          {
+            "Fn::Sub": "https://${Distribution.DomainName}/signup"
+          }
+        ]
+      }
+    }
+  },
+  "Conditions": {
+    "HasCustomDomain": {
+      "Fn::Not": [
+        {
+          "Fn::Equals": [
+            {
+              "Ref": "CustomDomain"
+            },
+            ""
+          ]
+        }
+      ]
+    }
+  },
+  "Rules": {
+    "DomainNeedsCertificate": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Or": [
+              {
+                "Fn::And": [
+                  {
+                    "Fn::Equals": [
+                      {
+                        "Ref": "CustomDomain"
+                      },
+                      ""
+                    ]
+                  },
+                  {
+                    "Fn::Equals": [
+                      {
+                        "Ref": "CertificateArn"
+                      },
+                      ""
+                    ]
+                  }
+                ]
+              },
+              {
+                "Fn::And": [
+                  {
+                    "Fn::Not": [
+                      {
+                        "Fn::Equals": [
+                          {
+                            "Ref": "CustomDomain"
+                          },
+                          ""
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "Fn::Not": [
+                      {
+                        "Fn::Equals": [
+                          {
+                            "Ref": "CertificateArn"
+                          },
+                          ""
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "Specify CustomDomain and CertificateArn together"
+        }
+      ]
+    }
+  }
+}

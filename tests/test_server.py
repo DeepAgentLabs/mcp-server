@@ -6,8 +6,14 @@ from pathlib import Path
 
 import pytest
 
+from deep_agentic_core_mcp import __version__
 from deep_agentic_core_mcp.server import _TOOL_DISPATCH, TOOLS, server
 from deep_agentic_core_mcp.services import session as session_service
+
+
+def test_initialization_reports_package_version():
+    assert server.create_initialization_options().server_version == __version__
+
 
 ROOT = Path(__file__).resolve().parents[2]
 SPEC_V04 = ROOT / "ai-operations-spec" / "specification" / "v0.4" / "examples"
@@ -312,6 +318,38 @@ async def test_handle_call_tool_run_experiment_honors_timeout() -> None:
     assert elapsed < 1.5, f"call blocked for {elapsed:.2f}s despite a 0.3s timeout"
     assert payload["ok"] is False
     assert payload["timed_out"] is True
+
+
+@pytest.mark.asyncio
+async def test_handle_call_tool_run_experiment_disabled_under_remote_transport(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from deep_agentic_core_mcp.server import handle_call_tool
+
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_REMOTE", "1")
+    result = await handle_call_tool(
+        "chaos.run_experiment",
+        {"script": CHAOS_TARGET_SCRIPT, "faults": ["silent_degradation"]},
+    )
+    payload = json.loads(result[0].text)
+    assert payload["ok"] is False
+    assert "remote transport" in payload["error"]
+
+
+@pytest.mark.asyncio
+async def test_handle_call_tool_run_experiment_remote_allowed_opt_in(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from deep_agentic_core_mcp.server import handle_call_tool
+
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_REMOTE", "1")
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_ALLOW_REMOTE_CHAOS", "1")
+    result = await handle_call_tool(
+        "chaos.run_experiment",
+        {"script": CHAOS_TARGET_SCRIPT, "faults": ["silent_degradation"]},
+    )
+    payload = json.loads(result[0].text)
+    assert payload["ok"] is True
 
 
 @pytest.mark.asyncio

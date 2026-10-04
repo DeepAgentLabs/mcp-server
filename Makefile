@@ -7,7 +7,7 @@ help: ## Show this help
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
 
 install: ## Install dependencies (dev extras)
-	uv sync --extra dev
+	uv sync --extra dev --extra http
 
 lint: ## Run ruff linter
 	uv run ruff check .

@@ -6,14 +6,31 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.0 - 2026-10-04
+
 ### Added
 
+- GitHub Actions AWS deployment after successful version-tag PyPI publication, with scoped
+  deployment credentials, immutable images, change-set safeguards, and MCP smoke checks.
+- Optional CloudFront custom-domain HTTPS configuration and explicit browser
+  origin compatibility during domain migration.
+- AWS signup portal with generated user identities, DynamoDB-backed hashed API
+  keys, immediate rotation/revocation, shared signup limits, and existing-key migration.
+- Authenticated multi-user Streamable HTTP transport, per-user Redis workflow
+  state, bounded storage with expiry, request/concurrency limits, and Host/Origin
+  validation. Stateless transport supports multiple workers without affinity.
+- HTTP installation extra, deployment guide, analysis/validation container, and
+  filtered container build helper. HTTP never exposes chaos script execution.
+- Tool dispatch runs synchronous work off the event loop. AgenticLens evaluation
+  integration now uses its public API re-exports.
 - `sidecar.status` and `sidecar.module_inventory` tools, wiring `agentic-sidecar`
   into the MCP server through a degrading adapter (Phase 3d). These report
   connectivity and scaffold/module inventory only, since the `agentic-sidecar`
-  decision runtime is not implemented upstream yet. Not yet part of a tagged
-  release — `pyproject.toml` and `src/deep_agentic_core_mcp/__init__.py` remain
-  at `0.2.0` pending a version bump (see [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md)).
+  decision runtime is not implemented upstream yet.
+
+### Fixed
+
+- MCP initialization now reports the package version instead of an empty string.
 
 ## 0.2.0 - 2026-08-08
 

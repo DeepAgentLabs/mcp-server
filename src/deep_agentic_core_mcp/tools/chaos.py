@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from deep_agentic_core_mcp import config
 from deep_agentic_core_mcp.adapters import AdapterUnavailableError
 from deep_agentic_core_mcp.adapters.agentic_chaos import describe_capabilities
 from deep_agentic_core_mcp.adapters.agentic_chaos import list_faults as adapter_list_faults
@@ -24,6 +25,16 @@ def list_faults(_: dict[str, Any] | None = None) -> dict[str, Any]:
 
 def run_experiment(arguments: dict[str, Any] | None) -> dict[str, Any]:
     """Run a sandboxed target script under selected chaos faults."""
+    if config.is_remote_transport() and not config.remote_chaos_allowed():
+        return {
+            "ok": False,
+            "error": (
+                "chaos.run_experiment is disabled over remote transport: it executes "
+                "arbitrary code and workspace-path confinement alone is not a sandbox. "
+                "See SECURITY.md. Set DEEP_AGENTIC_CORE_MCP_ALLOW_REMOTE_CHAOS=1 only "
+                "after adding a real sandbox (container, restricted user, hard limits)."
+            ),
+        }
     if not arguments or "script" not in arguments or "faults" not in arguments:
         return {"ok": False, "error": "Missing required 'script' and/or 'faults' argument"}
     session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)

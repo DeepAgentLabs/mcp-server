@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
 
 jobs:
   test:
@@ -45,24 +50,24 @@ jobs:
       - name: Install dependencies
         working-directory: mcp-server
         run: |
-          uv sync --extra dev --python ${{ matrix.python-version }}
+          uv sync --frozen --extra dev --extra http --python ${{ matrix.python-version }}
           uv pip install -e ../agenticlens -e ../agentic-chaos
 
       - name: Lint (ruff check)
         working-directory: mcp-server
-        run: uv run ruff check .
+        run: uv run --no-sync ruff check .
 
       - name: Format check (ruff format)
         working-directory: mcp-server
-        run: uv run ruff format --check .
+        run: uv run --no-sync ruff format --check .
 
       - name: Type check (mypy)
         working-directory: mcp-server
-        run: uv run mypy
+        run: uv run --no-sync mypy
 
       - name: Test (pytest)
         working-directory: mcp-server
-        run: uv run pytest
+        run: uv run --no-sync pytest
 
   package:
     runs-on: ubuntu-latest
@@ -101,11 +106,11 @@ jobs:
       - name: Install dependencies
         working-directory: mcp-server
         run: |
-          uv sync --extra dev --python 3.12
+          uv sync --frozen --extra dev --extra http --python 3.12
           uv pip install -e ../agenticlens -e ../agentic-chaos
 
       - name: Build distributions
         working-directory: mcp-server
         run: |
-          uv run python -m build
-          uv run python -m twine check dist/*
+          uv run --no-sync python -m build
+          uv run --no-sync python -m twine check dist/*

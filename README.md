@@ -17,6 +17,14 @@ separate MCP servers for each product surface.
 
 <!-- mcp-name: io.github.DeepAgentLabs/deep-agentic-core-mcp -->
 
+## Connect and use
+
+Start with the [user and developer guide](docs/user-guide.md) for hosted signup,
+MCP client connection, workflow analysis, evaluation reports, and local chaos/
+Sidecar capabilities. Run [the Python workflow example](examples/hosted_workflow.py)
+to send an exported workflow to the hosted service. The guide documents current
+integration availability and distinguishes implemented tools from future runtime work.
+
 ## Idea
 
 This project is the control plane between LLM hosts and the existing Python
@@ -57,10 +65,12 @@ Planned capability areas:
 - Local-first: work well as a stdio MCP server for developer workflows —
   this matters because `chaos.run_experiment` executes real code (see
   [SECURITY.md](SECURITY.md)), so this server is meant for trusted,
-  local/stdio use, not exposure to untrusted clients
-- Expandable: leave room for a later remote deployment mode if needed
+  local/stdio use; authenticated HTTP deployments disable code execution
+- Dual transport, one tool surface: the optional Streamable HTTP transport
+  (below) reuses stdio tools/resources/prompts, with remote script execution
+  excluded
 
-## MCP Surface (current, `0.2.0` plus unreleased work)
+## MCP Surface (current, `0.3.0`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -80,11 +90,9 @@ Planned capability areas:
 - `chaos.run_experiment` — run a workspace-sandboxed target script under
   selected faults ([executes real code — see `SECURITY.md`](SECURITY.md))
 - `sidecar.status` — report whether `agentic-sidecar` is connected and
-  whether its runtime is implemented yet (**shipped after the `0.2.0` tag,
-  not yet in a released version — no version bump or CHANGELOG entry yet**)
+  whether its runtime is implemented yet (added in `0.3.0`)
 - `sidecar.module_inventory` — inspect the current scaffolded sidecar
-  modules, framework adapters, and integration placeholders (**same
-  unreleased status as `sidecar.status` above**)
+  modules, framework adapters, and integration placeholders (added in `0.3.0`)
 - `spec.validate_artifact` — validate a workflow/run artifact against the AI
   Operations v0.4 draft
 
@@ -95,6 +103,34 @@ See [ROADMAP.md](ROADMAP.md) for what's shipped per phase and what's still
 open, and [docs/tools.md](docs/tools.md) for full input schemas and
 per-tool metadata (generated from `tools/registry.py`, run `make docs` to
 refresh it after changing that file).
+
+## Local vs. remote install modes
+
+Container definitions are grouped under [deploy/docker](deploy/docker/README.md).
+
+- **Local:** `pip install deep-agentic-core-mcp`, then run
+  `deep-agentic-core-mcp` over stdio. Local session behavior is unchanged.
+- **Self-hosted multi-user HTTP (`0.3.0`+):** install with
+  `pip install 'deep-agentic-core-mcp[http]'`, then run `deep-agentic-core-mcp-http`.
+  Provision a unique bearer key per user
+  and a Redis URL before startup. Missing configuration prevents startup.
+- **Hosted AWS signup:** open [mcp.deepagentlabs.io](https://mcp.deepagentlabs.io)
+  to generate a user identity and MCP key; connect your MCP client to
+  `https://mcp.deepagentlabs.io/mcp` with its bearer key.
+  DynamoDB stores user records and key hashes; keys work immediately and can be
+  replaced or revoked through the page. No password or email verification is used.
+  Save the key: it cannot be recovered. See [the AWS guide](deploy/aws/README.md).
+
+The HTTP service uses stateless MCP transport at `/mcp` and Redis-backed
+workflow sessions scoped to the authenticated user. Users can reuse the same
+`session_id` without accessing each other's artifacts. HTTP calls cannot run
+`chaos.run_experiment`, even if the local remote-chaos override is set.
+
+See [the remote hosting guide](docs/remote-hosting.md) and `render.yaml` for Render deployment, configuration,
+container builds, AWS deployment requirements, client headers, limits, and
+credential rotation. `create_app()` also accepts explicit credentials, a
+session backend, and allowed hosts/origins for integrations and tests.
+`MemorySessionStore` is an explicit development option; the CLI requires Redis.
 
 ## Repository Layout
 
@@ -117,6 +153,7 @@ mcp-server/
 │   └── deep_agentic_core_mcp/
 │       ├── __init__.py
 │       ├── server.py
+│       ├── transport_http.py
 │       ├── config.py
 │       ├── prompts/
 │       │   ├── __init__.py
@@ -172,10 +209,22 @@ MCP server:
 
 ## Packaging and Publishing Model
 
-`deep-agentic-core-mcp` should publish in two layers:
+One repository supports both the local Python package and the hosted HTTP service.
+The stdio entry point remains available without the optional HTTP dependencies.
+HTTP transport and signup support are included from `0.3.0`; the earlier
+PyPI `0.2.0` release provides local stdio.
 
-1. Publish the Python package to PyPI.
-2. Publish the MCP metadata in `server.json` to the official MCP Registry.
+| Workflow | Trigger | Result |
+|---|---|---|
+| `.github/workflows/ci.yml` | Pull request | Tests Python 3.10–3.13 and builds distributions; no AWS deployment |
+| `.github/workflows/ci.yml` | Push/merge to `main`, or manual run | Runs tests and package checks; no AWS deployment |
+| `.github/workflows/release-pypi.yml` | Push a `v*` version tag | Runs checks, publishes to PyPI, creates the GitHub Release, publishes MCP Registry metadata, and deploys AWS after PyPI succeeds |
+
+A push to `main` does not publish to PyPI or deploy AWS. A version-tag release
+deploys the same tagged source to AWS only after PyPI publication succeeds. Package releases use PyPI Trusted Publishing;
+AWS deployment uses the dedicated IAM user's GitHub secrets. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for releases and
+[the AWS CI guide](deploy/aws/CI-CD.md) for deployment setup and limits.
 
 For PyPI-based verification, the `mcp-name` marker above must match the
 `name` field in `server.json`.

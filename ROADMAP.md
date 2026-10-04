@@ -10,10 +10,9 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Current shipped version: `0.2.0` (2026-08-08) — see [CHANGELOG.md](CHANGELOG.md).
-Note: `sidecar.status`/`sidecar.module_inventory` (Phase 3d) are implemented
-and tested on `main` but postdate this tag and are not yet part of a
-released version — see [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md) for detail.
+Release version: `0.3.0` (2026-10-04) — see [CHANGELOG.md](CHANGELOG.md).
+This release includes HTTP/signup support and Sidecar discovery tools; the
+2026-09-11 audit above describes the earlier `0.2.0` release state.
 
 - **Phase 0: Foundation** ✅ Complete
 - **Phase 1: Minimal MCP Server** ✅ Complete — `core.health`/`core.version`
@@ -26,11 +25,9 @@ released version — see [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md) for detail.
   `lens.slo_summary`, and `lens.audit_report` shipped in `0.2.0`
 - **Phase 3b: Agentic Chaos Integration** ✅ Complete — `chaos.list_faults`
   shipped in `0.1.3`; `chaos.run_experiment` shipped in `0.2.0`
-- **Phase 3d: Agentic Sidecar Discovery** ✅ Implemented, **not yet
-  released** — `sidecar.status` and `sidecar.module_inventory` are merged to
-  `main` and tested as MCP-visible discovery/readiness tools, but they were
-  added after the `v0.2.0` tag with no corresponding `CHANGELOG.md` entry or
-  version bump yet (see [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md))
+- **Phase 3d: Agentic Sidecar Discovery** ✅ Complete — `sidecar.status` and
+  `sidecar.module_inventory` are included in `0.3.0` as discovery/readiness
+  tools. The upstream decision runtime remains unimplemented.
 - **Phase 3c: AI Operations Specification Conformance** 🏗️ In progress —
   `spec.validate_artifact` and schema resources shipped in `0.1.3`, ahead of
   where this roadmap originally planned them; remaining work still blocked on
@@ -38,6 +35,32 @@ released version — see [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md) for detail.
 - **Phase 4: Unified Workflows** 🚧 Planned
 - **Phase 5: Publishing and Adoption** 🚧 Planned
 - **Phase 6: Operational Intelligence** 🚧 Planned
+
+## Local and Hosted Delivery Status
+
+The project maintains one codebase with two entry points: local stdio through
+`deep-agentic-core-mcp` and optional multi-user Streamable HTTP through
+`deep-agentic-core-mcp-http`. Hosted HTTP uses bearer keys and Redis-backed
+user-scoped workflow state; the AWS signup service stores user records and key
+hashes in DynamoDB. Remote chaos execution remains disabled.
+
+As of 2026-10-04, the hosted service is running at
+`https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
+Transport/signup and Sidecar discovery are included in the `0.3.0` release.
+
+- **Package publishing:** version tags run the full CI matrix and packaging
+  checks before publishing to PyPI, creating the GitHub Release, and publishing
+  MCP Registry metadata. Adoption work remains in Phase 5.
+- **AWS continuous deployment:** the first main-triggered deployment was
+  verified successfully on 2026-10-04. Starting with `0.3.0`, AWS deployment
+  follows successful PyPI publication in the version-tag release workflow.
+  Pushes/merges to `main` and manual CI checks do not deploy AWS.
+- **Remaining delivery work:** continue Phase 5 registry/adoption work, and
+  improve release rollback and hosted operational coverage. Keep package and
+  hosted deployment versions aligned through the shared release tag.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for release steps and
+[deploy/aws/CI-CD.md](deploy/aws/CI-CD.md) for AWS deployment behavior.
 
 ## Cross-Project Dependencies
 
@@ -276,12 +299,10 @@ Success criteria:
 
 ## Phase 3d: Agentic Sidecar Discovery
 
-Status: implemented and merged to `main`, tested, and wired into the server —
-but **not yet part of a released version** (see
-[ROADMAP_AUDIT.md](ROADMAP_AUDIT.md)): it landed after the `v0.2.0` tag
-without a `CHANGELOG.md` entry or version bump. `agentic-sidecar` is still a
-scaffold upstream, so this phase intentionally exposes discovery/readiness
-information rather than pretending a decision runtime already exists.
+Status: complete, included in `0.3.0`. The tools were implemented after the
+`v0.2.0` tag (see the historical [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md)).
+`agentic-sidecar` remains a scaffold upstream, so this phase exposes discovery
+and readiness information rather than a decision runtime.
 
 Goals:
 
@@ -394,33 +415,30 @@ Goals:
   releases only?
 - Should `deep-agentic-core-mcp` be a thin wrapper package or eventually own
   workflow orchestration logic directly?
-- Is stdio-only enough for v0, or do we want a remote deployment path early?
-  If yes, see the known limitation directly below — it needs to be fixed
-  first, not concurrently.
+- ~~Is stdio-only enough for v0, or do we want a remote deployment path early?~~
+  Resolved: an optional Streamable HTTP transport (`transport_http.py`, the
+  `http` extra) now ships alongside stdio, sharing the same tool surface.
+  HTTP now requires per-user bearer credentials and shared Redis state,
+  enforces user isolation and storage quotas, and uses stateless transport.
+  AWS infrastructure now includes a DynamoDB-backed public key signup portal,
+  immediate key rotation/revocation, and migration of existing user identities.
+  Verified email signup, account recovery, OAuth onboarding, and billing remain future work.
 
 ## Known Limitations
 
-- **Tool handlers are synchronous and block the event loop.** `handle_call_tool`
-  in `server.py` calls each tool handler directly (not via `asyncio.to_thread()`
-  or similar), so a slow call — most notably `chaos.run_experiment`, which can
-  run for up to `timeout_seconds` (default 30s) — blocks the server from
-  processing anything else for its duration, including cancellation/other
-  requests from the same client. Harmless for today's single-client stdio
-  transport, but this must be fixed (wrap dispatch in `asyncio.to_thread()`,
-  or make handlers genuinely async) before any remote/multi-session/SSE
-  transport (Phase 4+) is added — it would otherwise let one slow call stall
-  every other client.
+- ~~Tool handlers are synchronous and block the event loop.~~ Resolved:
+  `handle_call_tool` now runs each handler via `asyncio.to_thread()`, so a
+  slow call (notably `chaos.run_experiment`) no longer blocks the event loop
+  from serving other concurrent clients — a precondition for the Streamable
+  HTTP transport added below.
 - **`chaos.run_experiment` has no allowlist beyond workspace-path
-  confinement.** Any script inside the workspace root can be executed today;
-  there's no further restriction on *which* scripts within that root are
-  permitted, and per `SECURITY.md` the tool doesn't authenticate or authorize
-  the calling client either. `devops-open-agent` solves the equivalent
-  problem for its own MCP integration with a layered allow/deny-list
-  (instance-level allowlist + per-user whitelist + per-user blacklist) —
-  the same shape (see Phase 3b) is a reasonable model here. Like the
-  async-blocking limitation above, this should be closed before any
-  remote/multi-client transport (Phase 4+) is considered, not concurrently
-  with it.
+  confinement.** Any script inside the workspace root can still be executed
+  under stdio/local use, and the tool still doesn't authenticate or
+  authorize the calling client itself (see `SECURITY.md`). The remote-transport
+  gate disables this tool by default. Authenticated HTTP dispatch now always
+  rejects execution, including with the legacy remote-chaos override enabled.
+  Isolated workers and explicit authorization remain prerequisites for a
+  future remote execution feature.
 
 ## Documentation Backlog
 

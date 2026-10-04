@@ -4,34 +4,22 @@ import time
 
 def search_flights():
     time.sleep(0.2)
-    return {
-        "status": "success",
-        "result": "Flight options found"
-    }
+    return {"status": "success", "result": "Flight options found"}
 
 
 def search_hotels():
     time.sleep(0.2)
-    return {
-        "status": "success",
-        "result": "Hotel options found"
-    }
+    return {"status": "success", "result": "Hotel options found"}
 
 
 def check_weather():
     time.sleep(0.2)
-    return {
-        "status": "success",
-        "result": "Weather information retrieved"
-    }
+    return {"status": "success", "result": "Weather information retrieved"}
 
 
 def generate_itinerary():
     time.sleep(0.2)
-    return {
-        "status": "success",
-        "result": "3-day travel itinerary generated"
-    }
+    return {"status": "success", "result": "3-day travel itinerary generated"}
 
 
 def main():

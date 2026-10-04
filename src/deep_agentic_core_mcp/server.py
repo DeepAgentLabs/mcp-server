@@ -28,11 +28,13 @@ from mcp.types import (
     ToolAnnotations,
 )
 
+from deep_agentic_core_mcp import config
 from deep_agentic_core_mcp.adapters.ai_operations_spec import schema_resource_content
 from deep_agentic_core_mcp.config import SERVER_NAME
 from deep_agentic_core_mcp.prompts.registry import list_prompts as _registry_prompts
 from deep_agentic_core_mcp.prompts.registry import render_prompt
 from deep_agentic_core_mcp.resources.catalog import list_resources as _catalog_resources
+from deep_agentic_core_mcp.services.remote_sessions import SessionStore
 from deep_agentic_core_mcp.tools.chaos import list_faults, run_experiment
 from deep_agentic_core_mcp.tools.core import health, session_state, verify, version
 from deep_agentic_core_mcp.tools.lens import (
@@ -50,7 +52,7 @@ from deep_agentic_core_mcp.tools.spec import validate_artifact
 # Server instance
 # ---------------------------------------------------------------------------
 
-server = Server(SERVER_NAME)
+server = Server(SERVER_NAME, version=config.VERSION)
 
 # ---------------------------------------------------------------------------
 # Tool dispatch
@@ -162,10 +164,18 @@ RESOURCE_CONTENT: dict[str, dict[str, Any]] = {
 
 async def handle_list_tools() -> list[Tool]:
     """Advertise available tools."""
+    if config.is_remote_transport():
+        return [tool for tool in TOOLS if tool.name not in _OPEN_WORLD_TOOLS]
     return TOOLS
 
 
-async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[TextContent]:
+async def handle_call_tool(
+    name: str,
+    arguments: dict[str, Any] | None,
+    *,
+    owner: str | None = None,
+    store: SessionStore | None = None,
+) -> list[TextContent]:
     """Dispatch tool calls and return JSON results.
 
     Tool handlers are expected to catch their own known failure modes (e.g.
@@ -179,8 +189,23 @@ async def handle_call_tool(name: str, arguments: dict[str, Any] | None) -> list[
     handler = _TOOL_DISPATCH.get(name)
     if handler is None:
         return [TextContent(type="text", text=json.dumps({"error": f"Unknown tool: {name}"}))]
+
+    def execute() -> dict[str, Any]:
+        if owner is not None and store is not None:
+            if name in _OPEN_WORLD_TOOLS:
+                return {
+                    "ok": False,
+                    "error": "chaos.run_experiment is disabled over remote transport",
+                }
+            with store.transaction(owner):
+                return handler(arguments)
+        return handler(arguments)
+
     try:
-        result = handler(arguments)
+        # Off the event loop: handlers are synchronous and some (notably
+        # chaos.run_experiment) can block for up to tens of seconds, which
+        # would otherwise stall every other client under concurrent/remote use.
+        result = await asyncio.to_thread(execute)
     except Exception as exc:  # noqa: BLE001 - last-resort boundary, see docstring
         error = {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
         return [TextContent(type="text", text=json.dumps(error))]
@@ -235,8 +260,20 @@ async def _on_list_tools(_: Any, params: PaginatedRequestParams) -> ListToolsRes
     return ListToolsResult(tools=await handle_list_tools())
 
 
-async def _on_call_tool(_: Any, params: CallToolRequestParams) -> CallToolResult:
-    content = await handle_call_tool(params.name, params.arguments)
+async def _on_call_tool(ctx: Any, params: CallToolRequestParams) -> CallToolResult:
+    request = getattr(ctx, "request", None)
+    if request is not None:
+        # Trusted ASGI scope values, never client arguments or identity headers.
+        identity = request.scope.get("deep_agentic_identity")
+        store = request.scope.get("deep_agentic_store")
+        if identity is None or store is None:
+            return CallToolResult(
+                content=[TextContent(type="text", text='{"error":"Authentication required"}')],
+                is_error=True,
+            )
+        content = await handle_call_tool(params.name, params.arguments, owner=identity, store=store)
+    else:
+        content = await handle_call_tool(params.name, params.arguments)
     is_error = False
     if content:
         try:
