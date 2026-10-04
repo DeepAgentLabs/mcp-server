@@ -39,6 +39,34 @@ released version — see [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md) for detail.
 - **Phase 5: Publishing and Adoption** 🚧 Planned
 - **Phase 6: Operational Intelligence** 🚧 Planned
 
+## Local and Hosted Delivery Status
+
+The project maintains one codebase with two entry points: local stdio through
+`deep-agentic-core-mcp` and optional multi-user Streamable HTTP through
+`deep-agentic-core-mcp-http`. Hosted HTTP uses bearer keys and Redis-backed
+user-scoped workflow state; the AWS signup service stores user records and key
+hashes in DynamoDB. Remote chaos execution remains disabled.
+
+As of 2026-10-04, the hosted service is running at
+`https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
+These transport/signup changes are not in the existing PyPI `0.2.0` release.
+
+- **Package publishing:** the version-tag workflow publishes to PyPI, creates a
+  GitHub Release, and publishes MCP Registry metadata. This existing automation
+  is separate from the remaining adoption work in Phase 5.
+- **AWS continuous deployment:** implemented in the CI workflow, with ECR image
+  publishing, an image-only CloudFormation update, and authenticated smoke
+  checks after successful `main` checks. Secrets and the ECS prerequisite are
+  configured. PR #18 has passed CI but remains open; the first automated AWS
+  deployment is pending merge and verification.
+- **Remaining delivery work:** merge and verify the first AWS CI deployment,
+  publish a versioned package containing HTTP support, and continue the Phase 5
+  registry/adoption work. Neither a `main` push nor an AWS deployment publishes
+  a new PyPI version; pushing a `v*` tag triggers the package release.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for release steps and
+[deploy/aws/CI-CD.md](deploy/aws/CI-CD.md) for AWS deployment behavior.
+
 ## Cross-Project Dependencies
 
 This server is an orchestration layer across sibling projects, so roadmap

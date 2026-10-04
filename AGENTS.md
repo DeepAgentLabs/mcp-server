@@ -106,7 +106,34 @@ objects (`ListToolsResult`, `CallToolResult`, `ListResourcesResult`).
 ## Entry Points
 
 - Console script: `deep-agentic-core-mcp` → `server.py:main()`
-- Server boot: `run_server()` → `stdio_server()` → `server.run()`
+- Local server boot: `run_server()` → `stdio_server()` → `server.run()`
+- HTTP console script: `deep-agentic-core-mcp-http` → `transport_http.py:main()`
+- Hosted signup and key lifecycle: `signup.py`, backed by DynamoDB
+
+## Local and Hosted Deployment Contract
+
+Maintain both transports in this repository. The base PyPI package provides
+local stdio; the optional `http` extra adds hosted Streamable HTTP dependencies.
+The HTTP/signup implementation is unreleased source work until a new version tag
+publishes it; do not imply that PyPI `0.2.0` already includes these changes.
+
+HTTP requires bearer authentication and Redis-backed user-scoped workflow state.
+The AWS deployment uses DynamoDB for user records and hashed keys. HTTP always
+rejects `chaos.run_experiment`; local stdio retains trusted local execution.
+Test transport-specific authorization and state isolation when changing dispatch.
+
+- Pull requests run CI checks and package builds without deploying to AWS.
+- Pushes/merges to `main` (or manual CI runs on `main`) deploy the AWS service
+  after checks pass. Deployment changes only the immutable image parameter in
+  the existing stack. Infrastructure changes use the separate operator flow.
+- Pushing a `v*` tag runs `release-pypi.yml`: PyPI publication, GitHub Release,
+  and MCP Registry publication. It does not run the AWS deployment job.
+- AWS deployments do not require a package version bump or publish to PyPI.
+  A package release still requires the version/changelog steps below.
+- Keep Docker files under `deploy/docker/` and infrastructure under `deploy/aws/`.
+  Keep credentials and local deployment state out of Git. Document configuration
+  in [deploy/aws/CI-CD.md](deploy/aws/CI-CD.md) and client behavior in
+  [docs/user-guide.md](docs/user-guide.md).
 
 ## Adding a New Tool
 

@@ -112,10 +112,13 @@ Container definitions are grouped under [deploy/docker](deploy/docker/README.md)
 
 - **Local:** `pip install deep-agentic-core-mcp`, then run
   `deep-agentic-core-mcp` over stdio. Local session behavior is unchanged.
-- **Authenticated multi-user HTTP:** `pip install 'deep-agentic-core-mcp[http]'`,
-  then run `deep-agentic-core-mcp-http`. Provision a unique bearer key per user
+- **Self-hosted multi-user HTTP (unreleased source):** install from a checkout
+  with `pip install '.[http]'`, then run `deep-agentic-core-mcp-http`.
+  Provision a unique bearer key per user
   and a Redis URL before startup. Missing configuration prevents startup.
-- **Hosted AWS signup:** open `/signup` to generate a user identity and MCP key.
+- **Hosted AWS signup:** open [mcp.deepagentlabs.io](https://mcp.deepagentlabs.io)
+  to generate a user identity and MCP key; connect your MCP client to
+  `https://mcp.deepagentlabs.io/mcp` with its bearer key.
   DynamoDB stores user records and key hashes; keys work immediately and can be
   replaced or revoked through the page. No password or email verification is used.
   Save the key: it cannot be recovered. See [the AWS guide](deploy/aws/README.md).
@@ -208,10 +211,22 @@ MCP server:
 
 ## Packaging and Publishing Model
 
-`deep-agentic-core-mcp` should publish in two layers:
+One repository supports both the local Python package and the hosted HTTP service.
+The stdio entry point remains available without the optional HTTP dependencies.
+The hosted transport and signup changes are unreleased source work; they are not
+included in the existing PyPI `0.2.0` release.
 
-1. Publish the Python package to PyPI.
-2. Publish the MCP metadata in `server.json` to the official MCP Registry.
+| Workflow | Trigger | Result |
+|---|---|---|
+| `.github/workflows/ci.yml` | Pull request | Tests Python 3.10–3.13 and builds distributions; no AWS deployment |
+| `.github/workflows/ci.yml` | Push/merge to `main`, or manual run on `main` | Runs checks, publishes an immutable ECR image, updates ECS through CloudFormation, and checks the hosted MCP |
+| `.github/workflows/release-pypi.yml` | Push a `v*` version tag | Builds and publishes to PyPI, creates the GitHub Release, then publishes MCP Registry metadata |
+
+A push to `main` does not publish a new PyPI version. A version tag does not
+trigger the AWS deployment job. Package releases use PyPI Trusted Publishing;
+AWS deployment uses the dedicated IAM user's GitHub secrets. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for releases and
+[the AWS CI guide](deploy/aws/CI-CD.md) for deployment setup and limits.
 
 For PyPI-based verification, the `mcp-name` marker above must match the
 `name` field in `server.json`.
