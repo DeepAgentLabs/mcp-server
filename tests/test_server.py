@@ -6,8 +6,14 @@ from pathlib import Path
 
 import pytest
 
+from deep_agentic_core_mcp import __version__
 from deep_agentic_core_mcp.server import _TOOL_DISPATCH, TOOLS, server
 from deep_agentic_core_mcp.services import session as session_service
+
+
+def test_initialization_reports_package_version():
+    assert server.create_initialization_options().server_version == __version__
+
 
 ROOT = Path(__file__).resolve().parents[2]
 SPEC_V04 = ROOT / "ai-operations-spec" / "specification" / "v0.4" / "examples"

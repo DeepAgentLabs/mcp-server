@@ -52,7 +52,7 @@ from deep_agentic_core_mcp.tools.spec import validate_artifact
 # Server instance
 # ---------------------------------------------------------------------------
 
-server = Server(SERVER_NAME)
+server = Server(SERVER_NAME, version=config.VERSION)
 
 # ---------------------------------------------------------------------------
 # Tool dispatch

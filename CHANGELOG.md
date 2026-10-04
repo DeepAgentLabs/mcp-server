@@ -28,6 +28,10 @@ This project follows [Semantic Versioning](https://semver.org/).
   connectivity and scaffold/module inventory only, since the `agentic-sidecar`
   decision runtime is not implemented upstream yet.
 
+### Fixed
+
+- MCP initialization now reports the package version instead of an empty string.
+
 ## 0.2.0 - 2026-08-08
 
 ### Added
