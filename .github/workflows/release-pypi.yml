@@ -157,6 +157,7 @@ jobs:
   deploy:
     name: Deploy AWS
     needs: publish-pypi
+    environment: aws
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
