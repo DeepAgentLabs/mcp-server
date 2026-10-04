@@ -70,7 +70,7 @@ Planned capability areas:
   (below) reuses stdio tools/resources/prompts, with remote script execution
   excluded
 
-## MCP Surface (current, `0.2.0` plus unreleased work)
+## MCP Surface (current, `0.3.0`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -90,11 +90,9 @@ Planned capability areas:
 - `chaos.run_experiment` — run a workspace-sandboxed target script under
   selected faults ([executes real code — see `SECURITY.md`](SECURITY.md))
 - `sidecar.status` — report whether `agentic-sidecar` is connected and
-  whether its runtime is implemented yet (**shipped after the `0.2.0` tag,
-  not yet in a released version — no version bump or CHANGELOG entry yet**)
+  whether its runtime is implemented yet (added in `0.3.0`)
 - `sidecar.module_inventory` — inspect the current scaffolded sidecar
-  modules, framework adapters, and integration placeholders (**same
-  unreleased status as `sidecar.status` above**)
+  modules, framework adapters, and integration placeholders (added in `0.3.0`)
 - `spec.validate_artifact` — validate a workflow/run artifact against the AI
   Operations v0.4 draft
 
@@ -112,8 +110,8 @@ Container definitions are grouped under [deploy/docker](deploy/docker/README.md)
 
 - **Local:** `pip install deep-agentic-core-mcp`, then run
   `deep-agentic-core-mcp` over stdio. Local session behavior is unchanged.
-- **Self-hosted multi-user HTTP (unreleased source):** install from a checkout
-  with `pip install '.[http]'`, then run `deep-agentic-core-mcp-http`.
+- **Self-hosted multi-user HTTP (`0.3.0`+):** install with
+  `pip install 'deep-agentic-core-mcp[http]'`, then run `deep-agentic-core-mcp-http`.
   Provision a unique bearer key per user
   and a Redis URL before startup. Missing configuration prevents startup.
 - **Hosted AWS signup:** open [mcp.deepagentlabs.io](https://mcp.deepagentlabs.io)
@@ -213,17 +211,17 @@ MCP server:
 
 One repository supports both the local Python package and the hosted HTTP service.
 The stdio entry point remains available without the optional HTTP dependencies.
-The hosted transport and signup changes are unreleased source work; they are not
-included in the existing PyPI `0.2.0` release.
+HTTP transport and signup support are included from `0.3.0`; the earlier
+PyPI `0.2.0` release provides local stdio.
 
 | Workflow | Trigger | Result |
 |---|---|---|
 | `.github/workflows/ci.yml` | Pull request | Tests Python 3.10–3.13 and builds distributions; no AWS deployment |
-| `.github/workflows/ci.yml` | Push/merge to `main`, or manual run on `main` | Runs checks, publishes an immutable ECR image, updates ECS through CloudFormation, and checks the hosted MCP |
-| `.github/workflows/release-pypi.yml` | Push a `v*` version tag | Builds and publishes to PyPI, creates the GitHub Release, then publishes MCP Registry metadata |
+| `.github/workflows/ci.yml` | Push/merge to `main`, or manual run | Runs tests and package checks; no AWS deployment |
+| `.github/workflows/release-pypi.yml` | Push a `v*` version tag | Runs checks, publishes to PyPI, creates the GitHub Release, publishes MCP Registry metadata, and deploys AWS after PyPI succeeds |
 
-A push to `main` does not publish a new PyPI version. A version tag does not
-trigger the AWS deployment job. Package releases use PyPI Trusted Publishing;
+A push to `main` does not publish to PyPI or deploy AWS. A version-tag release
+deploys the same tagged source to AWS only after PyPI publication succeeds. Package releases use PyPI Trusted Publishing;
 AWS deployment uses the dedicated IAM user's GitHub secrets. See
 [CONTRIBUTING.md](CONTRIBUTING.md) for releases and
 [the AWS CI guide](deploy/aws/CI-CD.md) for deployment setup and limits.

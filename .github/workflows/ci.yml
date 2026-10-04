@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
@@ -113,69 +114,3 @@ jobs:
         run: |
           uv run --no-sync python -m build
           uv run --no-sync python -m twine check dist/*
-
-  deploy:
-    name: Deploy AWS
-    needs: [test, package]
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    permissions:
-      contents: read
-    concurrency:
-      group: aws-mcp-production
-      cancel-in-progress: false
-    env:
-      AWS_REGION: us-east-2
-      AWS_DEFAULT_REGION: us-east-2
-      IMAGE_TAG: ci-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
-    steps:
-      - uses: actions/checkout@v7
-      - name: Skip superseded commits
-        id: revision
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          head_sha=$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .sha)
-          if [ "$head_sha" = "$GITHUB_SHA" ]; then
-            echo 'current=true' >> "$GITHUB_OUTPUT"
-          else
-            echo 'Skipping a commit superseded on main.'
-            echo 'current=false' >> "$GITHUB_OUTPUT"
-          fi
-      - name: Build AWS image
-        if: steps.revision.outputs.current == 'true'
-        run: python3 scripts/build_container.py --target aws --tag "deep-agentic-core-mcp:$IMAGE_TAG"
-      - name: Configure AWS credentials
-        if: steps.revision.outputs.current == 'true'
-        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-      - name: Publish immutable image
-        if: steps.revision.outputs.current == 'true'
-        id: image
-        shell: bash
-        run: |
-          repository_uri=$(aws cloudformation describe-stacks --stack-name deep-agentic-core-mcp-assets --query 'Stacks[0].Outputs[?OutputKey==`RepositoryUri`].OutputValue | [0]' --output text)
-          registry="${repository_uri%%/*}"
-          repository="${repository_uri#*/}"
-          export DOCKER_CONFIG=$(mktemp -d)
-          trap 'docker logout "$registry" >/dev/null 2>&1; rm -rf "$DOCKER_CONFIG"' EXIT
-          aws ecr get-login-password | docker login --username AWS --password-stdin "$registry"
-          docker tag "deep-agentic-core-mcp:$IMAGE_TAG" "$repository_uri:$IMAGE_TAG"
-          docker push "$repository_uri:$IMAGE_TAG"
-          digest=$(aws ecr describe-images --repository-name "$repository" --image-ids "imageTag=$IMAGE_TAG" --query 'imageDetails[0].imageDigest' --output text)
-          echo "uri=$repository_uri@$digest" >> "$GITHUB_OUTPUT"
-      - name: Deploy image through CloudFormation
-        if: steps.revision.outputs.current == 'true'
-        env:
-          IMAGE_URI: ${{ steps.image.outputs.uri }}
-        run: python3 scripts/aws_ci_deploy.py --image "$IMAGE_URI" --change-set "ci-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
-      - name: Verify hosted MCP
-        if: steps.revision.outputs.current == 'true'
-        env:
-          MCP_API_KEY: ${{ secrets.MCP_SMOKE_KEY }}
-          MCP_ORIGIN: https://mcp.deepagentlabs.io
-        run: python3 scripts/ci_smoke.py
