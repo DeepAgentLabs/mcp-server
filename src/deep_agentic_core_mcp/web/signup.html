@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Get your MCP key · DeepAgentLabs</title>
+  <link rel="stylesheet" href="/signup.css"><script src="/signup.js" defer></script>
+</head>
+<body>
+  <header><a href="/">DeepAgentLabs<span> / MCP</span></a><span class="badge">DEVELOPER ACCESS</span></header>
+  <main>
+    <section class="intro"><p class="eyebrow">YOUR WORKFLOWS. YOUR SPACE.</p>
+      <h1>One key.<br>A connected toolkit.</h1>
+      <p>Connect your AI assistant to workflow analysis, operational schemas, and shared tools. Your workflow sessions stay private to your key.</p>
+      <ol><li><b>Create your key</b><span>Choose a display name. No password required.</span></li><li><b>Save it somewhere safe</b><span>Your key is shown once. We cannot recover it.</span></li><li><b>Connect your MCP client</b><span>Use Streamable HTTP with your bearer key.</span></li></ol>
+    </section>
+    <section class="card">
+      <div id="signup-panel"><p class="eyebrow">GET STARTED</p><h2>Create your MCP key</h2>
+        <p>Each key has its own user identity and workflow sessions.</p>
+        <form id="signup-form"><label for="display-name">Display name</label><input id="display-name" name="display_name" minlength="2" maxlength="80" autocomplete="nickname" placeholder="e.g. Alex" required>
+          <p class="fine">A display name is a label, not a verified identity. Keep your key private: anyone with it can access your sessions.</p>
+          <button type="submit">Create my key <span aria-hidden="true">↗</span></button>
+        </form>
+      </div>
+      <div id="result-panel" hidden><p class="eyebrow">YOU'RE READY</p><h2>Save your key</h2><p>Shown only now. Save it in your password manager or download your connection details.</p>
+        <label for="new-key">MCP API key</label><textarea id="new-key" rows="2" readonly spellcheck="false"></textarea>
+        <div class="actions"><button id="copy-key" type="button">Copy key</button><button id="download" class="secondary" type="button">Download details</button></div>
+        <label for="mcp-url">Streamable HTTP endpoint</label><input id="mcp-url" readonly>
+        <p class="fine">Set the header <code>Authorization: Bearer &lt;your-key&gt;</code> in your MCP client. Losing the key means losing access to this account.</p>
+      </div>
+      <p id="message" role="status" aria-live="polite"></p>
+      <details><summary>Already have a key?</summary><p>Use your current key to inspect your account, replace the key, or revoke access.</p>
+        <label for="existing-key">Current MCP key</label><input id="existing-key" type="password" autocomplete="off" placeholder="Paste your saved key">
+        <div class="actions"><button id="inspect" class="secondary" type="button">View account</button><button id="rotate" class="secondary" type="button">Replace key</button><button id="revoke" class="danger" type="button">Revoke</button></div>
+        <p id="account-info"></p><p class="fine">Replacing a key keeps your user identity and sessions. Revoking it permanently closes access to this account. Calls already in progress may finish.</p>
+      </details>
+    </section>
+  </main><footer>DeepAgentLabs · Workflow sessions expire after one hour of inactivity.</footer>
+</body></html>

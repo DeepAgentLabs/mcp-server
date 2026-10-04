@@ -54,8 +54,38 @@ capabilities (filesystem, network, subprocess access are all whatever the
 server process itself has), and it does not authenticate or authorize the
 MCP client making the call — that's the host/transport's job.
 
-**Only expose this server to trusted MCP clients and keep it stdio/local.**
-If a remote deployment mode is ever added (see `ROADMAP.md`), this tool
-needs a real sandbox (container, restricted user, etc.) before it can be
-exposed to untrusted callers — workspace-path confinement alone is not
-sufficient at that point.
+**Only expose script execution to trusted local MCP clients.** HTTP disables
+this tool. A future remote execution feature needs isolated workers and explicit
+authorization; workspace-path confinement alone is insufficient.
+
+### Authenticated multi-user HTTP
+
+HTTP requires a unique, high-entropy bearer key per user, configured through
+`DEEP_AGENTIC_CORE_MCP_API_KEYS`. Use HTTPS at the hosting layer. The endpoint
+validates allowed Host and Origin values, rejects unknown keys with 401, and
+puts the authenticated identity in server-controlled request context. Tool
+arguments and user-supplied identity headers cannot select another user's
+state. Health checks are unauthenticated and expose only readiness status.
+
+HTTP uses stateless MCP transport and a shared Redis session store. Each user
+has a separate key containing their workflow sessions. Optimistic transactions
+prevent concurrent requests from silently overwriting each other's changes;
+conflicting calls fail and may be retried. Successful commits renew a one-hour
+TTL. Users are limited to 100 sessions and 4 MiB of serialized state. Configure
+Redis eviction/persistence, encryption, access controls, and capacity for the
+expected user count. A Redis outage fails tool calls rather than falling back
+to unisolated local state.
+
+Defaults per process are 60 authenticated requests/minute/user, two concurrent
+requests/user, 16 total concurrent requests, and a 1 MiB request body. These
+request counters are not global across replicas; use the hosting layer for
+aggregate limits. Cancellation does not forcibly stop synchronous Python work.
+Do not treat these controls as an execution sandbox.
+
+The HTTP tool surface excludes `chaos.run_experiment` and its dispatch rejects
+calls even when `DEEP_AGENTIC_CORE_MCP_ALLOW_REMOTE_CHAOS` is set. That override
+is retained for legacy/local integrations and cannot enable HTTP execution.
+
+This is administrator-provisioned bearer-key access, not an OAuth server.
+Do not publish keys, bake them into images, or enable HTTP access without TLS.
+See [remote hosting](docs/remote-hosting.md) for configuration and rotation.

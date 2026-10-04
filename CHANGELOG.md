@@ -8,6 +8,21 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- GitHub Actions AWS deployment after successful main-branch checks, with scoped
+  deployment credentials, immutable images, change-set safeguards, and MCP smoke checks.
+- Optional CloudFront custom-domain HTTPS configuration and explicit browser
+  origin compatibility during domain migration.
+- AWS signup portal with generated user identities, DynamoDB-backed hashed API
+  keys, immediate rotation/revocation, shared signup limits, and existing-key migration.
+- Authenticated multi-user Streamable HTTP transport, per-user Redis workflow
+  state, bounded storage with expiry, request/concurrency limits, and Host/Origin
+  validation. Stateless transport supports multiple workers without affinity.
+- HTTP installation extra, deployment guide, analysis/validation container, and
+  filtered container build helper. HTTP never exposes chaos script execution.
+- Tool dispatch runs synchronous work off the event loop. AgenticLens evaluation
+  integration now uses its public API re-exports.
+
+
 - `sidecar.status` and `sidecar.module_inventory` tools, wiring `agentic-sidecar`
   into the MCP server through a degrading adapter (Phase 3d). These report
   connectivity and scaffold/module inventory only, since the `agentic-sidecar`

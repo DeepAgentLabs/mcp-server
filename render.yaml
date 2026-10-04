@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://render.com/schema/render.yaml.json
+services:
+  - type: web
+    name: deep-agentic-core-mcp
+    runtime: docker
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./deploy/docker/Dockerfile.render
+    dockerContext: .
+    healthCheckPath: /healthz
+    autoDeployTrigger: "off"
+    envVars:
+      - key: DEEP_AGENTIC_CORE_MCP_API_KEYS
+        sync: false
+      - key: DEEP_AGENTIC_CORE_MCP_REDIS_URL
+        fromService:
+          name: deep-agentic-core-mcp-sessions
+          type: keyvalue
+          property: connectionString
+      - key: DEEP_AGENTIC_CORE_MCP_HTTP_HOST
+        value: 0.0.0.0
+  - type: keyvalue
+    name: deep-agentic-core-mcp-sessions
+    plan: free
+    region: oregon
+    maxmemoryPolicy: noeviction
+    ipAllowList: []

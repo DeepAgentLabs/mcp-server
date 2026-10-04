@@ -16,9 +16,12 @@ try:
 
     import agenticlens as _agenticlens_pkg
     from agenticlens.comparison.runner import compare_runs as _compare_runs
-    from agenticlens.evaluation.gate import GateConfig, evaluate_gate
-    from agenticlens.evaluation.html_report import render_html_report
-    from agenticlens.evaluation.models import EvaluationReport
+    from agenticlens.evaluation import (
+        EvaluationReport,
+        GateConfig,
+        evaluate_gate,
+        render_html_report,
+    )
     from agenticlens.exporters.markdown_exporter import MarkdownExporter
     from agenticlens.models.trace import Run
     from agenticlens.models.workflow import Workflow

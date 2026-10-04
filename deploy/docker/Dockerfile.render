@@ -1,0 +1,14 @@
+# Standalone Git-backed build: no adjacent repositories are required.
+FROM python:3.12-slim
+WORKDIR /app
+COPY pyproject.toml README.md ./
+COPY src ./src
+RUN pip install --no-cache-dir ".[http]" "agenticlens==0.5.0"
+COPY scripts/fetch_schema_assets.py /tmp/fetch_schema_assets.py
+RUN python /tmp/fetch_schema_assets.py /opt/workspace/ai-operations-spec/specification/v0.4/schemas
+RUN useradd --create-home --uid 10001 mcp
+USER mcp
+ENV DEEP_AGENTIC_CORE_MCP_HTTP_HOST=0.0.0.0 \
+    DEEP_AGENTIC_CORE_MCP_WORKSPACE_ROOT=/opt/workspace
+EXPOSE 10000
+CMD ["deep-agentic-core-mcp-http"]

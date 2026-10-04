@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -26,6 +27,9 @@ def workspace_root() -> Path:
     parent directory, so tools that need to resolve a sibling repo or a
     sandboxed script path share this single definition of "the workspace".
     """
+    configured = os.environ.get("DEEP_AGENTIC_CORE_MCP_WORKSPACE_ROOT")
+    if configured:
+        return Path(configured).resolve()
     return Path(__file__).resolve().parents[4]
 
 

@@ -394,33 +394,30 @@ Goals:
   releases only?
 - Should `deep-agentic-core-mcp` be a thin wrapper package or eventually own
   workflow orchestration logic directly?
-- Is stdio-only enough for v0, or do we want a remote deployment path early?
-  If yes, see the known limitation directly below — it needs to be fixed
-  first, not concurrently.
+- ~~Is stdio-only enough for v0, or do we want a remote deployment path early?~~
+  Resolved: an optional Streamable HTTP transport (`transport_http.py`, the
+  `http` extra) now ships alongside stdio, sharing the same tool surface.
+  HTTP now requires per-user bearer credentials and shared Redis state,
+  enforces user isolation and storage quotas, and uses stateless transport.
+  AWS infrastructure now includes a DynamoDB-backed public key signup portal,
+  immediate key rotation/revocation, and migration of existing user identities.
+  Verified email signup, account recovery, OAuth onboarding, and billing remain future work.
 
 ## Known Limitations
 
-- **Tool handlers are synchronous and block the event loop.** `handle_call_tool`
-  in `server.py` calls each tool handler directly (not via `asyncio.to_thread()`
-  or similar), so a slow call — most notably `chaos.run_experiment`, which can
-  run for up to `timeout_seconds` (default 30s) — blocks the server from
-  processing anything else for its duration, including cancellation/other
-  requests from the same client. Harmless for today's single-client stdio
-  transport, but this must be fixed (wrap dispatch in `asyncio.to_thread()`,
-  or make handlers genuinely async) before any remote/multi-session/SSE
-  transport (Phase 4+) is added — it would otherwise let one slow call stall
-  every other client.
+- ~~Tool handlers are synchronous and block the event loop.~~ Resolved:
+  `handle_call_tool` now runs each handler via `asyncio.to_thread()`, so a
+  slow call (notably `chaos.run_experiment`) no longer blocks the event loop
+  from serving other concurrent clients — a precondition for the Streamable
+  HTTP transport added below.
 - **`chaos.run_experiment` has no allowlist beyond workspace-path
-  confinement.** Any script inside the workspace root can be executed today;
-  there's no further restriction on *which* scripts within that root are
-  permitted, and per `SECURITY.md` the tool doesn't authenticate or authorize
-  the calling client either. `devops-open-agent` solves the equivalent
-  problem for its own MCP integration with a layered allow/deny-list
-  (instance-level allowlist + per-user whitelist + per-user blacklist) —
-  the same shape (see Phase 3b) is a reasonable model here. Like the
-  async-blocking limitation above, this should be closed before any
-  remote/multi-client transport (Phase 4+) is considered, not concurrently
-  with it.
+  confinement.** Any script inside the workspace root can still be executed
+  under stdio/local use, and the tool still doesn't authenticate or
+  authorize the calling client itself (see `SECURITY.md`). The remote-transport
+  gate disables this tool by default. Authenticated HTTP dispatch now always
+  rejects execution, including with the legacy remote-chaos override enabled.
+  Isolated workers and explicit authorization remain prerequisites for a
+  future remote execution feature.
 
 ## Documentation Backlog
 

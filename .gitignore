@@ -8,3 +8,6 @@ build/
 .venv/
 __pycache__/
 *.pyc
+.secrets/
+deploy/aws/deployment-state.json
+deploy/aws/parameters.json
