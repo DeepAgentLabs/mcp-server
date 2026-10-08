@@ -1,0 +1,75 @@
+site_name: DeepAgentLabs MCP Server
+site_description: Unified MCP server for agentic workflow analysis, resilience testing, and supervision readiness.
+site_url: https://deepagentlabs.io/deep-agentic-core-mcp/
+
+theme:
+  name: material
+
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: cyan
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: cyan
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+  font:
+    text: Inter
+    code: JetBrains Mono
+
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - User Guide: user-guide.md
+  - Remote Hosting: remote-hosting.md
+  - Architecture: architecture.md
+  - Features: features.md
+  - Configuration: configuration.md
+  - Integrations: integrations.md
+  - Examples: examples.md
+  - Troubleshooting: troubleshooting.md
+  - Limitations: limitations.md
+  - Roadmap: roadmap.md
+
+docs_dir: docs
+
+exclude_docs: tools.md
+
+strict: true
+
+extra:
+  generator: false
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - attr_list

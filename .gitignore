@@ -11,3 +11,9 @@ __pycache__/
 .secrets/
 deploy/aws/deployment-state.json
 deploy/aws/parameters.json
+
+# Documentation build and alternate Python environments
+site/
+venv/
+*.pyo
+*.pyd

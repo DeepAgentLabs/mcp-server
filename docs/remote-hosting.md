@@ -67,7 +67,7 @@ Use `core.verify` to inspect integration availability.
 ## AWS deployment requirements
 
 The deployable AWS templates and lifecycle instructions are in
-[deploy/aws/README.md](../deploy/aws/README.md). They use an ECS service behind
+[deploy/aws/README.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/deploy/aws/README.md). They use an ECS service behind
 a private ALB and CloudFront HTTPS, with a DynamoDB user/key table and Valkey sessions.
 The following also applies to other container hosting configurations.
 
