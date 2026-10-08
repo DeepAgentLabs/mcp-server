@@ -25,21 +25,15 @@ The example includes simulated steps for:
 
 ## Workflow
 
-```text
-User Request
-     |
-     v
-AI Travel Planner
-     |
-     +------------------+
-     |                  |
-     v                  v
-Flight Search      Hotel Search
-     |                  |
-     +--------+---------+
-              |
-              v
-        Weather Check
-              |
-              v
-     Itinerary Generation
+```mermaid
+flowchart TD
+    A[User Request] --> B[AI Travel Planner]
+
+    B --> C[Flight Search]
+    B --> D[Hotel Search]
+    B --> E[Weather Check]
+
+    C --> F[Itinerary Generation]
+    D --> F
+    E --> F
+```

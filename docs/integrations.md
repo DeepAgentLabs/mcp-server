@@ -63,13 +63,10 @@ Therefore, this integration could not be successfully validated locally.
 
 ## Integration overview
 
-```text
-DeepAgentLabs MCP Server
-        |
-        +-- AgenticLens
-        |
-        +-- Agentic Chaos
-        |
-        +-- Agentic Sidecar
-        |
-        +-- AI Operations Specification
+```mermaid
+graph TD
+    A[DeepAgentLabs MCP Server] --> B[AgenticLens]
+    A --> C[Agentic Chaos]
+    A --> D[Agentic Sidecar]
+    A --> E[AI Operations Specification]
+```

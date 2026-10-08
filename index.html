@@ -78,10 +78,7 @@
 
       <nav class="desktop-nav">
         <a href="#capabilities">Capabilities</a>
-        <a href="#architecture">Architecture</a>
-        <a href="#workflow">Workflow</a>
         <a href="#use-cases">Use Cases</a>
-        <a href="#quick-start">Quick Start</a>
       </nav>
 
       <div class="nav-actions">
@@ -118,10 +115,7 @@
     <div class="mobile-nav" id="mobile-nav">
 
       <a href="#capabilities">Capabilities</a>
-      <a href="#architecture">Architecture</a>
-      <a href="#workflow">Workflow</a>
       <a href="#use-cases">Use Cases</a>
-      <a href="#quick-start">Quick Start</a>
 
       <div class="mobile-nav-buttons">
 
@@ -763,142 +757,199 @@
     </section>
 
 
-    <!-- =======================================================
-         USE CASE
-    ======================================================== -->
+<!-- =======================================================
+     USE CASE
+======================================================== -->
 
-    <section
-      id="use-cases"
-      class="section use-case-section"
-    >
+<section
+  id="use-cases"
+  class="section use-case-section"
+>
 
-      <div class="section-container">
+  <div class="section-container">
 
-        <div class="use-case-header">
+    <div class="use-case-header">
+
+      <div>
+
+        <span class="eyebrow">
+          USE CASE
+        </span>
+
+        <h2>
+          AI Travel Planner
+        </h2>
+
+        <p>
+          A representative workflow demonstrating how the MCP server
+          can be used to analyze and test an agentic workflow.
+        </p>
+
+      </div>
+
+      <span class="simulation-badge">
+        SIMULATED WORKFLOW
+      </span>
+
+    </div>
+
+
+    <div class="travel-grid">
+
+
+      <!-- Workflow -->
+
+      <div class="travel-flow">
+
+        <div class="travel-node">
+          <span class="material-symbols-outlined">
+            person
+          </span>
+
+          <strong>User Request</strong>
+
+          <small>
+            Plan a 3-day trip to Goa
+          </small>
+        </div>
+
+
+        <div class="travel-arrow">↓</div>
+
+
+        <div class="travel-tools">
 
           <div>
-
-            <span class="eyebrow">
-              USE CASE
+            <span class="material-symbols-outlined">
+              flight
             </span>
 
-            <h2>
-              AI Travel Planner
-            </h2>
-
-            <p>
-              A representative workflow demonstrating how the MCP server
-              can be used to analyze and test an agentic workflow.
-            </p>
-
+            Flight Search
           </div>
 
-          <span class="simulation-badge">
-            SIMULATED WORKFLOW
+          <div>
+            <span class="material-symbols-outlined">
+              hotel
+            </span>
+
+            Hotel Search
+          </div>
+
+          <div>
+            <span class="material-symbols-outlined">
+              cloud
+            </span>
+
+            Weather Check
+          </div>
+
+        </div>
+
+
+        <div class="travel-arrow">↓</div>
+
+
+        <div class="travel-node">
+
+          <span class="material-symbols-outlined">
+            route
+          </span>
+
+          <strong>
+            Itinerary Generation
+          </strong>
+
+        </div>
+
+
+        <div class="travel-arrow">↓</div>
+
+
+        <div class="travel-result">
+
+          <div>
+            <span class="material-symbols-outlined">
+              analytics
+            </span>
+          </div>
+
+          <div>
+            <strong>
+              AgenticLens Analysis
+            </strong>
+
+            <small>
+              Workflow evidence and metrics
+            </small>
+          </div>
+
+        </div>
+
+
+        <div class="travel-arrow">↓</div>
+
+
+        <div class="travel-result chaos-result">
+
+          <div>
+            <span class="material-symbols-outlined">
+              science
+            </span>
+          </div>
+
+          <div>
+            <strong>
+              Chaos Experiment
+            </strong>
+
+            <small>
+              Controlled resilience testing
+            </small>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Code Snippet -->
+
+      <div class="use-case-code">
+
+        <div class="code-header">
+
+          <span>
+            Travel Planner workflow
+          </span>
+
+          <span>
+            Python
           </span>
 
         </div>
 
 
-        <div class="travel-grid">
+        <pre><code>results = {
+    "request": "Plan a 3-day trip to Goa",
+    "steps": [
+        {"name": "flight_search", "result": search_flights()},
+        {"name": "hotel_search", "result": search_hotels()},
+        {"name": "weather_check", "result": check_weather()},
+        {"name": "itinerary_generation", "result": generate_itinerary()},
+    ],
+}</code></pre>
 
 
-          <!-- Workflow -->
+        <p class="code-note">
+          Simulated workflow used to demonstrate MCP server analysis
+          and resilience-testing capabilities.
+        </p>
 
-          <div class="travel-flow">
-
-            <div class="travel-node">
-              <span class="material-symbols-outlined">
-                person
-              </span>
-              <strong>User Request</strong>
-              <small>Plan a 3-day trip to Goa</small>
-            </div>
+      </div>
 
 
-            <div class="travel-arrow">↓</div>
+    </div>
 
+  </div>
 
-            <div class="travel-tools">
-
-              <div>
-                <span class="material-symbols-outlined">
-                  flight
-                </span>
-                Flight Search
-              </div>
-
-              <div>
-                <span class="material-symbols-outlined">
-                  hotel
-                </span>
-                Hotel Search
-              </div>
-
-              <div>
-                <span class="material-symbols-outlined">
-                  cloud
-                </span>
-                Weather Check
-              </div>
-
-            </div>
-
-
-            <div class="travel-arrow">↓</div>
-
-
-            <div class="travel-node">
-
-              <span class="material-symbols-outlined">
-                route
-              </span>
-
-              <strong>Itinerary Generation</strong>
-
-            </div>
-
-
-            <div class="travel-arrow">↓</div>
-
-
-            <div class="travel-result">
-
-              <div>
-                <span class="material-symbols-outlined">
-                  analytics
-                </span>
-              </div>
-
-              <div>
-                <strong>AgenticLens Analysis</strong>
-                <small>Workflow evidence and metrics</small>
-              </div>
-
-            </div>
-
-
-            <div class="travel-arrow">↓</div>
-
-
-            <div class="travel-result chaos-result">
-
-              <div>
-                <span class="material-symbols-outlined">
-                  science
-                </span>
-              </div>
-
-              <div>
-                <strong>Chaos Experiment</strong>
-                <small>Controlled resilience testing</small>
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <!-- Terminal -->
-
-          <div class
+</section>

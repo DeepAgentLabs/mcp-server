@@ -55,19 +55,12 @@ Inspect the available Agentic Sidecar package, its status, modules, and framewor
 
 ## Architecture
 
-```text
-                    MCP Client / Host
-                           |
-                           v
-              +--------------------------+
-              |  DeepAgentLabs MCP Server |
-              +--------------------------+
-                    /      |       \
-                   /       |        \
-                  v        v         v
-           AgenticLens  Agentic   Agentic
-                       Chaos      Sidecar
-                  |
-                  v
-        AI Operations Workflow
-             Specification
+```mermaid
+graph TD
+    A[MCP Client / Host] -->|MCP requests| B[DeepAgentLabs MCP Server]
+
+    B --> C[AgenticLens]
+    B --> D[Agentic Chaos]
+    B --> E[Agentic Sidecar]
+    B --> F[AI Operations Spec]
+```
