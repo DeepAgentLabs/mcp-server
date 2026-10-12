@@ -8,6 +8,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- Exercise all v0.7 discovery capabilities and module inventory with a fake
+  package/tree in credential-free CI; link the pending Sidecar guide to review code.
+
 - Sidecar discovery detects installed decision and v0.7 operations APIs instead
   of hardcoding scaffold/runtime-not-ready status. Explicit connection/control
   flags prevent installed capabilities from being mistaken for a live MCP task.

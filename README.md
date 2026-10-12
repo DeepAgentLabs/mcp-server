@@ -292,6 +292,6 @@ for MCP startup. An unavailable package produces an unavailable response.
 
 For live task controls, use Sidecar's authenticated local OperatorServer/CLI
 interface described in its
-[live operations guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md).
+[proposed v0.7 live operations guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/bdabe440a59d7932cd497f11400b91febc51bb3d/docs/live-operations.md).
 The v0.7 checkout is prepared for review; this does not publish a sibling release
 or enable remote stop/revoke through MCP.
