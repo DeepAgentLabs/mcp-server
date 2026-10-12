@@ -179,3 +179,47 @@ recovered in the current signup flow.
 | HTTP 503 | Authentication/session storage unavailable; retry later |
 | Adapter unavailable | Check `core.health`; use a local install for optional packages |
 | Workflow/report input rejected | Use the model expected by that tool; inspect `ok` and `error` |
+
+### Chaos v0.5 streaming with MCP 0.3.2
+
+Install `agentic-chaos>=0.5.0` in the local MCP server environment. The catalog
+includes four streaming faults and auth/context-length errors dynamically.
+The example lives in the source repository; installing the PyPI wheel alone
+does not create it. Prepare a trusted local workspace before starting the stdio
+server (use your chosen Python environment):
+
+```bash
+mkdir -p chaos-workspace
+cd chaos-workspace
+git clone --branch v0.3.2 https://github.com/DeepAgentLabs/mcp-server.git mcp-server
+python -m pip install 'deep-agentic-core-mcp==0.3.2' 'agentic-chaos>=0.5.0'
+export DEEP_AGENTIC_CORE_MCP_WORKSPACE_ROOT="$PWD"
+deep-agentic-core-mcp
+```
+
+For an MCP host that launches the server itself, put the same absolute workspace
+path in its server environment configuration. Setting the variable in another
+terminal does not change an already-running host's environment. Your own target
+scripts can also live anywhere inside that configured workspace.
+
+Then call `chaos.run_experiment` with:
+
+```json
+{
+  "script": "mcp-server/examples/chaos_stream_target.py",
+  "faults": ["stream_cut"],
+  "timeout_seconds": 30,
+  "session_id": "stream-demo"
+}
+```
+
+The example uses `chaos_stream()` under the runner-owned session. Default
+`stream_cut` delivers one chunk, closes the source, and returns a native event
+with `outcome="degraded"` and `detail.chunks_delivered=1`. The script succeeds;
+that does not mean its output quality is acceptable. Apply downstream checks
+as appropriate. Paths are resolved inside the server's workspace.
+
+Profiles and provider patch helpers remain Python/CLI APIs in Chaos; the MCP
+request schema exposes fault names rather than those configuration surfaces.
+Hosted HTTP continues to reject `chaos.run_experiment`. No shared AIOS object or
+canonical export capability is introduced in this patch release.

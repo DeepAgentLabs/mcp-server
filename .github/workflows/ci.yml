@@ -69,9 +69,33 @@ jobs:
         working-directory: mcp-server
         run: uv run --no-sync pytest
 
+  test-chaos-v05:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: mcp-server
+      - name: Check out the advertised Chaos minimum
+        uses: actions/checkout@v7
+        with:
+          repository: DeepAgentLabs/agentic-chaos
+          ref: v0.5.0
+          path: agentic-chaos
+      - uses: astral-sh/setup-uv@v7
+      - name: Install MCP and Chaos v0.5.0
+        working-directory: mcp-server
+        run: |
+          uv sync --frozen --extra dev --extra http --python 3.12
+          uv pip install -e ../agentic-chaos
+      - name: Verify minimum-version catalog and experiment compatibility
+        working-directory: mcp-server
+        run: |
+          uv run --no-sync python -c "import agentic_chaos; assert agentic_chaos.__version__ == '0.5.0'"
+          uv run --no-sync pytest tests/test_chaos_v05.py
+
   package:
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test, test-chaos-v05]
     steps:
       - uses: actions/checkout@v7
         with:

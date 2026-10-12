@@ -10,9 +10,10 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.3.1` (2026-10-12) — see [CHANGELOG.md](CHANGELOG.md).
-This patch corrects installed Sidecar API discovery and adds deterministic CI
-coverage; HTTP/signup and the original discovery tools remain available. The
+Release version: `0.3.2` (2026-10-12) — see [CHANGELOG.md](CHANGELOG.md).
+This patch verifies Chaos v0.5 catalog and streaming experiment compatibility
+through real sibling tests and adds an offline streaming target. v0.3.1 corrected
+installed Sidecar API discovery and added deterministic CI coverage; HTTP/signup and the original discovery tools remain available. The
 2026-09-11 audit above describes the earlier `0.2.0` release state.
 
 - **Phase 0: Foundation** ✅ Complete

@@ -6,6 +6,24 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.2 - 2026-10-12
+
+### Added
+
+- Verify Agentic Chaos v0.5 fault catalog discovery and streaming experiment
+  events through the existing MCP tools with real sibling integration tests.
+- Offline `examples/chaos_stream_target.py` and usage documentation for local
+  stdio streaming experiments. New faults are discovered dynamically from the
+  optional installed Chaos package; hosted HTTP continues to reject execution.
+
+### Changed
+
+- Release package, MCP Registry metadata, and runtime version as `0.3.2`.
+- Pin a dedicated CI job to Chaos `v0.5.0` alongside latest-sibling coverage;
+  document source-checkout and explicit workspace setup for wheel installations.
+- Document Chaos v0.5 compatibility without adding a hard sibling dependency or
+  claiming new MCP profile/provider configuration APIs.
+
 ## 0.3.1 - 2026-10-12
 
 ### Fixed
