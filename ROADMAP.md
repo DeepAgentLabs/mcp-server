@@ -27,7 +27,8 @@ This release includes HTTP/signup support and Sidecar discovery tools; the
   shipped in `0.1.3`; `chaos.run_experiment` shipped in `0.2.0`
 - **Phase 3d: Agentic Sidecar Discovery** ✅ Complete — `sidecar.status` and
   `sidecar.module_inventory` are included in `0.3.0` as discovery/readiness
-  tools. The upstream decision runtime remains unimplemented.
+  tools. Sidecar has a local decision runtime; MCP integration with its
+  enforcement and live operator controls remains planned.
 - **Phase 3c: AI Operations Specification Conformance** 🏗️ In progress —
   `spec.validate_artifact` and schema resources shipped in `0.1.3`, ahead of
   where this roadmap originally planned them; remaining work still blocked on
@@ -477,3 +478,30 @@ Developers contributing to the MCP server should be able to ask:
 
 `Which AI Operations Specification object or artifact does this tool read,
 return, or transform?`
+
+## Access containment and evidence (planned extensions)
+
+Added 2026-10-11. Hosted bearer authentication, key replacement/revocation and
+remote chaos restrictions exist. They do not terminate running agents or revoke
+unrelated downstream credentials.
+
+- [ ] Phase 4: integrate authenticated Tower/Sidecar stop/revoke; enforce access
+      outside the LLM at dispatch, including queued calls, retries and existing
+      sessions after revocation. Define the effective revocation point and limits
+      on cancellation of in-flight calls.
+- [ ] Phase 4: deterministic tool-level authorization/delegated task scopes;
+      reject denied tools regardless of model/client requests. Test cross-user
+      access, direct-call bypass and revoked/expired authority.
+- [ ] Keep an independently authorized operator revocation path after the agent's
+      key is revoked; document local stdio trust separately from hosted HTTP auth.
+- [ ] Phase 3a/6: expose producer policy/action correlation and Lens integrity
+      verification, including failed/unknown status. Schema validity is not
+      cryptographic verification.
+- [ ] Phase 4/6: emit correlated access denials, revocation acknowledgements and
+      dispatch/completion evidence for Tower and containment scoring.
+- [ ] Validate with Chaos/Evals fixtures for revoked keys, denied tools, injected
+      instructions, queued dispatch and incomplete evidence. Preserve the remote
+      arbitrary-chaos execution restriction until sandbox requirements are met.
+
+Shared authority/evidence semantics belong in AI Operations Specification;
+MCP remains the access/composition layer, not a second policy or audit engine.

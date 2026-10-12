@@ -273,3 +273,9 @@ account or org changes, update:
 - the `mcp-name` marker in this README
 - `server.json`
 - any repository URLs in `pyproject.toml`
+
+## Operational safety roadmap
+
+See [planned safety acceptance criteria](ROADMAP.md#access-containment-and-evidence-planned-extensions) for responsibilities and
+dependencies. These additions do not claim implemented end-to-end containment
+or integrity protection.
