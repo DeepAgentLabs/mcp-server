@@ -406,8 +406,13 @@ async def test_handle_call_tool_sidecar_status() -> None:
     if _sidecar_available():
         assert payload["ok"] is True
         assert payload["package"] == "agentic-sidecar"
-        assert payload["package_status"] == "scaffold"
-        assert payload["runtime_ready"] is False
+        from deep_agentic_core_mcp.adapters.agentic_sidecar import probe
+
+        installed = probe()
+        assert payload["package_status"] == installed["package_status"]
+        assert payload["runtime_ready"] is installed["runtime_ready"]
+        assert payload["runtime_connected"] is False
+        assert payload["mcp_runtime_controls"] is False
     else:
         assert payload["ok"] is False
         assert "error" in payload

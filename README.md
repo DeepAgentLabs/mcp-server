@@ -48,8 +48,8 @@ Planned capability areas:
 - profile an agentic workflow and return structured telemetry summaries
 - analyze workflow artifacts and surface optimization recommendations
 - run controlled chaos experiments against target workflows
-- expose sidecar readiness and scaffold inventory while the upstream runtime
-  is still under construction
+- expose installed Sidecar decision/runtime capabilities and module inventory;
+  package readiness is distinct from a live task connection
 - eventually expose Control Tower inventory and operator-facing control
   surfaces once that sibling package ships them
 - compare normal versus chaos runs
@@ -89,9 +89,9 @@ Planned capability areas:
 - `chaos.list_faults` — list the supported fault types
 - `chaos.run_experiment` — run a workspace-sandboxed target script under
   selected faults ([executes real code — see `SECURITY.md`](SECURITY.md))
-- `sidecar.status` — report whether `agentic-sidecar` is connected and
-  whether its runtime is implemented yet (added in `0.3.0`)
-- `sidecar.module_inventory` — inspect the current scaffolded sidecar
+- `sidecar.status` — report installed Sidecar runtime APIs separately from
+  live task connectivity (added in `0.3.0`)
+- `sidecar.module_inventory` — inspect the installed sidecar
   modules, framework adapters, and integration placeholders (added in `0.3.0`)
 - `spec.validate_artifact` — validate a workflow/run artifact against the AI
   Operations v0.4 draft
@@ -238,8 +238,8 @@ registry, `core.verify`) and Phase 3b (Agentic Chaos) are complete as of
 - **Phase 3a (AgenticLens)** — provenance verification on
   `lens.analyze_workflow`'s response shape
 - **Phase 3d (Agentic Sidecar Discovery)** — now implemented in the current
-  development line; richer sidecar control surfaces still depend on upstream
-  runtime milestones landing first
+  development line; richer control surfaces require an authenticated task-scoped
+  runtime bridge
 - **Phase 3c (AI Operations Specification)** — multi-version schema support
   and conformance-style reporting, both blocked on upstream `ai-operations-spec`
   work landing first
@@ -279,3 +279,19 @@ account or org changes, update:
 See [planned safety acceptance criteria](ROADMAP.md#access-containment-and-evidence-planned-extensions) for responsibilities and
 dependencies. These additions do not claim implemented end-to-end containment
 or integrity protection.
+
+### Sidecar v0.7 compatibility
+
+With Sidecar installed, `sidecar.status` detects its public decision, plan,
+runtime-event, audit and local operator APIs. `runtime_ready` means the decision
+API is installed; `runtime_connected=false` and `mcp_runtime_controls=false`
+make clear that these MCP discovery tools do not attach to an active task.
+`sidecar.module_inventory` lists adapter files, including placeholders; their
+presence does not certify framework support. No Sidecar dependency is required
+for MCP startup. An unavailable package produces an unavailable response.
+
+For live task controls, use Sidecar's authenticated local OperatorServer/CLI
+interface described in its
+[live operations guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md).
+The v0.7 checkout is prepared for review; this does not publish a sibling release
+or enable remote stop/revoke through MCP.

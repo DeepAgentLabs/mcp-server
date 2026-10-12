@@ -6,6 +6,14 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Sidecar discovery detects installed decision and v0.7 operations APIs instead
+  of hardcoding scaffold/runtime-not-ready status. Explicit connection/control
+  flags prevent installed capabilities from being mistaken for a live MCP task.
+- Module inventory reports installed modules separately from missing planned
+  modules; regenerated tool descriptions retain placeholder support boundaries.
+
 ## 0.3.0 - 2026-10-04
 
 ### Added

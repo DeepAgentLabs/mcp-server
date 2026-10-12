@@ -76,9 +76,9 @@ status should explicitly account for upstream and downstream dependencies.
   tools.
 - `agentic-sidecar`
   Provides decision-supervision and governance behavior. Today the MCP server
-  only exposes discovery/readiness information because the sidecar runtime is
-  still scaffold-only upstream; richer `sidecar.*` control surfaces depend on
-  that package shipping real runtime behavior first.
+  exposes installed API readiness and module inventory. Sidecar v0.7 adds local
+  task status/audit/operator APIs; exposing them through MCP requires a separate
+  authenticated task-scoped bridge. Discovery is not a live task connection.
 - `ai-operations-spec`
   Provides the canonical artifact model and validation rules surfaced through
   `spec.*` tools and used as the ecosystem exchange contract.
@@ -302,8 +302,9 @@ Success criteria:
 
 Status: complete, included in `0.3.0`. The tools were implemented after the
 `v0.2.0` tag (see the historical [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md)).
-`agentic-sidecar` remains a scaffold upstream, so this phase exposes discovery
-and readiness information rather than a decision runtime.
+Sidecar has an implemented decision runtime and v0.7 local operations APIs.
+This MCP phase exposes installed API discovery/readiness without creating or
+connecting a live task or proxying operator controls.
 
 Goals:
 
@@ -321,8 +322,9 @@ Success criteria:
 
 - `core.verify` and `core.health` report `agentic-sidecar` separately from the
   other siblings
-- MCP clients can distinguish "package importable" from "runtime implemented"
-- the server surfaces current scaffold inventory without reimplementing sidecar
+- MCP clients can distinguish package importability, installed runtime APIs and
+  the absence of a live task/control connection
+- the server surfaces installed module inventory without reimplementing sidecar
   logic locally
 
 ## Phase 3c: AI Operations Specification Conformance

@@ -198,7 +198,7 @@ def list_tools() -> list[dict[str, Any]]:
             "name": "sidecar.status",
             "title": "Sidecar Status",
             "description": "Report whether agentic-sidecar is importable and whether "
-            "its decision runtime is actually ready yet.",
+            "its decision runtime APIs are installed; no live task connection is implied.",
             "input_schema": {"type": "object", "properties": {}, "additionalProperties": False},
             "category": "sidecar",
             "prerequisites": ["agentic_sidecar"],
@@ -208,7 +208,7 @@ def list_tools() -> list[dict[str, Any]]:
         {
             "name": "sidecar.module_inventory",
             "title": "Sidecar Module Inventory",
-            "description": "List the current scaffolded modules, framework adapters, "
+            "description": "List installed modules, framework adapter files, "
             "and integration placeholders present in agentic-sidecar.",
             "input_schema": {"type": "object", "properties": {}, "additionalProperties": False},
             "category": "sidecar",
