@@ -19,6 +19,8 @@ This project follows [Semantic Versioning](https://semver.org/).
 ### Changed
 
 - Release package, MCP Registry metadata, and runtime version as `0.3.2`.
+- Pin a dedicated CI job to Chaos `v0.5.0` alongside latest-sibling coverage;
+  document source-checkout and explicit workspace setup for wheel installations.
 - Document Chaos v0.5 compatibility without adding a hard sibling dependency or
   claiming new MCP profile/provider configuration APIs.
 

@@ -184,7 +184,25 @@ recovered in the current signup flow.
 
 Install `agentic-chaos>=0.5.0` in the local MCP server environment. The catalog
 includes four streaming faults and auth/context-length errors dynamically.
-For a trusted local workspace, call `chaos.run_experiment` with:
+The example lives in the source repository; installing the PyPI wheel alone
+does not create it. Prepare a trusted local workspace before starting the stdio
+server (use your chosen Python environment):
+
+```bash
+mkdir -p chaos-workspace
+cd chaos-workspace
+git clone --branch v0.3.2 https://github.com/DeepAgentLabs/mcp-server.git mcp-server
+python -m pip install 'deep-agentic-core-mcp==0.3.2' 'agentic-chaos>=0.5.0'
+export DEEP_AGENTIC_CORE_MCP_WORKSPACE_ROOT="$PWD"
+deep-agentic-core-mcp
+```
+
+For an MCP host that launches the server itself, put the same absolute workspace
+path in its server environment configuration. Setting the variable in another
+terminal does not change an already-running host's environment. Your own target
+scripts can also live anywhere inside that configured workspace.
+
+Then call `chaos.run_experiment` with:
 
 ```json
 {

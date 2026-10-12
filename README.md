@@ -80,6 +80,13 @@ The existing local stdio `chaos.run_experiment` tool runs
 integration tests cover the catalog and experiment path. Chaos remains optional;
 no hard sibling dependency is introduced. Hosted HTTP rejects chaos execution.
 
+The example is a repository file, not a wheel-installed asset. Clone the
+`v0.3.2` source into a `mcp-server` directory and set
+`DEEP_AGENTIC_CORE_MCP_WORKSPACE_ROOT` to its parent directory before starting
+the server. The [user guide](docs/user-guide.md#chaos-v05-streaming-with-mcp-032)
+provides exact setup commands. CI checks both the pinned Chaos `v0.5.0` tag
+and the latest sibling checkout.
+
 See [the user guide](docs/user-guide.md#chaos-v05-streaming-with-mcp-032) and
 [the Chaos v0.5 API guide](https://github.com/DeepAgentLabs/agentic-chaos/blob/main/docs/v0.5.md).
 
