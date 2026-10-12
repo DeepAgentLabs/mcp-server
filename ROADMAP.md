@@ -10,8 +10,9 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.3.0` (2026-10-04) — see [CHANGELOG.md](CHANGELOG.md).
-This release includes HTTP/signup support and Sidecar discovery tools; the
+Release version: `0.3.1` (2026-10-12) — see [CHANGELOG.md](CHANGELOG.md).
+This patch corrects installed Sidecar API discovery and adds deterministic CI
+coverage; HTTP/signup and the original discovery tools remain available. The
 2026-09-11 audit above describes the earlier `0.2.0` release state.
 
 - **Phase 0: Foundation** ✅ Complete
