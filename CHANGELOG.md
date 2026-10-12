@@ -6,10 +6,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.1 - 2026-10-12
+
 ### Fixed
 
 - Exercise all v0.7 discovery capabilities and module inventory with a fake
-  package/tree in credential-free CI; link the pending Sidecar guide to review code.
+  package/tree in credential-free CI; link to the published Sidecar v0.7.0 guide.
 
 - Sidecar discovery detects installed decision and v0.7 operations APIs instead
   of hardcoding scaffold/runtime-not-ready status. Explicit connection/control

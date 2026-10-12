@@ -70,7 +70,7 @@ Planned capability areas:
   (below) reuses stdio tools/resources/prompts, with remote script execution
   excluded
 
-## MCP Surface (current, `0.3.0`)
+## MCP Surface (current, `0.3.1`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -292,6 +292,6 @@ for MCP startup. An unavailable package produces an unavailable response.
 
 For live task controls, use Sidecar's authenticated local OperatorServer/CLI
 interface described in its
-[proposed v0.7 live operations guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/bdabe440a59d7932cd497f11400b91febc51bb3d/docs/live-operations.md).
-The v0.7 checkout is prepared for review; this does not publish a sibling release
-or enable remote stop/revoke through MCP.
+[v0.7.0 live operations guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/v0.7.0/docs/live-operations.md).
+Sidecar v0.7.0 is published separately. This patch improves discovery without
+enabling remote stop/revoke through MCP.
