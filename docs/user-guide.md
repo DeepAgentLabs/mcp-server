@@ -159,7 +159,9 @@ Export normal and chaos run artifacts locally, then send compatible baseline
 and candidate run objects to the hosted `lens.compare_runs` tool if desired.
 Install/connect Sidecar locally to inspect `sidecar.status` and
 `sidecar.module_inventory`. These tools describe package/runtime readiness and
-scaffold modules; they do not supervise live decisions through MCP.
+installed modules and public API capabilities; they do not supervise live decisions
+through MCP. Sidecar v0.7 local status/audit/operator APIs are reported when installed,
+while runtime_connected and mcp_runtime_controls remain false.
 
 ## 7. Manage access
 

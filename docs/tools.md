@@ -343,7 +343,7 @@ Input schema:
 
 ### `sidecar.module_inventory` — Sidecar Module Inventory
 
-List the current scaffolded modules, framework adapters, and integration placeholders present in agentic-sidecar.
+List installed modules, framework adapter files, and integration placeholders present in agentic-sidecar.
 
 | | |
 | --- | --- |
@@ -364,7 +364,7 @@ Input schema:
 
 ### `sidecar.status` — Sidecar Status
 
-Report whether agentic-sidecar is importable and whether its decision runtime is actually ready yet.
+Report whether agentic-sidecar is importable and whether its decision runtime APIs are installed; no live task connection is implied.
 
 | | |
 | --- | --- |

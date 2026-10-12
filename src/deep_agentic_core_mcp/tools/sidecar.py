@@ -26,7 +26,7 @@ def status(_: dict[str, Any] | None = None) -> dict[str, Any]:
 
 
 def module_inventory(_: dict[str, Any] | None = None) -> dict[str, Any]:
-    """Return the scaffolded module, adapter, and integration inventory."""
+    """Return the installed module, adapter-file, and integration inventory."""
     try:
         return {"ok": True, **adapter_module_inventory()}
     except AdapterUnavailableError as exc:
