@@ -2,7 +2,7 @@
 
 This guide covers connecting an assistant, integrating your application, and
 choosing hosted versus local tools. For exact tool arguments see the generated
-[tool reference](tools.md); operators should use [AWS hosting](../deploy/aws/README.md).
+[tool reference](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md); operators should use [AWS hosting](https://github.com/DeepAgentLabs/mcp-server/blob/main/deploy/aws/README.md).
 
 ## 1. Get a key and connect
 
@@ -63,7 +63,7 @@ instrument your running agents or grant access to their local files.
 ## 3. Analyze a workflow
 
 An AgenticLens workflow artifact contains a name, timestamps, and steps with
-metrics. See [the complete example](../examples/sample_workflow.json).
+metrics. See [the complete example](https://github.com/DeepAgentLabs/mcp-server/blob/main/examples/sample_workflow.json).
 
 Ask your assistant:
 
@@ -147,12 +147,12 @@ For chaos execution, run the stdio MCP server on the machine or trusted
 workspace containing your target script and installed sibling libraries.
 The usual MCP client command is `deep-agentic-core-mcp`; install the MCP package
 and required ecosystem packages in that command's Python environment. The repo's
-local workspace setup is described in [README](../README.md).
+local workspace setup is described in [README](https://github.com/DeepAgentLabs/mcp-server/blob/main/README.md).
 
 Call `core.health`, then `chaos.list_faults` to discover supported faults.
 Call `chaos.run_experiment` with a script path inside the configured workspace,
 selected faults, timeout, and session ID. It executes real code; review
-[SECURITY.md](../SECURITY.md). A server-relative path refers to the machine
+[SECURITY.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/SECURITY.md). A server-relative path refers to the machine
 running that server, not automatically to a remote client's filesystem.
 
 Export normal and chaos run artifacts locally, then send compatible baseline
