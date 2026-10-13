@@ -117,7 +117,12 @@ See [the user guide](docs/user-guide.md#chaos-v05-streaming-with-mcp-032) and
 Run [`examples/phase3_walkthrough.py`](examples/phase3_walkthrough.py) from a
 workspace checkout to see all four end to end.
 
-## MCP Surface (current, `0.3.3`)
+Since `0.3.4` the hosted service at `https://mcp.deepagentlabs.io/mcp` ships
+the same sibling versions and spec catalogs, so provenance, conformance reports
+and `chaos.export_aios_run` behave the same hosted as locally. Only
+`chaos.run_experiment` stays local-only.
+
+## MCP Surface (current, `0.3.4`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls

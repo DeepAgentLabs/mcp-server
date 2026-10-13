@@ -6,6 +6,36 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.4 - 2026-10-13
+
+Brings the hosted service up to the Phase 3 feature set. 0.3.3 shipped the
+server code, but the hosted images still used the earlier sibling versions.
+
+### Fixed
+
+- The AWS and Render images pin `agenticlens==0.6.1`, so every hosted
+  `lens.analyze_workflow` finding resolves its step provenance (model-swap and
+  chaos-impact findings were unresolved with 0.5.0).
+- The AWS and Render images install `agentic-chaos==0.5.1`, so the hosted
+  `chaos.export_aios_run` and `chaos.list_faults` work. HTTP still rejects
+  `chaos.run_experiment`; no target script runs on the hosted service.
+- `scripts/fetch_schema_assets.py` fetches the `ai-operations-spec` v0.5.1
+  assets into a spec-root layout: the three v0.4 schemas plus
+  `conformance-rules.json` and `compatibility.json`, each checksum-verified at a
+  pinned commit. Hosted `spec.validate_artifact` now returns the full
+  rule-by-rule conformance report, and the catalog resources are listed.
+- The workspace image and build helper copy `agentic-chaos` and the spec
+  catalogs from sibling checkouts.
+
+### Added
+
+- `tests/test_hosted_image.py` fails if the hosted images fall behind the
+  sibling versions or spec assets the adapters need.
+
+### Changed
+
+- Release package, MCP Registry metadata, and runtime version as `0.3.4`.
+
 ## 0.3.3 - 2026-10-13
 
 Completes Phase 3 (3a AgenticLens, 3b Agentic Chaos, 3c AI Operations

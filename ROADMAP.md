@@ -54,9 +54,13 @@ hashes in DynamoDB. Remote chaos execution remains disabled.
 As of 2026-10-04, the hosted service is running at
 `https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
 Transport/signup and Sidecar discovery are included in the `0.3.0` release.
-The hosted image does not install `agentic-chaos`, so `chaos.export_aios_run`
-reports the exporter as unavailable there; it works on any local or self-hosted
-install with `agentic-chaos>=0.5.1`.
+Since `0.3.4` the hosted image installs the Phase 3 sibling versions:
+`agenticlens` 0.6.1, `agentic-chaos` 0.5.1 (installed only for its exporter and
+fault catalog; HTTP still rejects `chaos.run_experiment`), and the
+`ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a pinned commit and
+checksum-verified. `tests/test_hosted_image.py` keeps these pins in step with
+the adapters. All Phase 3 features are therefore available both locally and
+hosted, except chaos execution, which stays local-only.
 
 - **Package publishing:** version tags run the full CI matrix and packaging
   checks before publishing to PyPI, creating the GitHub Release, and publishing

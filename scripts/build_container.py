@@ -24,7 +24,13 @@ def main() -> None:
         "agenticlens/LICENSE",
         "agenticlens/src",
         "agenticlens/schemas",
+        "agentic-chaos/pyproject.toml",
+        "agentic-chaos/README.md",
+        "agentic-chaos/LICENSE",
+        "agentic-chaos/src",
         "ai-operations-spec/specification/v0.4/schemas",
+        "ai-operations-spec/specification/v0.4/conformance-rules.json",
+        "ai-operations-spec/specification/v0.5/compatibility.json",
     ]
     dockerfile = "mcp-server/deploy/docker/Dockerfile"
     if args.target != "workspace":
