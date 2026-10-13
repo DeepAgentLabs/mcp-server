@@ -48,7 +48,8 @@ package is installed.
 | AgenticLens analysis and Markdown reports | Available | Requires AgenticLens installation |
 | Baseline/candidate run comparison | Available | Requires AgenticLens installation |
 | Evaluation-report SLO gates and audit/HTML reports | Available through `lens.*` | Requires AgenticLens installation |
-| AI Operations v0.4 artifact validation | Available | Requires canonical schema assets |
+| AI Operations artifact validation (`spec_version` routing, rule-cited conformance) | Available | Requires canonical schema assets (`ai-operations-spec>=0.5.1` for rule IDs) |
+| Converting a chaos report to an AIOS run (`chaos.export_aios_run`) | Package not installed in the hosted image | Available with `agentic-chaos>=0.5.1` |
 | Agentic Chaos fault listing | Package not installed in the hosted image | Available with Agentic Chaos installed |
 | Executing chaos experiments | Disabled and excluded from the HTTP catalog | Available over trusted local stdio |
 | Sidecar status and module discovery | Package not installed in the hosted image | Available with Sidecar installed; discovery only |
@@ -85,6 +86,46 @@ filename. Follow with:
 ```
 
 for `lens.report_summary` or `core.session_state`.
+
+Each recommendation in the `lens.analyze_workflow` response has a `provenance`
+block showing where it came from:
+
+```json
+{
+  "artifact": {"workflow_id": "wf-provenance", "workflow_name": "...", "digest": "sha256:..."},
+  "step": {"id": "retrieve", "id_in_artifact": true, "name": "Retriever", "type": "retriever", "index": 0},
+  "span_ids": ["retrieve"],
+  "evidence_sources": ["workflow.step"],
+  "resolved": true,
+  "producer": {"name": "agenticlens", "version": "0.6.1", "optimization_type": "rag_top_k_reduction"}
+}
+```
+
+`resolved` is true only when the step and every cited span exist in the
+artifact you sent. The digest is a SHA-256 of the artifact's canonical JSON, so
+you can confirm which input a finding refers to. It is traceability, not tamper
+evidence. `provenance_summary` lists any unresolved findings by title.
+
+### Validate AI Operations artifacts
+
+`spec.validate_artifact` reads the artifact's `spec_version` and validates it
+against that version's published schemas. An artifact declaring a version the
+server has no schemas for is rejected; it is never checked against a different
+version. `compatibility` gives the decision and the v0.5 rule that applies
+(`AIOS-0.5-V02` for the current `0.4-draft` artifacts). `conformance` lists
+every AI Operations rule with `pass`, `fail`, `not_evaluated` (process
+obligations, or semantic rules when the schema already failed) or
+`not_applicable`, and each issue carries the rule it violates:
+
+```json
+{"rule_id": "AIOS-0.4-P05", "message": "rel-1 references missing object step-9"}
+```
+
+Fields outside `conformance` (`ok`, `claim`, `schema_errors`,
+`semantic_errors`) are this server's presentation, not specification rules.
+The catalogs themselves are MCP resources:
+`resource://specs/aiops/v0.4/conformance-rules` and
+`resource://specs/aiops/v0.5/compatibility`.
 
 Sessions are scoped to the authenticated user. Two users can use
 `refund-agent-v1` without sharing data. Reusing a session ID within one account
@@ -152,7 +193,21 @@ local workspace setup is described in [README](../README.md).
 Call `core.health`, then `chaos.list_faults` to discover supported faults.
 Call `chaos.run_experiment` with a script path inside the configured workspace,
 selected faults, timeout, and session ID. It executes real code; review
-[SECURITY.md](../SECURITY.md). A server-relative path refers to the machine
+[SECURITY.md](../SECURITY.md). To limit which scripts it may run, set
+`DEEP_AGENTIC_CORE_MCP_ALLOWED_SCRIPT_GLOBS` (for example
+`my-agent/chaos/*.py`) and optionally `DEEP_AGENTIC_CORE_MCP_DENIED_SCRIPT_GLOBS`
+in the server's environment. Deny wins, and `.venv`, `site-packages` and `.git`
+are always denied.
+
+With `agentic-chaos>=0.5.1` the result also includes `aios_run`, the experiment
+as an AI Operations v0.4-draft Run, and `aios_export.aligned`, the outcome of
+validating it. Pass `"workflow_id"` to link the run to a Workflow definition, or
+`"export_aios": false` to skip the export. `chaos.export_aios_run` converts a
+saved report, or the session's last experiment, without running anything:
+
+```json
+{"session_id": "stream-demo", "workflow_id": "customer-support"}
+``` A server-relative path refers to the machine
 running that server, not automatically to a remote client's filesystem.
 
 Export normal and chaos run artifacts locally, then send compatible baseline
@@ -221,5 +276,5 @@ as appropriate. Paths are resolved inside the server's workspace.
 
 Profiles and provider patch helpers remain Python/CLI APIs in Chaos; the MCP
 request schema exposes fault names rather than those configuration surfaces.
-Hosted HTTP continues to reject `chaos.run_experiment`. No shared AIOS object or
-canonical export capability is introduced in this patch release.
+Hosted HTTP continues to reject `chaos.run_experiment`. MCP 0.3.3 adds the AIOS
+run export described in section 6 (requires `agentic-chaos>=0.5.1`).
