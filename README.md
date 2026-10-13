@@ -90,7 +90,34 @@ and the latest sibling checkout.
 See [the user guide](docs/user-guide.md#chaos-v05-streaming-with-mcp-032) and
 [the Chaos v0.5 API guide](https://github.com/DeepAgentLabs/agentic-chaos/blob/main/docs/v0.5.md).
 
-## MCP Surface (current, `0.3.2`)
+## Phase 3 completion (MCP 0.3.3)
+
+- **Finding provenance (3a):** every `lens.analyze_workflow` recommendation has
+  a `provenance` block. It names the artifact (`workflow_id`, canonical
+  `sha256` digest), the workflow step (`id`, `name`, `type`, `index`), the
+  evidence span IDs and the producer. `resolved` is true only when all of these
+  exist in the artifact you sent, and `provenance_summary` counts how many do.
+  Needs `agenticlens>=0.6.1` for model-swap and chaos-impact findings.
+- **Chaos results as AIOS runs (3b):** `chaos.run_experiment` attaches
+  `aios_run`, an AI Operations v0.4-draft Run built by `agentic-chaos>=0.5.1`'s
+  own exporter and checked by the spec adapter (`aios_export.aligned`).
+  `chaos.export_aios_run` converts a saved or session report without running
+  any code.
+- **Script policy (3b):** `DEEP_AGENTIC_CORE_MCP_ALLOWED_SCRIPT_GLOBS` and
+  `DEEP_AGENTIC_CORE_MCP_DENIED_SCRIPT_GLOBS` narrow which workspace scripts
+  `chaos.run_experiment` may run. Deny wins, and `.venv`, `site-packages` and
+  `.git` are always denied.
+- **Version routing and conformance (3c):** `spec.validate_artifact`
+  validates against the schema set the artifact's `spec_version` names and
+  rejects markers it has no schema for, citing the applicable v0.5 rule
+  (`AIOS-0.5-V01`…`V06`). Its `conformance` section lists every
+  `AIOS-0.4-*` rule with a status, separate from server presentation. Needs
+  `ai-operations-spec>=0.5.1` for the rule and compatibility catalogs.
+
+Run [`examples/phase3_walkthrough.py`](examples/phase3_walkthrough.py) from a
+workspace checkout to see all four end to end.
+
+## MCP Surface (current, `0.3.3`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -107,14 +134,17 @@ See [the user guide](docs/user-guide.md#chaos-v05-streaming-with-mcp-032) and
   evaluation report
 - `lens.audit_report` — case-by-case evaluation detail, optionally with HTML
 - `chaos.list_faults` — list the supported fault types
-- `chaos.run_experiment` — run a workspace-sandboxed target script under
-  selected faults ([executes real code — see `SECURITY.md`](SECURITY.md))
+- `chaos.run_experiment` — run a workspace-sandboxed, policy-checked target
+  script under selected faults and attach an AIOS run export
+  ([executes real code — see `SECURITY.md`](SECURITY.md))
+- `chaos.export_aios_run` — convert a chaos report into a validated AI
+  Operations v0.4-draft run artifact (added in `0.3.3`; no code execution)
 - `sidecar.status` — report installed Sidecar runtime APIs separately from
   live task connectivity (added in `0.3.0`)
 - `sidecar.module_inventory` — inspect the installed sidecar
   modules, framework adapters, and integration placeholders (added in `0.3.0`)
-- `spec.validate_artifact` — validate a workflow/run artifact against the AI
-  Operations v0.4 draft
+- `spec.validate_artifact` — validate a workflow/run artifact against the
+  schema set its `spec_version` names, with a rule-cited conformance report
 
 Sequential tool calls can share context via an optional `session_id`
 argument, backed by an in-memory session store — see `ROADMAP.md` Phase 2.
@@ -166,6 +196,8 @@ mcp-server/
 │   └── tools.md          # generated - see scripts/generate_tools_doc.py
 ├── examples/
 │   ├── sample_workflow.json
+│   ├── provenance_workflow.json
+│   ├── phase3_walkthrough.py
 │   └── chaos_target.py
 ├── scripts/
 │   └── generate_tools_doc.py
@@ -203,8 +235,12 @@ mcp-server/
 │           ├── sidecar.py
 │           └── spec.py
 └── tests/
+    ├── test_chaos_aios_export.py
+    ├── test_chaos_script_policy.py
     ├── test_degraded_boot.py
     ├── test_imports.py
+    ├── test_lens_provenance.py
+    ├── test_spec_conformance.py
     ├── test_registry.py
     ├── test_server.py
     └── test_session.py
@@ -252,17 +288,13 @@ For PyPI-based verification, the `mcp-name` marker above must match the
 ## What's Next
 
 Phase 2 (session management, rich diagnostics, tool annotations, prompt
-registry, `core.verify`) and Phase 3b (Agentic Chaos) are complete as of
-`0.2.0`. What's still open (see [ROADMAP.md](ROADMAP.md) for full detail):
+registry, `core.verify`) is complete as of `0.2.0`, and Phase 3 (3a AgenticLens,
+3b Agentic Chaos, 3c AI Operations Specification, 3d Sidecar discovery) is
+complete as of `0.3.3`. What's still open (see [ROADMAP.md](ROADMAP.md) for
+full detail):
 
-- **Phase 3a (AgenticLens)** — provenance verification on
-  `lens.analyze_workflow`'s response shape
-- **Phase 3d (Agentic Sidecar Discovery)** — now implemented in the current
-  development line; richer control surfaces require an authenticated task-scoped
-  runtime bridge
-- **Phase 3c (AI Operations Specification)** — multi-version schema support
-  and conformance-style reporting, both blocked on upstream `ai-operations-spec`
-  work landing first
+- **Sidecar runtime controls**: richer control surfaces require an
+  authenticated, task-scoped runtime bridge
 - **Phase 4 (Unified Workflows)** — joined observability + chaos workflows,
   incident/readiness reporting, a higher-level control surface
 - **Future Control Tower coordination** — once `agenticops-control-tower`
