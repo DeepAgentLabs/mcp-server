@@ -122,7 +122,7 @@ the same sibling versions and spec catalogs, so provenance, conformance reports
 and `chaos.export_aios_run` behave the same hosted as locally. Only
 `chaos.run_experiment` stays local-only.
 
-## MCP Surface (current, `0.3.3`)
+## MCP Surface (current, `0.3.4`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
