@@ -61,8 +61,16 @@ class SchemaSet:
         return "v" + self.marker.removesuffix("-draft")
 
 
+# Markers whose conformance rules this module implements (`_schema_issues` and
+# `semantic_issues_for` emit AIOS-0.4-* rules for the v0.4 artifact shape). A
+# schema set the specification publishes for any other marker is not loaded:
+# accepting it would mislabel issues or report its rules as passing unchecked.
+CHECKED_MARKERS = frozenset({"0.4-draft"})
+
 _IMPORT_ERROR: Exception | None = None
 SCHEMA_SETS: dict[str, SchemaSet] = {}
+# Markers the specification publishes that this server cannot yet check.
+UNCHECKED_MARKERS: list[str] = []
 VERSION_PATTERN = re.compile(_FALLBACK_VERSION_PATTERN)
 COMPATIBILITY: dict[str, Any] = {}
 CATALOG_DOCUMENTS: dict[str, dict[str, Any]] = {}
@@ -102,6 +110,9 @@ try:
         VERSION_PATTERN = re.compile(COMPATIBILITY["spec_version_pattern"])
     published = COMPATIBILITY.get("published_schema_sets", _FALLBACK_SCHEMA_SETS)
     for _marker, _entry in published.items():
+        if _marker not in CHECKED_MARKERS:
+            UNCHECKED_MARKERS.append(_marker)
+            continue
         _schema_set = _load_schema_set(SPEC_REPO, _marker, _entry)
         if _schema_set is not None:
             SCHEMA_SETS[_marker] = _schema_set
@@ -134,6 +145,7 @@ def probe() -> dict[str, Any]:
         "available": available,
         "version": ", ".join(supported_versions()) if available else None,
         "supported_versions": supported_versions() if available else [],
+        "published_unchecked_versions": sorted(UNCHECKED_MARKERS) if available else [],
         "conformance_catalog": any(s.rules for s in SCHEMA_SETS.values()),
         "compatibility_catalog": bool(COMPATIBILITY),
         "error": None if available else str(_IMPORT_ERROR),
@@ -273,12 +285,18 @@ def compatibility_decision(marker: Any) -> dict[str, Any]:
             rule_id = "AIOS-0.5-V04"
         else:
             rule_id = "AIOS-0.5-V06"
+    reason = (
+        "the specification publishes a schema set for this spec_version, but this server "
+        "version has no conformance checker for it yet; upgrade deep-agentic-core-mcp"
+        if marker in UNCHECKED_MARKERS
+        else "no schema set is published for this spec_version"
+    )
     return {
         **base,
         "decision": "reject",
         "rule_id": rule_id,
-        "reason": "no schema set is published for this spec_version; the artifact must be "
-        "validated against the schema its own marker names, never a different version's",
+        "reason": reason + "; the artifact must be validated against the schema its own "
+        "marker names, never a different version's",
     }
 
 

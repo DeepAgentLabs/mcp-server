@@ -191,3 +191,23 @@ async def test_verify_reports_supported_versions_and_catalogs() -> None:
     assert spec["supported_versions"] == ["0.4-draft"]
     assert spec["conformance_catalog"] is True
     assert spec["compatibility_catalog"] is True
+
+
+async def test_published_markers_without_a_checker_are_rejected(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(spec_adapter, "UNCHECKED_MARKERS", ["0.6-draft"])
+    artifact = {**_load(EXAMPLES / "valid" / "run.json"), "spec_version": "0.6-draft"}
+
+    payload = await _validate(artifact)
+
+    assert payload["compatibility"]["decision"] == "reject"
+    assert "no conformance checker" in payload["compatibility"]["reason"]
+    assert "conformance" not in payload
+
+
+def test_only_checked_markers_are_loaded() -> None:
+    assert set(spec_adapter.SCHEMA_SETS) <= spec_adapter.CHECKED_MARKERS
+    assert spec_adapter.probe()["published_unchecked_versions"] == sorted(
+        spec_adapter.UNCHECKED_MARKERS
+    )
