@@ -1,0 +1,90 @@
+"""Hosted images must ship the sibling versions and spec assets Phase 3 depends on.
+
+v0.3.3 shipped server code for provenance, AIOS export and rule-cited
+conformance, but the hosted images still pinned agenticlens 0.5.0, omitted
+agentic-chaos and fetched only the v0.4 schemas. These checks keep the image
+definitions in step with what the adapters need.
+"""
+
+import hashlib
+import importlib.util
+import re
+from pathlib import Path
+
+import pytest
+
+REPO = Path(__file__).resolve().parents[1]
+DOCKER = REPO / "deploy" / "docker"
+STANDALONE_IMAGES = ["Dockerfile.aws", "Dockerfile.render"]
+
+# Minimum sibling versions whose behavior the Phase 3 tools rely on.
+REQUIRED_PINS = {"agenticlens": (0, 6, 1), "agentic-chaos": (0, 5, 1)}
+
+# Spec-root-relative paths the ai_operations_spec adapter reads.
+SPEC_ASSETS = {
+    "specification/v0.4/schemas/common.schema.json",
+    "specification/v0.4/schemas/workflow.schema.json",
+    "specification/v0.4/schemas/run.schema.json",
+    "specification/v0.4/conformance-rules.json",
+    "specification/v0.5/compatibility.json",
+}
+
+
+def _version(text: str) -> tuple[int, ...]:
+    return tuple(int(part) for part in text.split("."))
+
+
+@pytest.mark.parametrize("dockerfile", STANDALONE_IMAGES)
+def test_standalone_images_pin_phase3_sibling_versions(dockerfile: str) -> None:
+    content = (DOCKER / dockerfile).read_text(encoding="utf-8")
+    for package, minimum in REQUIRED_PINS.items():
+        match = re.search(rf'"{package}==([0-9.]+)"', content)
+        assert match, f"{dockerfile} does not pin {package}"
+        assert _version(match.group(1)) >= minimum, f"{dockerfile} pins {package} too old"
+
+
+@pytest.mark.parametrize("dockerfile", STANDALONE_IMAGES)
+def test_standalone_images_fetch_assets_into_the_spec_root(dockerfile: str) -> None:
+    content = (DOCKER / dockerfile).read_text(encoding="utf-8")
+    assert "fetch_schema_assets.py /opt/workspace/ai-operations-spec\n" in content
+
+
+def test_fetch_script_pins_every_asset_the_spec_adapter_reads() -> None:
+    spec = importlib.util.spec_from_file_location(
+        "fetch_schema_assets", REPO / "scripts" / "fetch_schema_assets.py"
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    assert set(module.CHECKSUMS) == SPEC_ASSETS
+    assert re.fullmatch(r"[0-9a-f]{40}", module.COMMIT)
+    assert all(re.fullmatch(r"[0-9a-f]{64}", digest) for digest in module.CHECKSUMS.values())
+
+
+def test_local_spec_assets_match_the_pinned_checksums() -> None:
+    """When a sibling checkout is present, it must hold exactly the pinned content."""
+    spec_root = REPO.parent / "ai-operations-spec"
+    if not spec_root.exists():
+        pytest.skip("ai-operations-spec sibling checkout unavailable")
+    spec = importlib.util.spec_from_file_location(
+        "fetch_schema_assets", REPO / "scripts" / "fetch_schema_assets.py"
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    for relative, expected in module.CHECKSUMS.items():
+        digest = hashlib.sha256((spec_root / relative).read_bytes()).hexdigest()
+        assert digest == expected, f"{relative} differs from the pinned spec revision"
+
+
+def test_workspace_image_copies_chaos_and_spec_catalogs() -> None:
+    dockerfile = (DOCKER / "Dockerfile").read_text(encoding="utf-8")
+    ignore = (DOCKER / "Dockerfile.dockerignore").read_text(encoding="utf-8")
+    for path in (
+        "agentic-chaos/src",
+        "ai-operations-spec/specification/v0.4/conformance-rules.json",
+        "ai-operations-spec/specification/v0.5/compatibility.json",
+    ):
+        assert f"COPY {path}" in dockerfile
+        assert f"!{path}" in ignore
