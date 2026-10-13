@@ -207,7 +207,9 @@ saved report, or the session's last experiment, without running anything:
 
 ```json
 {"session_id": "stream-demo", "workflow_id": "customer-support"}
-``` A server-relative path refers to the machine
+```
+
+A server-relative path refers to the machine
 running that server, not automatically to a remote client's filesystem.
 
 Export normal and chaos run artifacts locally, then send compatible baseline
