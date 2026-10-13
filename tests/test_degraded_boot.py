@@ -44,11 +44,22 @@ _SCRIPT = textwrap.dedent(
                 )
             )[0].text
         )
-        schema_resource_uris = [r.uri for r in server_module.RESOURCES if "schema" in r.uri]
+        export = json.loads(
+            (
+                await server_module.handle_call_tool(
+                    "chaos.export_aios_run",
+                    {"report": {"name": "x", "start_time": "2026-10-13T12:00:00Z"}},
+                )
+            )[0].text
+        )
+        schema_resource_uris = [
+            r.uri for r in server_module.RESOURCES if "schema" in r.uri or "specs" in r.uri
+        ]
         print(json.dumps({
             "verify": verify,
             "health_status": health["status"],
             "validate": validate,
+            "export": export,
             "schema_resource_uris": schema_resource_uris,
         }))
 
@@ -81,3 +92,10 @@ def test_server_boots_and_degrades_when_sibling_repos_are_missing() -> None:
     assert output["validate"]["ok"] is False
     assert "unavailable" in output["validate"]["error"]
     assert output["schema_resource_uris"] == []
+    # Without the spec checkout an export (if agentic-chaos is installed at all) cannot be
+    # validated, so it is never reported as aligned - and nothing crashes.
+    assert output["export"]["ok"] is False
+    assert (
+        output["export"]["aios_run"] is None
+        or output["export"]["aios_export"]["validated"] is False
+    )
