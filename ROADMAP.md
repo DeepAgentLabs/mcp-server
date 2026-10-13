@@ -10,7 +10,10 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.3.3` (2026-10-13) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `0.3.5` (2026-10-13) — see [CHANGELOG.md](CHANGELOG.md).
+`0.3.5` adds `lens.diagnose_run` and `lens.score_analysis` for AgenticLens
+0.7.0 (v0.5 diagnosis) and pins the hosted images to `agenticlens` 0.7.0 and
+`agentic-chaos` 0.5.3. `0.3.3`
 This release completes Phase 3: provenance on every `lens.analyze_workflow`
 finding (3a), AIOS run export and a script allow/deny policy for chaos
 experiments (3b), and `spec_version`-routed validation with rule-cited
@@ -54,8 +57,8 @@ hashes in DynamoDB. Remote chaos execution remains disabled.
 As of 2026-10-04, the hosted service is running at
 `https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
 Transport/signup and Sidecar discovery are included in the `0.3.0` release.
-Since `0.3.4` the hosted image installs the Phase 3 sibling versions:
-`agenticlens` 0.6.1, `agentic-chaos` 0.5.1 (installed only for its exporter and
+Since `0.3.5` the hosted image installs `agenticlens` 0.7.0 and
+`agentic-chaos` 0.5.3 (`0.3.4` installed 0.6.1 and 0.5.1); chaos is installed only for its exporter and
 fault catalog; HTTP still rejects `chaos.run_experiment`), and the
 `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a pinned commit and
 checksum-verified. `tests/test_hosted_image.py` keeps these pins in step with
@@ -116,6 +119,7 @@ For roadmap work, distinguish:
 | 3a finding provenance | `agenticlens>=0.6.1` (model-swap and chaos-impact findings name their step) | `tests/test_lens_provenance.py`; agenticlens `tests/test_recommendation_provenance.py` |
 | 3b AIOS run export | `agentic-chaos>=0.5.1` (`agentic_chaos.export.to_aios_run`) | `tests/test_chaos_aios_export.py`; chaos `tests/test_export_aios.py` (v0.4 schema + spec semantic checker) |
 | 3b script policy | none (server-local) | `tests/test_chaos_script_policy.py` |
+| Lens diagnosis tools (`0.3.5`) | `agenticlens>=0.7.0` (`agenticlens.diagnosis`, `analyze_scores`) | `tests/test_lens_diagnosis.py`; agenticlens `tests/test_diagnosis_engine.py`, `tests/test_score_analysis.py` |
 | 3c version routing and conformance | `ai-operations-spec>=0.5.1` (`specification/v0.4/conformance-rules.json`, `specification/v0.5/compatibility.json`) | `tests/test_spec_conformance.py`; spec `tests/test_conformance_catalogs.py` |
 
 Each dependency degrades rather than breaking boot. With an older agenticlens,
