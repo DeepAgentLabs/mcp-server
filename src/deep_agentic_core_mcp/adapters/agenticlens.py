@@ -78,6 +78,14 @@ def artifact_digest(artifact: dict[str, Any]) -> str:
     return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
+def _artifact_step_ids(artifact: dict[str, Any]) -> set[str]:
+    return {
+        str(step["id"])
+        for step in artifact.get("steps") or []
+        if isinstance(step, dict) and step.get("id")
+    }
+
+
 def _provenance(
     recommendation: dict[str, Any],
     workflow: Workflow,
@@ -113,7 +121,12 @@ def _provenance(
         "step": step,
         "span_ids": span_ids,
         "evidence_sources": sorted({item["source"] for item in evidence if item.get("source")}),
-        "resolved": step is not None and bool(span_ids) and set(span_ids) <= set(steps),
+        # Only IDs the caller actually sent count; IDs AgenticLens generated for
+        # steps without one are not traceable back to the input.
+        "resolved": step is not None
+        and step["id_in_artifact"]
+        and bool(span_ids)
+        and set(span_ids) <= _artifact_step_ids(artifact),
         "producer": {
             "name": "agenticlens",
             "version": _version,

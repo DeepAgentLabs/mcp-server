@@ -84,3 +84,6 @@ async def test_generated_ids_are_not_presented_as_artifact_ids() -> None:
     assert provenance["artifact"]["workflow_id"] is None
     assert provenance["step"]["index"] == 0
     assert provenance["step"]["id_in_artifact"] is False
+    # A generated ID cannot be traced back to the input, so the finding is unresolved.
+    assert provenance["resolved"] is False
+    assert payload["provenance_summary"]["resolved"] == 0
