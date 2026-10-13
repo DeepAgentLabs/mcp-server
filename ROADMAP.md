@@ -13,11 +13,12 @@ entry below have been updated accordingly; see the audit for full detail.
 Release version: `0.3.5` (2026-10-13) — see [CHANGELOG.md](CHANGELOG.md).
 `0.3.5` adds `lens.diagnose_run` and `lens.score_analysis` for AgenticLens
 0.7.0 (v0.5 diagnosis) and pins the hosted images to `agenticlens` 0.7.0 and
-`agentic-chaos` 0.5.3. `0.3.3`
-This release completes Phase 3: provenance on every `lens.analyze_workflow`
+`agentic-chaos` 0.5.3.
+
+`0.3.3` completed Phase 3: provenance on every `lens.analyze_workflow`
 finding (3a), AIOS run export and a script allow/deny policy for chaos
 experiments (3b), and `spec_version`-routed validation with rule-cited
-conformance reports (3c). It pairs with sibling patch releases
+conformance reports (3c). That release paired with sibling patch releases
 `agenticlens` 0.6.1, `agentic-chaos` 0.5.1 and `ai-operations-spec` 0.5.1.
 v0.3.2 verified Chaos v0.5 compatibility; v0.3.1 corrected installed Sidecar API
 discovery. The 2026-09-11 audit above describes the earlier `0.2.0` release state.
@@ -57,11 +58,11 @@ hashes in DynamoDB. Remote chaos execution remains disabled.
 As of 2026-10-04, the hosted service is running at
 `https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
 Transport/signup and Sidecar discovery are included in the `0.3.0` release.
-Since `0.3.5` the hosted image installs `agenticlens` 0.7.0 and
-`agentic-chaos` 0.5.3 (`0.3.4` installed 0.6.1 and 0.5.1); chaos is installed only for its exporter and
-fault catalog; HTTP still rejects `chaos.run_experiment`), and the
-`ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a pinned commit and
-checksum-verified. `tests/test_hosted_image.py` keeps these pins in step with
+Since `0.3.5` the hosted image installs `agenticlens` 0.7.0, `agentic-chaos`
+0.5.3, and the `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a
+pinned commit and checksum-verified. (`0.3.4` installed Lens 0.6.1 and Chaos
+0.5.1.) Chaos is installed only for its exporter and fault catalog; HTTP still
+rejects `chaos.run_experiment`. `tests/test_hosted_image.py` keeps these pins in step with
 the adapters. All Phase 3 features are therefore available both locally and
 hosted, except chaos execution, which stays local-only.
 
