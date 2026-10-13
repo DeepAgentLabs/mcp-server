@@ -48,7 +48,17 @@ async def test_deny_wins_over_allow(monkeypatch: pytest.MonkeyPatch) -> None:
     assert "denied by script policy glob '*/chaos_target.py'" in payload["error"]
 
 
-@pytest.mark.parametrize("relative", ["proj/.venv/lib/x.py", ".venv/x.py", "proj/.git/hooks/x.py"])
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "proj/.venv/lib/x.py",
+        ".venv/x.py",
+        "proj/.git/hooks/x.py",
+        ".git/hooks/x.py",
+        "site-packages/x.py",
+        "proj/lib/site-packages/x.py",
+    ],
+)
 async def test_installed_and_vcs_scripts_are_denied_by_default(
     relative: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

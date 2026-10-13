@@ -23,6 +23,7 @@ DENIED_SCRIPT_GLOBS_ENV = "DEEP_AGENTIC_CORE_MCP_DENIED_SCRIPT_GLOBS"
 DEFAULT_DENIED_SCRIPT_GLOBS = (
     ".venv/*",
     "*/.venv/*",
+    "site-packages/*",
     "*/site-packages/*",
     ".git/*",
     "*/.git/*",
