@@ -11,6 +11,15 @@
 !ai-operations-spec/specification/v0.4/
 !ai-operations-spec/specification/v0.4/schemas/
 !ai-operations-spec/specification/v0.4/schemas/**
+!ai-operations-spec/specification/v0.4/conformance-rules.json
+!ai-operations-spec/specification/v0.5/
+!ai-operations-spec/specification/v0.5/compatibility.json
+!agentic-chaos/
+!agentic-chaos/pyproject.toml
+!agentic-chaos/README.md
+!agentic-chaos/LICENSE
+!agentic-chaos/src/
+!agentic-chaos/src/**
 **/.git
 **/.venv
 **/__pycache__
