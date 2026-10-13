@@ -122,7 +122,23 @@ the same sibling versions and spec catalogs, so provenance, conformance reports
 and `chaos.export_aios_run` behave the same hosted as locally. Only
 `chaos.run_experiment` stays local-only.
 
-## MCP Surface (current, `0.3.4`)
+## AgenticLens 0.7.0 diagnosis tools (MCP 0.3.5)
+
+- **`lens.diagnose_run`** — send a trace `Run` (and optional `baseline` runs)
+  and get AgenticLens's diagnosis report: failure-taxonomy diagnoses with
+  confidence and supporting spans, the faulty step and agent with ranked
+  candidates, the incident timeline, robust anomalies against the baseline,
+  guardrail status (`budget` caps spans, depth, and time), and an
+  investigation narrative in Markdown (`include_narrative`, default true).
+- **`lens.score_analysis`** — send an evaluation report and get deterministic
+  and model-based scores reported separately, judge cost kept apart from agent
+  cost, and the cases where evaluators disagree.
+
+Both need `agenticlens>=0.7.0`; with an older install they return a clear
+"unavailable" error and every other Lens tool keeps working. The hosted images
+pin `agenticlens==0.7.0` and `agentic-chaos==0.5.3`.
+
+## MCP Surface (current, `0.3.5`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -138,6 +154,10 @@ and `chaos.export_aios_run` behave the same hosted as locally. Only
 - `lens.slo_summary` — apply release-gate style SLO thresholds to an
   evaluation report
 - `lens.audit_report` — case-by-case evaluation detail, optionally with HTML
+- `lens.diagnose_run` — diagnose a trace run: faulty step and agent, timeline,
+  anomalies, investigation narrative (`agenticlens>=0.7.0`)
+- `lens.score_analysis` — deterministic vs model-based scores, judge cost, and
+  evaluator disagreement for an evaluation report (`agenticlens>=0.7.0`)
 - `chaos.list_faults` — list the supported fault types
 - `chaos.run_experiment` — run a workspace-sandboxed, policy-checked target
   script under selected faults and attach an AIOS run export
