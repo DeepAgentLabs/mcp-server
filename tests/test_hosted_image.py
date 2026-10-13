@@ -9,6 +9,7 @@ definitions in step with what the adapters need.
 import hashlib
 import importlib.util
 import re
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -62,20 +63,35 @@ def test_fetch_script_pins_every_asset_the_spec_adapter_reads() -> None:
     assert all(re.fullmatch(r"[0-9a-f]{64}", digest) for digest in module.CHECKSUMS.values())
 
 
-def test_local_spec_assets_match_the_pinned_checksums() -> None:
-    """When a sibling checkout is present, it must hold exactly the pinned content."""
+def test_pinned_checksums_match_the_pinned_spec_commit() -> None:
+    """Read each asset at the pinned commit (not the sibling's current branch).
+
+    Skips when the sibling checkout lacks that commit, e.g. CI's shallow clone;
+    later spec changes on its default branch must not break this check.
+    """
     spec_root = REPO.parent / "ai-operations-spec"
-    if not spec_root.exists():
-        pytest.skip("ai-operations-spec sibling checkout unavailable")
+    if not (spec_root / ".git").exists():
+        pytest.skip("ai-operations-spec git checkout unavailable")
     spec = importlib.util.spec_from_file_location(
         "fetch_schema_assets", REPO / "scripts" / "fetch_schema_assets.py"
     )
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
+    present = subprocess.run(
+        ["git", "-C", str(spec_root), "cat-file", "-e", f"{module.COMMIT}^{{commit}}"],
+        capture_output=True,
+        check=False,
+    )
+    if present.returncode != 0:
+        pytest.skip("pinned ai-operations-spec commit not present in this checkout")
     for relative, expected in module.CHECKSUMS.items():
-        digest = hashlib.sha256((spec_root / relative).read_bytes()).hexdigest()
-        assert digest == expected, f"{relative} differs from the pinned spec revision"
+        content = subprocess.run(
+            ["git", "-C", str(spec_root), "show", f"{module.COMMIT}:{relative}"],
+            capture_output=True,
+            check=True,
+        ).stdout
+        assert hashlib.sha256(content).hexdigest() == expected, relative
 
 
 def test_workspace_image_copies_chaos_and_spec_catalogs() -> None:
