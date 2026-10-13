@@ -79,3 +79,19 @@ async def test_score_analysis_separates_judge_scores() -> None:
     assert payload["judge_cost"]["total_cost_usd"] > 0
     assert payload["disagreement_cases"] == 2
     assert (await _call("lens.score_analysis", {}))["ok"] is False
+
+
+@pytest.mark.asyncio
+async def test_older_agenticlens_degrades_only_the_new_tools(monkeypatch) -> None:
+    from deep_agentic_core_mcp.adapters import agenticlens as adapter
+
+    monkeypatch.setattr(adapter, "_DIAGNOSIS_ERROR", ImportError("no agenticlens.diagnosis"))
+    for name, arguments in (
+        ("lens.diagnose_run", {"run": _load(DIAGNOSIS / "incident.json")}),
+        ("lens.score_analysis", {"report": _load(EVALUATION)}),
+    ):
+        payload = await _call(name, arguments)
+        assert payload["ok"] is False
+        assert "agenticlens>=0.7.0" in payload["error"]
+    audit = await _call("lens.audit_report", {"report": _load(EVALUATION)})
+    assert audit["ok"] is True
