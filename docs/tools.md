@@ -3,7 +3,7 @@
 
 # Tool Reference
 
-14 tools, generated from `tools/registry.py` - the same data MCP
+15 tools, generated from `tools/registry.py` - the same data MCP
 clients see via `tools/list`. See [README.md](../README.md) for a one-line-per-tool
 overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
@@ -102,7 +102,7 @@ Input schema:
 
 ### `lens.analyze_workflow` — Analyze Workflow
 
-Analyze an AgenticLens-compatible workflow artifact.
+Analyze an AgenticLens-compatible workflow artifact. Each recommendation carries a `provenance` block (artifact digest, workflow step, evidence span IDs, producer) and the response summarizes how many resolve.
 
 | | |
 | --- | --- |
@@ -274,6 +274,49 @@ Input schema:
 
 ## Agentic Chaos (`chaos.*`)
 
+### `chaos.export_aios_run` — Export Chaos Report as AIOS Run
+
+Convert a chaos report into an AI Operations v0.4-draft run artifact (via agentic-chaos>=0.5.1) and validate it with rule-cited conformance. 'report' may be omitted to reuse the session's last experiment.
+
+| | |
+| --- | --- |
+| Category | `chaos` |
+| Prerequisites | `agentic_chaos`, `ai_operations_spec` |
+| Expected duration | fast |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "report": {
+      "type": "object"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "created",
+        "running",
+        "completed",
+        "failed",
+        "cancelled"
+      ],
+      "description": "Observed run status; derived from crashed/timed_out when omitted."
+    },
+    "workflow_id": {
+      "type": "string"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session to read/write shared state under. Defaults to 'default'."
+    }
+  },
+  "additionalProperties": false
+}
+```
+
 ### `chaos.list_faults` — List Chaos Faults
 
 List the supported fault types for chaos experiments.
@@ -297,7 +340,7 @@ Input schema:
 
 ### `chaos.run_experiment` — Run Chaos Experiment
 
-Run a workspace-sandboxed target script under selected chaos faults and report the resulting events.
+Run a workspace-sandboxed target script under selected chaos faults and report the resulting events. The script must also pass the configured allow/deny glob policy. With agentic-chaos>=0.5.1 the result includes an AI Operations v0.4-draft run artifact and its conformance check.
 
 | | |
 | --- | --- |
@@ -325,6 +368,14 @@ Input schema:
     },
     "timeout_seconds": {
       "type": "number"
+    },
+    "export_aios": {
+      "type": "boolean",
+      "description": "Attach an AIOS run export (`aios_run`). Defaults to true."
+    },
+    "workflow_id": {
+      "type": "string",
+      "description": "External Workflow ID for the export's run-of link."
     },
     "session_id": {
       "type": "string",
@@ -387,7 +438,7 @@ Input schema:
 
 ### `spec.validate_artifact` — Validate AI Operations Artifact
 
-Validate a workflow or run artifact against the AI Operations v0.4 draft.
+Validate a workflow or run artifact against the schema set its `spec_version` names (v0.5 compatibility rules), returning a conformance report that cites AI Operations rule IDs separately from server presentation.
 
 | | |
 | --- | --- |
