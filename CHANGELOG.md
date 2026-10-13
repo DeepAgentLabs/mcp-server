@@ -21,7 +21,8 @@ optional dependency and degrades instead of failing boot.
     `sha256` digest of its canonical JSON
   - the workflow step: `id`, `id_in_artifact`, `name`, `type`, `index`
   - evidence span IDs and sources, and the producer
-  - `resolved`, true only when the step and every span exist in the artifact
+  - `resolved`, true only when the step and every span exist under IDs the
+    artifact itself carries (IDs AgenticLens generates do not count)
 
   `provenance_summary` counts resolved findings and lists unresolved ones by
   title.
@@ -38,13 +39,17 @@ optional dependency and degrades instead of failing boot.
   - `DEEP_AGENTIC_CORE_MCP_ALLOWED_SCRIPT_GLOBS` (opt-in allowlist) and
     `DEEP_AGENTIC_CORE_MCP_DENIED_SCRIPT_GLOBS`, matched against the
     workspace-relative path
-  - deny wins, and `.venv`, `site-packages` and `.git` are always denied
+  - deny wins, and `.venv`, `site-packages` and `.git` are always denied, at the
+    workspace root or nested
   - `core.health` reports the active policy as `chaos_script_policy`
 - **Version routing (3c).** `spec.validate_artifact` validates against the
   schema set the artifact's `spec_version` names, loaded from the spec's
   `specification/v0.5/compatibility.json`. Unpublished, malformed or missing
   markers are rejected rather than re-validated against another version.
   `compatibility` reports the decision and the v0.5 rule (`AIOS-0.5-V01`–`V06`).
+  Only markers this server implements rules for (`0.4-draft`) are loaded. Any
+  other set the spec publishes appears as `published_unchecked_versions`, and its
+  artifacts are rejected rather than checked with the wrong rules.
 - **Rule-cited conformance (3c).** `spec.validate_artifact` returns a
   `conformance` report:
   - every rule from `specification/v0.4/conformance-rules.json`, with

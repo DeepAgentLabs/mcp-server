@@ -393,7 +393,9 @@ Delivered in 0.3.3 (previously blocked upstream):
   consumer rules, an unpublished marker is rejected, never re-validated
   against a different version. The response's `compatibility` block gives the
   decision and the cited row (`AIOS-0.5-V01`–`V06`). Today the spec publishes
-  one set (`0.4-draft`); the routing needs no code change when a second set appears.
+  one set (`0.4-draft`). A set published for another marker is reported as
+  `published_unchecked_versions` and its artifacts are rejected until this server
+  implements that version's rules; nothing is ever checked with v0.4 rules by mistake.
 - ✅ conformance-style reporting. `conformance` lists every rule from
   `specification/v0.4/conformance-rules.json` with `pass` / `fail` /
   `not_evaluated` / `not_applicable` status, and labels each issue with its
@@ -406,8 +408,8 @@ Delivered in 0.3.3 (previously blocked upstream):
   plus `resource://specs/aiops/v0.4/conformance-rules` and
   `resource://specs/aiops/v0.5/compatibility`.
 
-Future spec milestones (new schema sets, frozen markers) need only a newer
-`ai-operations-spec` checkout or install.
+Future spec milestones (new schema sets, frozen markers) need a newer
+`ai-operations-spec` and an MCP release that adds that version's checker.
 
 ## Phase 4: Unified Workflows
 
