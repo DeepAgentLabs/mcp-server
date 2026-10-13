@@ -41,7 +41,9 @@ from deep_agentic_core_mcp.tools.lens import (
     analyze_workflow,
     audit_report,
     compare_runs,
+    diagnose_run,
     report_summary,
+    score_analysis,
     slo_summary,
 )
 from deep_agentic_core_mcp.tools.registry import list_tools as _registry_tools
@@ -68,6 +70,8 @@ _TOOL_DISPATCH: dict[str, Callable[[dict[str, Any] | None], dict[str, Any]]] = {
     "lens.compare_runs": compare_runs,
     "lens.slo_summary": slo_summary,
     "lens.audit_report": audit_report,
+    "lens.diagnose_run": diagnose_run,
+    "lens.score_analysis": score_analysis,
     "chaos.list_faults": list_faults,
     "chaos.run_experiment": run_experiment,
     "chaos.export_aios_run": export_aios_run,
