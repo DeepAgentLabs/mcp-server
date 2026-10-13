@@ -43,6 +43,14 @@ Mitigations currently in place:
   workspace root (the directory containing `mcp-server` and its sibling
   repos) and rejected if it resolves outside it or doesn't exist. It cannot
   be pointed at arbitrary paths on the host machine.
+- **Script allow/deny policy** (`0.3.3`) — on top of workspace confinement,
+  the resolved script's workspace-relative path must not match a deny glob and,
+  when `DEEP_AGENTIC_CORE_MCP_ALLOWED_SCRIPT_GLOBS` is set, must match an allow
+  glob. Deny always wins. `.venv`, `site-packages` and `.git` paths are always
+  denied, and `DEEP_AGENTIC_CORE_MCP_DENIED_SCRIPT_GLOBS` adds more. Globs use
+  `fnmatch` semantics (`*` also matches `/`) and are comma-separated.
+  `core.health` reports the active policy. Set an allowlist whenever the
+  workspace holds scripts that clients should not trigger.
 - **`timeout_seconds` guard** — the script runs on a worker thread with a
   configurable timeout. Note this is *not* a hard kill: Python cannot
   forcibly terminate a thread, so on timeout the script's thread may still
