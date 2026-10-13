@@ -6,6 +6,75 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.3 - 2026-10-13
+
+Completes Phase 3 (3a AgenticLens, 3b Agentic Chaos, 3c AI Operations
+Specification). Pairs with sibling patch releases `agenticlens` 0.6.1,
+`agentic-chaos` 0.5.1 and `ai-operations-spec` 0.5.1. Every sibling stays an
+optional dependency and degrades instead of failing boot.
+
+### Added
+
+- **Finding provenance (3a).** Each `lens.analyze_workflow` recommendation now
+  has a `provenance` block:
+  - the artifact: `workflow_id` when the artifact carries one, plus a
+    `sha256` digest of its canonical JSON
+  - the workflow step: `id`, `id_in_artifact`, `name`, `type`, `index`
+  - evidence span IDs and sources, and the producer
+  - `resolved`, true only when the step and every span exist under IDs the
+    artifact itself carries (IDs AgenticLens generates do not count)
+
+  `provenance_summary` counts resolved findings and lists unresolved ones by
+  title.
+- **AIOS run export (3b).** `chaos.run_experiment` attaches `aios_run`, an AI
+  Operations v0.4-draft Run built by `agentic-chaos`'s own exporter
+  (`>=0.5.1`), with `aios_export` reporting its validation (`aligned`,
+  rule-cited `issues`, `claim`). New arguments: `export_aios` (default true)
+  and `workflow_id`. With an older `agentic-chaos`, the result reports
+  `aios_export.available=false`.
+- **`chaos.export_aios_run` tool.** Converts a saved report, or the session's
+  last experiment, into a validated AIOS run without running code, so it is
+  also listed over HTTP.
+- **Script allow/deny policy (3b)** for `chaos.run_experiment`:
+  - `DEEP_AGENTIC_CORE_MCP_ALLOWED_SCRIPT_GLOBS` (opt-in allowlist) and
+    `DEEP_AGENTIC_CORE_MCP_DENIED_SCRIPT_GLOBS`, matched against the
+    workspace-relative path
+  - deny wins, and `.venv`, `site-packages` and `.git` are always denied, at the
+    workspace root or nested
+  - `core.health` reports the active policy as `chaos_script_policy`
+- **Version routing (3c).** `spec.validate_artifact` validates against the
+  schema set the artifact's `spec_version` names, loaded from the spec's
+  `specification/v0.5/compatibility.json`. Unpublished, malformed or missing
+  markers are rejected rather than re-validated against another version.
+  `compatibility` reports the decision and the v0.5 rule (`AIOS-0.5-V01`–`V06`).
+  Only markers this server implements rules for (`0.4-draft`) are loaded. Any
+  other set the spec publishes appears as `published_unchecked_versions`, and its
+  artifacts are rejected rather than checked with the wrong rules.
+- **Rule-cited conformance (3c).** `spec.validate_artifact` returns a
+  `conformance` report:
+  - every rule from `specification/v0.4/conformance-rules.json`, with
+    `pass` / `fail` / `not_evaluated` / `not_applicable` status
+  - each issue labeled with its rule ID (`AIOS-0.4-P01`–`P12`, `X01`, `U02`,
+    `E01`)
+
+  Server presentation fields are separated and labeled in `server.note`.
+- New semantic checks: P12 (retry attempts keep distinct identities and link to
+  the prior attempt) and X01 (Workflow references must be `external`).
+- Resources `resource://specs/aiops/v0.4/conformance-rules` and
+  `resource://specs/aiops/v0.5/compatibility`. Schema resources are now
+  generated for every loaded schema set.
+- `core.verify`/`core.health` report `supported_versions` and catalog
+  availability for the spec adapter, and `aios_export` for the chaos adapter.
+- `examples/phase3_walkthrough.py` and `examples/provenance_workflow.json`.
+
+### Changed
+
+- `spec.validate_artifact` skips semantic checks when schema validation fails
+  (`semantic_checked: false`), so they no longer crash on missing fields the
+  schema already reported. Semantic rules then show `not_evaluated`.
+- The draft-alignment claim cites the 2026-10-13 observation date.
+- Release package, MCP Registry metadata, and runtime version as `0.3.3`.
+
 ## 0.3.2 - 2026-10-12
 
 ### Added

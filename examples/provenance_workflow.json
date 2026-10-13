@@ -1,0 +1,42 @@
+{
+  "id": "wf-provenance",
+  "name": "Provenance workflow",
+  "start_time": "2026-10-13T12:00:00Z",
+  "end_time": "2026-10-13T12:00:04Z",
+  "steps": [
+    {
+      "id": "retrieve",
+      "name": "Retriever",
+      "type": "retriever",
+      "metrics": {
+        "prompt_tokens": 100,
+        "completion_tokens": 20,
+        "total_tokens": 120
+      },
+      "metadata": {
+        "chunk_count": 12,
+        "avg_tokens_per_chunk": 50
+      }
+    },
+    {
+      "id": "answer",
+      "name": "Answer",
+      "type": "llm_call",
+      "provider": "anthropic",
+      "model": "claude-3-5-sonnet",
+      "metrics": {
+        "prompt_tokens": 1000,
+        "completion_tokens": 1000,
+        "total_tokens": 2000
+      }
+    }
+  ],
+  "chaos_events": [
+    {
+      "id": "chaos-1",
+      "fault_type": "token_timeout",
+      "step_id": "answer",
+      "outcome": "errored"
+    }
+  ]
+}

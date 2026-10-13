@@ -7,7 +7,7 @@ from deep_agentic_core_mcp.adapters import agentic_sidecar as agentic_sidecar_ad
 from deep_agentic_core_mcp.adapters import agenticlens as agenticlens_adapter
 from deep_agentic_core_mcp.adapters import ai_operations_spec as ai_operations_spec_adapter
 from deep_agentic_core_mcp.adapters import workspace_root
-from deep_agentic_core_mcp.config import SERVER_NAME, VERSION
+from deep_agentic_core_mcp.config import SERVER_NAME, VERSION, script_policy
 from deep_agentic_core_mcp.prompts.registry import list_prompts
 from deep_agentic_core_mcp.resources.catalog import list_resources
 from deep_agentic_core_mcp.services import session
@@ -38,6 +38,7 @@ def health(_: dict[str, Any] | None = None) -> dict[str, Any]:
         "resources_loaded": len(list_resources()),
         "prompts_loaded": len(list_prompts()),
         "workspace_root": str(workspace_root()),
+        "chaos_script_policy": {key: list(globs) for key, globs in script_policy().items()},
         "last_successful_calls": session.last_successful_calls(),
     }
 

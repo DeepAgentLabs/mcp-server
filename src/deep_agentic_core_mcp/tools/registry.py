@@ -75,7 +75,9 @@ def list_tools() -> list[dict[str, Any]]:
         {
             "name": "lens.analyze_workflow",
             "title": "Analyze Workflow",
-            "description": "Analyze an AgenticLens-compatible workflow artifact.",
+            "description": "Analyze an AgenticLens-compatible workflow artifact. Each "
+            "recommendation carries a `provenance` block (artifact digest, workflow step, "
+            "evidence span IDs, producer) and the response summarizes how many resolve.",
             "input_schema": {
                 "type": "object",
                 "properties": {"artifact": {"type": "object"}, **_SESSION_ID_PROPERTY},
@@ -174,7 +176,9 @@ def list_tools() -> list[dict[str, Any]]:
             "name": "chaos.run_experiment",
             "title": "Run Chaos Experiment",
             "description": "Run a workspace-sandboxed target script under selected chaos "
-            "faults and report the resulting events.",
+            "faults and report the resulting events. The script must also pass the "
+            "configured allow/deny glob policy. With agentic-chaos>=0.5.1 the result "
+            "includes an AI Operations v0.4-draft run artifact and its conformance check.",
             "input_schema": {
                 "type": "object",
                 "properties": {
@@ -184,6 +188,14 @@ def list_tools() -> list[dict[str, Any]]:
                     },
                     "faults": {"type": "array", "items": {"type": "string"}},
                     "timeout_seconds": {"type": "number"},
+                    "export_aios": {
+                        "type": "boolean",
+                        "description": "Attach an AIOS run export (`aios_run`). Defaults to true.",
+                    },
+                    "workflow_id": {
+                        "type": "string",
+                        "description": "External Workflow ID for the export's run-of link.",
+                    },
                     **_SESSION_ID_PROPERTY,
                 },
                 "required": ["script", "faults"],
@@ -193,6 +205,32 @@ def list_tools() -> list[dict[str, Any]]:
             "prerequisites": ["agentic_chaos"],
             "expected_duration": "slow",
             "mutates_session": True,
+        },
+        {
+            "name": "chaos.export_aios_run",
+            "title": "Export Chaos Report as AIOS Run",
+            "description": "Convert a chaos report into an AI Operations v0.4-draft run "
+            "artifact (via agentic-chaos>=0.5.1) and validate it with rule-cited "
+            "conformance. 'report' may be omitted to reuse the session's last experiment.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "report": {"type": "object"},
+                    "status": {
+                        "type": "string",
+                        "enum": ["created", "running", "completed", "failed", "cancelled"],
+                        "description": "Observed run status; derived from crashed/timed_out "
+                        "when omitted.",
+                    },
+                    "workflow_id": {"type": "string"},
+                    **_SESSION_ID_PROPERTY,
+                },
+                "additionalProperties": False,
+            },
+            "category": "chaos",
+            "prerequisites": ["agentic_chaos", "ai_operations_spec"],
+            "expected_duration": "fast",
+            "mutates_session": False,
         },
         {
             "name": "sidecar.status",
@@ -219,9 +257,9 @@ def list_tools() -> list[dict[str, Any]]:
         {
             "name": "spec.validate_artifact",
             "title": "Validate AI Operations Artifact",
-            "description": (
-                "Validate a workflow or run artifact against the AI Operations v0.4 draft."
-            ),
+            "description": "Validate a workflow or run artifact against the schema set its "
+            "`spec_version` names (v0.5 compatibility rules), returning a conformance report "
+            "that cites AI Operations rule IDs separately from server presentation.",
             "input_schema": {
                 "type": "object",
                 "properties": {"artifact": {"type": "object"}},

@@ -39,9 +39,10 @@ ecosystem through a unified interface for hosts, agents, and external systems.
 
 ### Current Roadmap Focus
 
-The next major work is provenance verification on `lens.analyze_workflow`,
-multi-version AIOS schema support, and more unified observability-plus-chaos
-workflows. Changes here should strengthen composition and interoperability, not
+Phase 3 (lens provenance, chaos AIOS export and script policy, spec_version
+routing and rule-cited conformance) is complete as of `0.3.3`. The next major
+work is Phase 4: unified observability-plus-chaos workflows and the first
+Control Tower connector. Changes here should strengthen composition and interoperability, not
 duplicate implementation logic from sibling repos.
 
 ### Before You Build Here

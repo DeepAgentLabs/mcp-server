@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -70,12 +72,92 @@ def _workflow_summary(workflow: Workflow) -> dict[str, Any]:
     }
 
 
+def artifact_digest(artifact: dict[str, Any]) -> str:
+    """SHA-256 of the artifact's canonical JSON, so a finding can name its exact input."""
+    canonical = json.dumps(artifact, sort_keys=True, separators=(",", ":"), default=str)
+    return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def _artifact_step_ids(artifact: dict[str, Any]) -> set[str]:
+    return {
+        str(step["id"])
+        for step in artifact.get("steps") or []
+        if isinstance(step, dict) and step.get("id")
+    }
+
+
+def _provenance(
+    recommendation: dict[str, Any],
+    workflow: Workflow,
+    artifact: dict[str, Any],
+    artifact_ref: dict[str, Any],
+) -> dict[str, Any]:
+    """Tie one finding back to its artifact, step, and evidence spans.
+
+    Built only from what AgenticLens returned (`step_id`, `evidence`) and the
+    analyzed artifact itself; the server adds identity, not analysis.
+    """
+    steps = {step.id: (index, step) for index, step in enumerate(workflow.steps)}
+    step_id = recommendation.get("step_id")
+    located = steps.get(step_id) if step_id is not None else None
+    evidence = recommendation.get("evidence") or []
+    span_ids = sorted({item["span_id"] for item in evidence if item.get("span_id")})
+    step: dict[str, Any] | None = None
+    if located is not None:
+        index, found = located
+        raw_steps = artifact.get("steps") or []
+        raw_step = raw_steps[index] if index < len(raw_steps) else {}
+        step = {
+            "id": found.id,
+            # False when AgenticLens generated the ID because the artifact had none;
+            # `index` (position in the artifact's `steps`) is then the stable locator.
+            "id_in_artifact": isinstance(raw_step, dict) and raw_step.get("id") == found.id,
+            "name": found.name,
+            "type": found.type.value,
+            "index": index,
+        }
+    return {
+        "artifact": artifact_ref,
+        "step": step,
+        "span_ids": span_ids,
+        "evidence_sources": sorted({item["source"] for item in evidence if item.get("source")}),
+        # Only IDs the caller actually sent count; IDs AgenticLens generated for
+        # steps without one are not traceable back to the input.
+        "resolved": step is not None
+        and step["id_in_artifact"]
+        and bool(span_ids)
+        and set(span_ids) <= _artifact_step_ids(artifact),
+        "producer": {
+            "name": "agenticlens",
+            "version": _version,
+            "optimization_type": recommendation.get("optimization_type"),
+        },
+    }
+
+
 def analyze_workflow(artifact: dict[str, Any]) -> dict[str, Any]:
-    """Run AgenticLens recommendations against a workflow-shaped artifact."""
+    """Run AgenticLens recommendations against a workflow-shaped artifact.
+
+    Every recommendation gains a `provenance` block (artifact digest, the
+    workflow step it is about, evidence span IDs, producer). `resolved` is
+    true only when that step and every cited span exist in this artifact.
+    """
     _require_available()
     workflow = Workflow.model_validate(artifact)
     engine = RecommendationEngine()
     recommendations = engine.run(workflow)
+    artifact_ref = {
+        # Only an ID the artifact itself carries; AgenticLens generates one otherwise.
+        "workflow_id": artifact.get("id"),
+        "workflow_name": workflow.name,
+        "digest": artifact_digest(artifact),
+    }
+    dumped = []
+    for recommendation in recommendations:
+        item = recommendation.model_dump(mode="json")
+        item["provenance"] = _provenance(item, workflow, artifact, artifact_ref)
+        dumped.append(item)
+    unresolved = [item["title"] for item in dumped if not item["provenance"]["resolved"]]
     return {
         "workflow": _workflow_summary(workflow),
         "recommendation_count": len(recommendations),
@@ -83,9 +165,13 @@ def analyze_workflow(artifact: dict[str, Any]) -> dict[str, Any]:
             workflow, recommendations
         ),
         "estimated_cost_savings": RecommendationEngine.estimated_cost_savings(recommendations),
-        "recommendations": [
-            recommendation.model_dump(mode="json") for recommendation in recommendations
-        ],
+        "recommendations": dumped,
+        "provenance_summary": {
+            "artifact": artifact_ref,
+            "findings": len(dumped),
+            "resolved": len(dumped) - len(unresolved),
+            "unresolved_titles": unresolved,
+        },
     }
 
 
