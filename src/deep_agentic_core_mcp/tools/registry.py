@@ -163,6 +163,47 @@ def list_tools() -> list[dict[str, Any]]:
             "mutates_session": False,
         },
         {
+            "name": "lens.diagnose_run",
+            "title": "Diagnose Run",
+            "description": "Diagnose a trace run: failure taxonomy, faulty step and agent "
+            "with confidence and supporting spans, incident timeline, anomalies against "
+            "optional baseline runs, and an investigation narrative. Needs agenticlens>=0.7.0.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "run": {"type": "object"},
+                    "baseline": {"type": "array", "items": {"type": "object"}},
+                    "config": {"type": "object"},
+                    "budget": {"type": "object"},
+                    "include_narrative": {"type": "boolean"},
+                    **_SESSION_ID_PROPERTY,
+                },
+                "required": ["run"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
+            "name": "lens.score_analysis",
+            "title": "Score Analysis",
+            "description": "Report deterministic and model-based scores separately, judge cost "
+            "(kept apart from agent cost), and evaluator disagreement for an evaluation "
+            "report. Needs agenticlens>=0.7.0.",
+            "input_schema": {
+                "type": "object",
+                "properties": {"report": {"type": "object"}, **_SESSION_ID_PROPERTY},
+                "required": ["report"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
             "name": "chaos.list_faults",
             "title": "List Chaos Faults",
             "description": "List the supported fault types for chaos experiments.",

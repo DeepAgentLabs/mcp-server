@@ -3,7 +3,7 @@
 
 # Tool Reference
 
-15 tools, generated from `tools/registry.py` - the same data MCP
+17 tools, generated from `tools/registry.py` - the same data MCP
 clients see via `tools/list`. See [README.md](../README.md) for a one-line-per-tool
 overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
@@ -208,6 +208,53 @@ Input schema:
 }
 ```
 
+### `lens.diagnose_run` — Diagnose Run
+
+Diagnose a trace run: failure taxonomy, faulty step and agent with confidence and supporting spans, incident timeline, anomalies against optional baseline runs, and an investigation narrative. Needs agenticlens>=0.7.0.
+
+| | |
+| --- | --- |
+| Category | `lens` |
+| Prerequisites | `agenticlens` |
+| Expected duration | fast |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "run": {
+      "type": "object"
+    },
+    "baseline": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "config": {
+      "type": "object"
+    },
+    "budget": {
+      "type": "object"
+    },
+    "include_narrative": {
+      "type": "boolean"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session to read/write shared state under. Defaults to 'default'."
+    }
+  },
+  "required": [
+    "run"
+  ],
+  "additionalProperties": false
+}
+```
+
 ### `lens.report_summary` — Workflow Report Summary
 
 Render a Markdown workflow report and recommendation summary. 'artifact' may be omitted to reuse the session's stored workflow.
@@ -233,6 +280,38 @@ Input schema:
       "description": "Session to read/write shared state under. Defaults to 'default'."
     }
   },
+  "additionalProperties": false
+}
+```
+
+### `lens.score_analysis` — Score Analysis
+
+Report deterministic and model-based scores separately, judge cost (kept apart from agent cost), and evaluator disagreement for an evaluation report. Needs agenticlens>=0.7.0.
+
+| | |
+| --- | --- |
+| Category | `lens` |
+| Prerequisites | `agenticlens` |
+| Expected duration | fast |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "report": {
+      "type": "object"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session to read/write shared state under. Defaults to 'default'."
+    }
+  },
+  "required": [
+    "report"
+  ],
   "additionalProperties": false
 }
 ```

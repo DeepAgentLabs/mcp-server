@@ -6,6 +6,29 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.5 - 2026-10-13
+
+Pairs with `agenticlens` 0.7.0 (v0.5 advanced evaluation and diagnosis) and
+`agentic-chaos` 0.5.3.
+
+### Added
+
+- `lens.diagnose_run`: AgenticLens diagnosis of a trace run (failure taxonomy,
+  faulty step and agent, incident timeline, anomalies against optional
+  baseline runs, guardrail status, investigation narrative). Accepts
+  `config` (rule thresholds and budgets) and `budget` (analysis caps).
+- `lens.score_analysis`: deterministic vs model-based scores, judge cost kept
+  separate from agent cost, and evaluator disagreement for an evaluation
+  report.
+- Both tools are read-only and need `agenticlens>=0.7.0`; with an older
+  install they report the missing capability and other Lens tools keep
+  working.
+
+### Changed
+
+- The AWS and Render images pin `agenticlens==0.7.0` and
+  `agentic-chaos==0.5.3`; the hosted-image test requires Lens 0.7.0.
+
 ## 0.3.4 - 2026-10-13
 
 Brings the hosted service up to the Phase 3 feature set. 0.3.3 shipped the

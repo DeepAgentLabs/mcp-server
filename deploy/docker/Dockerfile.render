@@ -3,10 +3,11 @@ FROM python:3.12-slim
 WORKDIR /app
 COPY pyproject.toml README.md ./
 COPY src ./src
-# Phase 3 pairs: Lens 0.6.1 (finding provenance), Chaos 0.5.1 (AIOS run export).
+# Pairs: Lens 0.7.0 (finding provenance, diagnosis, score analysis),
+# Chaos 0.5.3 (AIOS run export).
 # Chaos is installed for its exporter and fault catalog only; HTTP always
 # rejects chaos.run_experiment, so no target script is ever executed here.
-RUN pip install --no-cache-dir ".[http]" "agenticlens==0.6.1" "agentic-chaos==0.5.1"
+RUN pip install --no-cache-dir ".[http]" "agenticlens==0.7.0" "agentic-chaos==0.5.3"
 COPY scripts/fetch_schema_assets.py /tmp/fetch_schema_assets.py
 RUN python /tmp/fetch_schema_assets.py /opt/workspace/ai-operations-spec
 RUN useradd --create-home --uid 10001 mcp
