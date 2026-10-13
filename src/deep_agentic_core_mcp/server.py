@@ -35,7 +35,7 @@ from deep_agentic_core_mcp.prompts.registry import list_prompts as _registry_pro
 from deep_agentic_core_mcp.prompts.registry import render_prompt
 from deep_agentic_core_mcp.resources.catalog import list_resources as _catalog_resources
 from deep_agentic_core_mcp.services.remote_sessions import SessionStore
-from deep_agentic_core_mcp.tools.chaos import list_faults, run_experiment
+from deep_agentic_core_mcp.tools.chaos import export_aios_run, list_faults, run_experiment
 from deep_agentic_core_mcp.tools.core import health, session_state, verify, version
 from deep_agentic_core_mcp.tools.lens import (
     analyze_workflow,
@@ -70,6 +70,7 @@ _TOOL_DISPATCH: dict[str, Callable[[dict[str, Any] | None], dict[str, Any]]] = {
     "lens.audit_report": audit_report,
     "chaos.list_faults": list_faults,
     "chaos.run_experiment": run_experiment,
+    "chaos.export_aios_run": export_aios_run,
     "sidecar.status": status,
     "sidecar.module_inventory": module_inventory,
     "spec.validate_artifact": validate_artifact,
