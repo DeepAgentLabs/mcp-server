@@ -13,7 +13,7 @@ python3 scripts/build_container.py --target workspace --tag deep-agentic-core-mc
 
 `workspace` is the default and needs sibling `agenticlens`, `agentic-chaos`
 and `ai-operations-spec` checkouts. AWS and Render builds use this repository's
-source, published `agenticlens==0.6.1` and `agentic-chaos==0.5.1`, and
+source, published `agenticlens==0.7.0` and `agentic-chaos==0.5.3`, and
 checksum-verified `ai-operations-spec` v0.5.1 assets (schemas plus the
 conformance and compatibility catalogs) fetched by `scripts/fetch_schema_assets.py`.
 Agentic Chaos is present only for its AIOS exporter and fault catalog; the HTTP

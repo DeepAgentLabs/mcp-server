@@ -18,8 +18,9 @@ REPO = Path(__file__).resolve().parents[1]
 DOCKER = REPO / "deploy" / "docker"
 STANDALONE_IMAGES = ["Dockerfile.aws", "Dockerfile.render"]
 
-# Minimum sibling versions whose behavior the Phase 3 tools rely on.
-REQUIRED_PINS = {"agenticlens": (0, 6, 1), "agentic-chaos": (0, 5, 1)}
+# Minimum sibling versions whose behavior the hosted tools rely on
+# (agenticlens 0.7.0 adds lens.diagnose_run and lens.score_analysis).
+REQUIRED_PINS = {"agenticlens": (0, 7, 0), "agentic-chaos": (0, 5, 1)}
 
 # Spec-root-relative paths the ai_operations_spec adapter reads.
 SPEC_ASSETS = {
