@@ -33,6 +33,17 @@ try:
 except Exception as exc:  # noqa: BLE001 - captured for core.verify/core.health reporting
     _IMPORT_ERROR = exc
 
+# Diagnosis and score analysis arrived in agenticlens 0.7.0. Probe them
+# separately so an older install keeps every other Lens tool working.
+_DIAGNOSIS_ERROR: Exception | None = None
+try:
+    from agenticlens.diagnosis import AnalysisBudget, DiagnosisConfig
+    from agenticlens.diagnosis import diagnose_run as _diagnose_run
+    from agenticlens.diagnosis import explain_run as _explain_run
+    from agenticlens.evaluation import analyze_scores as _analyze_scores
+except Exception as exc:  # noqa: BLE001 - reported per tool
+    _DIAGNOSIS_ERROR = exc
+
 
 def _require_available() -> None:
     if _IMPORT_ERROR is not None:
@@ -57,7 +68,15 @@ def describe_capabilities() -> list[str]:
         "compare_runs",
         "slo_summary",
         "audit_report",
+        "diagnose_run",
+        "score_analysis",
     ]
+
+
+def _require_diagnosis() -> None:
+    _require_available()
+    if _DIAGNOSIS_ERROR is not None:
+        raise AdapterUnavailableError("agenticlens>=0.7.0 (diagnosis)", _DIAGNOSIS_ERROR)
 
 
 def _workflow_summary(workflow: Workflow) -> dict[str, Any]:
@@ -256,3 +275,33 @@ def audit_report(
     if include_html:
         result["html_report"] = render_html_report(evaluation_report)
     return result
+
+
+def diagnose_run(
+    run: dict[str, Any],
+    *,
+    baseline: list[dict[str, Any]] | None = None,
+    config: dict[str, Any] | None = None,
+    budget: dict[str, Any] | None = None,
+    include_narrative: bool = True,
+) -> dict[str, Any]:
+    """Diagnose one trace run: failures, faulty step and agent, timeline, anomalies."""
+    _require_diagnosis()
+    report = _diagnose_run(
+        Run.model_validate(run),
+        baseline=[Run.model_validate(item) for item in baseline] if baseline else None,
+        config=DiagnosisConfig.model_validate(config or {}),
+        budget=AnalysisBudget.model_validate(budget or {}),
+    )
+    result: dict[str, Any] = {"report": report.model_dump(mode="json")}
+    if include_narrative:
+        result["narrative_markdown"] = _explain_run(report)
+    return result
+
+
+def score_analysis(report: dict[str, Any]) -> dict[str, Any]:
+    """Deterministic vs model-based scores, judge cost, and evaluator disagreement."""
+    _require_diagnosis()
+    analysis = _analyze_scores(EvaluationReport.model_validate(report))
+    dumped: dict[str, Any] = analysis.model_dump(mode="json")
+    return dumped
