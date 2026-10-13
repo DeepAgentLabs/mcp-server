@@ -7,7 +7,9 @@ from deep_agentic_core_mcp.adapters.agenticlens import analyze_workflow as adapt
 from deep_agentic_core_mcp.adapters.agenticlens import audit_report as adapter_audit_report
 from deep_agentic_core_mcp.adapters.agenticlens import compare_runs as adapter_compare_runs
 from deep_agentic_core_mcp.adapters.agenticlens import describe_capabilities
+from deep_agentic_core_mcp.adapters.agenticlens import diagnose_run as adapter_diagnose_run
 from deep_agentic_core_mcp.adapters.agenticlens import report_summary as adapter_report_summary
+from deep_agentic_core_mcp.adapters.agenticlens import score_analysis as adapter_score_analysis
 from deep_agentic_core_mcp.adapters.agenticlens import slo_summary as adapter_slo_summary
 from deep_agentic_core_mcp.services import session
 
@@ -122,4 +124,47 @@ def audit_report(arguments: dict[str, Any] | None) -> dict[str, Any]:
         session.record_call(session_id, "lens.audit_report", ok=False, note=str(exc))
         return {"ok": False, "error": str(exc)}
     session.record_call(session_id, "lens.audit_report", ok=True)
+    return result
+
+
+def diagnose_run(arguments: dict[str, Any] | None) -> dict[str, Any]:
+    """Diagnose a trace run and attribute its failure to a step and agent."""
+    if not arguments or "run" not in arguments:
+        return {"ok": False, "error": "Missing required 'run' argument"}
+    session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
+    try:
+        result = {
+            "ok": True,
+            **adapter_diagnose_run(
+                arguments["run"],
+                baseline=arguments.get("baseline"),
+                config=arguments.get("config"),
+                budget=arguments.get("budget"),
+                include_narrative=bool(arguments.get("include_narrative", True)),
+            ),
+        }
+    except AdapterUnavailableError as exc:
+        session.record_call(session_id, "lens.diagnose_run", ok=False, note=str(exc))
+        return {"ok": False, "error": str(exc)}
+    except ValueError as exc:
+        session.record_call(session_id, "lens.diagnose_run", ok=False, note=str(exc))
+        return {"ok": False, "error": f"Invalid diagnosis input: {exc}"}
+    session.record_call(session_id, "lens.diagnose_run", ok=True)
+    return result
+
+
+def score_analysis(arguments: dict[str, Any] | None) -> dict[str, Any]:
+    """Split an evaluation report into deterministic and model-based results."""
+    if not arguments or "report" not in arguments:
+        return {"ok": False, "error": "Missing required 'report' argument"}
+    session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
+    try:
+        result = {"ok": True, **adapter_score_analysis(arguments["report"])}
+    except AdapterUnavailableError as exc:
+        session.record_call(session_id, "lens.score_analysis", ok=False, note=str(exc))
+        return {"ok": False, "error": str(exc)}
+    except ValueError as exc:
+        session.record_call(session_id, "lens.score_analysis", ok=False, note=str(exc))
+        return {"ok": False, "error": f"Invalid evaluation report: {exc}"}
+    session.record_call(session_id, "lens.score_analysis", ok=True)
     return result
