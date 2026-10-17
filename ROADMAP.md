@@ -10,7 +10,10 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.3.6` (2026-10-17) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `0.3.7` (2026-10-17) — see [CHANGELOG.md](CHANGELOG.md).
+`0.3.7` moves the hosted images to `agentic-chaos` 0.6.0. Its AIOS run export
+adds call counts and the escaped error to the producer extension; MCP tools are
+unchanged.
 `0.3.5` adds `lens.diagnose_run` and `lens.score_analysis` for AgenticLens
 0.7.0 (v0.5 diagnosis) and pins the hosted images to `agenticlens` 0.7.0 and
 `agentic-chaos` 0.5.3.
@@ -58,10 +61,10 @@ hashes in DynamoDB. Remote chaos execution remains disabled.
 As of 2026-10-04, the hosted service is running at
 `https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
 Transport/signup and Sidecar discovery are included in the `0.3.0` release.
-Since `0.3.5` the hosted image installs `agenticlens` 0.7.0, `agentic-chaos`
-0.5.3, and the `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a
-pinned commit and checksum-verified. (`0.3.4` installed Lens 0.6.1 and Chaos
-0.5.1.) Chaos is installed only for its exporter and fault catalog; HTTP still
+Since `0.3.7` the hosted image installs `agenticlens` 0.7.0, `agentic-chaos`
+0.6.0, and the `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a
+pinned commit and checksum-verified. (`0.3.5`–`0.3.6` installed Chaos 0.5.3;
+`0.3.4` installed Lens 0.6.1 and Chaos 0.5.1.) Chaos is installed only for its exporter and fault catalog; HTTP still
 rejects `chaos.run_experiment`. `tests/test_hosted_image.py` keeps these pins in step with
 the adapters. All Phase 3 features are therefore available both locally and
 hosted, except chaos execution, which stays local-only.

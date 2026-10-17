@@ -39,7 +39,7 @@ integrations are absent, even while hosted analysis works.
 
 ## 2. Understand what is available
 
-Hosted availability below reflects the `0.3.5` hosted image (2026-10-13). Call `core.health` for the
+Hosted availability below reflects the `0.3.7` hosted image (2026-10-17). Call `core.health` for the
 current status; a tool appearing in the catalog does not guarantee its optional
 package is installed.
 
@@ -50,8 +50,8 @@ package is installed.
 | Baseline/candidate run comparison | Available | Requires AgenticLens installation |
 | Evaluation-report SLO gates and audit/HTML reports | Available through `lens.*` | Requires AgenticLens installation |
 | AI Operations artifact validation (`spec_version` routing, rule-cited conformance) | Available, including the rule and compatibility catalogs | Requires canonical schema assets (`ai-operations-spec>=0.5.1` for rule IDs) |
-| Converting a chaos report to an AIOS run (`chaos.export_aios_run`) | Available (Agentic Chaos 0.5.3; no code runs) | Available with `agentic-chaos>=0.5.1` |
-| Agentic Chaos fault listing | Available (Agentic Chaos 0.5.3) | Available with Agentic Chaos installed |
+| Converting a chaos report to an AIOS run (`chaos.export_aios_run`) | Available (Agentic Chaos 0.6.0; no code runs) | Available with `agentic-chaos>=0.5.1` |
+| Agentic Chaos fault listing | Available (Agentic Chaos 0.6.0) | Available with Agentic Chaos installed |
 | Executing chaos experiments | Disabled and excluded from the HTTP catalog | Available over trusted local stdio |
 | Sidecar status and module discovery | Package not installed in the hosted image | Available with Sidecar installed; discovery only |
 | Sidecar runtime supervision / decision gates | No MCP execution tools implemented | No MCP execution tools implemented |

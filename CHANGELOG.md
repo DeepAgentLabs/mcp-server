@@ -6,6 +6,20 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.7 - 2026-10-17
+
+Pairs with `agentic-chaos` 0.6.0 (pytest plugin and chaos contracts).
+
+### Changed
+
+- Hosted AWS and Render images pin `agentic-chaos==0.6.0` (was 0.5.3).
+  `chaos.export_aios_run` output now carries `calls: {recorded, dropped}` and,
+  when a target crashed, `unhandled_error` in the `io.deepagentlabs.agentic-chaos`
+  extension. The run, steps and evidence are unchanged.
+- No MCP tool, schema or transport change. Chaos contracts and the pytest
+  plugin are not exposed as MCP tools; HTTP still rejects `chaos.run_experiment`.
+  `agentic-chaos>=0.5.1` remains the floor for AIOS export.
+
 ## 0.3.6 - 2026-10-17
 
 ### Added
