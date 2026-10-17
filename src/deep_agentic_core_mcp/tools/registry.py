@@ -226,6 +226,56 @@ def list_tools() -> list[dict[str, Any]]:
             "mutates_session": False,
         },
         {
+            "name": "lens.suite_from_traces",
+            "title": "Suite From Traces",
+            "description": "Convert successful trace runs into a draft regression suite: each case "
+            "expects the run's tool trajectory and latency/cost within a margin, is marked "
+            "needs_review, and has PII masked unless 'mask' is false. Failed runs are skipped "
+            "with a reason. Nothing is stored. Needs agenticlens>=0.8.0.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "runs": {"type": "array", "items": {"type": "object"}, "minItems": 1},
+                    "name": {"type": "string", "minLength": 1},
+                    "version": {"type": "string", "minLength": 1},
+                    "latency_margin": {"type": ["number", "null"], "minimum": 1},
+                    "cost_margin": {"type": ["number", "null"], "minimum": 1},
+                    "include_output": {"type": "boolean"},
+                    "mask": {"type": "boolean"},
+                    "strategy": {"type": "string", "enum": ["redact", "hash"]},
+                    **_SESSION_ID_PROPERTY,
+                },
+                "required": ["runs", "name", "version"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
+            "name": "lens.suite_check",
+            "title": "Suite Check",
+            "description": "Check a test suite before approval: counts by split, domain, tag, "
+            "source and review status; exact, near and conflicting duplicates; unmasked PII "
+            "(types and locations only); and the approval checks AgenticLens would run. "
+            "Nothing is stored. Needs agenticlens>=0.8.0.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "suite": {"type": "object"},
+                    "threshold": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+                    **_SESSION_ID_PROPERTY,
+                },
+                "required": ["suite"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
             "name": "chaos.list_faults",
             "title": "List Chaos Faults",
             "description": "List the supported fault types for chaos experiments.",
