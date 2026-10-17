@@ -588,3 +588,13 @@ revocation and delegated authority remain v0.9 validation; stable schemas remain
 v1.0. Native correlated Lens readback requires Lens 0.7.1. All sibling packages
 stay optional; no dependency floor is increased without a runtime requirement.
 See the [Sidecar integration contract](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md).
+
+## Tower connector delivered in 0.3.6
+
+The first Phase 4 Control Tower integration ships alongside Tower 0.6.0, which
+combines its Phase 6/6A: twelve local stdio tools over real authenticated HTTP
+queries and incident transitions, separate reader/writer credentials, and a cited
+investigation prompt. Human approval stays in Tower HTTP/CLI. Hosted calls are
+rejected until per-user Tower credentials exist. MCP remains usable without Tower.
+Unified cross-engine workflows and broader Phase 4 features remain planned.
+See [setup](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/main/docs/mcp-connector.md).
