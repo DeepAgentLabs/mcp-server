@@ -614,3 +614,31 @@ Published Evals 0.7.2 report and gate schemas are now enforced in the native
 consumer paths. Validation runs offline using bundled upstream contracts;
 invalid artifacts fail with field-level diagnostics. Native verdicts and
 AIOS conformance remain distinct. See [behavior, examples and migration](docs/evals-report-contract.md).
+
+Agentic Evals 0.7.2 publishes native report (`schema_version: "1.0"`) and
+gate-decision JSON Schemas, with offline `report_schema()` and
+`gate_decision_schema()` accessors. Contract 1.x evolves additively; readers
+should tolerate unknown fields. MCP spec.validate_artifact validates AIOS artifacts, not the native Evals schemas. Dedicated Evals tools and AIOS evaluation evidence export remain future work.
+
+See the [contract, examples and compatibility policy](https://github.com/DeepAgentLabs/agentic-evals/blob/main/docs/report-contract.md). Existing dependency
+ranges remain sufficient; using the new accessors directly requires
+`agentic-evals>=0.7.2`. This documentation alignment needs no sibling patch release.
+
+## AgenticLens 0.8.0 suite management
+
+AgenticLens 0.8.0 delivers its v0.6 milestone: `agenticlens.suites` and
+`agenticlens suite` build regression suites from CSV/JSON imports, production
+traces and user feedback. It masks PII before storage, detects duplicates and
+conflicting labels, adds synthetic variations and stable splits, records
+reviews, and approves suites into immutable, hash-verified versions that CI
+verifies, exports and evaluates. Suites stay plain agentic-evals `TestSuite`
+files.
+
+MCP 0.3.9 adds two read-only, artifact-in/artifact-out tools:
+`lens.suite_from_traces` (draft cases from successful runs, PII masked by
+default, skipped runs with reasons) and `lens.suite_check` (summary,
+duplicates, unmasked-PII locations and the approval checks Lens would run).
+Neither stores anything; approval and the immutable store stay local CLI/API
+operations. Hosted images pin `agenticlens==0.8.0`.
+
+See the [suite management guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.8.0/docs/suite-management.md).
