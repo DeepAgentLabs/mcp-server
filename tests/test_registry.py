@@ -35,7 +35,7 @@ def test_tool_registry_has_phase_2_and_3_additions() -> None:
 
 def test_tool_registry_entries_carry_metadata() -> None:
     for tool in list_tools():
-        assert tool["category"] in {"core", "lens", "chaos", "sidecar", "spec"}
+        assert tool["category"] in {"core", "lens", "chaos", "sidecar", "spec", "tower"}
         assert isinstance(tool["prerequisites"], list)
         assert tool["expected_duration"] in {"instant", "fast", "slow"}
         assert isinstance(tool["mutates_session"], bool)

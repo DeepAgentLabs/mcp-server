@@ -2,6 +2,8 @@
 
 from typing import Any
 
+from deep_agentic_core_mcp.tools.tower import tool_definitions
+
 _SESSION_ID_PROPERTY = {
     "session_id": {
         "type": "string",
@@ -25,7 +27,7 @@ def list_tools() -> list[dict[str, Any]]:
     - `mutates_session`: whether the call writes to the in-memory session
       store (`services/session.py`)
     """
-    return [
+    return tool_definitions() + [
         {
             "name": "core.health",
             "title": "Health Check",
