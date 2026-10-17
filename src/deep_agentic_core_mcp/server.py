@@ -120,7 +120,7 @@ def _build_tools() -> list[Tool]:
                 description=str(entry["description"]),
                 input_schema=entry["input_schema"],
                 annotations=ToolAnnotations(
-                    read_only_hint=not entry.get("mutates_session", False),
+                    read_only_hint=not (entry.get("mutates_session", False) or open_world),
                     destructive_hint=open_world or None,
                     open_world_hint=open_world or None,
                 ),
@@ -181,7 +181,11 @@ RESOURCE_CONTENT: dict[str, dict[str, Any]] = {
 async def handle_list_tools() -> list[Tool]:
     """Advertise available tools."""
     if config.is_remote_transport():
-        return [tool for tool in TOOLS if tool.name not in _OPEN_WORLD_TOOLS]
+        return [
+            tool
+            for tool in TOOLS
+            if tool.name not in _OPEN_WORLD_TOOLS and not tool.name.startswith("tower.")
+        ]
     return TOOLS
 
 

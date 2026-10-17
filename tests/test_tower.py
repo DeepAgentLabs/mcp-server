@@ -18,19 +18,20 @@ def tower_environment(monkeypatch):
 
 
 def test_read_and_write_use_distinct_credentials():
-    opener = MagicMock()
-    opener.open.return_value.__enter__.return_value.read.return_value = b'{"agents": []}'
-    with patch("deep_agentic_core_mcp.tools.tower.build_opener", return_value=opener):
+    completed = MagicMock(returncode=0, stdout=b'{"ok": true, "data": {"agents": []}}')
+    with patch("deep_agentic_core_mcp.tools.tower.subprocess.run", return_value=completed) as run:
         assert query({"operation": "agents", "status": "unhealthy"})["ok"]
-        request = opener.open.call_args.args[0]
-        assert request.get_header("Authorization") == "Bearer reader-secret"
-        assert request.full_url.endswith("/agents?status=unhealthy")
+        request = json.loads(run.call_args.kwargs["input"])
+        assert request["token"] == "reader-secret"
+        assert request["url"].endswith("/agents?status=unhealthy")
+        assert run.call_args.kwargs["timeout"] == 10
         assert query({"operation": "execute", "incident_id": "safe", "preview_digest": "hash"})[
             "ok"
         ]
-        request = opener.open.call_args.args[0]
-        assert request.get_header("Authorization") == "Bearer writer-secret"
-        assert json.loads(request.data) == {"preview_digest": "hash"}
+        request = json.loads(run.call_args.kwargs["input"])
+        assert request["token"] == "writer-secret"
+        assert request["arguments"] == {"preview_digest": "hash"}
+        assert "writer-secret" not in str(run.call_args.args)
 
 
 def test_no_configuration_is_honest_unavailable(monkeypatch):
@@ -74,13 +75,21 @@ async def test_dispatch_and_annotations():
 
 
 def test_response_limit_and_secret_safe_errors():
+    from deep_agentic_core_mcp.tools.tower_http import request
+
+    payload = {
+        "url": "http://localhost/status",
+        "arguments": {},
+        "write": False,
+        "token": "reader-secret",
+    }
     opener = MagicMock()
     opener.open.return_value.__enter__.return_value.read.return_value = b"x" * (1024 * 1024 + 1)
-    with patch("deep_agentic_core_mcp.tools.tower.build_opener", return_value=opener):
-        assert not query({"operation": "status"})["ok"]
+    with patch("deep_agentic_core_mcp.tools.tower_http.build_opener", return_value=opener):
+        assert not request(payload)["ok"]
     opener.open.side_effect = OSError("reader-secret")
-    with patch("deep_agentic_core_mcp.tools.tower.build_opener", return_value=opener):
-        assert "reader-secret" not in str(query({"operation": "status"}))
+    with patch("deep_agentic_core_mcp.tools.tower_http.build_opener", return_value=opener):
+        assert "reader-secret" not in str(request(payload))
 
 
 def test_investigation_prompt_preserves_evidence_and_human_authority():
@@ -91,3 +100,23 @@ def test_investigation_prompt_preserves_evidence_and_human_authority():
     assert "untrusted data" in prompt
     assert "human approves" in prompt
     assert "fresh Lens, Evals and a probe" in prompt
+
+
+async def test_hosted_listing_hides_all_tower_tools(monkeypatch):
+    from deep_agentic_core_mcp.server import handle_list_tools
+
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_REMOTE", "1")
+    assert not any(tool.name.startswith("tower.") for tool in await handle_list_tools())
+
+
+def test_deadline_kills_worker_and_reports_unknown_result():
+    import subprocess
+
+    with patch(
+        "deep_agentic_core_mcp.tools.tower.subprocess.run",
+        side_effect=subprocess.TimeoutExpired("worker", 10),
+    ):
+        result = query({"operation": "execute", "incident_id": "i", "preview_digest": "d"})
+    assert not result["ok"]
+    assert "inspect incident" in result["error"]
+    assert all(not tool["mutates_session"] for tool in tool_definitions())
