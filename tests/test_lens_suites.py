@@ -93,6 +93,11 @@ async def test_suite_check_reports_approval_readiness() -> None:
     failed = {check["name"] for check in payload["approval_checks"] if not check["passed"]}
     assert failed == {"pii", "conflicting_duplicates"}
     assert payload["duplicates"]["conflicting_groups"] == 1
+    assert [(loc["case_id"], loc["field"]) for loc in payload["pii"]["locations"]] == [
+        ("a", "input"),
+        ("b", "input"),
+    ]
+    assert "a@b.io" not in json.dumps(payload["pii"])
     assert "a@b.io" not in json.dumps(payload["approval_checks"])
 
 
@@ -101,3 +106,42 @@ async def test_suite_check_rejects_missing_or_invalid_suite() -> None:
     assert (await _call("lens.suite_check", {}))["ok"] is False
     invalid = await _call("lens.suite_check", {"suite": {"name": "s", "version": "1", "cases": []}})
     assert invalid["ok"] is False and invalid["error"].startswith("Invalid suite")
+
+
+@pytest.mark.asyncio
+async def test_hash_masking_is_salted_per_call_unless_a_salt_is_given() -> None:
+    runs = [_load(TRACES / "prod-0002.json")]
+    args = {"runs": runs, "name": "p", "version": "1", "strategy": "hash"}
+
+    def token(payload: dict) -> str:
+        return payload["suite"]["cases"][0]["input"]["account_email"]
+
+    first, second = (
+        await _call("lens.suite_from_traces", args),
+        await _call("lens.suite_from_traces", args),
+    )
+    assert token(first).startswith("[SENSITIVE_FIELD:") and token(first) != token(second)
+    salted = {**args, "salt": "team-salt"}
+    assert token(await _call("lens.suite_from_traces", salted)) == token(
+        await _call("lens.suite_from_traces", salted)
+    )
+    assert "team-salt" not in json.dumps(await _call("lens.suite_from_traces", salted))
+
+
+@pytest.mark.asyncio
+async def test_older_agenticlens_degrades_only_the_suite_tools(monkeypatch) -> None:
+    from deep_agentic_core_mcp.adapters import agenticlens as adapter
+
+    monkeypatch.setattr(adapter, "_SUITES_ERROR", ImportError("no agenticlens.suites"))
+    for name, arguments in (
+        (
+            "lens.suite_from_traces",
+            {"runs": [_load(TRACES / "prod-0001.json")], "name": "p", "version": "1"},
+        ),
+        ("lens.suite_check", {"suite": _load(APPROVED)["suite"]}),
+    ):
+        payload = await _call(name, arguments)
+        assert payload["ok"] is False
+        assert "agenticlens>=0.8.0" in payload["error"]
+    diagnosis = await _call("lens.diagnose_run", {"run": _load(TRACES / "prod-0001.json")})
+    assert diagnosis["ok"] is True
