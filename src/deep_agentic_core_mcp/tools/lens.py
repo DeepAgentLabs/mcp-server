@@ -101,7 +101,7 @@ def slo_summary(arguments: dict[str, Any] | None) -> dict[str, Any]:
             "ok": True,
             **adapter_slo_summary(arguments["report"], arguments.get("thresholds")),
         }
-    except AdapterUnavailableError as exc:
+    except (AdapterUnavailableError, ValueError) as exc:
         session.record_call(session_id, "lens.slo_summary", ok=False, note=str(exc))
         return {"ok": False, "error": str(exc)}
     session.record_call(session_id, "lens.slo_summary", ok=True)
@@ -120,7 +120,7 @@ def audit_report(arguments: dict[str, Any] | None) -> dict[str, Any]:
                 arguments["report"], include_html=bool(arguments.get("include_html", False))
             ),
         }
-    except AdapterUnavailableError as exc:
+    except (AdapterUnavailableError, ValueError) as exc:
         session.record_call(session_id, "lens.audit_report", ok=False, note=str(exc))
         return {"ok": False, "error": str(exc)}
     session.record_call(session_id, "lens.audit_report", ok=True)
@@ -160,11 +160,8 @@ def score_analysis(arguments: dict[str, Any] | None) -> dict[str, Any]:
     session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
     try:
         result = {"ok": True, **adapter_score_analysis(arguments["report"])}
-    except AdapterUnavailableError as exc:
+    except (AdapterUnavailableError, ValueError) as exc:
         session.record_call(session_id, "lens.score_analysis", ok=False, note=str(exc))
         return {"ok": False, "error": str(exc)}
-    except ValueError as exc:
-        session.record_call(session_id, "lens.score_analysis", ok=False, note=str(exc))
-        return {"ok": False, "error": f"Invalid evaluation report: {exc}"}
     session.record_call(session_id, "lens.score_analysis", ok=True)
     return result
