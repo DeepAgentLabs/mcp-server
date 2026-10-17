@@ -10,7 +10,12 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.3.8` (2026-10-17) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `0.3.9` (2026-10-17) — see [CHANGELOG.md](CHANGELOG.md).
+`0.3.9` adds `lens.suite_from_traces` and `lens.suite_check` for AgenticLens
+0.8.0 (v0.6 test-suite and dataset management) and pins the hosted images to
+`agenticlens` 0.8.0.
+`0.3.8` adds offline `evals.validate_artifact` against the published Evals 0.7.2
+report and gate schemas.
 `0.3.7` moves the hosted images to `agentic-chaos` 0.6.0. Its AIOS run export
 adds call counts and the escaped error to the producer extension; MCP tools are
 unchanged.
@@ -61,9 +66,9 @@ hashes in DynamoDB. Remote chaos execution remains disabled.
 As of 2026-10-04, the hosted service is running at
 `https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
 Transport/signup and Sidecar discovery are included in the `0.3.0` release.
-Since `0.3.7` the hosted image installs `agenticlens` 0.7.0, `agentic-chaos`
+Since `0.3.9` the hosted image installs `agenticlens` 0.8.0, `agentic-chaos`
 0.6.0, and the `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a
-pinned commit and checksum-verified. (`0.3.5`–`0.3.6` installed Chaos 0.5.3;
+pinned commit and checksum-verified. (`0.3.7`–`0.3.8` installed Lens 0.7.0; `0.3.5`–`0.3.6` installed Chaos 0.5.3;
 `0.3.4` installed Lens 0.6.1 and Chaos 0.5.1.) Chaos is installed only for its exporter and fault catalog; HTTP still
 rejects `chaos.run_experiment`. `tests/test_hosted_image.py` keeps these pins in step with
 the adapters. All Phase 3 features are therefore available both locally and
@@ -124,6 +129,7 @@ For roadmap work, distinguish:
 | 3b AIOS run export | `agentic-chaos>=0.5.1` (`agentic_chaos.export.to_aios_run`) | `tests/test_chaos_aios_export.py`; chaos `tests/test_export_aios.py` (v0.4 schema + spec semantic checker) |
 | 3b script policy | none (server-local) | `tests/test_chaos_script_policy.py` |
 | Lens diagnosis tools (`0.3.5`) | `agenticlens>=0.7.0` (`agenticlens.diagnosis`, `analyze_scores`) | `tests/test_lens_diagnosis.py`; agenticlens `tests/test_diagnosis_engine.py`, `tests/test_score_analysis.py` |
+| Lens suite tools (`0.3.9`) | `agenticlens>=0.8.0` (`agenticlens.suites`) | `tests/test_lens_suites.py`; agenticlens `tests/test_suites_*.py` |
 | 3c version routing and conformance | `ai-operations-spec>=0.5.1` (`specification/v0.4/conformance-rules.json`, `specification/v0.5/compatibility.json`) | `tests/test_spec_conformance.py`; spec `tests/test_conformance_catalogs.py` |
 
 Each dependency degrades rather than breaking boot. With an older agenticlens,
