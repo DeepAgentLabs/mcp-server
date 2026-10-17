@@ -45,6 +45,17 @@ def test_standalone_images_pin_phase3_sibling_versions(dockerfile: str) -> None:
         assert _version(match.group(1)) >= minimum, f"{dockerfile} pins {package} too old"
 
 
+# Exact sibling releases the current hosted images ship (0.3.7: Chaos 0.6.0).
+HOSTED_PINS = {"agenticlens": "0.7.0", "agentic-chaos": "0.6.0"}
+
+
+@pytest.mark.parametrize("dockerfile", STANDALONE_IMAGES)
+def test_standalone_images_pin_the_released_sibling_versions(dockerfile: str) -> None:
+    content = (DOCKER / dockerfile).read_text(encoding="utf-8")
+    pins = dict(re.findall(r'"([a-z-]+)==([0-9.]+)"', content))
+    assert {package: pins.get(package) for package in HOSTED_PINS} == HOSTED_PINS
+
+
 @pytest.mark.parametrize("dockerfile", STANDALONE_IMAGES)
 def test_standalone_images_fetch_assets_into_the_spec_root(dockerfile: str) -> None:
     content = (DOCKER / dockerfile).read_text(encoding="utf-8")
