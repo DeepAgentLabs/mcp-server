@@ -6,6 +6,20 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.6 - 2026-10-17
+
+### Added
+
+- Twelve local `tower.*` tools over the authenticated Control Tower 0.6.0 HTTP
+  API, covering inventory, evidence, investigation and approved staging recovery.
+- Separate configured reader/writer authority, fixed origin, encoded target IDs,
+  refused redirects, bounded requests/responses and secret-safe failures.
+- `tower.investigation` prompt with citations, explicit uncertainty, untrusted
+  evidence boundaries and separate human approval through Tower HTTP/CLI.
+- Hosted Tower calls are rejected until per-user credential binding exists.
+  Tower remains optional and other MCP tools work without it.
+
+
 ## 0.3.5 - 2026-10-13
 
 Pairs with `agenticlens` 0.7.0 (v0.5 advanced evaluation and diagnosis) and
