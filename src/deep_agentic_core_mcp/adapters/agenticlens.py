@@ -7,7 +7,7 @@ import json
 import secrets
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from deep_agentic_core_mcp.adapters import AdapterUnavailableError, ensure_repo_on_path
 from deep_agentic_core_mcp.services.evals_contract import validate_evals_artifact
@@ -367,9 +367,13 @@ def suite_from_traces(
     suite = _TestSuite(name=name, version=version, cases=result.cases)
     masking = None
     if mask:
-        if strategy == "hash" and not salt:
+        if strategy not in ("redact", "hash"):
+            raise ValueError("strategy must be 'redact' or 'hash'")
+        masking_strategy: Literal["redact", "hash"] = "hash" if strategy == "hash" else "redact"
+        if masking_strategy == "hash" and not salt:
             salt = secrets.token_hex(16)
-        suite, report = _mask_suite(suite, _PIIMasker(strategy=strategy, salt=salt or ""))
+        masker = _PIIMasker(strategy=masking_strategy, salt=salt or "")
+        suite, report = _mask_suite(suite, masker)
         masking = {"total": report.total, "counts": report.counts}
     return {
         "suite": suite.model_dump(mode="json", exclude_defaults=True),
