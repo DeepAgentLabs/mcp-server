@@ -447,6 +447,10 @@ Input schema:
         "hash"
       ]
     },
+    "salt": {
+      "type": "string",
+      "description": "Salt for 'hash' masking; a random per-call salt is used (and not returned) when omitted."
+    },
     "session_id": {
       "type": "string",
       "description": "Session to read/write shared state under. Defaults to 'default'."
