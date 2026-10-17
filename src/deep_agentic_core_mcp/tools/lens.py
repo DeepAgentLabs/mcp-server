@@ -190,6 +190,7 @@ def suite_from_traces(arguments: dict[str, Any] | None) -> dict[str, Any]:
                 include_output=bool(arguments.get("include_output", False)),
                 mask=bool(arguments.get("mask", True)),
                 strategy=arguments.get("strategy", "redact"),
+                salt=arguments.get("salt"),
             ),
         }
     except AdapterUnavailableError as exc:

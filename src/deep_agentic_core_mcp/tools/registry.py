@@ -243,6 +243,11 @@ def list_tools() -> list[dict[str, Any]]:
                     "include_output": {"type": "boolean"},
                     "mask": {"type": "boolean"},
                     "strategy": {"type": "string", "enum": ["redact", "hash"]},
+                    "salt": {
+                        "type": "string",
+                        "description": "Salt for 'hash' masking; a random per-call salt is "
+                        "used (and not returned) when omitted.",
+                    },
                     **_SESSION_ID_PROPERTY,
                 },
                 "required": ["runs", "name", "version"],

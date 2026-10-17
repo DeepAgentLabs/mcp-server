@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import secrets
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -55,6 +56,7 @@ try:
     from agenticlens.suites import cases_from_runs as _cases_from_runs
     from agenticlens.suites import find_duplicates as _find_duplicates
     from agenticlens.suites import mask_suite as _mask_suite
+    from agenticlens.suites import scan_suite as _scan_suite
     from agenticlens.suites import summarize_suite as _summarize_suite
 except Exception as exc:  # noqa: BLE001 - reported per tool
     _SUITES_ERROR = exc
@@ -344,8 +346,14 @@ def suite_from_traces(
     include_output: bool = False,
     mask: bool = True,
     strategy: str = "redact",
+    salt: str | None = None,
 ) -> dict[str, Any]:
-    """Convert successful trace runs into a draft suite of cases needing review."""
+    """Convert successful trace runs into a draft suite of cases needing review.
+
+    With `strategy="hash"` and no `salt`, a random per-call salt is used and
+    never returned, so hashed tokens cannot be dictionary-matched; pass a
+    stable `salt` to keep tokens comparable across calls.
+    """
     _require_suites()
     result = _cases_from_runs(
         [Run.model_validate(run) for run in runs],
@@ -359,7 +367,9 @@ def suite_from_traces(
     suite = _TestSuite(name=name, version=version, cases=result.cases)
     masking = None
     if mask:
-        suite, report = _mask_suite(suite, _PIIMasker(strategy=strategy))
+        if strategy == "hash" and not salt:
+            salt = secrets.token_hex(16)
+        suite, report = _mask_suite(suite, _PIIMasker(strategy=strategy, salt=salt or ""))
         masking = {"total": report.total, "counts": report.counts}
     return {
         "suite": suite.model_dump(mode="json", exclude_defaults=True),
@@ -372,10 +382,13 @@ def suite_check(suite: dict[str, Any], *, threshold: float = 0.85) -> dict[str, 
     """Summary, duplicates, unmasked-PII scan, and approval checks for a suite (no storage)."""
     _require_suites()
     parsed = _TestSuite.model_validate(suite)
+    # Approval always applies Lens's fixed duplicate threshold; the returned
+    # report uses the caller's `threshold`, so the two scans are not shared.
     checks = _approval_checks(parsed)
     return {
         "summary": _summarize_suite(parsed).model_dump(mode="json"),
         "duplicates": _find_duplicates(parsed, threshold=threshold).model_dump(mode="json"),
+        "pii": _scan_suite(parsed).model_dump(mode="json"),
         "approval_checks": [check.model_dump(mode="json") for check in checks],
         "approvable": all(check.passed for check in checks),
     }
