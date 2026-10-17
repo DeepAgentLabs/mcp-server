@@ -7,7 +7,7 @@ COPY src ./src
 # Chaos 0.6.0 (AIOS run export; extension carries call counts).
 # Chaos is installed for its exporter and fault catalog only; HTTP always
 # rejects chaos.run_experiment, so no target script is ever executed here.
-RUN pip install --no-cache-dir ".[http]" "agenticlens==0.7.0" "agentic-chaos==0.6.0"
+RUN pip install --no-cache-dir ".[http]" "agenticlens==0.8.0" "agentic-chaos==0.6.0"
 COPY scripts/fetch_schema_assets.py /tmp/fetch_schema_assets.py
 RUN python /tmp/fetch_schema_assets.py /opt/workspace/ai-operations-spec
 RUN useradd --create-home --uid 10001 mcp

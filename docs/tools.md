@@ -3,7 +3,7 @@
 
 # Tool Reference
 
-30 tools, generated from `tools/registry.py` - the same data MCP
+32 tools, generated from `tools/registry.py` - the same data MCP
 clients see via `tools/list`. See [README.md](../README.md) for a one-line-per-tool
 overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
@@ -346,6 +346,120 @@ Input schema:
   },
   "required": [
     "report"
+  ],
+  "additionalProperties": false
+}
+```
+
+### `lens.suite_check` — Suite Check
+
+Check a test suite before approval: counts by split, domain, tag, source and review status; exact, near and conflicting duplicates; unmasked PII (types and locations only); and the approval checks AgenticLens would run. Nothing is stored. Needs agenticlens>=0.8.0.
+
+| | |
+| --- | --- |
+| Category | `lens` |
+| Prerequisites | `agenticlens` |
+| Expected duration | fast |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "suite": {
+      "type": "object"
+    },
+    "threshold": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 1
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session to read/write shared state under. Defaults to 'default'."
+    }
+  },
+  "required": [
+    "suite"
+  ],
+  "additionalProperties": false
+}
+```
+
+### `lens.suite_from_traces` — Suite From Traces
+
+Convert successful trace runs into a draft regression suite: each case expects the run's tool trajectory and latency/cost within a margin, is marked needs_review, and has PII masked unless 'mask' is false. Failed runs are skipped with a reason. Nothing is stored. Needs agenticlens>=0.8.0.
+
+| | |
+| --- | --- |
+| Category | `lens` |
+| Prerequisites | `agenticlens` |
+| Expected duration | fast |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "runs": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "minItems": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "latency_margin": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "cost_margin": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "include_output": {
+      "type": "boolean"
+    },
+    "mask": {
+      "type": "boolean"
+    },
+    "strategy": {
+      "type": "string",
+      "enum": [
+        "redact",
+        "hash"
+      ]
+    },
+    "salt": {
+      "type": "string",
+      "description": "Salt for 'hash' masking; a random per-call salt is used (and not returned) when omitted."
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session to read/write shared state under. Defaults to 'default'."
+    }
+  },
+  "required": [
+    "runs",
+    "name",
+    "version"
   ],
   "additionalProperties": false
 }

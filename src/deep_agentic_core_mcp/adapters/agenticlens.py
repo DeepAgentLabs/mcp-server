@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import secrets
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from deep_agentic_core_mcp.adapters import AdapterUnavailableError, ensure_repo_on_path
 from deep_agentic_core_mcp.services.evals_contract import validate_evals_artifact
@@ -46,6 +47,21 @@ except Exception as exc:  # noqa: BLE001 - reported per tool
     _DIAGNOSIS_ERROR = exc
 
 
+# Suite management arrived in agenticlens 0.8.0; probed like diagnosis.
+_SUITES_ERROR: Exception | None = None
+try:
+    from agentic_evals import TestSuite as _TestSuite
+    from agenticlens.suites import PIIMasker as _PIIMasker
+    from agenticlens.suites import approval_checks as _approval_checks
+    from agenticlens.suites import cases_from_runs as _cases_from_runs
+    from agenticlens.suites import find_duplicates as _find_duplicates
+    from agenticlens.suites import mask_suite as _mask_suite
+    from agenticlens.suites import scan_suite as _scan_suite
+    from agenticlens.suites import summarize_suite as _summarize_suite
+except Exception as exc:  # noqa: BLE001 - reported per tool
+    _SUITES_ERROR = exc
+
+
 def _require_available() -> None:
     if _IMPORT_ERROR is not None:
         raise AdapterUnavailableError("agenticlens", _IMPORT_ERROR)
@@ -71,6 +87,8 @@ def describe_capabilities() -> list[str]:
         "audit_report",
         "diagnose_run",
         "score_analysis",
+        "suite_from_traces",
+        "suite_check",
     ]
 
 
@@ -310,3 +328,71 @@ def score_analysis(report: dict[str, Any]) -> dict[str, Any]:
     analysis = _analyze_scores(EvaluationReport.model_validate(report))
     dumped: dict[str, Any] = analysis.model_dump(mode="json")
     return dumped
+
+
+def _require_suites() -> None:
+    _require_available()
+    if _SUITES_ERROR is not None:
+        raise AdapterUnavailableError("agenticlens>=0.8.0 (suites)", _SUITES_ERROR)
+
+
+def suite_from_traces(
+    runs: list[dict[str, Any]],
+    *,
+    name: str,
+    version: str,
+    latency_margin: float | None = 1.5,
+    cost_margin: float | None = 1.5,
+    include_output: bool = False,
+    mask: bool = True,
+    strategy: str = "redact",
+    salt: str | None = None,
+) -> dict[str, Any]:
+    """Convert successful trace runs into a draft suite of cases needing review.
+
+    With `strategy="hash"` and no `salt`, a random per-call salt is used and
+    never returned, so hashed tokens cannot be dictionary-matched; pass a
+    stable `salt` to keep tokens comparable across calls.
+    """
+    _require_suites()
+    result = _cases_from_runs(
+        [Run.model_validate(run) for run in runs],
+        latency_margin=latency_margin,
+        cost_margin=cost_margin,
+        include_output=include_output,
+    )
+    skipped = [item.model_dump(mode="json") for item in result.skipped]
+    if not result.cases:
+        return {"suite": None, "skipped": skipped, "masking": None}
+    suite = _TestSuite(name=name, version=version, cases=result.cases)
+    masking = None
+    if mask:
+        if strategy not in ("redact", "hash"):
+            raise ValueError("strategy must be 'redact' or 'hash'")
+        masking_strategy: Literal["redact", "hash"] = "hash" if strategy == "hash" else "redact"
+        if masking_strategy == "hash" and not salt:
+            salt = secrets.token_hex(16)
+        masker = _PIIMasker(strategy=masking_strategy, salt=salt or "")
+        suite, report = _mask_suite(suite, masker)
+        masking = {"total": report.total, "counts": report.counts}
+    return {
+        "suite": suite.model_dump(mode="json", exclude_defaults=True),
+        "skipped": skipped,
+        "masking": masking,
+    }
+
+
+def suite_check(suite: dict[str, Any], *, threshold: float = 0.85) -> dict[str, Any]:
+    """Summary, duplicates, unmasked-PII scan, and approval checks for a suite (no storage)."""
+    _require_suites()
+    parsed = _TestSuite.model_validate(suite)
+    # Approval always applies Lens's fixed duplicate threshold; the returned
+    # report uses the caller's `threshold`, so the two scans are not shared.
+    checks = _approval_checks(parsed)
+    return {
+        "summary": _summarize_suite(parsed).model_dump(mode="json"),
+        "duplicates": _find_duplicates(parsed, threshold=threshold).model_dump(mode="json"),
+        "pii": _scan_suite(parsed).model_dump(mode="json"),
+        "approval_checks": [check.model_dump(mode="json") for check in checks],
+        "approvable": all(check.passed for check in checks),
+    }

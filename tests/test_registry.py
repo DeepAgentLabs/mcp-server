@@ -28,6 +28,8 @@ def test_tool_registry_has_phase_2_and_3_additions() -> None:
         "lens.audit_report",
         "lens.diagnose_run",
         "lens.score_analysis",
+        "lens.suite_from_traces",
+        "lens.suite_check",
         "chaos.run_experiment",
         "sidecar.module_inventory",
     } <= names

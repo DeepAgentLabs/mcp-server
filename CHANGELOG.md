@@ -6,6 +6,28 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.9 - 2026-10-17
+
+Pairs with `agenticlens` 0.8.0 (v0.6 test-suite and dataset management).
+
+### Added
+
+- `lens.suite_from_traces`: convert trace runs into a draft agentic-evals
+  suite. Successful runs become `needs_review` cases expecting their tool
+  trajectory and latency/cost within a margin; PII is masked by default
+  (`redact`, or `hash` with a random per-call salt unless `salt` is given);
+  failed runs are returned in `skipped` with a reason.
+- `lens.suite_check`: suite summary, exact/near/conflicting duplicates, and
+  the approval checks AgenticLens runs (review, unmasked PII by type and
+  location only, conflicting duplicates), with `approvable` and a value-free
+  `pii` scan listing each unmasked value's case, field and type.
+- Both tools are read-only and store nothing. They need `agenticlens>=0.8.0`
+  and report "unavailable" on older installs without affecting other tools.
+
+### Changed
+
+- Hosted AWS and Render images pin `agenticlens==0.8.0` (was 0.7.0).
+
 ## 0.3.8 - 2026-10-17
 
 ### Added
