@@ -39,7 +39,7 @@ integrations are absent, even while hosted analysis works.
 
 ## 2. Understand what is available
 
-Hosted availability below reflects the `0.3.7` hosted image (2026-10-17). Call `core.health` for the
+Hosted availability below reflects the `0.3.8` hosted image (2026-10-17). Call `core.health` for the
 current status; a tool appearing in the catalog does not guarantee its optional
 package is installed.
 
@@ -283,3 +283,8 @@ Profiles and provider patch helpers remain Python/CLI APIs in Chaos; the MCP
 request schema exposes fault names rather than those configuration surfaces.
 Hosted HTTP continues to reject `chaos.run_experiment`. MCP 0.3.3 adds the AIOS
 run export described in section 6 (requires `agentic-chaos>=0.5.1`).
+
+## Native Evals validation
+
+Use `evals.validate_artifact` for reports or gate decisions. This offline tool
+works without Lens. See [the contract guide](evals-report-contract.md).

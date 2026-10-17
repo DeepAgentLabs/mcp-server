@@ -10,7 +10,7 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.3.7` (2026-10-17) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `0.3.8` (2026-10-17) — see [CHANGELOG.md](CHANGELOG.md).
 `0.3.7` moves the hosted images to `agentic-chaos` 0.6.0. Its AIOS run export
 adds call counts and the escaped error to the producer extension; MCP tools are
 unchanged.
@@ -602,13 +602,9 @@ rejected until per-user Tower credentials exist. MCP remains usable without Towe
 Unified cross-engine workflows and broader Phase 4 features remain planned.
 See [setup](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/main/docs/mcp-connector.md).
 
-## Evals 0.7.2 report contract
+## Native Evals contract validation — MCP 0.3.8
 
-Agentic Evals 0.7.2 publishes native report (`schema_version: "1.0"`) and
-gate-decision JSON Schemas, with offline `report_schema()` and
-`gate_decision_schema()` accessors. Contract 1.x evolves additively; readers
-should tolerate unknown fields. MCP spec.validate_artifact validates AIOS artifacts, not the native Evals schemas. Dedicated Evals tools and AIOS evaluation evidence export remain future work.
-
-See the [contract, examples and compatibility policy](https://github.com/DeepAgentLabs/agentic-evals/blob/main/docs/report-contract.md). Existing dependency
-ranges remain sufficient; using the new accessors directly requires
-`agentic-evals>=0.7.2`. This documentation alignment needs no sibling patch release.
+Published Evals 0.7.2 report and gate schemas are now enforced in the native
+consumer paths. Validation runs offline using bundled upstream contracts;
+invalid artifacts fail with field-level diagnostics. Native verdicts and
+AIOS conformance remain distinct. See [behavior, examples and migration](docs/evals-report-contract.md).

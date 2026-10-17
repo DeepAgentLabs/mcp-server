@@ -3,7 +3,7 @@
 
 # Tool Reference
 
-29 tools, generated from `tools/registry.py` - the same data MCP
+30 tools, generated from `tools/registry.py` - the same data MCP
 clients see via `tools/list`. See [README.md](../README.md) for a one-line-per-tool
 overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
@@ -346,6 +346,43 @@ Input schema:
   },
   "required": [
     "report"
+  ],
+  "additionalProperties": false
+}
+```
+
+## Native Evals (`evals.*`)
+
+### `evals.validate_artifact` — Validate Native Evals Artifact
+
+Validate native evaluation reports or gate decisions against the published Evals 1.0 schemas. Structural validation is not AIOS conformance and does not compute or pass a release gate.
+
+| | |
+| --- | --- |
+| Category | `evals` |
+| Prerequisites | none |
+| Expected duration | fast |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "artifact": {
+      "type": "object"
+    },
+    "artifact_type": {
+      "enum": [
+        "evaluation_report",
+        "gate_decision"
+      ]
+    }
+  },
+  "required": [
+    "artifact",
+    "artifact_type"
   ],
   "additionalProperties": false
 }

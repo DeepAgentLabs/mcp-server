@@ -138,3 +138,10 @@ jobs:
         run: |
           uv run --no-sync python -m build
           uv run --no-sync python -m twine check dist/*
+
+      - name: Verify standalone installed-wheel schema resources
+        working-directory: mcp-server
+        run: |
+          for wheel in dist/*.whl; do
+            uv run --isolated --no-project --with "$wheel" python -I scripts/smoke_evals_contract.py
+          done

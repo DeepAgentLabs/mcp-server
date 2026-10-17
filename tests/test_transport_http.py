@@ -295,3 +295,28 @@ def test_render_hostname_and_port_are_used(monkeypatch):
     assert "mcp-test.onrender.com" in captured["allowed_hosts"]
     assert captured["port"] == 10000
     assert captured["host"] == "0.0.0.0"
+
+
+@pytest.mark.asyncio
+async def test_native_evals_validation_over_authenticated_http():
+    app = app_for_test()
+    async with (
+        app.router.lifespan_context(app),
+        httpx.AsyncClient(
+            transport=httpx.ASGITransport(app=app), base_url="http://testserver"
+        ) as client,
+    ):
+        params = {
+            "name": "evals.validate_artifact",
+            "arguments": {
+                "artifact_type": "gate_decision",
+                "artifact": {"passed": False, "reasons": ["blocked"], "observed": {}},
+            },
+        }
+        valid = tool_payload(await rpc(client, "tools/call", params))
+        assert valid["ok"] is True
+        assert valid["valid"] is True  # The gate itself still fails.
+        params["arguments"]["artifact"]["passed"] = "false"
+        invalid = tool_payload(await rpc(client, "tools/call", params))
+        assert invalid["ok"] is False
+        assert invalid["valid"] is False

@@ -138,7 +138,7 @@ Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
 pin `agenticlens==0.7.0` and `agentic-chaos==0.6.0` (since MCP 0.3.7).
 
-## MCP Surface (current, `0.3.7`)
+## MCP Surface (current, `0.3.8`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -153,6 +153,7 @@ pin `agenticlens==0.7.0` and `agentic-chaos==0.6.0` (since MCP 0.3.7).
   regressions
 - `lens.slo_summary` — apply release-gate style SLO thresholds to an
   evaluation report
+- `evals.validate_artifact` — offline validation of native Evals reports and gate decisions
 - `lens.audit_report` — case-by-case evaluation detail, optionally with HTML
 - `lens.diagnose_run` — diagnose a trace run: faulty step and agent, timeline,
   anomalies, investigation narrative (`agenticlens>=0.7.0`)
@@ -418,13 +419,9 @@ Use `tower.agents` with `status=unhealthy`, `tower.versions` with an explicit
 minimum, or `tower.evidence` with `source=agentic-sidecar` to inspect high-risk
 posture without replacing native producer decisions.
 
-## Evals 0.7.2 report contract
+## Native Evals contract validation — MCP 0.3.8
 
-Agentic Evals 0.7.2 publishes native report (`schema_version: "1.0"`) and
-gate-decision JSON Schemas, with offline `report_schema()` and
-`gate_decision_schema()` accessors. Contract 1.x evolves additively; readers
-should tolerate unknown fields. MCP spec.validate_artifact validates AIOS artifacts, not the native Evals schemas. Dedicated Evals tools and AIOS evaluation evidence export remain future work.
-
-See the [contract, examples and compatibility policy](https://github.com/DeepAgentLabs/agentic-evals/blob/main/docs/report-contract.md). Existing dependency
-ranges remain sufficient; using the new accessors directly requires
-`agentic-evals>=0.7.2`. This documentation alignment needs no sibling patch release.
+Published Evals 0.7.2 report and gate schemas are now enforced in the native
+consumer paths. Validation runs offline using bundled upstream contracts;
+invalid artifacts fail with field-level diagnostics. Native verdicts and
+AIOS conformance remain distinct. See [behavior, examples and migration](docs/evals-report-contract.md).

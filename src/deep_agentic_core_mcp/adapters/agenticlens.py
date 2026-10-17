@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from deep_agentic_core_mcp.adapters import AdapterUnavailableError, ensure_repo_on_path
+from deep_agentic_core_mcp.services.evals_contract import validate_evals_artifact
 
 _IMPORT_ERROR: Exception | None = None
 _version: str | None = None
@@ -246,9 +247,11 @@ def slo_summary(
 ) -> dict[str, Any]:
     """Apply release-gate style SLO thresholds to an evaluation report."""
     _require_available()
+    validate_evals_artifact(report, "evaluation_report")
     evaluation_report = EvaluationReport.model_validate(report)
     gate_config = GateConfig.model_validate(thresholds or {})
     decision = evaluate_gate(evaluation_report, gate_config)
+    validate_evals_artifact(decision.model_dump(mode="json"), "gate_decision")
     return {
         "suite_name": evaluation_report.suite_name,
         "suite_version": evaluation_report.suite_version,
@@ -265,6 +268,7 @@ def audit_report(
 ) -> dict[str, Any]:
     """Return the full case-by-case evaluation detail, for audit trails."""
     _require_available()
+    validate_evals_artifact(report, "evaluation_report")
     evaluation_report = EvaluationReport.model_validate(report)
     result: dict[str, Any] = {
         "suite_name": evaluation_report.suite_name,
@@ -302,6 +306,7 @@ def diagnose_run(
 def score_analysis(report: dict[str, Any]) -> dict[str, Any]:
     """Deterministic vs model-based scores, judge cost, and evaluator disagreement."""
     _require_diagnosis()
+    validate_evals_artifact(report, "evaluation_report")
     analysis = _analyze_scores(EvaluationReport.model_validate(report))
     dumped: dict[str, Any] = analysis.model_dump(mode="json")
     return dumped
