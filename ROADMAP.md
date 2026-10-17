@@ -10,7 +10,7 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.3.5` (2026-10-13) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `0.3.6` (2026-10-17) — see [CHANGELOG.md](CHANGELOG.md).
 `0.3.5` adds `lens.diagnose_run` and `lens.score_analysis` for AgenticLens
 0.7.0 (v0.5 diagnosis) and pins the hosted images to `agenticlens` 0.7.0 and
 `agentic-chaos` 0.5.3.

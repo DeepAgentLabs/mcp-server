@@ -25,13 +25,14 @@ OUTPUT_PATH = REPO_ROOT / "docs" / "tools.md"
 # (a category added to registry.py without updating this map) still renders,
 # alphabetically, at the end - so a new category can't silently vanish from
 # the doc, it just looks less polished until this map is updated too.
-_CATEGORY_ORDER = ["core", "lens", "chaos", "sidecar", "spec"]
+_CATEGORY_ORDER = ["core", "lens", "chaos", "sidecar", "spec", "tower"]
 _CATEGORY_TITLES = {
     "core": "Core",
     "lens": "AgenticLens (`lens.*`)",
     "chaos": "Agentic Chaos (`chaos.*`)",
     "sidecar": "Agentic Sidecar (`sidecar.*`)",
     "spec": "AI Operations Specification (`spec.*`)",
+    "tower": "Control Tower (`tower.*`)",
 }
 
 

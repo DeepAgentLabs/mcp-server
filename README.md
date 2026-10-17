@@ -138,7 +138,7 @@ Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
 pin `agenticlens==0.7.0` and `agentic-chaos==0.5.3`.
 
-## MCP Surface (current, `0.3.5`)
+## MCP Surface (current, `0.3.6`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -405,7 +405,9 @@ The model provider remains the client's choice; none is bundled.
 
 Hosted/remote MCP rejects Tower tools until per-user Tower credential binding
 exists. Local tokens cannot be borrowed by hosted tenants. Redirects are refused,
-responses are limited to 1 MiB and request waits to ten seconds. URLs and tokens
+responses are limited to 1 MiB and an isolated HTTP worker enforces a ten-second
+total deadline. A timeout may leave an action result unknown; inspect the Tower
+incident before retrying. URLs and tokens
 come only from trusted server environment. The Tower optional connector extra
 must use MCP >=0.3.6; other producer floors remain unchanged.
 
