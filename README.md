@@ -6,7 +6,7 @@ ecosystem. It is designed to expose a single MCP interface that combines:
 - `agenticlens` style workflow inspection, profiling, and analysis
 - `agentic-chaos` style resilience testing and fault-injection workflows
 - `agentic-sidecar` style supervision-readiness and module-surface discovery
-- future `agenticops-control-tower` style operator-facing control-plane access
+- authenticated local Control Tower 0.6.0 investigation and approved recovery access
 
 It sits above the **AI Operations Workflow Specification**, exposing a unified
 MCP-native control surface over the shared operational model used by the
@@ -33,7 +33,7 @@ libraries:
 - `agenticlens` remains the core profiling and analysis engine
 - `agentic-chaos` remains the core chaos and resilience engine
 - `agentic-sidecar` remains the core decision-supervision and governance engine
-- `agenticops-control-tower` remains the future operator-facing control plane
+- `agenticops-control-tower` 0.6.0 provides the operator-facing control plane
 - the `AI Operations Workflow Specification` remains the shared data contract
 - `deep-agentic-core-mcp` becomes the MCP-native interface that hosts can call
 
@@ -138,7 +138,7 @@ Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
 pin `agenticlens==0.7.0` and `agentic-chaos==0.5.3`.
 
-## MCP Surface (current, `0.3.5`)
+## MCP Surface (current, `0.3.6`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -322,9 +322,8 @@ full detail):
   authenticated, task-scoped runtime bridge
 - **Phase 4 (Unified Workflows)** — joined observability + chaos workflows,
   incident/readiness reporting, a higher-level control surface
-- **Future Control Tower coordination** — once `agenticops-control-tower`
-  ships real control-plane APIs, MCP should expose those operator-facing
-  surfaces without reimplementing them here
+- **Control Tower coordination** — local connector tools ship in 0.3.6 for
+  Tower 0.6.0; hosted per-user credential binding remains planned
 - **Phase 5/6** — PyPI + MCP Registry publishing, operational intelligence
   features
 
@@ -387,3 +386,34 @@ revocation and delegated authority remain v0.9 validation; stable schemas remain
 v1.0. Native correlated Lens readback requires Lens 0.7.1. All sibling packages
 stay optional; no dependency floor is increased without a runtime requirement.
 See the [Sidecar integration contract](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md).
+
+## Control Tower 0.6.0 connector (MCP 0.3.6)
+
+Local stdio exposes twelve `tower.*` tools over the actual authenticated Tower
+HTTP API: inventory/status/versions/posture/evidence, incidents, detection,
+investigation, preview, execute and verify. Configure `AGENTICOPS_TOWER_URL`
+(a trusted HTTP(S) origin), `AGENTICOPS_TOWER_READ_TOKEN`, and optionally the
+separate `AGENTICOPS_TOWER_WRITE_TOKEN`. No Tower package import is required.
+Without Tower, all other tools work; Tower tools return structured unavailable.
+
+The `tower.investigation` prompt directs the host model to cite record IDs and
+artifact references, preserve uncertainty and missing evidence, recommend only
+the supported staging runbook, and leave approval to a human through Tower's
+HTTP/CLI. Approval credentials are never accepted by tool arguments or exposed
+through an approval tool. Execution is subject to Tower's exact-preview approval.
+The model provider remains the client's choice; none is bundled.
+
+Hosted/remote MCP rejects Tower tools until per-user Tower credential binding
+exists. Local tokens cannot be borrowed by hosted tenants. Redirects are refused,
+responses are limited to 1 MiB and an isolated HTTP worker enforces a ten-second
+total deadline. A timeout may leave an action result unknown; inspect the Tower
+incident before retrying. URLs and tokens
+come only from trusted server environment. The Tower optional connector extra
+must use MCP >=0.3.6; other producer floors remain unchanged.
+
+For setup, request JSON and both resolved/escalated native Lens/Evals walkthroughs,
+see [Tower's connector guide](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/main/docs/mcp-connector.md)
+and [incident guide](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/main/docs/incident-recovery.md).
+Use `tower.agents` with `status=unhealthy`, `tower.versions` with an explicit
+minimum, or `tower.evidence` with `source=agentic-sidecar` to inspect high-risk
+posture without replacing native producer decisions.

@@ -49,6 +49,8 @@ from deep_agentic_core_mcp.tools.lens import (
 from deep_agentic_core_mcp.tools.registry import list_tools as _registry_tools
 from deep_agentic_core_mcp.tools.sidecar import module_inventory, status
 from deep_agentic_core_mcp.tools.spec import validate_artifact
+from deep_agentic_core_mcp.tools.tower import READ_OPERATIONS, WRITE_OPERATIONS
+from deep_agentic_core_mcp.tools.tower import query as tower_query
 
 # ---------------------------------------------------------------------------
 # Server instance
@@ -80,9 +82,18 @@ _TOOL_DISPATCH: dict[str, Callable[[dict[str, Any] | None], dict[str, Any]]] = {
     "spec.validate_artifact": validate_artifact,
 }
 
+for _operation in (*READ_OPERATIONS, *WRITE_OPERATIONS):
+
+    def _tower_handler(
+        arguments: dict[str, Any] | None, *, operation: str = _operation
+    ) -> dict[str, Any]:
+        return tower_query({**(arguments or {}), "operation": operation})
+
+    _TOOL_DISPATCH["tower." + _operation] = _tower_handler
+
 # Tools whose execution has real-world side effects (they run external code),
 # rather than just reading/deriving from arguments already in hand.
-_OPEN_WORLD_TOOLS = {"chaos.run_experiment"}
+_OPEN_WORLD_TOOLS = {"chaos.run_experiment"} | {"tower." + op for op in WRITE_OPERATIONS}
 
 # ---------------------------------------------------------------------------
 # Tool and prompt definitions (derived from the canonical registries)
@@ -109,7 +120,7 @@ def _build_tools() -> list[Tool]:
                 description=str(entry["description"]),
                 input_schema=entry["input_schema"],
                 annotations=ToolAnnotations(
-                    read_only_hint=not entry.get("mutates_session", False),
+                    read_only_hint=not (entry.get("mutates_session", False) or open_world),
                     destructive_hint=open_world or None,
                     open_world_hint=open_world or None,
                 ),
@@ -170,7 +181,11 @@ RESOURCE_CONTENT: dict[str, dict[str, Any]] = {
 async def handle_list_tools() -> list[Tool]:
     """Advertise available tools."""
     if config.is_remote_transport():
-        return [tool for tool in TOOLS if tool.name not in _OPEN_WORLD_TOOLS]
+        return [
+            tool
+            for tool in TOOLS
+            if tool.name not in _OPEN_WORLD_TOOLS and not tool.name.startswith("tower.")
+        ]
     return TOOLS
 
 
@@ -196,6 +211,8 @@ async def handle_call_tool(
         return [TextContent(type="text", text=json.dumps({"error": f"Unknown tool: {name}"}))]
 
     def execute() -> dict[str, Any]:
+        if name.startswith("tower.") and (owner is not None or config.is_remote_transport()):
+            return {"ok": False, "error": "Tower connector is local-only"}
         if owner is not None and store is not None:
             if name in _OPEN_WORLD_TOOLS:
                 return {
