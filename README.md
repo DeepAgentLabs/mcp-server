@@ -138,7 +138,7 @@ Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
 pin `agenticlens==0.7.0` and `agentic-chaos==0.6.0` (since MCP 0.3.7).
 
-## MCP Surface (current, `0.3.6`)
+## MCP Surface (current, `0.3.7`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls

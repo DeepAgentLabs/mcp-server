@@ -39,7 +39,7 @@ integrations are absent, even while hosted analysis works.
 
 ## 2. Understand what is available
 
-Hosted availability below reflects the `0.3.5` hosted image (2026-10-13). Call `core.health` for the
+Hosted availability below reflects the `0.3.7` hosted image (2026-10-17). Call `core.health` for the
 current status; a tool appearing in the catalog does not guarantee its optional
 package is installed.
 
