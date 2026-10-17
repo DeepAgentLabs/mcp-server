@@ -11,6 +11,10 @@ from deep_agentic_core_mcp.adapters.agenticlens import diagnose_run as adapter_d
 from deep_agentic_core_mcp.adapters.agenticlens import report_summary as adapter_report_summary
 from deep_agentic_core_mcp.adapters.agenticlens import score_analysis as adapter_score_analysis
 from deep_agentic_core_mcp.adapters.agenticlens import slo_summary as adapter_slo_summary
+from deep_agentic_core_mcp.adapters.agenticlens import suite_check as adapter_suite_check
+from deep_agentic_core_mcp.adapters.agenticlens import (
+    suite_from_traces as adapter_suite_from_traces,
+)
 from deep_agentic_core_mcp.services import session
 
 
@@ -164,4 +168,55 @@ def score_analysis(arguments: dict[str, Any] | None) -> dict[str, Any]:
         session.record_call(session_id, "lens.score_analysis", ok=False, note=str(exc))
         return {"ok": False, "error": str(exc)}
     session.record_call(session_id, "lens.score_analysis", ok=True)
+    return result
+
+
+def suite_from_traces(arguments: dict[str, Any] | None) -> dict[str, Any]:
+    """Convert trace runs into a draft regression suite (PII masked by default)."""
+    arguments = arguments or {}
+    missing = [key for key in ("runs", "name", "version") if key not in arguments]
+    if missing:
+        return {"ok": False, "error": f"Missing required argument(s): {', '.join(missing)}"}
+    session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
+    try:
+        result = {
+            "ok": True,
+            **adapter_suite_from_traces(
+                arguments["runs"],
+                name=arguments["name"],
+                version=arguments["version"],
+                latency_margin=arguments.get("latency_margin", 1.5),
+                cost_margin=arguments.get("cost_margin", 1.5),
+                include_output=bool(arguments.get("include_output", False)),
+                mask=bool(arguments.get("mask", True)),
+                strategy=arguments.get("strategy", "redact"),
+            ),
+        }
+    except AdapterUnavailableError as exc:
+        session.record_call(session_id, "lens.suite_from_traces", ok=False, note=str(exc))
+        return {"ok": False, "error": str(exc)}
+    except ValueError as exc:
+        session.record_call(session_id, "lens.suite_from_traces", ok=False, note=str(exc))
+        return {"ok": False, "error": f"Invalid suite input: {exc}"}
+    session.record_call(session_id, "lens.suite_from_traces", ok=True)
+    return result
+
+
+def suite_check(arguments: dict[str, Any] | None) -> dict[str, Any]:
+    """Check a suite for duplicates, unmasked PII, and approval readiness."""
+    if not arguments or "suite" not in arguments:
+        return {"ok": False, "error": "Missing required 'suite' argument"}
+    session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
+    try:
+        result = {
+            "ok": True,
+            **adapter_suite_check(arguments["suite"], threshold=arguments.get("threshold", 0.85)),
+        }
+    except AdapterUnavailableError as exc:
+        session.record_call(session_id, "lens.suite_check", ok=False, note=str(exc))
+        return {"ok": False, "error": str(exc)}
+    except ValueError as exc:
+        session.record_call(session_id, "lens.suite_check", ok=False, note=str(exc))
+        return {"ok": False, "error": f"Invalid suite: {exc}"}
+    session.record_call(session_id, "lens.suite_check", ok=True)
     return result

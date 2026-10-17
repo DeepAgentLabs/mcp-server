@@ -46,6 +46,8 @@ from deep_agentic_core_mcp.tools.lens import (
     report_summary,
     score_analysis,
     slo_summary,
+    suite_check,
+    suite_from_traces,
 )
 from deep_agentic_core_mcp.tools.registry import list_tools as _registry_tools
 from deep_agentic_core_mcp.tools.sidecar import module_inventory, status
@@ -76,6 +78,8 @@ _TOOL_DISPATCH: dict[str, Callable[[dict[str, Any] | None], dict[str, Any]]] = {
     "lens.audit_report": audit_report,
     "lens.diagnose_run": diagnose_run,
     "lens.score_analysis": score_analysis,
+    "lens.suite_from_traces": suite_from_traces,
+    "lens.suite_check": suite_check,
     "chaos.list_faults": list_faults,
     "chaos.run_experiment": run_experiment,
     "chaos.export_aios_run": export_aios_run,
