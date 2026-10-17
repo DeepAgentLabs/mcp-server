@@ -136,9 +136,25 @@ and `chaos.export_aios_run` behave the same hosted as locally. Only
 
 Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
-pin `agenticlens==0.7.0` and `agentic-chaos==0.6.0` (since MCP 0.3.7).
+pin `agenticlens==0.8.0` and `agentic-chaos==0.6.0` (since MCP 0.3.9).
 
-## MCP Surface (current, `0.3.8`)
+## AgenticLens 0.8.0 suite tools (MCP 0.3.9)
+
+- **`lens.suite_from_traces`** — send trace `Run`s plus a suite `name` and
+  `version` and get a draft agentic-evals suite: each successful run becomes a
+  case expecting its tool trajectory and latency/cost within a margin, marked
+  `needs_review`, with PII masked (`mask`, `strategy`). Failed runs come back
+  in `skipped` with a reason.
+- **`lens.suite_check`** — send a suite and get its summary (splits, domains,
+  tags, sources, review status), exact/near/conflicting duplicates, and the
+  approval checks AgenticLens would run (review, unmasked PII by type and
+  location only, conflicting duplicates), plus `approvable`.
+
+Both are read-only and store nothing; approving into the immutable suite store
+stays a local `agenticlens suite approve` step. Both need `agenticlens>=0.8.0`;
+older installs get an "unavailable" error while other Lens tools keep working.
+
+## MCP Surface (current, `0.3.9`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -159,6 +175,10 @@ pin `agenticlens==0.7.0` and `agentic-chaos==0.6.0` (since MCP 0.3.7).
   anomalies, investigation narrative (`agenticlens>=0.7.0`)
 - `lens.score_analysis` — deterministic vs model-based scores, judge cost, and
   evaluator disagreement for an evaluation report (`agenticlens>=0.7.0`)
+- `lens.suite_from_traces` — draft regression-suite cases from successful
+  trace runs, PII masked (`agenticlens>=0.8.0`)
+- `lens.suite_check` — suite summary, duplicates, unmasked PII and approval
+  readiness (`agenticlens>=0.8.0`)
 - `chaos.list_faults` — list the supported fault types
 - `chaos.run_experiment` — run a workspace-sandboxed, policy-checked target
   script under selected faults and attach an AIOS run export
