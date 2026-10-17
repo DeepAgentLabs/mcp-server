@@ -6,10 +6,10 @@ binding exists. Tokens, origins and approval authority never come from tool args
 
 import json
 import os
+import subprocess
+import sys
 from typing import Any
-from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlencode, urlsplit
-from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from deep_agentic_core_mcp import config
 
@@ -29,13 +29,6 @@ WRITE_OPERATIONS = {
     "execute": ("/incidents/{incident_id}/execute", {"preview_digest"}),
     "verify": ("/incidents/{incident_id}/verify", {"lens_evidence_id", "evals_evidence_id"}),
 }
-
-
-class _NoRedirect(HTTPRedirectHandler):
-    def redirect_request(
-        self, req: Any, fp: Any, code: int, msg: str, headers: Any, newurl: str
-    ) -> None:
-        return None
 
 
 def query(arguments: dict[str, Any] | None) -> dict[str, Any]:
@@ -79,23 +72,27 @@ def query(arguments: dict[str, Any] | None) -> dict[str, Any]:
         return {"ok": False, "error": "Unsupported Tower arguments"}
     if any(not isinstance(value, (str, int)) or isinstance(value, bool) for value in args.values()):
         return {"ok": False, "error": "Tower arguments must be scalar strings or integers"}
-    body = json.dumps(args).encode() if write else None
     url = origin + path + ("?" + urlencode(args) if args and not write else "")
-    request = Request(
-        url,
-        data=body,
-        method="POST" if write else "GET",
-        headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"},
-    )
+    payload = json.dumps({"url": url, "arguments": args, "write": write, "token": token}).encode()
+    if len(payload) > 65536:
+        return {"ok": False, "error": "Tower request exceeds connector limit"}
     try:
-        with build_opener(_NoRedirect()).open(request, timeout=10) as response:
-            data = response.read(1024 * 1024 + 1)
-            if len(data) > 1024 * 1024:
-                return {"ok": False, "error": "Tower response exceeds connector limit"}
-            return {"ok": True, "data": json.loads(data)}
-    except HTTPError as exc:
-        return {"ok": False, "error": f"Tower HTTP {exc.code}"}
-    except (URLError, OSError, ValueError):
+        completed = subprocess.run(
+            [sys.executable, "-m", "deep_agentic_core_mcp.tools.tower_http"],
+            input=payload,
+            capture_output=True,
+            timeout=10,
+            check=False,
+        )
+        if completed.returncode != 0:
+            return {"ok": False, "error": "Tower HTTP worker unavailable"}
+        result = json.loads(completed.stdout)
+        if not isinstance(result, dict):
+            return {"ok": False, "error": "Invalid Tower HTTP worker response"}
+        return result
+    except subprocess.TimeoutExpired:
+        return {"ok": False, "error": "Tower deadline exceeded; inspect incident before retry"}
+    except (OSError, ValueError):
         return {"ok": False, "error": "Tower unavailable or invalid response"}
 
 
@@ -139,7 +136,7 @@ def tool_definitions() -> list[dict[str, Any]]:
                 "category": "tower",
                 "prerequisites": ["configured Tower 0.6 API"],
                 "expected_duration": "fast",
-                "mutates_session": write,
+                "mutates_session": False,
             }
         )
     return tools
