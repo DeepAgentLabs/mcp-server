@@ -359,7 +359,7 @@ def suite_from_traces(
     suite = _TestSuite(name=name, version=version, cases=result.cases)
     masking = None
     if mask:
-        suite, report = _mask_suite(suite, _PIIMasker(strategy=strategy))  # type: ignore[arg-type]
+        suite, report = _mask_suite(suite, _PIIMasker(strategy=strategy))
         masking = {"total": report.total, "counts": report.counts}
     return {
         "suite": suite.model_dump(mode="json", exclude_defaults=True),
