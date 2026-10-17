@@ -6,6 +6,22 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.8 - 2026-10-17
+
+### Added
+
+- Offline validation against the exact published Evals 0.7.2 report and gate
+  schemas, with pinned upstream parity tests and packaged schema resources.
+- Native JSON boundary tests for nested invalid scores, failed gates, unknown
+  additive fields, unsupported versions and value-free diagnostics.
+
+### Changed
+
+- Report consumers reject malformed/partial native artifacts before projecting
+  or analyzing them. Send full JSON reports rather than summary-only objects.
+- New read-only `evals.validate_artifact` works over stdio and authenticated HTTP.
+- Lens report analysis/audit/SLO tools validate input; produced SLO gates validate too.
+
 ## 0.3.7 - 2026-10-17
 
 Pairs with `agentic-chaos` 0.6.0 (pytest plugin and chaos contracts).
