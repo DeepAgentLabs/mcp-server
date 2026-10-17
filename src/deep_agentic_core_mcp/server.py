@@ -37,6 +37,7 @@ from deep_agentic_core_mcp.resources.catalog import list_resources as _catalog_r
 from deep_agentic_core_mcp.services.remote_sessions import SessionStore
 from deep_agentic_core_mcp.tools.chaos import export_aios_run, list_faults, run_experiment
 from deep_agentic_core_mcp.tools.core import health, session_state, verify, version
+from deep_agentic_core_mcp.tools.evals import validate_artifact as validate_evals_artifact
 from deep_agentic_core_mcp.tools.lens import (
     analyze_workflow,
     audit_report,
@@ -63,6 +64,7 @@ server = Server(SERVER_NAME, version=config.VERSION)
 # ---------------------------------------------------------------------------
 
 _TOOL_DISPATCH: dict[str, Callable[[dict[str, Any] | None], dict[str, Any]]] = {
+    "evals.validate_artifact": validate_evals_artifact,
     "core.health": health,
     "core.version": version,
     "core.verify": verify,

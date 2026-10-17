@@ -29,6 +29,26 @@ def list_tools() -> list[dict[str, Any]]:
     """
     return tool_definitions() + [
         {
+            "name": "evals.validate_artifact",
+            "title": "Validate Native Evals Artifact",
+            "description": "Validate native evaluation reports or gate decisions against the "
+            "published Evals 1.0 schemas. Structural validation is not AIOS conformance "
+            "and does not compute or pass a release gate.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "artifact": {"type": "object"},
+                    "artifact_type": {"enum": ["evaluation_report", "gate_decision"]},
+                },
+                "required": ["artifact", "artifact_type"],
+                "additionalProperties": False,
+            },
+            "category": "evals",
+            "prerequisites": [],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
             "name": "core.health",
             "title": "Health Check",
             "description": "Return rich server diagnostics: adapter availability, loaded "
