@@ -46,7 +46,7 @@ def test_standalone_images_pin_phase3_sibling_versions(dockerfile: str) -> None:
         assert _version(match.group(1)) >= minimum, f"{dockerfile} pins {package} too old"
 
 
-# Exact sibling releases the current hosted images ship (0.3.8: Lens 0.8.0, Chaos 0.6.0).
+# Exact sibling releases the current hosted images ship (0.3.9: Lens 0.8.0, Chaos 0.6.0).
 HOSTED_PINS = {"agenticlens": "0.8.0", "agentic-chaos": "0.6.0"}
 
 
