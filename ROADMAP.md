@@ -10,7 +10,10 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.3.9` (2026-10-17) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `0.3.11` (2026-10-18) — see [CHANGELOG.md](CHANGELOG.md).
+`0.3.11` adds `lens.modelfit_recommend` for AgenticLens 0.9.0 (v0.7 ModelFit)
+and pins the hosted images to `agenticlens` 0.9.0.
+`0.3.10` pins the hosted images to `agentic-chaos` 0.7.0.
 `0.3.9` adds `lens.suite_from_traces` and `lens.suite_check` for AgenticLens
 0.8.0 (v0.6 test-suite and dataset management) and pins the hosted images to
 `agenticlens` 0.8.0.
@@ -66,9 +69,9 @@ hashes in DynamoDB. Remote chaos execution remains disabled.
 As of 2026-10-04, the hosted service is running at
 `https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
 Transport/signup and Sidecar discovery are included in the `0.3.0` release.
-Since `0.3.9` the hosted image installs `agenticlens` 0.8.0, `agentic-chaos`
-0.6.0, and the `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a
-pinned commit and checksum-verified. (`0.3.7`–`0.3.8` installed Lens 0.7.0; `0.3.5`–`0.3.6` installed Chaos 0.5.3;
+Since `0.3.11` the hosted image installs `agenticlens` 0.9.0, `agentic-chaos`
+0.7.0, and the `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a
+pinned commit and checksum-verified. (`0.3.9`–`0.3.10` installed Lens 0.8.0; `0.3.7`–`0.3.8` installed Lens 0.7.0; `0.3.5`–`0.3.6` installed Chaos 0.5.3;
 `0.3.4` installed Lens 0.6.1 and Chaos 0.5.1.) Chaos is installed only for its exporter and fault catalog; HTTP still
 rejects `chaos.run_experiment`. `tests/test_hosted_image.py` keeps these pins in step with
 the adapters. All Phase 3 features are therefore available both locally and
@@ -130,6 +133,7 @@ For roadmap work, distinguish:
 | 3b script policy | none (server-local) | `tests/test_chaos_script_policy.py` |
 | Lens diagnosis tools (`0.3.5`) | `agenticlens>=0.7.0` (`agenticlens.diagnosis`, `analyze_scores`) | `tests/test_lens_diagnosis.py`; agenticlens `tests/test_diagnosis_engine.py`, `tests/test_score_analysis.py` |
 | Lens suite tools (`0.3.9`) | `agenticlens>=0.8.0` (`agenticlens.suites`) | `tests/test_lens_suites.py`; agenticlens `tests/test_suites_*.py` |
+| Lens ModelFit tool (`0.3.11`) | `agenticlens>=0.9.0` (`agenticlens.modelfit`) | `tests/test_lens_modelfit.py`; agenticlens `tests/test_modelfit_*.py`, `tests/test_examples_modelfit.py` |
 | 3c version routing and conformance | `ai-operations-spec>=0.5.1` (`specification/v0.4/conformance-rules.json`, `specification/v0.5/compatibility.json`) | `tests/test_spec_conformance.py`; spec `tests/test_conformance_catalogs.py` |
 
 Each dependency degrades rather than breaking boot. With an older agenticlens,
@@ -681,3 +685,17 @@ native evidence schema changes are required; this documentation alignment needs
 no patch release. See the [operator guide](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/v0.7.0/docs/fleet-operations.md).
 
 See the [local Tower compatibility guide](docs/tower-0.7-fleet-operations.md) for the operator workflow and package boundaries.
+
+## AgenticLens 0.9.0 ModelFit
+
+AgenticLens 0.9.0 delivers its v0.7 milestone: per-task-category model
+recommendations from recorded experiment reports, under hard quality, cost,
+latency, safety, provider and deployment constraints that fail closed, with
+confidence, explanations, alternatives, provider-diverse fallbacks, savings
+tied to the experiment evidence, quality risks and a task-level model matrix.
+
+MCP 0.3.11 adds the read-only, artifact-in/artifact-out `lens.modelfit_recommend`
+tool and pins hosted images to `agenticlens==0.9.0`. Experiment execution and
+runtime routing stay outside MCP; the tool stores nothing.
+
+See the [ModelFit guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.9.0/docs/modelfit.md).
