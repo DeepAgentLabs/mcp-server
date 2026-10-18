@@ -48,6 +48,7 @@ package is installed.
 | AgenticLens analysis and Markdown reports (with finding provenance) | Available (AgenticLens 0.8.0) | Requires AgenticLens installation (`>=0.6.1` for step provenance on every finding) |
 | AgenticLens run diagnosis and score analysis (`lens.diagnose_run`, `lens.score_analysis`) | Available (AgenticLens 0.8.0) | Requires `agenticlens>=0.7.0` |
 | AgenticLens suite drafting and approval checks (`lens.suite_from_traces`, `lens.suite_check`) | Available (AgenticLens 0.8.0; nothing stored) | Requires `agenticlens>=0.8.0` |
+| AgenticLens ModelFit recommendations (`lens.modelfit_recommend`) | Available (AgenticLens 0.9.0; nothing stored, no model called) | Requires `agenticlens>=0.9.0` |
 | Baseline/candidate run comparison | Available | Requires AgenticLens installation |
 | Evaluation-report SLO gates and audit/HTML reports | Available through `lens.*` | Requires AgenticLens installation |
 | AI Operations artifact validation (`spec_version` routing, rule-cited conformance) | Available, including the rule and compatibility catalogs | Requires canonical schema assets (`ai-operations-spec>=0.5.1` for rule IDs) |
@@ -178,6 +179,7 @@ consumers:
 - `lens.score_analysis`: `{"report": <EvaluationReport object>}`
 - `lens.suite_from_traces`: `{"runs": [<Run object>, ...], "name": "prod-regression", "version": "1.0.0", "strategy": "hash"}`
 - `lens.suite_check`: `{"suite": <agentic-evals TestSuite object>, "threshold": 0.85}`
+- `lens.modelfit_recommend`: `{"reports": [<ExperimentReport object>], "config": {"defaults": {"min_pass_rate": 0.85}, "categories": [{"id": "orders", "tags": ["orders"]}]}, "variant_metadata": {"mid-b": {"provider": "provider-b"}}}`
 - `lens.compare_runs`: `{"baseline": [<Run object>], "candidate": [<Run object>], "session_id": "release-check"}`
 
 Use JSON conforming to AgenticLens's `EvaluationReport` or `Run` models. Validate
