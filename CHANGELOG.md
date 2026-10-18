@@ -6,6 +6,27 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.11 - 2026-10-18
+
+Pairs with `agenticlens` 0.9.0 (v0.7 ModelFit).
+
+### Added
+
+- `lens.modelfit_recommend`: recommend a model per task category from one or
+  more supplied experiment reports, with an optional ModelFit `config` and
+  per-variant `variant_metadata` (provider, deployment, capabilities). Returns
+  a compact recommendation per category (status, model, confidence, fallback,
+  per-case savings, high-severity risks), `unfit_category_ids`, and the full
+  ModelFit report with its task-level model matrix. Each source's `sha256` is
+  the digest of the report's canonical JSON.
+- The tool is read-only: it calls no model and stores nothing. It needs
+  `agenticlens>=0.9.0` and reports "unavailable" on older installs without
+  affecting other tools.
+
+### Changed
+
+- Hosted AWS and Render images pin `agenticlens==0.9.0` (was 0.8.0).
+
 ## 0.3.10 - 2026-10-17
 
 ### Changed
