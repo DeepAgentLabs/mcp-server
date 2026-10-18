@@ -281,6 +281,48 @@ def list_tools() -> list[dict[str, Any]]:
             "mutates_session": False,
         },
         {
+            "name": "lens.modelfit_recommend",
+            "title": "ModelFit Recommend",
+            "description": "Recommend a model per task category from supplied AgenticLens "
+            "experiment reports, under hard quality, cost, latency, safety, provider and "
+            "deployment constraints that fail closed. Returns per-category recommendations "
+            "with confidence, fallbacks, savings against a reference variant and quality "
+            "risks, plus the full ModelFit report and task-level model matrix. No model is "
+            "called and nothing is stored. Needs agenticlens>=0.9.0.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "reports": {
+                        "type": "array",
+                        "items": {"type": "object"},
+                        "minItems": 1,
+                        "description": "Experiment reports (agenticlens experiment run --save).",
+                    },
+                    "config": {
+                        "type": "object",
+                        "description": "ModelFit config: categories, defaults, weights, "
+                        "candidates, reference_variant_id.",
+                    },
+                    "variant_metadata": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "additionalProperties": {"type": "string"},
+                        },
+                        "description": "Variant ID -> manifest metadata (provider, "
+                        "deployment, capabilities).",
+                    },
+                    **_SESSION_ID_PROPERTY,
+                },
+                "required": ["reports"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
             "name": "chaos.list_faults",
             "title": "List Chaos Faults",
             "description": "List the supported fault types for chaos experiments.",

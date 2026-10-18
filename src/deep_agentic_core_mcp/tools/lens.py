@@ -8,6 +8,9 @@ from deep_agentic_core_mcp.adapters.agenticlens import audit_report as adapter_a
 from deep_agentic_core_mcp.adapters.agenticlens import compare_runs as adapter_compare_runs
 from deep_agentic_core_mcp.adapters.agenticlens import describe_capabilities
 from deep_agentic_core_mcp.adapters.agenticlens import diagnose_run as adapter_diagnose_run
+from deep_agentic_core_mcp.adapters.agenticlens import (
+    modelfit_recommend as adapter_modelfit_recommend,
+)
 from deep_agentic_core_mcp.adapters.agenticlens import report_summary as adapter_report_summary
 from deep_agentic_core_mcp.adapters.agenticlens import score_analysis as adapter_score_analysis
 from deep_agentic_core_mcp.adapters.agenticlens import slo_summary as adapter_slo_summary
@@ -220,4 +223,28 @@ def suite_check(arguments: dict[str, Any] | None) -> dict[str, Any]:
         session.record_call(session_id, "lens.suite_check", ok=False, note=str(exc))
         return {"ok": False, "error": f"Invalid suite: {exc}"}
     session.record_call(session_id, "lens.suite_check", ok=True)
+    return result
+
+
+def modelfit_recommend(arguments: dict[str, Any] | None) -> dict[str, Any]:
+    """Recommend a model per task category from experiment reports (read-only)."""
+    if not arguments or "reports" not in arguments:
+        return {"ok": False, "error": "Missing required 'reports' argument"}
+    session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
+    try:
+        result = {
+            "ok": True,
+            **adapter_modelfit_recommend(
+                arguments["reports"],
+                config=arguments.get("config"),
+                variant_metadata=arguments.get("variant_metadata"),
+            ),
+        }
+    except AdapterUnavailableError as exc:
+        session.record_call(session_id, "lens.modelfit_recommend", ok=False, note=str(exc))
+        return {"ok": False, "error": str(exc)}
+    except ValueError as exc:
+        session.record_call(session_id, "lens.modelfit_recommend", ok=False, note=str(exc))
+        return {"ok": False, "error": f"Invalid ModelFit input: {exc}"}
+    session.record_call(session_id, "lens.modelfit_recommend", ok=True)
     return result

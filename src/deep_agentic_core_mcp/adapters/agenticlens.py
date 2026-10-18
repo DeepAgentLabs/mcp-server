@@ -61,6 +61,15 @@ try:
 except Exception as exc:  # noqa: BLE001 - reported per tool
     _SUITES_ERROR = exc
 
+_MODELFIT_ERROR: Exception | None = None
+try:
+    from agenticlens.experiments import ExperimentReport as _ExperimentReport
+    from agenticlens.modelfit import ExperimentEvidence as _ExperimentEvidence
+    from agenticlens.modelfit import ModelFitConfig as _ModelFitConfig
+    from agenticlens.modelfit import recommend_models as _recommend_models
+except Exception as exc:  # noqa: BLE001 - reported per tool
+    _MODELFIT_ERROR = exc
+
 
 def _require_available() -> None:
     if _IMPORT_ERROR is not None:
@@ -89,6 +98,7 @@ def describe_capabilities() -> list[str]:
         "score_analysis",
         "suite_from_traces",
         "suite_check",
+        "modelfit_recommend",
     ]
 
 
@@ -395,4 +405,62 @@ def suite_check(suite: dict[str, Any], *, threshold: float = 0.85) -> dict[str, 
         "pii": _scan_suite(parsed).model_dump(mode="json"),
         "approval_checks": [check.model_dump(mode="json") for check in checks],
         "approvable": all(check.passed for check in checks),
+    }
+
+
+def _require_modelfit() -> None:
+    _require_available()
+    if _MODELFIT_ERROR is not None:
+        raise AdapterUnavailableError("agenticlens>=0.9.0 (modelfit)", _MODELFIT_ERROR)
+
+
+def modelfit_recommend(
+    reports: list[dict[str, Any]],
+    *,
+    config: dict[str, Any] | None = None,
+    variant_metadata: dict[str, dict[str, str]] | None = None,
+) -> dict[str, Any]:
+    """Recommend a model per task category from supplied experiment reports.
+
+    Each report's `sources[].sha256` is the SHA-256 of its canonical JSON (the
+    report arrives as an object, not file bytes). Nothing is stored and no
+    model is called.
+    """
+    _require_modelfit()
+    if not reports:
+        raise ValueError("at least one experiment report is required")
+    evidence = [
+        _ExperimentEvidence(
+            report=_ExperimentReport.model_validate(report),
+            sha256=artifact_digest(report).removeprefix("sha256:"),
+        )
+        for report in reports
+    ]
+    parsed_config = _ModelFitConfig.model_validate(config or {})
+    report = _recommend_models(evidence, parsed_config, variant_metadata=variant_metadata)
+    recommendations = []
+    for result in report.categories:
+        rec = result.recommendation
+        savings = rec.savings
+        recommendations.append(
+            {
+                "category_id": result.category.id,
+                "status": rec.status,
+                "variant_id": rec.variant_id,
+                "model": rec.model,
+                "provider": rec.provider,
+                "confidence": rec.confidence,
+                "fallback_variant_id": rec.fallback.variant_id if rec.fallback else None,
+                "cost_per_case_savings_usd": (
+                    savings.cost_per_case_savings_usd if savings and savings.available else None
+                ),
+                "high_severity_risks": [
+                    risk.kind for risk in rec.quality_risks if risk.severity == "high"
+                ],
+            }
+        )
+    return {
+        "recommendations": recommendations,
+        "unfit_category_ids": report.summary.unfit_category_ids,
+        "modelfit": report.model_dump(mode="json"),
     }

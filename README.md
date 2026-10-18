@@ -136,7 +136,7 @@ and `chaos.export_aios_run` behave the same hosted as locally. Only
 
 Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
-pin `agenticlens==0.8.0` and `agentic-chaos==0.6.0` (since MCP 0.3.9).
+pin `agenticlens==0.9.0` and `agentic-chaos==0.7.0` (since MCP 0.3.11).
 
 ## AgenticLens 0.8.0 suite tools (MCP 0.3.9)
 
@@ -154,7 +154,24 @@ Both are read-only and store nothing; approving into the immutable suite store
 stays a local `agenticlens suite approve` step. Both need `agenticlens>=0.8.0`;
 older installs get an "unavailable" error while other Lens tools keep working.
 
-## MCP Surface (current, `0.3.9`)
+## AgenticLens 0.9.0 ModelFit tool (MCP 0.3.11)
+
+- **`lens.modelfit_recommend`** — send one or more experiment reports
+  (`agenticlens experiment run --save`), an optional ModelFit `config`
+  (categories, constraints, weights, candidate catalog, reference variant)
+  and optional `variant_metadata` (provider, deployment, capabilities per
+  variant), and get a recommendation per task category: status, model,
+  confidence, fallback, per-case savings against the reference, and
+  high-severity risks, plus the full ModelFit report and task-level model
+  matrix.
+
+Constraints fail closed, so a category with no candidate that provably meets
+its limits comes back as `no_feasible_model` in `unfit_category_ids`. Each
+source's `sha256` is the digest of the report's canonical JSON. The tool calls
+no model and stores nothing. It needs `agenticlens>=0.9.0`; older installs
+get an "unavailable" error while other Lens tools keep working.
+
+## MCP Surface (current, `0.3.11`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -179,6 +196,8 @@ older installs get an "unavailable" error while other Lens tools keep working.
   trace runs, PII masked (`agenticlens>=0.8.0`)
 - `lens.suite_check` — suite summary, duplicates, unmasked PII and approval
   readiness (`agenticlens>=0.8.0`)
+- `lens.modelfit_recommend` — per-task-category model recommendations from
+  experiment reports under hard constraints (`agenticlens>=0.9.0`)
 - `chaos.list_faults` — list the supported fault types
 - `chaos.run_experiment` — run a workspace-sandboxed, policy-checked target
   script under selected faults and attach an AIOS run export
@@ -512,3 +531,19 @@ native evidence schema changes are required; this documentation alignment needs
 no patch release. See the [operator guide](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/v0.7.0/docs/fleet-operations.md).
 
 See the [local Tower compatibility guide](docs/tower-0.7-fleet-operations.md) for the operator workflow and package boundaries.
+
+## AgenticLens 0.9.0 ModelFit
+
+AgenticLens 0.9.0 delivers its v0.7 milestone: `agenticlens.modelfit` and
+`agenticlens modelfit` recommend a model per task category from recorded
+experiment reports, under hard quality, cost, latency, safety, provider and
+deployment constraints that fail closed, with confidence, explanations,
+alternatives, provider-diverse fallbacks, savings tied to the experiment
+evidence, quality risks and a task-level model matrix.
+
+MCP 0.3.11 adds the read-only `lens.modelfit_recommend` tool over supplied
+reports and pins hosted images to `agenticlens==0.9.0`. Running experiments
+stays a local `agenticlens experiment run` step; ModelFit recommends and does
+not route traffic.
+
+See the [ModelFit guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.9.0/docs/modelfit.md).

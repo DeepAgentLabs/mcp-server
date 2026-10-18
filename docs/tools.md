@@ -3,7 +3,7 @@
 
 # Tool Reference
 
-32 tools, generated from `tools/registry.py` - the same data MCP
+33 tools, generated from `tools/registry.py` - the same data MCP
 clients see via `tools/list`. See [README.md](../README.md) for a one-line-per-tool
 overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
@@ -250,6 +250,57 @@ Input schema:
   },
   "required": [
     "run"
+  ],
+  "additionalProperties": false
+}
+```
+
+### `lens.modelfit_recommend` — ModelFit Recommend
+
+Recommend a model per task category from supplied AgenticLens experiment reports, under hard quality, cost, latency, safety, provider and deployment constraints that fail closed. Returns per-category recommendations with confidence, fallbacks, savings against a reference variant and quality risks, plus the full ModelFit report and task-level model matrix. No model is called and nothing is stored. Needs agenticlens>=0.9.0.
+
+| | |
+| --- | --- |
+| Category | `lens` |
+| Prerequisites | `agenticlens` |
+| Expected duration | fast |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "reports": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "minItems": 1,
+      "description": "Experiment reports (agenticlens experiment run --save)."
+    },
+    "config": {
+      "type": "object",
+      "description": "ModelFit config: categories, defaults, weights, candidates, reference_variant_id."
+    },
+    "variant_metadata": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "description": "Variant ID -> manifest metadata (provider, deployment, capabilities)."
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session to read/write shared state under. Defaults to 'default'."
+    }
+  },
+  "required": [
+    "reports"
   ],
   "additionalProperties": false
 }
