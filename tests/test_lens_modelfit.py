@@ -115,6 +115,7 @@ async def test_older_agenticlens_degrades_only_the_modelfit_tool(monkeypatch) ->
     assert payload["ok"] is False
     assert "agenticlens>=0.9.0" in payload["error"]
 
-    suite = {"name": "s", "version": "1", "cases": [{"id": "c", "name": "c", "input": "hi"}]}
+    approved = ROOT / "agenticlens" / "examples" / "suites" / "store" / "support-regression"
+    suite = json.loads((approved / "1.0.0.json").read_text(encoding="utf-8"))["suite"]
     result = await handle_call_tool("lens.suite_check", {"suite": suite})
     assert json.loads(result[0].text)["ok"] is True
