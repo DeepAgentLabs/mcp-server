@@ -474,3 +474,9 @@ Neither stores anything; approval and the immutable store stay local CLI/API
 operations. Hosted images pin `agenticlens==0.8.0`.
 
 See the [suite management guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.8.0/docs/suite-management.md).
+
+## Evals 0.8.0 CLI interoperability
+
+Evals 0.8.0 CLI JSON reports and gate decisions retain the 0.7.2 wire contract and validate with `evals.validate_artifact`. The bundled upstream 0.7.2 schemas and pinned contract-test dependency remain the compatibility baseline. JUnit and Markdown are presentation formats, not native validator inputs. This release adds no MCP execution tool or runtime dependency.
+
+See [CLI usage and compatibility](docs/evals-0.8-cli.md).
