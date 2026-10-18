@@ -103,3 +103,18 @@ async def test_invalid_input_is_a_clear_error() -> None:
     weights = {"quality": 0, "cost": 0, "latency": 0, "reliability": 0}
     payload = await _call({"reports": [_experiment()], "config": {"weights": weights}})
     assert payload["ok"] is False and "scoring weight" in payload["error"]
+
+
+@pytest.mark.asyncio
+async def test_older_agenticlens_degrades_only_the_modelfit_tool(monkeypatch) -> None:
+    from deep_agentic_core_mcp.adapters import agenticlens as adapter
+    from deep_agentic_core_mcp.server import handle_call_tool
+
+    monkeypatch.setattr(adapter, "_MODELFIT_ERROR", ImportError("no agenticlens.modelfit"))
+    payload = await _call({"reports": [_experiment()]})
+    assert payload["ok"] is False
+    assert "agenticlens>=0.9.0" in payload["error"]
+
+    suite = {"name": "s", "version": "1", "cases": [{"id": "c", "name": "c", "input": "hi"}]}
+    result = await handle_call_tool("lens.suite_check", {"suite": suite})
+    assert json.loads(result[0].text)["ok"] is True
