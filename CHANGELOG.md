@@ -6,6 +6,13 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.10 - 2026-10-17
+
+### Changed
+
+- Pin published AWS/Render images to Chaos 0.7.0; preserve existing MCP tool boundaries.
+- Document advanced Chaos evidence compatibility and synthetic containment limits.
+
 ## 0.3.9 - 2026-10-17
 
 Pairs with `agenticlens` 0.8.0 (v0.6 test-suite and dataset management).
