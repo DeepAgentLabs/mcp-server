@@ -656,6 +656,16 @@ Evals 0.8.0 CLI JSON reports and gate decisions retain the 0.7.2 wire contract a
 
 See [CLI usage and compatibility](docs/evals-0.8-cli.md).
 
+## Evals 0.9.0 judge reliability (MCP 0.3.14)
+
+Evals 0.9.0 adds optional judge (`summary.judge`), live-target (`summary.live`)
+and per-case `target_status` fields to native report schema 1.0. MCP 0.3.14
+re-syncs the bundled upstream schemas from `agentic-evals==0.9.0` (the
+contract-test dev pin) and pins the hosted images to it, so
+`evals.validate_artifact` enforces the new fields offline. No tool is added or
+changed; validation never recomputes a gate. See
+[the compatibility note](docs/evals-0.9-judge-reliability.md).
+
 ## Chaos 0.7.0 interoperability
 
 Chaos 0.7.0 adds sequential fault cascades, deterministic monotonic breaking-point

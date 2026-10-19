@@ -462,7 +462,7 @@ posture without replacing native producer decisions.
 
 ## Native Evals contract validation — MCP 0.3.8
 
-Published Evals 0.7.2 report and gate schemas are now enforced in the native
+Published Evals report and gate schemas (0.7.2 at MCP 0.3.8; 0.9.0 since MCP 0.3.14) are now enforced in the native
 consumer paths. Validation runs offline using bundled upstream contracts;
 invalid artifacts fail with field-level diagnostics. Native verdicts and
 AIOS conformance remain distinct. See [behavior, examples and migration](docs/evals-report-contract.md).
@@ -501,6 +501,15 @@ See the [suite management guide](https://github.com/DeepAgentLabs/agenticlens/bl
 Evals 0.8.0 CLI JSON reports and gate decisions retain the 0.7.2 wire contract and validate with `evals.validate_artifact`. The bundled upstream 0.7.2 schemas and pinned contract-test dependency remain the compatibility baseline. JUnit and Markdown are presentation formats, not native validator inputs. This release adds no MCP execution tool or runtime dependency.
 
 See [CLI usage and compatibility](docs/evals-0.8-cli.md).
+
+## Evals 0.9.0 judge reliability (MCP 0.3.14)
+
+MCP 0.3.14 bundles the Evals 0.9.0 native report and gate schemas, so
+`evals.validate_artifact` enforces the new optional judge summary, live-target
+summary and per-case `target_status` fields. Validation stays offline and
+structural; MCP never recomputes a gate or treats an unavailable judgment as a
+pass. Hosted images pin `agentic-evals==0.9.0`. See
+[the compatibility note](docs/evals-0.9-judge-reliability.md).
 
 ## Chaos 0.7.0 interoperability
 
