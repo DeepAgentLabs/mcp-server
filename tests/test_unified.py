@@ -13,8 +13,9 @@ from deep_agentic_core_mcp.services.remote_sessions import MemorySessionStore
 ROOT = Path(__file__).resolve().parents[2]
 AGENTICLENS_ARTIFACTS = ROOT / "agenticlens" / "examples" / "pitch_demo" / "artifacts"
 
-CLEAN_CHAOS = {"ok": True, "crashed": None, "timed_out": False, "chaos_events": [{"f": 1}]}
-CRASHED_CHAOS = {"ok": False, "crashed": "RuntimeError('boom')", "timed_out": False,
+_RUN = {"id": "run-1", "name": "target", "start_time": "t0", "end_time": "t1"}
+CLEAN_CHAOS = {**_RUN, "ok": True, "crashed": None, "timed_out": False, "chaos_events": [{}]}
+CRASHED_CHAOS = {**_RUN, "ok": False, "crashed": "RuntimeError('boom')", "timed_out": False,
                  "chaos_events": []}  # fmt: skip
 
 
@@ -95,9 +96,15 @@ async def test_required_evidence_narrows_the_check() -> None:
     [
         ({"chaos_report": {}}, "invalid"),
         ({"chaos_report": {"ok": False, "error": "boom"}}, "invalid"),
+        ({"chaos_report": {"crashed": None, "timed_out": False, "chaos_events": []}}, "invalid"),
+        ({"chaos_report": {**CLEAN_CHAOS, "chaos_events": "none"}}, "invalid"),
+        ({"chaos_report": {**CLEAN_CHAOS, "timed_out": "no"}}, "invalid"),
+        ({"chaos_report": []}, "invalid"),
         ({"chaos_report": CRASHED_CHAOS}, "failed"),
+        ({"chaos_report": {**CLEAN_CHAOS, "ok": False}}, "failed"),
         ({"chaos_report": {**CLEAN_CHAOS, "timed_out": True}}, "failed"),
         ({"comparison": {}}, "invalid"),
+        ({"comparison": []}, "invalid"),
         ({"comparison": {"regressions": []}}, "invalid"),
         ({"comparison": {"ok": False, "error": "x"}}, "invalid"),
         ({"evaluation_report": {"summary": {"pass_rate": 1.0}}}, "invalid"),
@@ -146,6 +153,9 @@ async def test_evaluation_honours_every_evals_threshold() -> None:
     [
         {"thresholds": {"min_pass_rat": 0.9}},
         {"thresholds": [0.9]},
+        {"thresholds": []},
+        {"thresholds": ""},
+        {"thresholds": None},
         {"required_evidence": []},
         {"required_evidence": ["traces"]},
         {"required_evidence": "chaos"},

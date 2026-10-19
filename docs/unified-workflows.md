@@ -20,7 +20,7 @@ authorization and correlated denial evidence remain open Phase 4 work; see
 | `core.compare_runs` | Lens baseline/candidate comparison; same behavior as `lens.compare_runs` | Stores runs and the comparison |
 | `core.release_check` | Gates comparison, evaluation and chaos evidence; fails closed | Stores the result |
 | `core.incident_summary` | Collects regressions, chaos crashes/timeouts, failed cases and blocked gates | Stores the result |
-| `core.export_report` | Exports everything the session holds as `mcp.unified-report.v1` | Read-only |
+| `core.export_report` | Exports everything the session holds as `mcp.unified-report.v1` | Evidence unchanged; the call is recorded in history |
 
 The workflow steps are also served as `resource://workflows/release-check`,
 and the `core.release_check` prompt asks a host to explain every gate.
@@ -47,7 +47,7 @@ Each gate reports a `status`:
 | --- | --- | --- |
 | `passed` | Valid evidence that met every check | No |
 | `failed` | Valid evidence with regressions, failed Evals thresholds, a crash or a timeout | Yes |
-| `invalid` | Evidence that does not match its producer's contract, or came from a failed call | Yes |
+| `invalid` | Evidence that is not an object, does not match its producer's contract (a chaos report needs every `chaos.run_experiment` field with the right type), or came from a failed call | Yes |
 | `missing` | A kind listed in `required_evidence` with nothing supplied or stored | Yes |
 
 `ready` is true only when every gate passed. By default all three kinds are

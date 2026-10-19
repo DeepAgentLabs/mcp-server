@@ -21,7 +21,17 @@ from deep_agentic_core_mcp.tools.lens import run_comparison
 
 EVIDENCE_KINDS = ("comparison", "evaluation", "chaos")
 REPORT_SCHEMA_VERSION = "mcp.unified-report.v1"
-_CHAOS_REPORT_KEYS = ("crashed", "timed_out", "chaos_events")
+# Field types of a chaos.run_experiment report (crashed is a repr string or None).
+_CHAOS_REPORT_FIELDS: dict[str, tuple[type, ...]] = {
+    "ok": (bool,),
+    "id": (str,),
+    "name": (str,),
+    "start_time": (str,),
+    "end_time": (str,),
+    "chaos_events": (list,),
+    "crashed": (str, type(None)),
+    "timed_out": (bool,),
+}
 
 
 def compare_runs(arguments: dict[str, Any] | None) -> dict[str, Any]:
@@ -90,19 +100,23 @@ def _evaluation_gate(report: dict[str, Any], thresholds: dict[str, Any]) -> dict
 def _chaos_gate(report: dict[str, Any]) -> dict[str, Any]:
     # A crashed or timed-out run is a real report with ok=false, so check its
     # shape before treating ok=false as a failed call.
-    absent = [key for key in _CHAOS_REPORT_KEYS if key not in report]
-    if absent:
+    wrong = [
+        key
+        for key, types in _CHAOS_REPORT_FIELDS.items()
+        if key not in report or not isinstance(report[key], types)
+    ]
+    if wrong:
         failed = _failed_call("chaos", report)
-        missing = f"Not a chaos.run_experiment report; missing {', '.join(absent)}"
-        return failed or _gate("chaos", "invalid", [missing])
+        problem = f"Not a chaos.run_experiment report; missing or mistyped {', '.join(wrong)}"
+        return failed or _gate("chaos", "invalid", [problem])
     reasons = []
     if report["crashed"]:
         reasons.append(f"Target crashed under chaos: {report['crashed']}")
     if report["timed_out"]:
         reasons.append("Target timed out under chaos")
-    if report.get("ok") is False and not reasons:
+    if report["ok"] is False and not reasons:
         reasons.append("Chaos run reported ok=false")
-    observed = {"event_count": len(report["chaos_events"] or [])}
+    observed = {"event_count": len(report["chaos_events"])}
     return _gate("chaos", "failed" if reasons else "passed", reasons, observed)
 
 
@@ -118,7 +132,7 @@ def _required_evidence(arguments: dict[str, Any]) -> list[str] | str:
 
 
 def _thresholds(arguments: dict[str, Any]) -> dict[str, Any] | str:
-    thresholds = arguments.get("thresholds") or {}
+    thresholds = arguments.get("thresholds", {})
     if not isinstance(thresholds, dict):
         return "thresholds must be an object of Evals GateConfig fields"
     if thresholds:
@@ -131,16 +145,21 @@ def _thresholds(arguments: dict[str, Any]) -> dict[str, Any] | str:
     return thresholds
 
 
-def _evidence(
-    arguments: dict[str, Any], state: session.SessionState
-) -> dict[str, dict[str, Any] | None]:
-    """Explicit arguments win; comparison and chaos fall back to this session."""
-    supplied = {
+def _evidence(arguments: dict[str, Any], state: session.SessionState) -> dict[str, Any]:
+    """Explicit arguments win; comparison and chaos fall back to this session.
+
+    Values are returned as supplied, so a malformed non-object is gated as
+    invalid rather than reported as missing.
+    """
+    return {
         "comparison": arguments.get("comparison", state.last_comparison),
         "evaluation": arguments.get("evaluation_report"),
         "chaos": arguments.get("chaos_report", state.last_chaos_report),
     }
-    return {kind: value if isinstance(value, dict) else None for kind, value in supplied.items()}
+
+
+def _objects(evidence: dict[str, Any]) -> dict[str, dict[str, Any] | None]:
+    return {kind: value if isinstance(value, dict) else None for kind, value in evidence.items()}
 
 
 def _reject(session_id: str, error: str) -> dict[str, Any]:
@@ -168,7 +187,9 @@ def release_check(arguments: dict[str, Any] | None) -> dict[str, Any]:
             if kind in required:
                 gates.append(_gate(kind, "missing", [f"No {kind} evidence supplied or stored"]))
             continue
-        if kind == "comparison":
+        if not isinstance(item, dict):
+            gates.append(_gate(kind, "invalid", [f"The {kind} evidence must be an object"]))
+        elif kind == "comparison":
             gates.append(_comparison_gate(item))
         elif kind == "evaluation":
             gates.append(_evaluation_gate(item, thresholds))
@@ -192,7 +213,7 @@ def incident_summary(arguments: dict[str, Any] | None) -> dict[str, Any]:
     arguments = arguments or {}
     session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
     state = session.get_session(session_id)
-    evidence = _evidence(arguments, state)
+    evidence = _objects(_evidence(arguments, state))
     if not any(evidence.values()) and state.last_release_check is None:
         return {"ok": False, "error": "No incident evidence supplied or stored in session"}
 
