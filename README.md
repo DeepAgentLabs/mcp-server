@@ -198,6 +198,8 @@ get an "unavailable" error while other Lens tools keep working.
   readiness (`agenticlens>=0.8.0`)
 - `lens.modelfit_recommend` — per-task-category model recommendations from
   experiment reports under hard constraints (`agenticlens>=0.9.0`)
+- `lens.routing_decide` — explain runtime model selection and fallback chains from
+  ModelFit evidence without invoking models (`agenticlens>=0.10.0`)
 - `chaos.list_faults` — list the supported fault types
 - `chaos.run_experiment` — run a workspace-sandboxed, policy-checked target
   script under selected faults and attach an AIOS run export
