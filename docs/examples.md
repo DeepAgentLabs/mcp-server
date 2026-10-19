@@ -37,3 +37,12 @@ flowchart TD
     D --> F
     E --> F
 ```
+
+## Unified release check
+
+[`examples/unified_release_check.py`](https://github.com/DeepAgentLabs/mcp-server/blob/main/examples/unified_release_check.py)
+compares Lens runs, runs a local chaos experiment, and calls
+`core.release_check` with an Evals report: first with chaos evidence missing,
+then ready, then blocked by a latency threshold. It ends with
+`core.incident_summary` and `core.export_report`. See
+[Unified workflows](unified-workflows.md).
