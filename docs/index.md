@@ -2,7 +2,7 @@
 
 ## Unified MCP interface for agentic workflows
 
-**Version:** 0.2.0  
+**Version:** 0.4.0
 **Maturity:** Alpha
 
 `deep-agentic-core-mcp` is the shared MCP server layer for the DeepAgentLabs ecosystem. It provides one MCP interface for workflow analysis, resilience testing, server diagnostics, and supervision-readiness discovery.
@@ -15,6 +15,20 @@ The MCP server brings multiple agentic capabilities together behind a single MCP
 - **Agentic Chaos** — controlled fault-injection and resilience experiments
 - **Agentic Sidecar** — supervision-readiness and module discovery
 - **Core diagnostics** — health, version, verification, and session information
+
+## Phase 4 unified workflows
+
+Use the core tools to combine existing evidence:
+
+```text
+lens.analyze_workflow
+        |
+core.compare_runs / chaos.export_aios_run
+        |
+core.release_check
+        |
+core.incident_summary -> core.export_report
+```
 
 ## Key capabilities
 

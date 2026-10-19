@@ -56,6 +56,14 @@ from deep_agentic_core_mcp.tools.sidecar import module_inventory, status
 from deep_agentic_core_mcp.tools.spec import validate_artifact
 from deep_agentic_core_mcp.tools.tower import READ_OPERATIONS, WRITE_OPERATIONS
 from deep_agentic_core_mcp.tools.tower import query as tower_query
+from deep_agentic_core_mcp.tools.unified import (
+    compare_runs as unified_compare_runs,
+)
+from deep_agentic_core_mcp.tools.unified import (
+    export_report,
+    incident_summary,
+    release_check,
+)
 
 # ---------------------------------------------------------------------------
 # Server instance
@@ -90,6 +98,10 @@ _TOOL_DISPATCH: dict[str, Callable[[dict[str, Any] | None], dict[str, Any]]] = {
     "sidecar.status": status,
     "sidecar.module_inventory": module_inventory,
     "spec.validate_artifact": validate_artifact,
+    "core.compare_runs": unified_compare_runs,
+    "core.release_check": release_check,
+    "core.incident_summary": incident_summary,
+    "core.export_report": export_report,
 }
 
 for _operation in (*READ_OPERATIONS, *WRITE_OPERATIONS):
@@ -180,6 +192,16 @@ RESOURCE_CONTENT: dict[str, dict[str, Any]] = {
         "chaos_events": [],
     },
     "resource://catalogs/chaos_faults": list_faults(),
+    "resource://workflows/phase4-release-check": {
+        "steps": [
+            "lens.analyze_workflow",
+            "core.compare_runs",
+            "chaos.export_aios_run",
+            "core.release_check",
+            "core.export_report",
+        ],
+        "note": "Supply real artifacts and treat missing evidence as unresolved.",
+    },
     **schema_resource_content(),
 }
 

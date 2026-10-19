@@ -6,7 +6,7 @@ ecosystem. It is designed to expose a single MCP interface that combines:
 - `agenticlens` style workflow inspection, profiling, and analysis
 - `agentic-chaos` style resilience testing and fault-injection workflows
 - `agentic-sidecar` style supervision-readiness and module-surface discovery
-- authenticated local Control Tower 0.6.0 investigation and approved recovery access
+- authenticated local Control Tower 0.7.0 investigation and read-only fleet posture access
 
 It sits above the **AI Operations Workflow Specification**, exposing a unified
 MCP-native control surface over the shared operational model used by the
@@ -33,7 +33,7 @@ libraries:
 - `agenticlens` remains the core profiling and analysis engine
 - `agentic-chaos` remains the core chaos and resilience engine
 - `agentic-sidecar` remains the core decision-supervision and governance engine
-- `agenticops-control-tower` 0.6.0 provides the operator-facing control plane
+- `agenticops-control-tower` 0.7.0 provides the operator-facing control plane
 - the `AI Operations Workflow Specification` remains the shared data contract
 - `deep-agentic-core-mcp` becomes the MCP-native interface that hosts can call
 
@@ -171,7 +171,7 @@ source's `sha256` is the digest of the report's canonical JSON. The tool calls
 no model and stores nothing. It needs `agenticlens>=0.9.0`; older installs
 get an "unavailable" error while other Lens tools keep working.
 
-## MCP Surface (current, `0.3.14`)
+## MCP Surface (current, `0.4.0`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -179,6 +179,12 @@ get an "unavailable" error while other Lens tools keep working.
 - `core.verify` — checks agenticlens/agentic-chaos/agentic-sidecar/ai-operations-spec
   connectivity and reports readiness
 - `core.session_state` — inspect what the active session has accumulated
+- `core.compare_runs` — compare baseline and candidate evidence through the
+  unified MCP surface
+- `core.release_check` — combine comparison, evaluation, and chaos evidence
+  into a deterministic readiness decision
+- `core.incident_summary` — combine incident signals for investigation
+- `core.export_report` — export the evidence accumulated by a workflow session
 - `lens.analyze_workflow` — run AgenticLens recommendations against a
   workflow artifact
 - `lens.report_summary` — render a Markdown workflow report
@@ -362,10 +368,12 @@ full detail):
 
 - **Sidecar runtime controls**: richer control surfaces require an
   authenticated, task-scoped runtime bridge
-- **Phase 4 (Unified Workflows)** — joined observability + chaos workflows,
+- **Phase 4 (Unified Workflows)** — first unified comparison, release-check,
+  incident-summary, and report-export tools are shipped in `0.4.0`; broader
+  joined observability + chaos workflows remain in progress,
   incident/readiness reporting, a higher-level control surface
 - **Control Tower coordination** — local connector tools ship in 0.3.6 for
-  Tower 0.6.0; hosted per-user credential binding remains planned
+  Tower 0.7.0; hosted per-user credential binding remains planned
 - **Phase 5/6** — PyPI + MCP Registry publishing, operational intelligence
   features
 

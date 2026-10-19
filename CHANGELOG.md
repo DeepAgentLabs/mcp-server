@@ -409,3 +409,16 @@ optional dependency and degrades instead of failing boot.
 - Tool registry, resource catalog, and prompt catalog scaffolding.
 - stdio transport via `mcp` SDK.
 - CI workflow and PyPI Trusted Publishing.
+## [0.4.0] - Unreleased
+
+### Added
+
+- Added Phase 4 unified workflow tools: `core.compare_runs`,
+  `core.release_check`, `core.incident_summary`, and `core.export_report`.
+- Added a release-check prompt and reusable workflow resource.
+- Added deterministic session-backed evidence aggregation across Lens, Chaos,
+  Evals, and workflow artifacts.
+
+### Changed
+
+- Updated the MCP package version to `0.4.0`.

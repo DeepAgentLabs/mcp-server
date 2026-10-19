@@ -5,8 +5,8 @@ interface across the DeepAgentLabs ecosystem.
 
 ## Current Release
 
-**Version:** `0.2.0`  
-**Released:** 2026-08-08
+**Version:** `0.4.0`
+**Status:** Unreleased Phase 4 development
 
 ## Development Status
 
@@ -15,11 +15,11 @@ interface across the DeepAgentLabs ecosystem.
 | Phase 0 | ✅ Complete | Foundation and project setup |
 | Phase 1 | ✅ Complete | Minimal MCP server |
 | Phase 2 | ✅ Complete | Session management and diagnostics |
-| Phase 3a | 🏗️ In progress | AgenticLens integration |
+| Phase 3a | ✅ Complete | AgenticLens integration |
 | Phase 3b | ✅ Complete | Agentic Chaos integration |
 | Phase 3d | ✅ Implemented | Agentic Sidecar discovery |
-| Phase 3c | 🏗️ In progress | AI Operations Specification conformance |
-| Phase 4 | 🚧 Planned | Unified workflows |
+| Phase 3c | ✅ Complete | AI Operations Specification conformance |
+| Phase 4 | 🏗️ In progress | Unified workflows |
 | Phase 5 | 🚧 Planned | Publishing and adoption |
 | Phase 6 | 🚧 Planned | Operational intelligence |
 
@@ -27,9 +27,9 @@ interface across the DeepAgentLabs ecosystem.
 
 ### Phase 3 — Ecosystem Integrations
 
-- Continue AgenticLens integration and provenance support.
-- Expand AI Operations Specification conformance.
-- Continue exposing Agentic Sidecar readiness and discovery capabilities.
+Phase 3 is complete. The current MCP surface includes Lens, Chaos, Sidecar
+discovery, AI Operations Spec validation, native Evals validation, and local
+Control Tower connector tools.
 
 ### Phase 4 — Unified Workflows
 

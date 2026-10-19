@@ -17,6 +17,21 @@ The DeepAgentLabs MCP Server provides a unified MCP interface over several exist
 
 ## Core Diagnostics
 
+## Unified Phase 4 Workflows
+
+The Phase 4 tools compose existing package capabilities without reimplementing
+their engines:
+
+- `core.compare_runs` compares baseline and candidate evidence.
+- `core.release_check` combines regressions, evaluation thresholds, and chaos
+  outcomes into a deterministic readiness result.
+- `core.incident_summary` groups comparison, chaos, and evaluation signals for
+  investigation.
+- `core.export_report` exports the session's accumulated evidence.
+
+These tools treat missing evidence as unresolved rather than silently passing
+an incomplete release check.
+
 The core tools provide information about the MCP server itself.
 
 ### `core.health`

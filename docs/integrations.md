@@ -2,6 +2,13 @@
 
 The MCP Server provides a unified interface over multiple DeepAgentLabs packages.
 
+## Phase 4 unified workflows
+
+The `core.compare_runs`, `core.release_check`, `core.incident_summary`, and
+`core.export_report` tools compose the existing integrations into one workflow.
+They do not replace AgenticLens, Agentic Chaos, Agentic Evals, AI Operations
+Spec, Sidecar, or Control Tower logic.
+
 ## AgenticLens
 
 **Status:** Available
@@ -16,7 +23,8 @@ The MCP Server exposes these capabilities through:
 - `lens.slo_summary`
 - `lens.audit_report`
 
-The verified local environment reports AgenticLens version `0.5.0`.
+The current compatibility target is AgenticLens `0.10.0`. Optional imports
+degrade cleanly when the package is absent or older than the requested feature.
 
 ## Agentic Chaos
 
@@ -29,7 +37,8 @@ The MCP Server exposes:
 - `chaos.list_faults`
 - `chaos.run_experiment`
 
-The verified local environment reports Agentic Chaos version `0.4.0`.
+The current compatibility target is Agentic Chaos `0.8.0`. MCP uses its
+exporter and fault catalog; arbitrary chaos execution remains local-only.
 
 ## Agentic Sidecar
 
@@ -44,22 +53,22 @@ The MCP Server exposes:
 
 The verified local environment reports:
 
-- Version: `0.6.0`
+- Version: `0.8.5`
 - Package status: `scaffold`
 - Release stage: `pre-alpha`
 - Runtime ready: `false`
 
 ## AI Operations Specification
 
-**Status:** Unavailable in the current local environment**
+**Status:** Read-only compatibility surface
 
 The MCP Server provides:
 
 - `spec.validate_artifact`
 
-However, the required AI Operations Specification v0.4 schema documents were not found in the local development environment.
-
-Therefore, this integration could not be successfully validated locally.
+The current compatibility target is AI Operations Specification `0.5.1`; the
+MCP package bundles the canonical schemas and uses the sibling package for
+optional catalog and conformance integration.
 
 ## Integration overview
 

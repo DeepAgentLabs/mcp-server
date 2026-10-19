@@ -16,6 +16,11 @@ def list_resources() -> list[dict[str, str]]:
             "name": "Chaos fault catalog",
             "kind": "reference",
         },
+        {
+            "uri": "resource://workflows/phase4-release-check",
+            "name": "Phase 4 release-check workflow",
+            "kind": "workflow-guide",
+        },
     ]
     resources.extend(list_schema_resources())
     return resources

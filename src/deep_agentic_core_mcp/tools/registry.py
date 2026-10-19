@@ -465,4 +465,78 @@ def list_tools() -> list[dict[str, Any]]:
             "expected_duration": "fast",
             "mutates_session": False,
         },
+        {
+            "name": "core.compare_runs",
+            "title": "Unified Run Comparison",
+            "description": "Compare baseline and candidate runs through the unified MCP surface.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "baseline": {"type": "array", "items": {"type": "object"}},
+                    "candidate": {"type": "array", "items": {"type": "object"}},
+                    "regression_threshold": {"type": "number"},
+                    **_SESSION_ID_PROPERTY,
+                },
+                "additionalProperties": False,
+            },
+            "category": "core",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": True,
+        },
+        {
+            "name": "core.release_check",
+            "title": "Unified Release Check",
+            "description": "Combine comparison, evaluation, and chaos evidence into a "
+            "deterministic readiness decision.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "comparison": {"type": "object"},
+                    "evaluation_report": {"type": "object"},
+                    "chaos_report": {"type": "object"},
+                    "thresholds": {"type": "object"},
+                    **_SESSION_ID_PROPERTY,
+                },
+                "additionalProperties": False,
+            },
+            "category": "core",
+            "prerequisites": [],
+            "expected_duration": "fast",
+            "mutates_session": True,
+        },
+        {
+            "name": "core.incident_summary",
+            "title": "Unified Incident Summary",
+            "description": "Combine workflow, comparison, chaos, and evaluation evidence "
+            "for investigation.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "comparison": {"type": "object"},
+                    "evaluation_report": {"type": "object"},
+                    "chaos_report": {"type": "object"},
+                    **_SESSION_ID_PROPERTY,
+                },
+                "additionalProperties": False,
+            },
+            "category": "core",
+            "prerequisites": [],
+            "expected_duration": "fast",
+            "mutates_session": True,
+        },
+        {
+            "name": "core.export_report",
+            "title": "Export Unified Report",
+            "description": "Export the evidence accumulated by a unified workflow session.",
+            "input_schema": {
+                "type": "object",
+                "properties": {**_SESSION_ID_PROPERTY},
+                "additionalProperties": False,
+            },
+            "category": "core",
+            "prerequisites": [],
+            "expected_duration": "instant",
+            "mutates_session": False,
+        },
     ]

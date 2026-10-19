@@ -28,6 +28,8 @@ class SessionState:
     candidate_runs: list[dict[str, Any]] | None = None
     last_comparison: dict[str, Any] | None = None
     last_chaos_report: dict[str, Any] | None = None
+    last_release_check: dict[str, Any] | None = None
+    last_incident_summary: dict[str, Any] | None = None
     history: deque[dict[str, Any]] = field(default_factory=lambda: deque(maxlen=_HISTORY_LIMIT))
 
     def summary(self) -> dict[str, Any]:
@@ -39,6 +41,8 @@ class SessionState:
             "candidate_run_count": len(self.candidate_runs) if self.candidate_runs else 0,
             "has_comparison": self.last_comparison is not None,
             "has_chaos_report": self.last_chaos_report is not None,
+            "has_release_check": self.last_release_check is not None,
+            "has_incident_summary": self.last_incident_summary is not None,
             "history": list(self.history),
         }
 

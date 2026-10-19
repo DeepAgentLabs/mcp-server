@@ -45,15 +45,15 @@ package is installed.
 
 | Capability | Hosted server | Local server |
 | --- | --- | --- |
-| AgenticLens analysis and Markdown reports (with finding provenance) | Available (AgenticLens 0.8.0) | Requires AgenticLens installation (`>=0.6.1` for step provenance on every finding) |
-| AgenticLens run diagnosis and score analysis (`lens.diagnose_run`, `lens.score_analysis`) | Available (AgenticLens 0.8.0) | Requires `agenticlens>=0.7.0` |
-| AgenticLens suite drafting and approval checks (`lens.suite_from_traces`, `lens.suite_check`) | Available (AgenticLens 0.8.0; nothing stored) | Requires `agenticlens>=0.8.0` |
-| AgenticLens ModelFit recommendations (`lens.modelfit_recommend`) | Available (AgenticLens 0.9.0; nothing stored, no model called) | Requires `agenticlens>=0.9.0` |
+| AgenticLens analysis and Markdown reports (with finding provenance) | Available (AgenticLens 0.10.0) | Requires AgenticLens installation (`>=0.6.1` for step provenance on every finding) |
+| AgenticLens run diagnosis and score analysis (`lens.diagnose_run`, `lens.score_analysis`) | Available (AgenticLens 0.10.0) | Requires `agenticlens>=0.7.0` |
+| AgenticLens suite drafting and approval checks (`lens.suite_from_traces`, `lens.suite_check`) | Available (AgenticLens 0.10.0; nothing stored) | Requires `agenticlens>=0.8.0` |
+| AgenticLens ModelFit recommendations (`lens.modelfit_recommend`) | Available (AgenticLens 0.10.0; nothing stored, no model called) | Requires `agenticlens>=0.9.0` |
 | Baseline/candidate run comparison | Available | Requires AgenticLens installation |
 | Evaluation-report SLO gates and audit/HTML reports | Available through `lens.*` | Requires AgenticLens installation |
 | AI Operations artifact validation (`spec_version` routing, rule-cited conformance) | Available, including the rule and compatibility catalogs | Requires canonical schema assets (`ai-operations-spec>=0.5.1` for rule IDs) |
-| Converting a chaos report to an AIOS run (`chaos.export_aios_run`) | Available (Agentic Chaos 0.6.0; no code runs) | Available with `agentic-chaos>=0.5.1` |
-| Agentic Chaos fault listing | Available (Agentic Chaos 0.6.0) | Available with Agentic Chaos installed |
+| Converting a chaos report to an AIOS run (`chaos.export_aios_run`) | Available (Agentic Chaos 0.8.0; no code runs) | Available with `agentic-chaos>=0.5.1` |
+| Agentic Chaos fault listing | Available (Agentic Chaos 0.8.0) | Available with Agentic Chaos installed |
 | Executing chaos experiments | Disabled and excluded from the HTTP catalog | Available over trusted local stdio |
 | Sidecar status and module discovery | Package not installed in the hosted image | Available with Sidecar installed; discovery only |
 | Sidecar runtime supervision / decision gates | No MCP execution tools implemented | No MCP execution tools implemented |
@@ -202,7 +202,7 @@ Call `core.health`, then `chaos.list_faults` to discover supported faults.
 Call `chaos.run_experiment` with a script path inside the configured workspace,
 selected faults, timeout, and session ID. It executes real code; review
 [SECURITY.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/SECURITY.md). A server-relative path refers to the machine
-[SECURITY.md](../SECURITY.md). To limit which scripts it may run, set
+[SECURITY.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/SECURITY.md). To limit which scripts it may run, set
 `DEEP_AGENTIC_CORE_MCP_ALLOWED_SCRIPT_GLOBS` (for example
 `my-agent/chaos/*.py`) and optionally `DEEP_AGENTIC_CORE_MCP_DENIED_SCRIPT_GLOBS`
 in the server's environment. Deny wins, and `.venv`, `site-packages` and `.git`

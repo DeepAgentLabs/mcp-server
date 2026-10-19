@@ -3,11 +3,78 @@
 
 # Tool Reference
 
-34 tools, generated from `tools/registry.py` - the same data MCP
+38 tools, generated from `tools/registry.py` - the same data MCP
 clients see via `tools/list`. See [README.md](../README.md) for a one-line-per-tool
 overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
 ## Core
+
+### `core.compare_runs` — Unified Run Comparison
+
+Compare baseline and candidate runs through the unified MCP surface.
+
+| | |
+| --- | --- |
+| Category | `core` |
+| Prerequisites | `agenticlens` |
+| Expected duration | fast |
+| Mutates session | yes |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "baseline": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "candidate": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "regression_threshold": {
+      "type": "number"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session to read/write shared state under. Defaults to 'default'."
+    }
+  },
+  "additionalProperties": false
+}
+```
+
+### `core.export_report` — Export Unified Report
+
+Export the evidence accumulated by a unified workflow session.
+
+| | |
+| --- | --- |
+| Category | `core` |
+| Prerequisites | none |
+| Expected duration | instant |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Session to read/write shared state under. Defaults to 'default'."
+    }
+  },
+  "additionalProperties": false
+}
+```
 
 ### `core.health` — Health Check
 
@@ -26,6 +93,79 @@ Input schema:
 {
   "type": "object",
   "properties": {},
+  "additionalProperties": false
+}
+```
+
+### `core.incident_summary` — Unified Incident Summary
+
+Combine workflow, comparison, chaos, and evaluation evidence for investigation.
+
+| | |
+| --- | --- |
+| Category | `core` |
+| Prerequisites | none |
+| Expected duration | fast |
+| Mutates session | yes |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "comparison": {
+      "type": "object"
+    },
+    "evaluation_report": {
+      "type": "object"
+    },
+    "chaos_report": {
+      "type": "object"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session to read/write shared state under. Defaults to 'default'."
+    }
+  },
+  "additionalProperties": false
+}
+```
+
+### `core.release_check` — Unified Release Check
+
+Combine comparison, evaluation, and chaos evidence into a deterministic readiness decision.
+
+| | |
+| --- | --- |
+| Category | `core` |
+| Prerequisites | none |
+| Expected duration | fast |
+| Mutates session | yes |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "comparison": {
+      "type": "object"
+    },
+    "evaluation_report": {
+      "type": "object"
+    },
+    "chaos_report": {
+      "type": "object"
+    },
+    "thresholds": {
+      "type": "object"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session to read/write shared state under. Defaults to 'default'."
+    }
+  },
   "additionalProperties": false
 }
 ```
