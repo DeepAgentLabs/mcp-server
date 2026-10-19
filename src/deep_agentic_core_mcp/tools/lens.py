@@ -73,6 +73,11 @@ def compare_runs(arguments: dict[str, Any] | None) -> dict[str, Any]:
     `baseline`/`candidate` may be omitted if a comparison already stored
     runs in this session under the same slots.
     """
+    return run_comparison(arguments, tool="lens.compare_runs")
+
+
+def run_comparison(arguments: dict[str, Any] | None, *, tool: str) -> dict[str, Any]:
+    """Shared body of `lens.compare_runs` and `core.compare_runs`, recorded as `tool`."""
     arguments = arguments or {}
     session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
     state = session.get_session(session_id)
@@ -89,13 +94,13 @@ def compare_runs(arguments: dict[str, Any] | None) -> dict[str, Any]:
             "ok": True,
             **adapter_compare_runs(baseline, candidate, regression_threshold=regression_threshold),
         }
-    except AdapterUnavailableError as exc:
-        session.record_call(session_id, "lens.compare_runs", ok=False, note=str(exc))
+    except (AdapterUnavailableError, ValueError) as exc:
+        session.record_call(session_id, tool, ok=False, note=str(exc))
         return {"ok": False, "error": str(exc)}
     state.baseline_runs = baseline
     state.candidate_runs = candidate
     state.last_comparison = result
-    session.record_call(session_id, "lens.compare_runs", ok=True)
+    session.record_call(session_id, tool, ok=True)
     return result
 
 
