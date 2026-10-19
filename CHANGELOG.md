@@ -6,6 +6,36 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.4.0 - 2026-10-19
+
+First Phase 4 (Unified Workflows) slice. No sibling release, dependency range
+or hosted image pin changes.
+
+### Added
+
+- `core.compare_runs`, `core.release_check`, `core.incident_summary` and
+  `core.export_report`, the `resource://workflows/release-check` resource and a
+  `core.release_check` prompt (contributed in #40).
+- `core.release_check` fails closed. Evaluation reports go through the Evals
+  release gate, the same path as `lens.slo_summary`, so every `GateConfig`
+  threshold applies (strict by default) and unknown threshold keys are rejected.
+  Comparisons are validated with the Lens comparison model and chaos evidence
+  must be a `chaos.run_experiment` report. `required_evidence` (default: all
+  three kinds) makes absent evidence a blocking `missing` gate. Each gate reports
+  `passed`, `failed`, `invalid` or `missing` with reasons and observed values.
+- `core.incident_summary` reports regressions, chaos crashes or timeouts, failed
+  evaluation cases and blocked release gates, and `no_signals` when nothing failed.
+- `core.export_report` returns an MCP-local `mcp.unified-report.v1` envelope
+  naming its generator; it is not an AIOS artifact.
+- `docs/unified-workflows.md` and `examples/unified_release_check.py`.
+
+### Changed
+
+- `core.compare_runs` and `lens.compare_runs` share one code path, and
+  `lens.compare_runs` now returns invalid runs as a structured error.
+- Correct the Sidecar 0.8.5 discovery status in `docs/integrations.md` and add
+  the Agentic Evals integration.
+
 ## 0.3.14 - 2026-10-19
 
 Pairs with Agentic Evals 0.9.0 (roadmap v0.9 judge reliability, cost and
@@ -409,16 +439,3 @@ optional dependency and degrades instead of failing boot.
 - Tool registry, resource catalog, and prompt catalog scaffolding.
 - stdio transport via `mcp` SDK.
 - CI workflow and PyPI Trusted Publishing.
-## [0.4.0] - Unreleased
-
-### Added
-
-- Added Phase 4 unified workflow tools: `core.compare_runs`,
-  `core.release_check`, `core.incident_summary`, and `core.export_report`.
-- Added a release-check prompt and reusable workflow resource.
-- Added deterministic session-backed evidence aggregation across Lens, Chaos,
-  Evals, and workflow artifacts.
-
-### Changed
-
-- Updated the MCP package version to `0.4.0`.
