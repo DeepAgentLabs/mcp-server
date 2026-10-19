@@ -6,7 +6,7 @@ interface across the DeepAgentLabs ecosystem.
 ## Current Release
 
 **Version:** `0.4.0`
-**Status:** Unreleased Phase 4 development
+**Released:** 2026-10-19
 
 ## Development Status
 
@@ -33,9 +33,18 @@ Control Tower connector tools.
 
 ### Phase 4 — Unified Workflows
 
-- Combine observability and resilience workflows.
-- Compare baseline and chaos runs.
-- Surface incident and readiness evidence through one MCP interface.
+Delivered in `0.4.0`:
+
+- `core.compare_runs`, a fail-closed `core.release_check`,
+  `core.incident_summary` and `core.export_report`
+  ([guide](unified-workflows.md)).
+- Local Control Tower connector tools (since `0.3.6`).
+
+Still open:
+
+- Authenticated Tower/Sidecar stop/revoke enforced at dispatch.
+- Deterministic tool-level authorization and delegated task scopes.
+- Correlated access-denial and revocation evidence.
 
 ### Phase 5 — Publishing and Adoption
 

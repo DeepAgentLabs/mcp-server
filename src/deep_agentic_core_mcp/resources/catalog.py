@@ -17,8 +17,8 @@ def list_resources() -> list[dict[str, str]]:
             "kind": "reference",
         },
         {
-            "uri": "resource://workflows/phase4-release-check",
-            "name": "Phase 4 release-check workflow",
+            "uri": "resource://workflows/release-check",
+            "name": "Unified release-check workflow",
             "kind": "workflow-guide",
         },
     ]

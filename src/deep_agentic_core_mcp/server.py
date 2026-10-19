@@ -192,15 +192,32 @@ RESOURCE_CONTENT: dict[str, dict[str, Any]] = {
         "chaos_events": [],
     },
     "resource://catalogs/chaos_faults": list_faults(),
-    "resource://workflows/phase4-release-check": {
+    "resource://workflows/release-check": {
         "steps": [
-            "lens.analyze_workflow",
-            "core.compare_runs",
-            "chaos.export_aios_run",
-            "core.release_check",
-            "core.export_report",
+            {
+                "tool": "core.compare_runs",
+                "produces": "comparison",
+                "note": "Baseline and candidate Lens trace runs; stored in the session.",
+            },
+            {
+                "tool": "chaos.run_experiment",
+                "produces": "chaos",
+                "note": "Local stdio only. Hosted callers pass chaos_report instead.",
+            },
+            {
+                "tool": "core.release_check",
+                "produces": "release_check",
+                "note": "Pass evaluation_report (native Evals) and optional Evals "
+                "GateConfig thresholds; comparison and chaos default to the session.",
+            },
+            {"tool": "core.incident_summary", "produces": "incident_summary"},
+            {"tool": "core.export_report", "produces": "mcp.unified-report.v1"},
         ],
-        "note": "Supply real artifacts and treat missing evidence as unresolved.",
+        "rules": [
+            "Missing, malformed or failed-call evidence blocks readiness.",
+            "Use required_evidence to narrow which kinds a release needs.",
+            "The exported report is MCP-local, not an AIOS artifact.",
+        ],
     },
     **schema_resource_content(),
 }

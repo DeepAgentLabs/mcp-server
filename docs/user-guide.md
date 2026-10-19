@@ -50,6 +50,7 @@ package is installed.
 | AgenticLens suite drafting and approval checks (`lens.suite_from_traces`, `lens.suite_check`) | Available (AgenticLens 0.10.0; nothing stored) | Requires `agenticlens>=0.8.0` |
 | AgenticLens ModelFit recommendations (`lens.modelfit_recommend`) | Available (AgenticLens 0.10.0; nothing stored, no model called) | Requires `agenticlens>=0.9.0` |
 | Baseline/candidate run comparison | Available | Requires AgenticLens installation |
+| Unified release check, incident summary and report export (`core.release_check`, `core.incident_summary`, `core.export_report`) | Available; pass a local `chaos_report` because chaos execution is disabled | Available; the Lens-backed gates require AgenticLens |
 | Evaluation-report SLO gates and audit/HTML reports | Available through `lens.*` | Requires AgenticLens installation |
 | AI Operations artifact validation (`spec_version` routing, rule-cited conformance) | Available, including the rule and compatibility catalogs | Requires canonical schema assets (`ai-operations-spec>=0.5.1` for rule IDs) |
 | Converting a chaos report to an AIOS run (`chaos.export_aios_run`) | Available (Agentic Chaos 0.8.0; no code runs) | Available with `agentic-chaos>=0.5.1` |

@@ -10,7 +10,11 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.4.0` (unreleased) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `0.4.0` — see [CHANGELOG.md](CHANGELOG.md). It ships the
+first Phase 4 slice: `core.compare_runs`, a fail-closed `core.release_check`
+over Lens, Evals and Chaos evidence, `core.incident_summary` and
+`core.export_report` ([guide](docs/unified-workflows.md)). Hosted image pins and
+sibling dependency ranges are unchanged.
 `0.3.14` syncs the bundled native Evals schemas to `agentic-evals` 0.9.0 and pins
 it in the hosted images. `0.3.13` pinned them to `agentic-chaos` 0.8.0.
 `0.3.12` adds read-only `lens.routing_decide` and pins the hosted images to `agenticlens` 0.10.0.
@@ -57,8 +61,9 @@ discovery. The 2026-09-11 audit above describes the earlier `0.2.0` release stat
   `spec.validate_artifact` and schema resources (`0.1.3`); `spec_version`
   routing per the v0.5 compatibility rules, rule-cited conformance reports, and
   catalog resources in `0.3.3`
-- **Phase 4: Unified Workflows** 🏗️ In progress — first unified comparison,
-  release-check, incident-summary, and report-export tools shipped in `0.4.0`
+- **Phase 4: Unified Workflows** 🏗️ In progress — unified comparison,
+  fail-closed release-check, incident-summary and report-export tools shipped
+  in `0.4.0`; local Tower connector since `0.3.6`; access-containment items open
 - **Phase 5: Publishing and Adoption** 🚧 Planned
 - **Phase 6: Operational Intelligence** 🚧 Planned
 
@@ -439,9 +444,11 @@ Future spec milestones (new schema sets, frozen markers) need a newer
 
 ## Phase 4: Unified Workflows
 
-Status: in progress for `0.4.0`. The first slice adds unified comparison,
-release checks, incident summaries, and evidence export over existing Lens,
-Chaos, Evals, and session APIs.
+Status: in progress. `0.4.0` ships the unified-workflow slice over existing
+Lens, Evals, Chaos and session APIs, and the local Control Tower connector has
+shipped since `0.3.6`. The access-containment items under "Operational safety
+roadmap" (authenticated stop/revoke, tool-level authorization, correlated
+denial evidence) remain open.
 
 Goals:
 
@@ -466,14 +473,23 @@ Possible tools:
 - `control_tower.list_unhealthy_agents`
 - `control_tower.capability_summary`
 
-Delivered in the first `0.4.0` slice:
+Delivered in `0.4.0` ([guide](docs/unified-workflows.md)):
 
-- `core.compare_runs`
-- `core.release_check`
-- `core.incident_summary`
-- `core.export_report`
-- `resource://workflows/phase4-release-check`
-- `core.release_check` prompt guidance
+- `core.compare_runs` — the `lens.compare_runs` path, stored for the release check
+- `core.release_check` — fails closed: evaluation reports go through the Evals
+  release gate (every `GateConfig` threshold, unknown keys rejected),
+  comparisons are validated with the Lens comparison model, chaos evidence must
+  be a `chaos.run_experiment` report, and `required_evidence` (default: all
+  three) turns absent evidence into a blocking `missing` gate
+- `core.incident_summary` — failure signals only, including blocked gates
+- `core.export_report` — MCP-local `mcp.unified-report.v1` envelope, not an
+  AIOS artifact; a shared release-evidence artifact would be specified in
+  `ai-operations-spec` first
+- `resource://workflows/release-check` and the `core.release_check` prompt
+- [`examples/unified_release_check.py`](examples/unified_release_check.py)
+
+The Control Tower tools ship as `tower.*` (local stdio only) rather than the
+`control_tower.*` names sketched above.
 
 Control Tower integration notes:
 
@@ -626,7 +642,8 @@ combines its Phase 6/6A: twelve local stdio tools over real authenticated HTTP
 queries and incident transitions, separate reader/writer credentials, and a cited
 investigation prompt. Human approval stays in Tower HTTP/CLI. Hosted calls are
 rejected until per-user Tower credentials exist. MCP remains usable without Tower.
-Unified cross-engine workflows and broader Phase 4 features remain planned.
+Unified cross-engine workflows shipped in `0.4.0`; access-containment Phase 4
+items remain planned.
 See [setup](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/main/docs/mcp-connector.md).
 
 ## Native Evals contract validation — MCP 0.3.8

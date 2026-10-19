@@ -16,19 +16,20 @@ The MCP server brings multiple agentic capabilities together behind a single MCP
 - **Agentic Sidecar** — supervision-readiness and module discovery
 - **Core diagnostics** — health, version, verification, and session information
 
-## Phase 4 unified workflows
+## Unified workflows (0.4.0)
 
-Use the core tools to combine existing evidence:
+Use the core tools to combine existing evidence into a fail-closed release
+decision:
 
 ```text
-lens.analyze_workflow
-        |
-core.compare_runs / chaos.export_aios_run
-        |
-core.release_check
-        |
-core.incident_summary -> core.export_report
+core.compare_runs        chaos.run_experiment (local)     Evals report
+        \                        |                         /
+         +------------> core.release_check <--------------+
+                                 |
+               core.incident_summary -> core.export_report
 ```
+
+See [Unified workflows](unified-workflows.md).
 
 ## Key capabilities
 

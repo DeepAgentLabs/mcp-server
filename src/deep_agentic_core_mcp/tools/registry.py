@@ -468,7 +468,9 @@ def list_tools() -> list[dict[str, Any]]:
         {
             "name": "core.compare_runs",
             "title": "Unified Run Comparison",
-            "description": "Compare baseline and candidate runs through the unified MCP surface.",
+            "description": "Compare baseline and candidate trace runs for regressions, "
+            "storing the comparison for core.release_check. Same behavior as "
+            "lens.compare_runs.",
             "input_schema": {
                 "type": "object",
                 "properties": {
@@ -487,29 +489,56 @@ def list_tools() -> list[dict[str, Any]]:
         {
             "name": "core.release_check",
             "title": "Unified Release Check",
-            "description": "Combine comparison, evaluation, and chaos evidence into a "
-            "deterministic readiness decision.",
+            "description": "Decide release readiness from a Lens comparison, an Evals "
+            "report (judged by the Evals release gate) and a chaos.run_experiment report. "
+            "Fails closed: required evidence that is missing, malformed or from a failed "
+            "call blocks readiness. Comparison and chaos evidence default to this session.",
             "input_schema": {
                 "type": "object",
                 "properties": {
-                    "comparison": {"type": "object"},
-                    "evaluation_report": {"type": "object"},
-                    "chaos_report": {"type": "object"},
-                    "thresholds": {"type": "object"},
+                    "comparison": {
+                        "type": "object",
+                        "description": "A lens/core.compare_runs result. Defaults to the "
+                        "session's last comparison.",
+                    },
+                    "evaluation_report": {
+                        "type": "object",
+                        "description": "A native Agentic Evals evaluation report.",
+                    },
+                    "chaos_report": {
+                        "type": "object",
+                        "description": "A chaos.run_experiment result. Defaults to the "
+                        "session's last chaos report.",
+                    },
+                    "thresholds": {
+                        "type": "object",
+                        "description": "Evals GateConfig fields (for example min_pass_rate, "
+                        "max_failed_cases). Unknown keys are rejected. The Evals default "
+                        "requires every case to pass.",
+                    },
+                    "required_evidence": {
+                        "type": "array",
+                        "items": {"type": "string", "enum": ["comparison", "evaluation", "chaos"]},
+                        "minItems": 1,
+                        "uniqueItems": True,
+                        "description": "Evidence kinds that must be present. Defaults to "
+                        "all three.",
+                    },
                     **_SESSION_ID_PROPERTY,
                 },
                 "additionalProperties": False,
             },
             "category": "core",
-            "prerequisites": [],
+            "prerequisites": ["agenticlens"],
             "expected_duration": "fast",
             "mutates_session": True,
         },
         {
             "name": "core.incident_summary",
             "title": "Unified Incident Summary",
-            "description": "Combine workflow, comparison, chaos, and evaluation evidence "
-            "for investigation.",
+            "description": "Collect regressions, chaos crashes or timeouts, failed "
+            "evaluation cases and blocked release gates from supplied or session "
+            "evidence for investigation. Reports no_signals when nothing failed.",
             "input_schema": {
                 "type": "object",
                 "properties": {
@@ -528,7 +557,9 @@ def list_tools() -> list[dict[str, Any]]:
         {
             "name": "core.export_report",
             "title": "Export Unified Report",
-            "description": "Export the evidence accumulated by a unified workflow session.",
+            "description": "Export the session's workflow, analysis, comparison, chaos, "
+            "release-check and incident evidence as one MCP-local JSON envelope "
+            "(mcp.unified-report.v1; not an AIOS artifact).",
             "input_schema": {
                 "type": "object",
                 "properties": {**_SESSION_ID_PROPERTY},

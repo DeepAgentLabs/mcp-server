@@ -61,7 +61,7 @@ def test_resource_registry_not_empty() -> None:
     assert list_resources()
     uris = {resource["uri"] for resource in list_resources()}
     assert "resource://schemas/aiops/v0.4/workflow" in uris
-    assert "resource://workflows/phase4-release-check" in uris
+    assert "resource://workflows/release-check" in uris
 
 
 def test_prompt_registry_not_empty() -> None:

@@ -19,6 +19,7 @@ try:
     ensure_repo_on_path("agenticlens")
 
     import agenticlens as _agenticlens_pkg
+    from agenticlens.comparison.models import ComparisonReport
     from agenticlens.comparison.runner import compare_runs as _compare_runs
     from agenticlens.evaluation import (
         EvaluationReport,
@@ -278,6 +279,19 @@ def compare_runs(
     )
     dumped: dict[str, Any] = report.model_dump(mode="json")
     return dumped
+
+
+def validate_comparison(report: dict[str, Any]) -> dict[str, Any]:
+    """Validate a `lens.compare_runs` result against the Lens comparison model."""
+    _require_available()
+    dumped: dict[str, Any] = ComparisonReport.model_validate(report).model_dump(mode="json")
+    return dumped
+
+
+def gate_threshold_names() -> set[str]:
+    """Threshold keys the Evals release gate accepts; it ignores any others."""
+    _require_available()
+    return set(GateConfig.model_fields)
 
 
 def slo_summary(
