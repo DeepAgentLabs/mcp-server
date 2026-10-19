@@ -128,3 +128,77 @@ def test_lens_report_consumers_reject_invalid_nested_score(report, operation):
     result = getattr(lens, operation)({"report": report})
     assert result["ok"] is False
     assert "native Evals" in result["error"]
+
+
+def _judged_live_report():
+    """An Evals 0.9.0 live report with retries, a judge outage and a target outage."""
+    from agentic_evals import (
+        EvaluationContext,
+        EvaluatorConfig,
+        EvaluatorRegistry,
+        LLMJudgeEvaluator,
+        PythonTarget,
+        RetryPolicy,
+        Score,
+        run_live_suite,
+    )
+
+    def judge(context: EvaluationContext) -> Score:
+        if context.case.id == "judge-down":
+            raise TimeoutError("judge provider timed out")
+        return Score(name="quality", value=1.0, passed=True, explanation="ok")
+
+    judged = [EvaluatorConfig(name="quality", required=False)]
+    suite = Suite(
+        name="judged-live",
+        version="1",
+        cases=[
+            Case(id="ok", name="ok", expected_output="ok", evaluators=judged),
+            Case(id="judge-down", name="judge", expected_output="ok", evaluators=judged),
+            Case(id="outage", name="outage", expected_output="ok"),
+        ],
+    )
+    registry = EvaluatorRegistry()
+    registry.register(LLMJudgeEvaluator("quality", judge, retry=RetryPolicy(max_attempts=2)))
+    return run_live_suite(
+        suite,
+        PythonTarget(callable_path=f"{__name__}:_live_target"),
+        registry=registry,
+        retry=RetryPolicy(max_attempts=2),
+    )
+
+
+def _live_target(payload, *, case):
+    if case.id == "outage":
+        raise ConnectionError("backend unavailable")
+    return {"output": "ok", "trace": {"trace_id": case.id}}
+
+
+def test_evals_090_judge_and_live_outcomes_validate():
+    report = _judged_live_report()
+    artifact = report.model_dump(mode="json")
+    validate_evals_artifact(artifact, "evaluation_report")
+    assert artifact["summary"]["judge"]["unavailable_cases"] == ["judge-down"]
+    assert artifact["summary"]["live"]["error_case_ids"] == ["outage"]
+    gate = evaluate_gate(report, GateConfig(min_pass_rate=0.5)).model_dump(mode="json")
+    # An unavailable judge fails the default gate; MCP validates, never recomputes.
+    assert not gate["passed"]
+    validate_evals_artifact(gate, "gate_decision")
+
+
+@pytest.mark.parametrize(
+    "path,value",
+    [
+        (("cases", 2, "target_status"), "crashed"),
+        (("cases", 2, "target_attempts"), 0),
+        (("summary", "judge", "unavailable_scores"), -1),
+    ],
+)
+def test_evals_090_fields_are_enforced(path, value):
+    artifact = _judged_live_report().model_dump(mode="json")
+    node = artifact
+    for key in path[:-1]:
+        node = node[key]
+    node[path[-1]] = value
+    with pytest.raises(ValueError, match="evaluation_report"):
+        validate_evals_artifact(artifact, "evaluation_report")
