@@ -2,12 +2,13 @@
 
 The MCP Server provides a unified interface over multiple DeepAgentLabs packages.
 
-## Phase 4 unified workflows
+## Unified workflows (0.4.0)
 
 The `core.compare_runs`, `core.release_check`, `core.incident_summary`, and
-`core.export_report` tools compose the existing integrations into one workflow.
-They do not replace AgenticLens, Agentic Chaos, Agentic Evals, AI Operations
-Spec, Sidecar, or Control Tower logic.
+`core.export_report` tools compose Lens, Evals and Chaos evidence into one
+workflow. They do not replace AgenticLens, Agentic Chaos, Agentic Evals, AI
+Operations Spec, Sidecar, or Control Tower logic. See
+[Unified workflows](unified-workflows.md).
 
 ## AgenticLens
 
@@ -42,9 +43,10 @@ exporter and fault catalog; arbitrary chaos execution remains local-only.
 
 ## Agentic Sidecar
 
-**Status:** Experimental / scaffold
+**Status:** Discovery only
 
-The Sidecar package is importable, but its decision runtime is not yet implemented.
+Sidecar ships a local decision runtime, but MCP exposes only discovery; it
+does not bridge Sidecar runtime controls.
 
 The MCP Server exposes:
 
@@ -54,9 +56,18 @@ The MCP Server exposes:
 The verified local environment reports:
 
 - Version: `0.8.5`
-- Package status: `scaffold`
+- Package status: `implemented`
 - Release stage: `pre-alpha`
-- Runtime ready: `false`
+- Runtime ready: `true` (runtime connected to MCP: `false`)
+
+## Agentic Evals
+
+**Status:** Available
+
+The MCP Server validates native Evals reports and gate decisions offline with
+`evals.validate_artifact`, and `core.release_check` and `lens.slo_summary` judge
+evaluation reports with the Evals release gate. The bundled schemas match
+Agentic Evals `0.9.0`.
 
 ## AI Operations Specification
 
