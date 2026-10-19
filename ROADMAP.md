@@ -11,7 +11,8 @@ entry below have been updated accordingly; see the audit for full detail.
 ## Release Status
 
 Release version: `0.4.0` (unreleased) — see [CHANGELOG.md](CHANGELOG.md).
-`0.3.13` pins the hosted images to `agentic-chaos` 0.8.0 (workflow summaries in AIOS exports).
+`0.3.14` syncs the bundled native Evals schemas to `agentic-evals` 0.9.0 and pins
+it in the hosted images. `0.3.13` pinned them to `agentic-chaos` 0.8.0.
 `0.3.12` adds read-only `lens.routing_decide` and pins the hosted images to `agenticlens` 0.10.0.
 `0.3.11` adds `lens.modelfit_recommend` for AgenticLens 0.9.0 (v0.7 ModelFit)
 and pins the hosted images to `agenticlens` 0.9.0.
@@ -72,7 +73,7 @@ hashes in DynamoDB. Remote chaos execution remains disabled.
 As of 2026-10-04, the hosted service is running at
 `https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
 Transport/signup and Sidecar discovery are included in the `0.3.0` release.
-Since `0.3.13` the hosted image installs `agenticlens` 0.10.0, `agentic-chaos`
+Since `0.3.14` the hosted image installs `agenticlens` 0.10.0, `agentic-evals` 0.9.0, `agentic-chaos`
 0.8.0, and the `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a
 pinned commit and checksum-verified. (`0.3.12` installed Chaos 0.7.0; `0.3.9`–`0.3.10` installed Lens 0.8.0; `0.3.7`–`0.3.8` installed Lens 0.7.0; `0.3.5`–`0.3.6` installed Chaos 0.5.3;
 `0.3.4` installed Lens 0.6.1 and Chaos 0.5.1.) Chaos is installed only for its exporter and fault catalog; HTTP still
@@ -669,6 +670,16 @@ See the [suite management guide](https://github.com/DeepAgentLabs/agenticlens/bl
 Evals 0.8.0 CLI JSON reports and gate decisions retain the 0.7.2 wire contract and validate with `evals.validate_artifact`. The bundled upstream 0.7.2 schemas and pinned contract-test dependency remain the compatibility baseline. JUnit and Markdown are presentation formats, not native validator inputs. This release adds no MCP execution tool or runtime dependency.
 
 See [CLI usage and compatibility](docs/evals-0.8-cli.md).
+
+## Evals 0.9.0 judge reliability (MCP 0.3.14)
+
+Evals 0.9.0 adds optional judge (`summary.judge`), live-target (`summary.live`)
+and per-case `target_status` fields to native report schema 1.0. MCP 0.3.14
+re-syncs the bundled upstream schemas from `agentic-evals==0.9.0` (the
+contract-test dev pin) and pins the hosted images to it, so
+`evals.validate_artifact` enforces the new fields offline. No tool is added or
+changed; validation never recomputes a gate. See
+[the compatibility note](docs/evals-0.9-judge-reliability.md).
 
 ## Chaos 0.7.0 interoperability
 

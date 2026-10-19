@@ -52,6 +52,7 @@ nav:
   - Chaos 0.8 Compatibility: chaos-0.8.md
   - Evals CLI Compatibility: evals-0.8-cli.md
   - Evals Report Contract: evals-report-contract.md
+  - Evals 0.9 Judge Reliability: evals-0.9-judge-reliability.md
   - Sidecar 0.8 Compatibility: sidecar-v0.8.md
   - Control Tower: tower-0.7-fleet-operations.md
   - Examples: examples.md
