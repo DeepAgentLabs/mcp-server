@@ -10,9 +10,31 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.3.0` (2026-10-04) — see [CHANGELOG.md](CHANGELOG.md).
-This release includes HTTP/signup support and Sidecar discovery tools; the
-2026-09-11 audit above describes the earlier `0.2.0` release state.
+Release version: `0.3.13` (2026-10-18) — see [CHANGELOG.md](CHANGELOG.md).
+`0.3.13` pins the hosted images to `agentic-chaos` 0.8.0 (workflow summaries in AIOS exports).
+`0.3.12` adds read-only `lens.routing_decide` and pins the hosted images to `agenticlens` 0.10.0.
+`0.3.11` adds `lens.modelfit_recommend` for AgenticLens 0.9.0 (v0.7 ModelFit)
+and pins the hosted images to `agenticlens` 0.9.0.
+`0.3.10` pins the hosted images to `agentic-chaos` 0.7.0.
+`0.3.9` adds `lens.suite_from_traces` and `lens.suite_check` for AgenticLens
+0.8.0 (v0.6 test-suite and dataset management) and pins the hosted images to
+`agenticlens` 0.8.0.
+`0.3.8` adds offline `evals.validate_artifact` against the published Evals 0.7.2
+report and gate schemas.
+`0.3.7` moves the hosted images to `agentic-chaos` 0.6.0. Its AIOS run export
+adds call counts and the escaped error to the producer extension; MCP tools are
+unchanged.
+`0.3.5` adds `lens.diagnose_run` and `lens.score_analysis` for AgenticLens
+0.7.0 (v0.5 diagnosis) and pins the hosted images to `agenticlens` 0.7.0 and
+`agentic-chaos` 0.5.3.
+
+`0.3.3` completed Phase 3: provenance on every `lens.analyze_workflow`
+finding (3a), AIOS run export and a script allow/deny policy for chaos
+experiments (3b), and `spec_version`-routed validation with rule-cited
+conformance reports (3c). That release paired with sibling patch releases
+`agenticlens` 0.6.1, `agentic-chaos` 0.5.1 and `ai-operations-spec` 0.5.1.
+v0.3.2 verified Chaos v0.5 compatibility; v0.3.1 corrected installed Sidecar API
+discovery. The 2026-09-11 audit above describes the earlier `0.2.0` release state.
 
 - **Phase 0: Foundation** ✅ Complete
 - **Phase 1: Minimal MCP Server** ✅ Complete — `core.health`/`core.version`
@@ -20,18 +42,20 @@ This release includes HTTP/signup support and Sidecar discovery tools; the
 - **Phase 2: Session Management & Diagnostics** ✅ Complete — session state,
   rich `core.health` diagnostics, tool metadata/annotations, `core.verify`,
   and real `prompts/list`/`prompts/get` support all shipped in `0.2.0`
-- **Phase 3a: AgenticLens Integration** 🏗️ In progress — `lens.analyze_workflow`
-  shipped in `0.1.3`; `lens.report_summary`, `lens.compare_runs`,
-  `lens.slo_summary`, and `lens.audit_report` shipped in `0.2.0`
+- **Phase 3a: AgenticLens Integration** ✅ Complete — five `lens.*` tools
+  (`0.1.3`/`0.2.0`); every `lens.analyze_workflow` finding carries verified
+  artifact/step/span provenance in `0.3.3`
 - **Phase 3b: Agentic Chaos Integration** ✅ Complete — `chaos.list_faults`
-  shipped in `0.1.3`; `chaos.run_experiment` shipped in `0.2.0`
+  (`0.1.3`), `chaos.run_experiment` (`0.2.0`); AIOS run export,
+  `chaos.export_aios_run`, and the script allow/deny policy in `0.3.3`
 - **Phase 3d: Agentic Sidecar Discovery** ✅ Complete — `sidecar.status` and
   `sidecar.module_inventory` are included in `0.3.0` as discovery/readiness
-  tools. The upstream decision runtime remains unimplemented.
-- **Phase 3c: AI Operations Specification Conformance** 🏗️ In progress —
-  `spec.validate_artifact` and schema resources shipped in `0.1.3`, ahead of
-  where this roadmap originally planned them; remaining work still blocked on
-  upstream (see below)
+  tools. Sidecar has a local decision runtime; MCP integration with its
+  enforcement and live operator controls remains planned.
+- **Phase 3c: AI Operations Specification Conformance** ✅ Complete —
+  `spec.validate_artifact` and schema resources (`0.1.3`); `spec_version`
+  routing per the v0.5 compatibility rules, rule-cited conformance reports, and
+  catalog resources in `0.3.3`
 - **Phase 4: Unified Workflows** 🚧 Planned
 - **Phase 5: Publishing and Adoption** 🚧 Planned
 - **Phase 6: Operational Intelligence** 🚧 Planned
@@ -47,6 +71,13 @@ hashes in DynamoDB. Remote chaos execution remains disabled.
 As of 2026-10-04, the hosted service is running at
 `https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
 Transport/signup and Sidecar discovery are included in the `0.3.0` release.
+Since `0.3.13` the hosted image installs `agenticlens` 0.10.0, `agentic-chaos`
+0.8.0, and the `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a
+pinned commit and checksum-verified. (`0.3.12` installed Chaos 0.7.0; `0.3.9`–`0.3.10` installed Lens 0.8.0; `0.3.7`–`0.3.8` installed Lens 0.7.0; `0.3.5`–`0.3.6` installed Chaos 0.5.3;
+`0.3.4` installed Lens 0.6.1 and Chaos 0.5.1.) Chaos is installed only for its exporter and fault catalog; HTTP still
+rejects `chaos.run_experiment`. `tests/test_hosted_image.py` keeps these pins in step with
+the adapters. All Phase 3 features are therefore available both locally and
+hosted, except chaos execution, which stays local-only.
 
 - **Package publishing:** version tags run the full CI matrix and packaging
   checks before publishing to PyPI, creating the GitHub Release, and publishing
@@ -75,9 +106,9 @@ status should explicitly account for upstream and downstream dependencies.
   tools.
 - `agentic-sidecar`
   Provides decision-supervision and governance behavior. Today the MCP server
-  only exposes discovery/readiness information because the sidecar runtime is
-  still scaffold-only upstream; richer `sidecar.*` control surfaces depend on
-  that package shipping real runtime behavior first.
+  exposes installed API readiness and module inventory. Sidecar v0.7 adds local
+  task status/audit/operator APIs; exposing them through MCP requires a separate
+  authenticated task-scoped bridge. Discovery is not a live task connection.
 - `ai-operations-spec`
   Provides the canonical artifact model and validation rules surfaced through
   `spec.*` tools and used as the ecosystem exchange contract.
@@ -94,6 +125,25 @@ For roadmap work, distinguish:
   be updated together.
 - `Validate in`: sibling CLIs, fixtures, or adapters that should be checked
   before the item is marked done.
+
+### Phase 3 sibling dependencies (recorded for `0.3.3`)
+
+| Item | Depends on | Validate in |
+|---|---|---|
+| 3a finding provenance | `agenticlens>=0.6.1` (model-swap and chaos-impact findings name their step) | `tests/test_lens_provenance.py`; agenticlens `tests/test_recommendation_provenance.py` |
+| 3b AIOS run export | `agentic-chaos>=0.5.1` (`agentic_chaos.export.to_aios_run`) | `tests/test_chaos_aios_export.py`; chaos `tests/test_export_aios.py` (v0.4 schema + spec semantic checker) |
+| 3b script policy | none (server-local) | `tests/test_chaos_script_policy.py` |
+| Lens diagnosis tools (`0.3.5`) | `agenticlens>=0.7.0` (`agenticlens.diagnosis`, `analyze_scores`) | `tests/test_lens_diagnosis.py`; agenticlens `tests/test_diagnosis_engine.py`, `tests/test_score_analysis.py` |
+| Lens suite tools (`0.3.9`) | `agenticlens>=0.8.0` (`agenticlens.suites`) | `tests/test_lens_suites.py`; agenticlens `tests/test_suites_*.py` |
+| Lens ModelFit tool (`0.3.11`) | `agenticlens>=0.9.0` (`agenticlens.modelfit`) | `tests/test_lens_modelfit.py`; agenticlens `tests/test_modelfit_*.py`, `tests/test_examples_modelfit.py` |
+| 3c version routing and conformance | `ai-operations-spec>=0.5.1` (`specification/v0.4/conformance-rules.json`, `specification/v0.5/compatibility.json`) | `tests/test_spec_conformance.py`; spec `tests/test_conformance_catalogs.py` |
+
+Each dependency degrades rather than breaking boot. With an older agenticlens,
+unattributed findings report `provenance.resolved=false`. With
+`agentic-chaos` 0.5.0 (still exercised by the pinned CI lane), experiments run
+but return `aios_export.available=false`. With a spec checkout that predates
+the catalogs, `conformance.catalog_available=false`, but issues still carry
+their rule IDs.
 
 ## Definition of Done
 
@@ -231,11 +281,12 @@ Success criteria:
 
 ## Phase 3a: AgenticLens Integration
 
-Status: in progress — `lens.analyze_workflow` and the `agenticlens` adapter
-layer shipped in 0.1.3; `lens.report_summary`, `lens.compare_runs`,
+Status: complete in 0.3.3. `lens.analyze_workflow` and the `agenticlens`
+adapter layer shipped in 0.1.3; `lens.report_summary`, `lens.compare_runs`,
 `lens.slo_summary`, and `lens.audit_report` shipped in 0.2.0, each backed by
 real `agenticlens` capability (`MarkdownExporter`, `comparison.runner`,
 `evaluation.gate`, `evaluation.html_report`) rather than reimplemented logic.
+0.3.3 closes the provenance criterion below.
 
 - wire `agenticlens` into the MCP server through adapter functions
 - expose a first analysis-oriented tool surface
@@ -255,17 +306,23 @@ Success criteria:
 
 - a saved workflow artifact can be analyzed through MCP
 - recommendations are returned in a host-friendly schema
-- every finding includes source provenance (step, span, artifact) — not yet
-  verified against `lens.analyze_workflow`'s current response shape
+- ✅ every finding includes source provenance (step, span, artifact) — each
+  recommendation's `provenance` block names the artifact (`workflow_id` when
+  the artifact carries one, plus a canonical-JSON `sha256` digest), the workflow
+  step (`id`, `name`, `type`, `index`, `id_in_artifact`), the evidence span IDs
+  and sources, and the producer. `resolved` is true only when that step and
+  every cited span exist in the artifact. `provenance_summary` counts resolved
+  findings. Upstream, `agenticlens` 0.6.1 makes every default recommender name
+  its step (model swap and chaos impact did not before).
 - the analyzed artifact remains traceable to the AI Operations Specification
   contract
 
-Remaining work: this phase is functionally complete against agenticlens's
-current API surface; provenance verification above is still open.
+No open Phase 3a work remains.
 
 ## Phase 3b: Agentic Chaos Integration
 
-Status: complete, shipped in 0.2.0. `chaos.list_faults` and the
+Status: complete. 0.3.3 closes the two remaining criteria: AIOS conversion
+and the script allow/deny policy. `chaos.list_faults` and the
 `agentic-chaos` adapter layer shipped in 0.1.3; `chaos.run_experiment`
 shipped in 0.2.0, running a workspace-sandboxed target script inside a real
 `chaos_session()` (mirroring the agentic-chaos CLI's `chaos run`), with a
@@ -287,22 +344,29 @@ Success criteria:
 
 - ✅ a target script or workflow can be exercised with selected faults
 - ✅ results can be summarized alongside normal run output
-- chaos results are readable as or convertible to AI Operations Specification
-  artifacts — still open; `chaos.run_experiment`'s output is `ChaosReport`-shaped
-  but not yet run through `spec.validate_artifact`
-- [ ] script-path allow/deny-list for `chaos.run_experiment`, layered on top
-  of the existing workspace-root confinement — an opt-in instance-level
-  allowlist (e.g. `MCP_SERVER_ALLOWED_SCRIPT_GLOBS`) plus a deny-list, modeled
-  on `devops-open-agent`'s layered MCP-server allowlist/whitelist/blacklist
-  pattern; tracked as a prerequisite for widening `chaos.run_experiment`
-  exposure beyond trusted local stdio clients (see Known Limitations)
+- ✅ chaos results are convertible to AI Operations Specification artifacts —
+  `chaos.run_experiment` attaches `aios_run`, a v0.4-draft Run produced by
+  `agentic-chaos`'s own exporter (`>=0.5.1`, so the mapping stays with the
+  producer). The result is validated through the same path as
+  `spec.validate_artifact` (`aios_export.aligned`, rule-cited `issues`).
+  `chaos.export_aios_run` converts a saved or session report without running
+  code, so it is also offered over HTTP.
+- [x] script-path allow/deny-list for `chaos.run_experiment`, layered on top
+  of the existing workspace-root confinement: the opt-in
+  `DEEP_AGENTIC_CORE_MCP_ALLOWED_SCRIPT_GLOBS` allowlist plus
+  `DEEP_AGENTIC_CORE_MCP_DENIED_SCRIPT_GLOBS`. Deny always wins, and
+  `.venv`, `site-packages` and `.git` paths are always denied. `core.health`
+  reports the active policy. The policy narrows what local stdio clients can
+  run. It is not a sandbox, and HTTP still rejects execution (see Known
+  Limitations).
 
 ## Phase 3d: Agentic Sidecar Discovery
 
 Status: complete, included in `0.3.0`. The tools were implemented after the
 `v0.2.0` tag (see the historical [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md)).
-`agentic-sidecar` remains a scaffold upstream, so this phase exposes discovery
-and readiness information rather than a decision runtime.
+Sidecar has an implemented decision runtime and v0.7 local operations APIs.
+This MCP phase exposes installed API discovery/readiness without creating or
+connecting a live task or proxying operator controls.
 
 Goals:
 
@@ -320,13 +384,15 @@ Success criteria:
 
 - `core.verify` and `core.health` report `agentic-sidecar` separately from the
   other siblings
-- MCP clients can distinguish "package importable" from "runtime implemented"
-- the server surfaces current scaffold inventory without reimplementing sidecar
+- MCP clients can distinguish package importability, installed runtime APIs and
+  the absence of a live task/control connection
+- the server surfaces installed module inventory without reimplementing sidecar
   logic locally
 
 ## Phase 3c: AI Operations Specification Conformance
 
-Status: in progress — delivered ahead of where this roadmap had it planned.
+Status: complete in 0.3.3 — the upstream blockers below closed in
+`ai-operations-spec` 0.5.1.
 
 Goals:
 
@@ -343,17 +409,31 @@ Delivered in 0.1.3:
 - a `resources/read` handler returning resource contents
 - an `ai-operations-spec` adapter layer
 
-Remaining work (re-checked during the 0.2.0 pass, still blocked upstream):
+Delivered in 0.3.3 (previously blocked upstream):
 
-- validation coverage beyond the v0.4 draft (versioned/multi-version support)
-  — `ai-operations-spec`'s `v0.1`–`v0.3` directories don't have populated
-  `schemas/` yet, only `v0.4` does, so there's nothing to switch between
-- conformance-style reporting that distinguishes spec-defined pass/fail rules
-  from server-specific presentation, mirroring `agenticlens`'s own
-  conformance direction — no defined conformance-rule format exists upstream
-  to wire against yet
-- resource coverage for additional artifact and schema types as the
-  specification grows
+- ✅ versioned/multi-version support. Schema sets load per `spec_version`
+  marker from the spec's `specification/v0.5/compatibility.json`, and every
+  artifact is validated against the set its own marker names. Following the v0.5
+  consumer rules, an unpublished marker is rejected, never re-validated
+  against a different version. The response's `compatibility` block gives the
+  decision and the cited row (`AIOS-0.5-V01`–`V06`). Today the spec publishes
+  one set (`0.4-draft`). A set published for another marker is reported as
+  `published_unchecked_versions` and its artifacts are rejected until this server
+  implements that version's rules; nothing is ever checked with v0.4 rules by mistake.
+- ✅ conformance-style reporting. `conformance` lists every rule from
+  `specification/v0.4/conformance-rules.json` with `pass` / `fail` /
+  `not_evaluated` / `not_applicable` status, and labels each issue with its
+  rule ID (`AIOS-0.4-P01`–`P12`, `X01`, `U02`, `E01`, ...). Process
+  obligations are never reported as passing. Server presentation (`ok`,
+  `claim`, `schema_errors`, `semantic_errors`, `server`) is kept separate and
+  labeled as such. The semantic checks now also enforce P12 (retry attempt
+  identity and linking) and X01 for Workflow references.
+- ✅ resource coverage. Resources are generated for every loaded schema set,
+  plus `resource://specs/aiops/v0.4/conformance-rules` and
+  `resource://specs/aiops/v0.5/compatibility`.
+
+Future spec milestones (new schema sets, frozen markers) need a newer
+`ai-operations-spec` and an MCP release that adds that version's checker.
 
 ## Phase 4: Unified Workflows
 
@@ -431,9 +511,9 @@ Goals:
   slow call (notably `chaos.run_experiment`) no longer blocks the event loop
   from serving other concurrent clients — a precondition for the Streamable
   HTTP transport added below.
-- **`chaos.run_experiment` has no allowlist beyond workspace-path
-  confinement.** Any script inside the workspace root can still be executed
-  under stdio/local use, and the tool still doesn't authenticate or
+- **`chaos.run_experiment` is not sandboxed.** Workspace confinement plus the
+  `0.3.3` allow/deny glob policy limit *which* scripts run, but not what a
+  script can do once running. The tool still doesn't authenticate or
   authorize the calling client itself (see `SECURITY.md`). The remote-transport
   gate disables this tool by default. Authenticated HTTP dispatch now always
   rejects execution, including with the legacy remote-chaos override enabled.
@@ -477,3 +557,202 @@ Developers contributing to the MCP server should be able to ask:
 
 `Which AI Operations Specification object or artifact does this tool read,
 return, or transform?`
+
+## Access containment and evidence (planned extensions)
+
+Added 2026-10-11. Hosted bearer authentication, key replacement/revocation and
+remote chaos restrictions exist. They do not terminate running agents or revoke
+unrelated downstream credentials.
+
+- [ ] Phase 4: integrate authenticated Tower/Sidecar stop/revoke; enforce access
+      outside the LLM at dispatch, including queued calls, retries and existing
+      sessions after revocation. Define the effective revocation point and limits
+      on cancellation of in-flight calls.
+- [ ] Phase 4: deterministic tool-level authorization/delegated task scopes;
+      reject denied tools regardless of model/client requests. Test cross-user
+      access, direct-call bypass and revoked/expired authority.
+- [ ] Keep an independently authorized operator revocation path after the agent's
+      key is revoked; document local stdio trust separately from hosted HTTP auth.
+- [ ] Phase 3a/6: expose producer policy/action correlation and Lens integrity
+      verification, including failed/unknown status. Schema validity is not
+      cryptographic verification. **Blocked by** `agenticlens`: integrity-protected
+      export/verification is still an open item on its roadmap, so there is no
+      producer API to expose yet. This is a planned safety extension; it is not
+      part of the core Phase 3a scope that `0.3.3` completes (finding provenance
+      is digest-based traceability, not tamper evidence).
+- [ ] Phase 4/6: emit correlated access denials, revocation acknowledgements and
+      dispatch/completion evidence for Tower and containment scoring.
+- [ ] Validate with Chaos/Evals fixtures for revoked keys, denied tools, injected
+      instructions, queued dispatch and incomplete evidence. Preserve the remote
+      arbitrary-chaos execution restriction until sandbox requirements are met.
+
+Shared authority/evidence semantics belong in AI Operations Specification;
+MCP remains the access/composition layer, not a second policy or audit engine.
+
+## Sidecar 0.8 interoperability
+
+MCP server 0.3.5 retains connectivity, discovery and transport ownership.
+Sidecar 0.8 adds a client adapter and a separate-process MCP 2.3.0 gateway example
+with server-side enforcement. This does not enable remote operator bridging
+in this server or expose shared/exclusive configuration through public tools.
+
+Sidecar 0.8 provides Shared/Exclusive context-only, guardrails-only or combined
+configuration, explicit host context delivery and mandatory guardrail composition.
+Exclusive rules cannot weaken shared restrictions. Cross-framework privacy,
+revocation and delegated authority remain v0.9 validation; stable schemas remain
+v1.0. Native correlated Lens readback requires Lens 0.7.1. All sibling packages
+stay optional; no dependency floor is increased without a runtime requirement.
+See the [Sidecar integration contract](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md).
+
+## Tower connector delivered in 0.3.6
+
+The first Phase 4 Control Tower integration ships alongside Tower 0.6.0, which
+combines its Phase 6/6A: twelve local stdio tools over real authenticated HTTP
+queries and incident transitions, separate reader/writer credentials, and a cited
+investigation prompt. Human approval stays in Tower HTTP/CLI. Hosted calls are
+rejected until per-user Tower credentials exist. MCP remains usable without Tower.
+Unified cross-engine workflows and broader Phase 4 features remain planned.
+See [setup](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/main/docs/mcp-connector.md).
+
+## Native Evals contract validation — MCP 0.3.8
+
+Published Evals 0.7.2 report and gate schemas are now enforced in the native
+consumer paths. Validation runs offline using bundled upstream contracts;
+invalid artifacts fail with field-level diagnostics. Native verdicts and
+AIOS conformance remain distinct. See [behavior, examples and migration](docs/evals-report-contract.md).
+
+Agentic Evals 0.7.2 publishes native report (`schema_version: "1.0"`) and
+gate-decision JSON Schemas, with offline `report_schema()` and
+`gate_decision_schema()` accessors. Contract 1.x evolves additively; readers
+should tolerate unknown fields. MCP spec.validate_artifact validates AIOS artifacts, not the native Evals schemas. Dedicated Evals tools and AIOS evaluation evidence export remain future work.
+
+See the [contract, examples and compatibility policy](https://github.com/DeepAgentLabs/agentic-evals/blob/main/docs/report-contract.md). Existing dependency
+ranges remain sufficient; using the new accessors directly requires
+`agentic-evals>=0.7.2`. This documentation alignment needs no sibling patch release.
+
+## AgenticLens 0.8.0 suite management
+
+AgenticLens 0.8.0 delivers its v0.6 milestone: `agenticlens.suites` and
+`agenticlens suite` build regression suites from CSV/JSON imports, production
+traces and user feedback. It masks PII by default before storage (`--no-mask`
+opts out), detects duplicates and
+conflicting labels, adds synthetic variations and stable splits, records
+reviews, and approves suites into immutable, hash-verified versions that CI
+verifies, exports and evaluates. Suites stay plain agentic-evals `TestSuite`
+files.
+
+MCP 0.3.9 adds two read-only, artifact-in/artifact-out tools:
+`lens.suite_from_traces` (draft cases from successful runs, PII masked by
+default, skipped runs with reasons) and `lens.suite_check` (summary,
+duplicates, unmasked-PII locations and the approval checks Lens would run).
+Neither stores anything; approval and the immutable store stay local CLI/API
+operations. Hosted images pin `agenticlens==0.8.0`.
+
+See the [suite management guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.8.0/docs/suite-management.md).
+
+## Evals 0.8.0 CLI interoperability
+
+Evals 0.8.0 CLI JSON reports and gate decisions retain the 0.7.2 wire contract and validate with `evals.validate_artifact`. The bundled upstream 0.7.2 schemas and pinned contract-test dependency remain the compatibility baseline. JUnit and Markdown are presentation formats, not native validator inputs. This release adds no MCP execution tool or runtime dependency.
+
+See [CLI usage and compatibility](docs/evals-0.8-cli.md).
+
+## Chaos 0.7.0 interoperability
+
+Chaos 0.7.0 adds sequential fault cascades, deterministic monotonic breaking-point
+search, synthetic response poisoning (including prompt/tool-response instruction
+and policy-bypass payloads), and explicit-price retry cost estimates. Native
+child event IDs and fault types remain intact; cascade IDs/stages and poisoning
+strategy/payload/seed are additive event detail. Existing report readers and
+AIOS exports remain compatible.
+
+See the [v0.7 guide and offline synthetic example](https://github.com/DeepAgentLabs/agentic-chaos/blob/v0.7.0/docs/v0.7.md).
+The example includes observed synthetic dispatches and a bypassed negative
+control. Injection or recovery alone does not prove containment. No new shared
+schema, automatic adapter, hosted execution capability or containment guarantee
+is introduced.
+
+MCP 0.3.10 pins published images to Chaos 0.7.0. The existing registry discovers poisoned_response; trusted local scripts can use cascade/search APIs. No new MCP tools are added. Hosted HTTP continues to reject chaos.run_experiment.
+
+## Control Tower 0.7.0 fleet operations
+
+Tower 0.7.0 adds frozen environment/capability targeting, bulk desired settings,
+separate approval, durable per-target results and bounded stop/MCP-revocation
+acknowledgement through Python, HTTP and CLI. No fleet atomicity or automatic
+rollback/resume is claimed. Timed-out/requested commands need host reconciliation.
+
+Local MCP 0.3.6 investigation tools remain compatible. Tower 0.7 bulk endpoints are Python/HTTP/CLI-only: MCP exposes no new fleet write or approval tools, and hosted Tower restrictions remain in force.
+
+Existing optional dependency ranges remain sufficient. No sibling runtime or
+native evidence schema changes are required; this documentation alignment needs
+no patch release. See the [operator guide](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/v0.7.0/docs/fleet-operations.md).
+
+See the [local Tower compatibility guide](docs/tower-0.7-fleet-operations.md) for the operator workflow and package boundaries.
+
+## AgenticLens 0.9.0 ModelFit
+
+AgenticLens 0.9.0 delivers its v0.7 milestone: per-task-category model
+recommendations from recorded experiment reports, under hard quality, cost,
+latency, safety, provider and deployment constraints that fail closed, with
+confidence, explanations, alternatives, provider-diverse fallbacks, savings
+tied to the experiment evidence, quality risks and a task-level model matrix.
+
+MCP 0.3.11 adds the read-only, artifact-in/artifact-out `lens.modelfit_recommend`
+tool and pins hosted images to `agenticlens==0.9.0`. Experiment execution and
+runtime routing stay outside MCP; the tool stores nothing.
+
+See the [ModelFit guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.9.0/docs/modelfit.md).
+
+## AgenticLens 0.10.0 routing (MCP 0.3.12)
+
+`lens.routing_decide` explains a route from a supplied ModelFit `report`,
+`request` (`request_id`, `category_id`) and optional routing `policy`. It returns
+constraints, confidence, ranked targets, fallback chain and policy/report hashes.
+It is read-only in **every mode**, including `enforce`: no model invocation,
+callbacks, human approval execution or audit-file writes. `executed` is always
+false. An unrouteable decision stays blocked/escalated in the native result.
+Older Lens installs degrade only this tool with an explicit unavailable error.
+
+```json
+{
+  "report": {"...": "supply the complete ModelFit report"},
+  "request": {"request_id": "opaque-123", "category_id": "orders"},
+  "policy": {"minimum_confidence": "medium"}
+}
+```
+
+Hosted images pin `agenticlens==0.10.0` and retain `agentic-chaos==0.7.0`.
+The workspace source takes precedence over stale copies in sibling virtualenvs.
+See the [Lens routing guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.10.0/docs/routing.md)
+for callback execution and audit boundaries. Sidecar authority, Tower approvals,
+Evals scoring, Chaos faults and AIOS shared schemas remain independently owned.
+
+## Chaos 0.8.0 interoperability
+
+Chaos 0.8.0 adds:
+
+- multi-stage chaos workflows: steps, steady-state health checks, parallel
+  branches, approval gates that can be resumed, and reusable templates
+- declarative YAML/JSON/TOML experiments, with validation that never executes
+  targets and cron schedule previews
+- `Scope` explosion-radius control (steps, providers and exclusions) on every
+  built-in fault and `cascade()`; custom faults get it by calling
+  `BaseFault.__init__`, setting `scope` or overriding `in_scope()`
+- a topology fuzzer that weights fault placement by fan-out
+
+Native event IDs and fault types are unchanged. Workflow provenance
+(`detail.workflow`) and an optional `ChaosReport.workflow` summary are
+additive. A workflow's steps merge into one native report for contracts and
+AIOS export.
+
+See the [v0.8 guide](https://github.com/DeepAgentLabs/agentic-chaos/blob/v0.8.0/docs/v0.8.md)
+and the [offline examples](https://github.com/DeepAgentLabs/agentic-chaos/tree/v0.8.0/examples/workflows).
+Workflow statuses, health checks and fuzz outcomes are resilience evidence.
+They are not scores, release gates or proof of containment. No new shared
+schema, automatic adapter or hosted execution capability is introduced.
+
+MCP 0.3.13 pins the published images to Chaos 0.8.0. `chaos.export_aios_run`
+carries the workflow summary of merged reports in the producer extension, and
+the existing registry discovers faults. Workflows, experiments and fuzzing
+are Python/CLI orchestration, not new MCP tools. Hosted HTTP continues to
+reject `chaos.run_experiment`, so no experiment target is executed by the
+hosted service.

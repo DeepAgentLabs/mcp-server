@@ -26,6 +26,12 @@ def test_tool_registry_has_phase_2_and_3_additions() -> None:
         "lens.compare_runs",
         "lens.slo_summary",
         "lens.audit_report",
+        "lens.diagnose_run",
+        "lens.score_analysis",
+        "lens.suite_from_traces",
+        "lens.suite_check",
+        "lens.modelfit_recommend",
+        "lens.routing_decide",
         "chaos.run_experiment",
         "sidecar.module_inventory",
     } <= names
@@ -33,7 +39,7 @@ def test_tool_registry_has_phase_2_and_3_additions() -> None:
 
 def test_tool_registry_entries_carry_metadata() -> None:
     for tool in list_tools():
-        assert tool["category"] in {"core", "lens", "chaos", "sidecar", "spec"}
+        assert tool["category"] in {"core", "lens", "chaos", "sidecar", "spec", "tower", "evals"}
         assert isinstance(tool["prerequisites"], list)
         assert tool["expected_duration"] in {"instant", "fast", "slow"}
         assert isinstance(tool["mutates_session"], bool)

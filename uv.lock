@@ -9,6 +9,21 @@ resolution-markers = [
 ]
 
 [[package]]
+name = "agentic-evals"
+version = "0.7.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "jsonschema" },
+    { name = "pydantic" },
+    { name = "pyyaml" },
+    { name = "referencing" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b3/cf/dcec72c6b093d6f65f109b50950060eded24630232cfdd004b2a8b542da0/agentic_evals-0.7.2.tar.gz", hash = "sha256:a56f3b407677051d22046dc058c72072cfaeb618e70365b55a8d24d5ead80d4e", size = 302794, upload-time = "2026-10-17T20:42:00.369Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/56/f6/c7d916de24645bc7e641852fe8507ca25bc48980c43786f4b7449c3ce43c/agentic_evals-0.7.2-py3-none-any.whl", hash = "sha256:c1daaf9a71a90d038c17f26659fc9764bea8f69f449e52195ed95d25bd0ef99d", size = 80977, upload-time = "2026-10-17T20:41:58.968Z" },
+]
+
+[[package]]
 name = "annotated-types"
 version = "0.8.0"
 source = { registry = "https://pypi.org/simple" }
@@ -616,7 +631,7 @@ wheels = [
 
 [[package]]
 name = "deep-agentic-core-mcp"
-version = "0.3.0"
+version = "0.3.13"
 source = { editable = "." }
 dependencies = [
     { name = "jsonschema" },
@@ -627,6 +642,7 @@ dependencies = [
 
 [package.optional-dependencies]
 dev = [
+    { name = "agentic-evals" },
     { name = "build" },
     { name = "fakeredis", extra = ["lua"] },
     { name = "httpx" },
@@ -651,6 +667,7 @@ http = [
 
 [package.metadata]
 requires-dist = [
+    { name = "agentic-evals", marker = "extra == 'dev'", specifier = "==0.7.2" },
     { name = "boto3", marker = "extra == 'http'", specifier = ">=1.34,<2" },
     { name = "build", marker = "extra == 'dev'", specifier = ">=1.2" },
     { name = "fakeredis", extras = ["lua"], marker = "extra == 'dev'", specifier = ">=2.23,<3" },

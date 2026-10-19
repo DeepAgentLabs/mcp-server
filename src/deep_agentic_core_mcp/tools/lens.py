@@ -7,8 +7,18 @@ from deep_agentic_core_mcp.adapters.agenticlens import analyze_workflow as adapt
 from deep_agentic_core_mcp.adapters.agenticlens import audit_report as adapter_audit_report
 from deep_agentic_core_mcp.adapters.agenticlens import compare_runs as adapter_compare_runs
 from deep_agentic_core_mcp.adapters.agenticlens import describe_capabilities
+from deep_agentic_core_mcp.adapters.agenticlens import diagnose_run as adapter_diagnose_run
+from deep_agentic_core_mcp.adapters.agenticlens import (
+    modelfit_recommend as adapter_modelfit_recommend,
+)
 from deep_agentic_core_mcp.adapters.agenticlens import report_summary as adapter_report_summary
+from deep_agentic_core_mcp.adapters.agenticlens import routing_decide as adapter_routing_decide
+from deep_agentic_core_mcp.adapters.agenticlens import score_analysis as adapter_score_analysis
 from deep_agentic_core_mcp.adapters.agenticlens import slo_summary as adapter_slo_summary
+from deep_agentic_core_mcp.adapters.agenticlens import suite_check as adapter_suite_check
+from deep_agentic_core_mcp.adapters.agenticlens import (
+    suite_from_traces as adapter_suite_from_traces,
+)
 from deep_agentic_core_mcp.services import session
 
 
@@ -99,7 +109,7 @@ def slo_summary(arguments: dict[str, Any] | None) -> dict[str, Any]:
             "ok": True,
             **adapter_slo_summary(arguments["report"], arguments.get("thresholds")),
         }
-    except AdapterUnavailableError as exc:
+    except (AdapterUnavailableError, ValueError) as exc:
         session.record_call(session_id, "lens.slo_summary", ok=False, note=str(exc))
         return {"ok": False, "error": str(exc)}
     session.record_call(session_id, "lens.slo_summary", ok=True)
@@ -118,8 +128,143 @@ def audit_report(arguments: dict[str, Any] | None) -> dict[str, Any]:
                 arguments["report"], include_html=bool(arguments.get("include_html", False))
             ),
         }
-    except AdapterUnavailableError as exc:
+    except (AdapterUnavailableError, ValueError) as exc:
         session.record_call(session_id, "lens.audit_report", ok=False, note=str(exc))
         return {"ok": False, "error": str(exc)}
     session.record_call(session_id, "lens.audit_report", ok=True)
+    return result
+
+
+def diagnose_run(arguments: dict[str, Any] | None) -> dict[str, Any]:
+    """Diagnose a trace run and attribute its failure to a step and agent."""
+    if not arguments or "run" not in arguments:
+        return {"ok": False, "error": "Missing required 'run' argument"}
+    session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
+    try:
+        result = {
+            "ok": True,
+            **adapter_diagnose_run(
+                arguments["run"],
+                baseline=arguments.get("baseline"),
+                config=arguments.get("config"),
+                budget=arguments.get("budget"),
+                include_narrative=bool(arguments.get("include_narrative", True)),
+            ),
+        }
+    except AdapterUnavailableError as exc:
+        session.record_call(session_id, "lens.diagnose_run", ok=False, note=str(exc))
+        return {"ok": False, "error": str(exc)}
+    except ValueError as exc:
+        session.record_call(session_id, "lens.diagnose_run", ok=False, note=str(exc))
+        return {"ok": False, "error": f"Invalid diagnosis input: {exc}"}
+    session.record_call(session_id, "lens.diagnose_run", ok=True)
+    return result
+
+
+def score_analysis(arguments: dict[str, Any] | None) -> dict[str, Any]:
+    """Split an evaluation report into deterministic and model-based results."""
+    if not arguments or "report" not in arguments:
+        return {"ok": False, "error": "Missing required 'report' argument"}
+    session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
+    try:
+        result = {"ok": True, **adapter_score_analysis(arguments["report"])}
+    except (AdapterUnavailableError, ValueError) as exc:
+        session.record_call(session_id, "lens.score_analysis", ok=False, note=str(exc))
+        return {"ok": False, "error": str(exc)}
+    session.record_call(session_id, "lens.score_analysis", ok=True)
+    return result
+
+
+def suite_from_traces(arguments: dict[str, Any] | None) -> dict[str, Any]:
+    """Convert trace runs into a draft regression suite (PII masked by default)."""
+    arguments = arguments or {}
+    missing = [key for key in ("runs", "name", "version") if key not in arguments]
+    if missing:
+        return {"ok": False, "error": f"Missing required argument(s): {', '.join(missing)}"}
+    session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
+    try:
+        result = {
+            "ok": True,
+            **adapter_suite_from_traces(
+                arguments["runs"],
+                name=arguments["name"],
+                version=arguments["version"],
+                latency_margin=arguments.get("latency_margin", 1.5),
+                cost_margin=arguments.get("cost_margin", 1.5),
+                include_output=bool(arguments.get("include_output", False)),
+                mask=bool(arguments.get("mask", True)),
+                strategy=arguments.get("strategy", "redact"),
+                salt=arguments.get("salt"),
+            ),
+        }
+    except AdapterUnavailableError as exc:
+        session.record_call(session_id, "lens.suite_from_traces", ok=False, note=str(exc))
+        return {"ok": False, "error": str(exc)}
+    except ValueError as exc:
+        session.record_call(session_id, "lens.suite_from_traces", ok=False, note=str(exc))
+        return {"ok": False, "error": f"Invalid suite input: {exc}"}
+    session.record_call(session_id, "lens.suite_from_traces", ok=True)
+    return result
+
+
+def suite_check(arguments: dict[str, Any] | None) -> dict[str, Any]:
+    """Check a suite for duplicates, unmasked PII, and approval readiness."""
+    if not arguments or "suite" not in arguments:
+        return {"ok": False, "error": "Missing required 'suite' argument"}
+    session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
+    try:
+        result = {
+            "ok": True,
+            **adapter_suite_check(arguments["suite"], threshold=arguments.get("threshold", 0.85)),
+        }
+    except AdapterUnavailableError as exc:
+        session.record_call(session_id, "lens.suite_check", ok=False, note=str(exc))
+        return {"ok": False, "error": str(exc)}
+    except ValueError as exc:
+        session.record_call(session_id, "lens.suite_check", ok=False, note=str(exc))
+        return {"ok": False, "error": f"Invalid suite: {exc}"}
+    session.record_call(session_id, "lens.suite_check", ok=True)
+    return result
+
+
+def modelfit_recommend(arguments: dict[str, Any] | None) -> dict[str, Any]:
+    """Recommend a model per task category from experiment reports (read-only)."""
+    if not arguments or "reports" not in arguments:
+        return {"ok": False, "error": "Missing required 'reports' argument"}
+    session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
+    try:
+        result = {
+            "ok": True,
+            **adapter_modelfit_recommend(
+                arguments["reports"],
+                config=arguments.get("config"),
+                variant_metadata=arguments.get("variant_metadata"),
+            ),
+        }
+    except AdapterUnavailableError as exc:
+        session.record_call(session_id, "lens.modelfit_recommend", ok=False, note=str(exc))
+        return {"ok": False, "error": str(exc)}
+    except ValueError as exc:
+        session.record_call(session_id, "lens.modelfit_recommend", ok=False, note=str(exc))
+        return {"ok": False, "error": f"Invalid ModelFit input: {exc}"}
+    session.record_call(session_id, "lens.modelfit_recommend", ok=True)
+    return result
+
+
+def routing_decide(arguments: dict[str, Any] | None) -> dict[str, Any]:
+    """Explain one model routing decision without model calls or persisted artifacts."""
+    if not arguments or "report" not in arguments or "request" not in arguments:
+        return {"ok": False, "error": "Missing required 'report' or 'request' argument"}
+    session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
+    try:
+        result = {
+            "ok": True,
+            **adapter_routing_decide(
+                arguments["report"], arguments["request"], arguments.get("policy")
+            ),
+        }
+    except (AdapterUnavailableError, ValueError) as exc:
+        session.record_call(session_id, "lens.routing_decide", ok=False, note=str(exc))
+        return {"ok": False, "error": str(exc)}
+    session.record_call(session_id, "lens.routing_decide", ok=True)
     return result

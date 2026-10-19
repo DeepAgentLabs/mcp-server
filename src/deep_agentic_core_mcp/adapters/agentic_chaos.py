@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import fnmatch
 import runpy
 import uuid
 from concurrent.futures import ThreadPoolExecutor
@@ -10,6 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from deep_agentic_core_mcp import config
 from deep_agentic_core_mcp.adapters import (
     AdapterUnavailableError,
     ensure_repo_on_path,
@@ -30,6 +32,15 @@ try:
 except Exception as exc:  # noqa: BLE001 - captured for core.verify/core.health reporting
     _IMPORT_ERROR = exc
 
+# AIOS run export ships in agentic-chaos 0.5.1; older installs still run experiments.
+_AIOS_EXPORT_ERROR: Exception | None = None
+try:
+    from agentic_chaos.export.aios import to_aios_run as _to_aios_run
+except Exception as exc:  # noqa: BLE001 - reported per call and by probe()
+    _AIOS_EXPORT_ERROR = exc
+
+AIOS_EXPORT_MIN_VERSION = "0.5.1"
+
 
 def _require_available() -> None:
     if _IMPORT_ERROR is not None:
@@ -41,13 +52,38 @@ def probe() -> dict[str, Any]:
     return {
         "available": _IMPORT_ERROR is None,
         "version": _version,
+        "aios_export": _IMPORT_ERROR is None and _AIOS_EXPORT_ERROR is None,
         "error": None if _IMPORT_ERROR is None else str(_IMPORT_ERROR),
     }
 
 
 def describe_capabilities() -> list[str]:
     """Return the supported chaos integration capabilities."""
-    return ["list_faults", "run_experiment"]
+    return ["list_faults", "run_experiment", "export_aios_run"]
+
+
+def aios_export_available() -> bool:
+    """Whether the installed agentic-chaos can export AIOS run artifacts."""
+    return _IMPORT_ERROR is None and _AIOS_EXPORT_ERROR is None
+
+
+def export_aios_run(
+    report: dict[str, Any],
+    *,
+    status: str = "completed",
+    workflow_id: str | None = None,
+) -> dict[str, Any]:
+    """Convert a ChaosReport-shaped dict into an AIOS v0.4-draft run via agentic-chaos."""
+    _require_available()
+    if _AIOS_EXPORT_ERROR is not None:
+        raise AdapterUnavailableError(
+            "agentic_chaos",
+            RuntimeError(
+                f"AIOS run export requires agentic-chaos>={AIOS_EXPORT_MIN_VERSION} "
+                f"(installed: {_version}): {_AIOS_EXPORT_ERROR}"
+            ),
+        )
+    return _to_aios_run(report, status=status, workflow_id=workflow_id)  # type: ignore[no-any-return]
 
 
 def list_faults() -> dict[str, list[dict[str, Any]]]:
@@ -82,7 +118,28 @@ def _resolve_sandboxed_script(script: str) -> Path:
         raise ValueError(f"script must resolve inside the workspace ({root}): {script}") from exc
     if not candidate.is_file():
         raise ValueError(f"script not found: {candidate}")
+    _enforce_script_policy(candidate.relative_to(root).as_posix())
     return candidate
+
+
+def _enforce_script_policy(relative_path: str) -> None:
+    """Apply the configured allow/deny globs on top of workspace confinement.
+
+    Deny always wins; when an allowlist is configured, the script must match it.
+    """
+    policy = config.script_policy()
+    denied = next(
+        (glob for glob in policy["denied"] if fnmatch.fnmatchcase(relative_path, glob)), None
+    )
+    if denied is not None:
+        raise ValueError(f"script {relative_path} is denied by script policy glob {denied!r}")
+    if policy["allowed"] and not any(
+        fnmatch.fnmatchcase(relative_path, glob) for glob in policy["allowed"]
+    ):
+        raise ValueError(
+            f"script {relative_path} is not in the configured allowlist "
+            f"({config.ALLOWED_SCRIPT_GLOBS_ENV})"
+        )
 
 
 def run_experiment(

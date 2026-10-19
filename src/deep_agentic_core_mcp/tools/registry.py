@@ -2,6 +2,8 @@
 
 from typing import Any
 
+from deep_agentic_core_mcp.tools.tower import tool_definitions
+
 _SESSION_ID_PROPERTY = {
     "session_id": {
         "type": "string",
@@ -25,7 +27,27 @@ def list_tools() -> list[dict[str, Any]]:
     - `mutates_session`: whether the call writes to the in-memory session
       store (`services/session.py`)
     """
-    return [
+    return tool_definitions() + [
+        {
+            "name": "evals.validate_artifact",
+            "title": "Validate Native Evals Artifact",
+            "description": "Validate native evaluation reports or gate decisions against the "
+            "published Evals 1.0 schemas. Structural validation is not AIOS conformance "
+            "and does not compute or pass a release gate.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "artifact": {"type": "object"},
+                    "artifact_type": {"enum": ["evaluation_report", "gate_decision"]},
+                },
+                "required": ["artifact", "artifact_type"],
+                "additionalProperties": False,
+            },
+            "category": "evals",
+            "prerequisites": [],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
         {
             "name": "core.health",
             "title": "Health Check",
@@ -75,7 +97,9 @@ def list_tools() -> list[dict[str, Any]]:
         {
             "name": "lens.analyze_workflow",
             "title": "Analyze Workflow",
-            "description": "Analyze an AgenticLens-compatible workflow artifact.",
+            "description": "Analyze an AgenticLens-compatible workflow artifact. Each "
+            "recommendation carries a `provenance` block (artifact digest, workflow step, "
+            "evidence span IDs, producer) and the response summarizes how many resolve.",
             "input_schema": {
                 "type": "object",
                 "properties": {"artifact": {"type": "object"}, **_SESSION_ID_PROPERTY},
@@ -161,6 +185,178 @@ def list_tools() -> list[dict[str, Any]]:
             "mutates_session": False,
         },
         {
+            "name": "lens.diagnose_run",
+            "title": "Diagnose Run",
+            "description": "Diagnose a trace run: failure taxonomy, faulty step and agent "
+            "with confidence and supporting spans, incident timeline, anomalies against "
+            "optional baseline runs, and an investigation narrative. Needs agenticlens>=0.7.0.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "run": {"type": "object"},
+                    "baseline": {"type": "array", "items": {"type": "object"}},
+                    "config": {"type": "object"},
+                    "budget": {"type": "object"},
+                    "include_narrative": {"type": "boolean"},
+                    **_SESSION_ID_PROPERTY,
+                },
+                "required": ["run"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
+            "name": "lens.score_analysis",
+            "title": "Score Analysis",
+            "description": "Report deterministic and model-based scores separately, judge cost "
+            "(kept apart from agent cost), and evaluator disagreement for an evaluation "
+            "report. Needs agenticlens>=0.7.0.",
+            "input_schema": {
+                "type": "object",
+                "properties": {"report": {"type": "object"}, **_SESSION_ID_PROPERTY},
+                "required": ["report"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
+            "name": "lens.suite_from_traces",
+            "title": "Suite From Traces",
+            "description": "Convert successful trace runs into a draft regression suite: each case "
+            "expects the run's tool trajectory and latency/cost within a margin, is marked "
+            "needs_review, and has PII masked unless 'mask' is false. Failed runs are skipped "
+            "with a reason. Nothing is stored. Needs agenticlens>=0.8.0.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "runs": {"type": "array", "items": {"type": "object"}, "minItems": 1},
+                    "name": {"type": "string", "minLength": 1},
+                    "version": {"type": "string", "minLength": 1},
+                    "latency_margin": {"type": ["number", "null"], "minimum": 1},
+                    "cost_margin": {"type": ["number", "null"], "minimum": 1},
+                    "include_output": {"type": "boolean"},
+                    "mask": {"type": "boolean"},
+                    "strategy": {"type": "string", "enum": ["redact", "hash"]},
+                    "salt": {
+                        "type": "string",
+                        "description": "Salt for 'hash' masking; a random per-call salt is "
+                        "used (and not returned) when omitted.",
+                    },
+                    **_SESSION_ID_PROPERTY,
+                },
+                "required": ["runs", "name", "version"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
+            "name": "lens.suite_check",
+            "title": "Suite Check",
+            "description": "Check a test suite before approval: counts by split, domain, tag, "
+            "source and review status; exact, near and conflicting duplicates; unmasked PII "
+            "(types and locations only); and the approval checks AgenticLens would run. "
+            "Nothing is stored. Needs agenticlens>=0.8.0.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "suite": {"type": "object"},
+                    "threshold": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+                    **_SESSION_ID_PROPERTY,
+                },
+                "required": ["suite"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
+            "name": "lens.modelfit_recommend",
+            "title": "ModelFit Recommend",
+            "description": "Recommend a model per task category from supplied AgenticLens "
+            "experiment reports, under hard quality, cost, latency, safety, provider and "
+            "deployment constraints that fail closed. Returns per-category recommendations "
+            "with confidence, fallbacks, savings against a reference variant and quality "
+            "risks, plus the full ModelFit report and task-level model matrix. No model is "
+            "called and nothing is stored. Needs agenticlens>=0.9.0.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "reports": {
+                        "type": "array",
+                        "items": {"type": "object"},
+                        "minItems": 1,
+                        "description": "Experiment reports (agenticlens experiment run --save).",
+                    },
+                    "config": {
+                        "type": "object",
+                        "description": "ModelFit config: categories, defaults, weights, "
+                        "candidates, reference_variant_id.",
+                    },
+                    "variant_metadata": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "object",
+                            "additionalProperties": {"type": "string"},
+                        },
+                        "description": "Variant ID -> manifest metadata (provider, "
+                        "deployment, capabilities).",
+                    },
+                    **_SESSION_ID_PROPERTY,
+                },
+                "required": ["reports"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
+            "name": "lens.routing_decide",
+            "title": "Routing Decision",
+            "description": "Explain a model route from a saved ModelFit report and routing policy. "
+            "Returns selected targets, fallback chain, confidence, constraint rejections and "
+            "evidence/policy hashes. Read-only in every mode: no model calls, callbacks, "
+            "audit-file writes or approval execution. Needs agenticlens>=0.10.0.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "report": {"type": "object", "description": "ModelFit report JSON."},
+                    "request": {
+                        "type": "object",
+                        "properties": {
+                            "request_id": {"type": "string", "minLength": 1},
+                            "category_id": {"type": "string", "minLength": 1},
+                        },
+                        "required": ["request_id", "category_id"],
+                        "additionalProperties": False,
+                    },
+                    "policy": {
+                        "type": "object",
+                        "description": "Lens RoutingPolicy; default advisory.",
+                    },
+                    **_SESSION_ID_PROPERTY,
+                },
+                "required": ["report", "request"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
             "name": "chaos.list_faults",
             "title": "List Chaos Faults",
             "description": "List the supported fault types for chaos experiments.",
@@ -174,7 +370,9 @@ def list_tools() -> list[dict[str, Any]]:
             "name": "chaos.run_experiment",
             "title": "Run Chaos Experiment",
             "description": "Run a workspace-sandboxed target script under selected chaos "
-            "faults and report the resulting events.",
+            "faults and report the resulting events. The script must also pass the "
+            "configured allow/deny glob policy. With agentic-chaos>=0.5.1 the result "
+            "includes an AI Operations v0.4-draft run artifact and its conformance check.",
             "input_schema": {
                 "type": "object",
                 "properties": {
@@ -184,6 +382,14 @@ def list_tools() -> list[dict[str, Any]]:
                     },
                     "faults": {"type": "array", "items": {"type": "string"}},
                     "timeout_seconds": {"type": "number"},
+                    "export_aios": {
+                        "type": "boolean",
+                        "description": "Attach an AIOS run export (`aios_run`). Defaults to true.",
+                    },
+                    "workflow_id": {
+                        "type": "string",
+                        "description": "External Workflow ID for the export's run-of link.",
+                    },
                     **_SESSION_ID_PROPERTY,
                 },
                 "required": ["script", "faults"],
@@ -195,10 +401,36 @@ def list_tools() -> list[dict[str, Any]]:
             "mutates_session": True,
         },
         {
+            "name": "chaos.export_aios_run",
+            "title": "Export Chaos Report as AIOS Run",
+            "description": "Convert a chaos report into an AI Operations v0.4-draft run "
+            "artifact (via agentic-chaos>=0.5.1) and validate it with rule-cited "
+            "conformance. 'report' may be omitted to reuse the session's last experiment.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "report": {"type": "object"},
+                    "status": {
+                        "type": "string",
+                        "enum": ["created", "running", "completed", "failed", "cancelled"],
+                        "description": "Observed run status; derived from crashed/timed_out "
+                        "when omitted.",
+                    },
+                    "workflow_id": {"type": "string"},
+                    **_SESSION_ID_PROPERTY,
+                },
+                "additionalProperties": False,
+            },
+            "category": "chaos",
+            "prerequisites": ["agentic_chaos", "ai_operations_spec"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
             "name": "sidecar.status",
             "title": "Sidecar Status",
             "description": "Report whether agentic-sidecar is importable and whether "
-            "its decision runtime is actually ready yet.",
+            "its decision runtime APIs are installed; no live task connection is implied.",
             "input_schema": {"type": "object", "properties": {}, "additionalProperties": False},
             "category": "sidecar",
             "prerequisites": ["agentic_sidecar"],
@@ -208,7 +440,7 @@ def list_tools() -> list[dict[str, Any]]:
         {
             "name": "sidecar.module_inventory",
             "title": "Sidecar Module Inventory",
-            "description": "List the current scaffolded modules, framework adapters, "
+            "description": "List installed modules, framework adapter files, "
             "and integration placeholders present in agentic-sidecar.",
             "input_schema": {"type": "object", "properties": {}, "additionalProperties": False},
             "category": "sidecar",
@@ -219,9 +451,9 @@ def list_tools() -> list[dict[str, Any]]:
         {
             "name": "spec.validate_artifact",
             "title": "Validate AI Operations Artifact",
-            "description": (
-                "Validate a workflow or run artifact against the AI Operations v0.4 draft."
-            ),
+            "description": "Validate a workflow or run artifact against the schema set its "
+            "`spec_version` names (v0.5 compatibility rules), returning a conformance report "
+            "that cites AI Operations rule IDs separately from server presentation.",
             "input_schema": {
                 "type": "object",
                 "properties": {"artifact": {"type": "object"}},

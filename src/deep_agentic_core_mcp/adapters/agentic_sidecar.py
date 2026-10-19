@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 from deep_agentic_core_mcp.adapters import AdapterUnavailableError, ensure_repo_on_path
@@ -12,17 +13,51 @@ _package_root: Path | None = None
 _version: str | None = None
 _repo_root: Path | None = None
 
-_CURRENT_STATUS = {
-    "package_status": "scaffold",
-    "release_stage": "pre-alpha",
-    "runtime_ready": False,
-    "summary": (
-        "agentic-sidecar is importable, but its decision runtime is still planned rather "
-        "than implemented."
-    ),
-    "first_runtime_milestone": "v0.1 — Sidecar Runtime, Policy Advisor & Rule-Based Decision Gate",
-    "current_focus": "LangGraph adapter first, deterministic policy/risk Decision Gate.",
-}
+_package: ModuleType | None = None
+
+
+def _runtime_status(package: Any) -> dict[str, Any]:
+    """Inspect public APIs without starting a task, provider or operator server."""
+    sidecar = getattr(package, "Sidecar", None)
+    ready = callable(getattr(sidecar, "evaluate", None))
+    features = []
+    for owner, method, capability in (
+        (sidecar, "evaluate", "decision_evaluation"),
+        (sidecar, "enforce", "governance_enforcement"),
+        (sidecar, "evaluate_plan", "plan_evaluation"),
+        (getattr(package, "TaskRuntime", None), "snapshot", "runtime_events"),
+        (getattr(package, "TaskRuntime", None), "control", "task_controls"),
+        (getattr(package, "EventJournal", None), "export", "durable_audit"),
+    ):
+        if callable(getattr(owner, method, None)):
+            features.append(capability)
+    if callable(getattr(package, "OperatorServer", None)):
+        features.append("local_operator_http")
+    return {
+        "package_status": "implemented" if ready else "scaffold",
+        "release_stage": "pre-alpha",
+        "runtime_ready": ready,
+        "runtime_connected": False,
+        "mcp_runtime_controls": False,
+        "installed_runtime_capabilities": features,
+        "summary": (
+            "Sidecar decision runtime is installed; MCP exposes package discovery only. "
+            "No live task is connected through these tools."
+            if ready
+            else "Package is importable but no decision evaluation API was found."
+        ),
+        "first_runtime_milestone": (
+            "v0.1 — Sidecar Runtime, Policy Advisor & Rule-Based Decision Gate"
+        ),
+        "current_focus": (
+            "Installed local status/audit/operator APIs; MCP runtime bridging remains planned."
+            if "local_operator_http" in features
+            else "Installed deterministic decision supervision."
+            if ready
+            else "No implemented runtime detected."
+        ),
+    }
+
 
 _PLANNED_MODULES = [
     "core",
@@ -30,6 +65,7 @@ _PLANNED_MODULES = [
     "intent",
     "evaluators",
     "status",
+    "operations",
     "adapters",
     "integrations",
     "cli",
@@ -40,6 +76,7 @@ try:
 
     import agentic_sidecar as _agentic_sidecar_pkg
 
+    _package = _agentic_sidecar_pkg
     _package_root = Path(_agentic_sidecar_pkg.__file__).resolve().parent
     _version = _agentic_sidecar_pkg.__version__
 except Exception as exc:  # noqa: BLE001 - captured for core.verify/core.health reporting
@@ -62,10 +99,13 @@ def probe() -> dict[str, Any]:
             "release_stage": None,
             "runtime_ready": False,
             "summary": "agentic-sidecar could not be imported in this environment.",
-            "first_runtime_milestone": _CURRENT_STATUS["first_runtime_milestone"],
+            "first_runtime_milestone": _runtime_status(None)["first_runtime_milestone"],
             "current_focus": None,
+            "runtime_connected": False,
+            "mcp_runtime_controls": False,
+            "installed_runtime_capabilities": [],
         }
-    return {"available": True, "version": _version, "error": None, **_CURRENT_STATUS}
+    return {"available": True, "version": _version, "error": None, **_runtime_status(_package)}
 
 
 def describe_capabilities() -> list[str]:
@@ -79,7 +119,7 @@ def status_summary() -> dict[str, Any]:
     return {
         "package": "agentic-sidecar",
         "version": _version,
-        **_CURRENT_STATUS,
+        **_runtime_status(_package),
     }
 
 
@@ -98,7 +138,7 @@ def _list_python_stems(package_root: Path, subdir: str) -> list[str]:
 
 
 def module_inventory() -> dict[str, Any]:
-    """Return the current scaffold inventory exposed by the sidecar package."""
+    """Return the installed module inventory exposed by the sidecar package."""
     _require_available()
     if _package_root is None:
         raise AdapterUnavailableError("agentic_sidecar", RuntimeError("package root unavailable"))
@@ -107,9 +147,14 @@ def module_inventory() -> dict[str, Any]:
     return {
         "package": "agentic-sidecar",
         "version": _version,
-        "package_status": _CURRENT_STATUS["package_status"],
+        "package_status": _runtime_status(_package)["package_status"],
         "top_level_modules": modules,
         "framework_adapters": _list_python_stems(_package_root, "adapters"),
         "integrations": _list_python_stems(_package_root, "integrations"),
-        "planned_runtime_modules": list(_PLANNED_MODULES),
+        "planned_runtime_modules": [name for name in _PLANNED_MODULES if name not in modules],
+        "installed_runtime_capabilities": _runtime_status(_package)[
+            "installed_runtime_capabilities"
+        ],
+        "runtime_connected": False,
+        "mcp_runtime_controls": False,
     }

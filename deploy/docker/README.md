@@ -11,9 +11,13 @@ python3 scripts/build_container.py --target render --tag deep-agentic-core-mcp:r
 python3 scripts/build_container.py --target workspace --tag deep-agentic-core-mcp:local
 ```
 
-`workspace` is the default and needs sibling `agenticlens` and
-`ai-operations-spec` checkouts. AWS and Render builds use this repository's
-source, published AgenticLens, and pinned schema downloads.
+`workspace` is the default and needs sibling `agenticlens`, `agentic-chaos`
+and `ai-operations-spec` checkouts. AWS and Render builds use this repository's
+source, published `agenticlens==0.10.0` and `agentic-chaos==0.8.0`, and
+checksum-verified `ai-operations-spec` v0.5.1 assets (schemas plus the
+conformance and compatibility catalogs) fetched by `scripts/fetch_schema_assets.py`.
+Agentic Chaos is present only for its AIOS exporter and fault catalog; the HTTP
+server never runs `chaos.run_experiment`.
 
 With BuildKit, direct standalone builds from the repository root also work:
 
