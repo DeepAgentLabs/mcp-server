@@ -19,8 +19,8 @@ interface across the DeepAgentLabs ecosystem.
 | Phase 3b | ✅ Complete | Agentic Chaos integration |
 | Phase 3d | ✅ Implemented | Agentic Sidecar discovery |
 | Phase 3c | ✅ Complete | AI Operations Specification conformance |
-| Phase 4 | 🏗️ In progress | Unified workflows |
-| Phase 5 | 🚧 Planned | Publishing and adoption |
+| Phase 4 | ✅ Complete | Unified workflows |
+| Phase 5 | 🏗️ In progress | Publishing, adoption and hosted access control |
 | Phase 6 | 🚧 Planned | Operational intelligence |
 
 ## Upcoming Work
@@ -33,24 +33,21 @@ Control Tower connector tools.
 
 ### Phase 4 — Unified Workflows
 
-Delivered in `0.4.0`:
+Complete. Delivered in `0.4.0`:
 
 - `core.compare_runs`, a fail-closed `core.release_check`,
   `core.incident_summary` and `core.export_report`
   ([guide](unified-workflows.md)).
 - Local Control Tower connector tools (since `0.3.6`).
 
-Still open:
-
-- Authenticated Tower/Sidecar stop/revoke enforced at dispatch.
-- Deterministic tool-level authorization and delegated task scopes.
-- Correlated access-denial and revocation evidence.
+Access-containment items moved to Phase 5 on 2026-10-19.
 
 ### Phase 5 — Publishing and Adoption
 
-- Verify PyPI packaging.
-- Publish the package and MCP Registry metadata.
-- Add CI for package and registry publishing.
+- ~~PyPI packaging, publishing and MCP Registry metadata with release CI~~ ✅
+- Hosted access control (moved from Phase 4): tool-level permissions per key,
+  revocation re-checked at dispatch, authenticated Tower/Sidecar stop/revoke,
+  correlated denial evidence, and per-user hosted Tower credentials.
 
 ### Phase 6 — Operational Intelligence
 

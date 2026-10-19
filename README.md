@@ -173,7 +173,7 @@ get an "unavailable" error while other Lens tools keep working.
 
 ## Unified workflows (MCP 0.4.0)
 
-`0.4.0` adds the first Phase 4 slice: `core.compare_runs`,
+`0.4.0` completes Phase 4 (Unified Workflows): `core.compare_runs`,
 `core.release_check`, `core.incident_summary` and `core.export_report`, plus the
 `resource://workflows/release-check` resource and a `core.release_check`
 prompt. MCP judges nothing itself: comparisons come from AgenticLens,
@@ -390,14 +390,13 @@ full detail):
 
 - **Sidecar runtime controls**: richer control surfaces require an
   authenticated, task-scoped runtime bridge
-- **Phase 4 (Unified Workflows)** — the unified comparison, release-check,
-  incident-summary and report-export tools ship in `0.4.0`. Authenticated
-  Tower/Sidecar stop/revoke, tool-level authorization and correlated denial
-  evidence remain open
+- **Phase 5 (Publishing and Adoption)** — publishing is automated; next is
+  hosted access control, moved from Phase 4: tool-level permissions per key,
+  revocation at dispatch, authenticated Tower/Sidecar stop/revoke, correlated
+  denial evidence and hosted Tower credentials
 - **Control Tower coordination** — local connector tools ship in 0.3.6 for
   Tower 0.7.0; hosted per-user credential binding remains planned
-- **Phase 5/6** — PyPI + MCP Registry publishing, operational intelligence
-  features
+- **Phase 6** — operational intelligence features
 
 ## Development
 
