@@ -120,8 +120,10 @@ def render_prompt(name: str, arguments: dict[str, str] | None = None) -> str:
     if name == "core.release_check":
         return (
             "Review the unified MCP workflow evidence in session "
-            f"'{arguments.get('session_id', 'default')}'. Use core.release_check, "
-            "then explain every gate as passed or failed. Do not treat missing evidence "
-            "as a passing gate; distinguish observed facts from recommendations."
+            f"'{arguments.get('session_id', 'default')}'. Call core.release_check, then "
+            "explain each gate's status (passed, failed, invalid or missing) and cite its "
+            "reasons and observed values. Missing or invalid evidence blocks the release; "
+            "never describe it as passing. Distinguish observed facts from "
+            "recommendations, and read resource://workflows/release-check for the steps."
         )
     raise KeyError(f"Unknown prompt: {name}")

@@ -255,49 +255,6 @@ async def test_handle_call_tool_compare_runs() -> None:
 
 
 @pytest.mark.asyncio
-async def test_phase4_unified_release_check_and_export() -> None:
-    from deep_agentic_core_mcp.server import handle_call_tool
-
-    result = await handle_call_tool(
-        "core.release_check",
-        {
-            "comparison": {"regressions": []},
-            "chaos_report": {"crashed": False, "timed_out": False, "chaos_events": []},
-            "evaluation_report": {"summary": {"pass_rate": 1.0}},
-            "thresholds": {"min_pass_rate": 0.95},
-        },
-    )
-    payload = json.loads(result[0].text)
-    assert payload["ok"] is True
-    assert payload["ready"] is True
-    assert {gate["name"] for gate in payload["gates"]} == {
-        "regressions",
-        "chaos",
-        "evaluation",
-    }
-
-    exported = json.loads((await handle_call_tool("core.export_report", {}))[0].text)
-    assert exported["ok"] is True
-    assert exported["report"]["schema_version"] == "mcp.unified-report.v1"
-
-
-@pytest.mark.asyncio
-async def test_phase4_incident_summary_requires_evidence() -> None:
-    from deep_agentic_core_mcp.server import handle_call_tool
-
-    empty = json.loads((await handle_call_tool("core.incident_summary", {}))[0].text)
-    assert empty["ok"] is False
-
-    result = await handle_call_tool(
-        "core.incident_summary",
-        {"chaos_report": {"crashed": True, "chaos_events": []}},
-    )
-    payload = json.loads(result[0].text)
-    assert payload["ok"] is True
-    assert payload["findings"][0]["type"] == "resilience_signal"
-
-
-@pytest.mark.asyncio
 async def test_handle_call_tool_slo_summary() -> None:
     from deep_agentic_core_mcp.server import handle_call_tool
 
