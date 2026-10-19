@@ -3,7 +3,7 @@
 
 # Tool Reference
 
-33 tools, generated from `tools/registry.py` - the same data MCP
+34 tools, generated from `tools/registry.py` - the same data MCP
 clients see via `tools/list`. See [README.md](../README.md) for a one-line-per-tool
 overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
@@ -331,6 +331,62 @@ Input schema:
       "description": "Session to read/write shared state under. Defaults to 'default'."
     }
   },
+  "additionalProperties": false
+}
+```
+
+### `lens.routing_decide` — Routing Decision
+
+Explain a model route from a saved ModelFit report and routing policy. Returns selected targets, fallback chain, confidence, constraint rejections and evidence/policy hashes. Read-only in every mode: no model calls, callbacks, audit-file writes or approval execution. Needs agenticlens>=0.10.0.
+
+| | |
+| --- | --- |
+| Category | `lens` |
+| Prerequisites | `agenticlens` |
+| Expected duration | fast |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "report": {
+      "type": "object",
+      "description": "ModelFit report JSON."
+    },
+    "request": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "request_id",
+        "category_id"
+      ],
+      "additionalProperties": false
+    },
+    "policy": {
+      "type": "object",
+      "description": "Lens RoutingPolicy; default advisory."
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session to read/write shared state under. Defaults to 'default'."
+    }
+  },
+  "required": [
+    "report",
+    "request"
+  ],
   "additionalProperties": false
 }
 ```

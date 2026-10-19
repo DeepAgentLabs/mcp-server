@@ -71,6 +71,16 @@ except Exception as exc:  # noqa: BLE001 - reported per tool
     _MODELFIT_ERROR = exc
 
 
+_ROUTING_ERROR: Exception | None = None
+try:
+    from agenticlens.modelfit import ModelFitReport as _ModelFitReport
+    from agenticlens.routing import Router as _Router
+    from agenticlens.routing import RouteRequest as _RouteRequest
+    from agenticlens.routing import RoutingPolicy as _RoutingPolicy
+except Exception as exc:  # noqa: BLE001 - reported per tool
+    _ROUTING_ERROR = exc
+
+
 def _require_available() -> None:
     if _IMPORT_ERROR is not None:
         raise AdapterUnavailableError("agenticlens", _IMPORT_ERROR)
@@ -99,6 +109,7 @@ def describe_capabilities() -> list[str]:
         "suite_from_traces",
         "suite_check",
         "modelfit_recommend",
+        "routing_decide",
     ]
 
 
@@ -464,3 +475,19 @@ def modelfit_recommend(
         "unfit_category_ids": report.summary.unfit_category_ids,
         "modelfit": report.model_dump(mode="json"),
     }
+
+
+def routing_decide(
+    report: dict[str, Any],
+    request: dict[str, Any],
+    policy: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Read-only routing explanation. Never invokes callbacks or writes an audit file."""
+    _require_available()
+    if _ROUTING_ERROR is not None:
+        raise AdapterUnavailableError("agenticlens>=0.10.0 (routing)", _ROUTING_ERROR)
+    router = _Router(
+        _ModelFitReport.model_validate(report), _RoutingPolicy.model_validate(policy or {})
+    )
+    decision = router.decide(_RouteRequest.model_validate(request))
+    return {"decision": decision.model_dump(mode="json"), "executed": False}

@@ -31,6 +31,7 @@ def test_tool_registry_has_phase_2_and_3_additions() -> None:
         "lens.suite_from_traces",
         "lens.suite_check",
         "lens.modelfit_recommend",
+        "lens.routing_decide",
         "chaos.run_experiment",
         "sidecar.module_inventory",
     } <= names

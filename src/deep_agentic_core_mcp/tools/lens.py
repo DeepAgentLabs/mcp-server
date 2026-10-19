@@ -12,6 +12,7 @@ from deep_agentic_core_mcp.adapters.agenticlens import (
     modelfit_recommend as adapter_modelfit_recommend,
 )
 from deep_agentic_core_mcp.adapters.agenticlens import report_summary as adapter_report_summary
+from deep_agentic_core_mcp.adapters.agenticlens import routing_decide as adapter_routing_decide
 from deep_agentic_core_mcp.adapters.agenticlens import score_analysis as adapter_score_analysis
 from deep_agentic_core_mcp.adapters.agenticlens import slo_summary as adapter_slo_summary
 from deep_agentic_core_mcp.adapters.agenticlens import suite_check as adapter_suite_check
@@ -247,4 +248,23 @@ def modelfit_recommend(arguments: dict[str, Any] | None) -> dict[str, Any]:
         session.record_call(session_id, "lens.modelfit_recommend", ok=False, note=str(exc))
         return {"ok": False, "error": f"Invalid ModelFit input: {exc}"}
     session.record_call(session_id, "lens.modelfit_recommend", ok=True)
+    return result
+
+
+def routing_decide(arguments: dict[str, Any] | None) -> dict[str, Any]:
+    """Explain one model routing decision without model calls or persisted artifacts."""
+    if not arguments or "report" not in arguments or "request" not in arguments:
+        return {"ok": False, "error": "Missing required 'report' or 'request' argument"}
+    session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
+    try:
+        result = {
+            "ok": True,
+            **adapter_routing_decide(
+                arguments["report"], arguments["request"], arguments.get("policy")
+            ),
+        }
+    except (AdapterUnavailableError, ValueError) as exc:
+        session.record_call(session_id, "lens.routing_decide", ok=False, note=str(exc))
+        return {"ok": False, "error": str(exc)}
+    session.record_call(session_id, "lens.routing_decide", ok=True)
     return result

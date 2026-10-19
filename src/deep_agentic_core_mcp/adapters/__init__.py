@@ -49,4 +49,8 @@ def ensure_repo_on_path(repo_name: str, *, src: bool = True) -> Path:
         site_packages_str = str(site_packages)
         if site_packages_str not in sys.path:
             sys.path.insert(0, site_packages_str)
+    # The explicit workspace checkout must win over stale copies in sibling venvs.
+    if import_root_str in sys.path:
+        sys.path.remove(import_root_str)
+    sys.path.insert(0, import_root_str)
     return repo_root
