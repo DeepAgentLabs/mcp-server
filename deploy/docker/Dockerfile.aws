@@ -3,7 +3,7 @@ FROM python:3.12-slim
 WORKDIR /app
 COPY pyproject.toml README.md ./
 COPY src ./src
-# Pairs: Lens 0.7.0 (finding provenance, diagnosis, score analysis),
+# Pairs: Lens 0.10.0 (diagnosis, suites, ModelFit, advisory routing),
 # Chaos 0.8.0 (AIOS run export; extension carries call counts and workflow summaries).
 # Chaos is installed for its exporter and fault catalog only; HTTP always
 # rejects chaos.run_experiment, so no target script is ever executed here.
