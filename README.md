@@ -171,7 +171,7 @@ source's `sha256` is the digest of the report's canonical JSON. The tool calls
 no model and stores nothing. It needs `agenticlens>=0.9.0`; older installs
 get an "unavailable" error while other Lens tools keep working.
 
-## MCP Surface (current, `0.3.13`)
+## MCP Surface (current, `0.4.0`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -179,6 +179,12 @@ get an "unavailable" error while other Lens tools keep working.
 - `core.verify` — checks agenticlens/agentic-chaos/agentic-sidecar/ai-operations-spec
   connectivity and reports readiness
 - `core.session_state` — inspect what the active session has accumulated
+- `core.compare_runs` — compare baseline and candidate evidence through the
+  unified MCP surface
+- `core.release_check` — combine comparison, evaluation, and chaos evidence
+  into a deterministic readiness decision
+- `core.incident_summary` — combine incident signals for investigation
+- `core.export_report` — export the evidence accumulated by a workflow session
 - `lens.analyze_workflow` — run AgenticLens recommendations against a
   workflow artifact
 - `lens.report_summary` — render a Markdown workflow report
@@ -362,7 +368,9 @@ full detail):
 
 - **Sidecar runtime controls**: richer control surfaces require an
   authenticated, task-scoped runtime bridge
-- **Phase 4 (Unified Workflows)** — joined observability + chaos workflows,
+- **Phase 4 (Unified Workflows)** — first unified comparison, release-check,
+  incident-summary, and report-export tools are shipped in `0.4.0`; broader
+  joined observability + chaos workflows remain in progress,
   incident/readiness reporting, a higher-level control surface
 - **Control Tower coordination** — local connector tools ship in 0.3.6 for
   Tower 0.6.0; hosted per-user credential binding remains planned

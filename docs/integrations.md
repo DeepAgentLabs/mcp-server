@@ -2,6 +2,13 @@
 
 The MCP Server provides a unified interface over multiple DeepAgentLabs packages.
 
+## Phase 4 unified workflows
+
+The `core.compare_runs`, `core.release_check`, `core.incident_summary`, and
+`core.export_report` tools compose the existing integrations into one workflow.
+They do not replace AgenticLens, Agentic Chaos, Agentic Evals, AI Operations
+Spec, Sidecar, or Control Tower logic.
+
 ## AgenticLens
 
 **Status:** Available

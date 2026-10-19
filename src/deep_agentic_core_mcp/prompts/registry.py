@@ -67,6 +67,13 @@ def list_prompts() -> list[dict[str, Any]]:
                 },
             ],
         },
+        {
+            "name": "core.release_check",
+            "description": "Guide a host through a unified workflow release check.",
+            "arguments": [
+                {"name": "session_id", "description": "Workflow session ID", "required": False}
+            ],
+        },
     ]
 
 
@@ -109,5 +116,12 @@ def render_prompt(name: str, arguments: dict[str, str] | None = None) -> str:
             f"'{arguments.get('faults', 'the configured faults')}' into "
             f"'{arguments.get('script', 'the target script')}', for someone who has not "
             "read the agentic-chaos documentation."
+        )
+    if name == "core.release_check":
+        return (
+            "Review the unified MCP workflow evidence in session "
+            f"'{arguments.get('session_id', 'default')}'. Use core.release_check, "
+            "then explain every gate as passed or failed. Do not treat missing evidence "
+            "as a passing gate; distinguish observed facts from recommendations."
         )
     raise KeyError(f"Unknown prompt: {name}")

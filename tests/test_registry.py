@@ -34,6 +34,10 @@ def test_tool_registry_has_phase_2_and_3_additions() -> None:
         "lens.routing_decide",
         "chaos.run_experiment",
         "sidecar.module_inventory",
+        "core.compare_runs",
+        "core.release_check",
+        "core.incident_summary",
+        "core.export_report",
     } <= names
 
 
@@ -57,6 +61,7 @@ def test_resource_registry_not_empty() -> None:
     assert list_resources()
     uris = {resource["uri"] for resource in list_resources()}
     assert "resource://schemas/aiops/v0.4/workflow" in uris
+    assert "resource://workflows/phase4-release-check" in uris
 
 
 def test_prompt_registry_not_empty() -> None:
@@ -70,6 +75,7 @@ def test_prompt_registry_entries_have_arguments() -> None:
         arg for arg in prompts["chaos.experiment_brief"]["arguments"] if arg["name"] == "faults"
     )
     assert faults_argument["required"] is True
+    assert "core.release_check" in prompts
 
 
 def test_typed_descriptors_build() -> None:

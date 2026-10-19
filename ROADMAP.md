@@ -10,7 +10,7 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.3.13` (2026-10-18) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `0.4.0` (unreleased) — see [CHANGELOG.md](CHANGELOG.md).
 `0.3.13` pins the hosted images to `agentic-chaos` 0.8.0 (workflow summaries in AIOS exports).
 `0.3.12` adds read-only `lens.routing_decide` and pins the hosted images to `agenticlens` 0.10.0.
 `0.3.11` adds `lens.modelfit_recommend` for AgenticLens 0.9.0 (v0.7 ModelFit)
@@ -56,7 +56,8 @@ discovery. The 2026-09-11 audit above describes the earlier `0.2.0` release stat
   `spec.validate_artifact` and schema resources (`0.1.3`); `spec_version`
   routing per the v0.5 compatibility rules, rule-cited conformance reports, and
   catalog resources in `0.3.3`
-- **Phase 4: Unified Workflows** 🚧 Planned
+- **Phase 4: Unified Workflows** 🏗️ In progress — first unified comparison,
+  release-check, incident-summary, and report-export tools shipped in `0.4.0`
 - **Phase 5: Publishing and Adoption** 🚧 Planned
 - **Phase 6: Operational Intelligence** 🚧 Planned
 
@@ -437,6 +438,10 @@ Future spec milestones (new schema sets, frozen markers) need a newer
 
 ## Phase 4: Unified Workflows
 
+Status: in progress for `0.4.0`. The first slice adds unified comparison,
+release checks, incident summaries, and evidence export over existing Lens,
+Chaos, Evals, and session APIs.
+
 Goals:
 
 - combine observability and chaos into joined workflows
@@ -459,6 +464,15 @@ Possible tools:
 - `control_tower.list_agents`
 - `control_tower.list_unhealthy_agents`
 - `control_tower.capability_summary`
+
+Delivered in the first `0.4.0` slice:
+
+- `core.compare_runs`
+- `core.release_check`
+- `core.incident_summary`
+- `core.export_report`
+- `resource://workflows/phase4-release-check`
+- `core.release_check` prompt guidance
 
 Control Tower integration notes:
 

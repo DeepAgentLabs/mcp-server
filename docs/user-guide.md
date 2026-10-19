@@ -202,7 +202,7 @@ Call `core.health`, then `chaos.list_faults` to discover supported faults.
 Call `chaos.run_experiment` with a script path inside the configured workspace,
 selected faults, timeout, and session ID. It executes real code; review
 [SECURITY.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/SECURITY.md). A server-relative path refers to the machine
-[SECURITY.md](../SECURITY.md). To limit which scripts it may run, set
+[SECURITY.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/SECURITY.md). To limit which scripts it may run, set
 `DEEP_AGENTIC_CORE_MCP_ALLOWED_SCRIPT_GLOBS` (for example
 `my-agent/chaos/*.py`) and optionally `DEEP_AGENTIC_CORE_MCP_DENIED_SCRIPT_GLOBS`
 in the server's environment. Deny wins, and `.venv`, `site-packages` and `.git`
