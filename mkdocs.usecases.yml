@@ -1,0 +1,14 @@
+INHERIT: mkdocs.yml
+
+site_name: DeepAgentLabs MCP Server Use Cases
+site_url: https://deepagentlabs.io/deep-agentic-core-mcp/usecases/
+edit_uri: https://github.com/DeepAgentLabs/mcp-server/edit/main/usecases/
+docs_dir: usecases
+
+nav:
+  - Overview: index.md
+  - Use Case 1: use-case-1.md
+  - Use Case 2: use-case-2.md
+  - Use Case 3: use-case-3.md
+  - Back to docs: https://deepagentlabs.io/deep-agentic-core-mcp/docs/
+  - Back to MCP Server: https://deepagentlabs.io/deep-agentic-core-mcp/
