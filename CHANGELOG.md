@@ -6,6 +6,25 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.12 - 2026-10-18
+
+Pairs with AgenticLens 0.10.0 (roadmap v0.8 advisory runtime routing).
+
+### Added
+
+- Read-only `lens.routing_decide`: selection explanations, fallback chains,
+  constraint rejections, confidence, policy/report hashes from saved ModelFit
+  evidence. Never executes model callbacks or writes a routing audit file.
+- Graceful per-tool unavailability with older Lens and routing boundary tests.
+
+### Fixed
+
+- Workspace checkout imports now precede stale sibling virtualenv installations.
+
+### Changed
+
+- Hosted AWS/Render images pin `agenticlens==0.10.0`; Chaos stays at 0.7.0.
+
 ## 0.3.11 - 2026-10-18
 
 Pairs with `agenticlens` 0.9.0 (v0.7 ModelFit).
