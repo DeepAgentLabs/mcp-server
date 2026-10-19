@@ -11,7 +11,7 @@ overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
 ### `core.compare_runs` — Unified Run Comparison
 
-Compare baseline and candidate runs through the unified MCP surface.
+Compare baseline and candidate trace runs for regressions, storing the comparison for core.release_check. Same behavior as lens.compare_runs.
 
 | | |
 | --- | --- |
@@ -52,7 +52,7 @@ Input schema:
 
 ### `core.export_report` — Export Unified Report
 
-Export the evidence accumulated by a unified workflow session.
+Export the session's workflow, analysis, comparison, chaos, release-check and incident evidence as one MCP-local JSON envelope (mcp.unified-report.v1; not an AIOS artifact).
 
 | | |
 | --- | --- |
@@ -99,7 +99,7 @@ Input schema:
 
 ### `core.incident_summary` — Unified Incident Summary
 
-Combine workflow, comparison, chaos, and evaluation evidence for investigation.
+Collect regressions, chaos crashes or timeouts, failed evaluation cases and blocked release gates from supplied or session evidence for investigation. Reports no_signals when nothing failed.
 
 | | |
 | --- | --- |
@@ -134,12 +134,12 @@ Input schema:
 
 ### `core.release_check` — Unified Release Check
 
-Combine comparison, evaluation, and chaos evidence into a deterministic readiness decision.
+Decide release readiness from a Lens comparison, an Evals report (judged by the Evals release gate) and a chaos.run_experiment report. Fails closed: required evidence that is missing, malformed or from a failed call blocks readiness. Comparison and chaos evidence default to this session.
 
 | | |
 | --- | --- |
 | Category | `core` |
-| Prerequisites | none |
+| Prerequisites | `agenticlens` |
 | Expected duration | fast |
 | Mutates session | yes |
 
@@ -150,16 +150,34 @@ Input schema:
   "type": "object",
   "properties": {
     "comparison": {
-      "type": "object"
+      "type": "object",
+      "description": "A lens/core.compare_runs result. Defaults to the session's last comparison."
     },
     "evaluation_report": {
-      "type": "object"
+      "type": "object",
+      "description": "A native Agentic Evals evaluation report."
     },
     "chaos_report": {
-      "type": "object"
+      "type": "object",
+      "description": "A chaos.run_experiment result. Defaults to the session's last chaos report."
     },
     "thresholds": {
-      "type": "object"
+      "type": "object",
+      "description": "Evals GateConfig fields (for example min_pass_rate, max_failed_cases). Unknown keys are rejected. The Evals default requires every case to pass."
+    },
+    "required_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "comparison",
+          "evaluation",
+          "chaos"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "Evidence kinds that must be present. Defaults to all three."
     },
     "session_id": {
       "type": "string",
