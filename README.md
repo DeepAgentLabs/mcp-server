@@ -171,6 +171,25 @@ source's `sha256` is the digest of the report's canonical JSON. The tool calls
 no model and stores nothing. It needs `agenticlens>=0.9.0`; older installs
 get an "unavailable" error while other Lens tools keep working.
 
+## Unified workflows (MCP 0.4.0)
+
+`0.4.0` adds the first Phase 4 slice: `core.compare_runs`,
+`core.release_check`, `core.incident_summary` and `core.export_report`, plus the
+`resource://workflows/release-check` resource and a `core.release_check`
+prompt. MCP judges nothing itself: comparisons come from AgenticLens,
+evaluation reports go through the Agentic Evals release gate (every
+`GateConfig` threshold, strict by default, unknown keys rejected), and chaos
+evidence must be a `chaos.run_experiment` report.
+
+The release check fails closed. Each gate is `passed`, `failed`, `invalid` or
+`missing`, and `ready` is true only when all of them pass; by default the
+comparison, evaluation and chaos evidence are all required
+(`required_evidence` narrows that). Hosted HTTP supports all four tools; pass a
+locally produced `chaos_report` because hosted chaos execution stays disabled.
+The exported report is MCP-local, not an AIOS artifact. No sibling release or
+dependency floor changes. See the [unified workflows guide](docs/unified-workflows.md)
+and [`examples/unified_release_check.py`](examples/unified_release_check.py).
+
 ## MCP Surface (current, `0.4.0`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
@@ -179,12 +198,15 @@ get an "unavailable" error while other Lens tools keep working.
 - `core.verify` — checks agenticlens/agentic-chaos/agentic-sidecar/ai-operations-spec
   connectivity and reports readiness
 - `core.session_state` — inspect what the active session has accumulated
-- `core.compare_runs` — compare baseline and candidate evidence through the
-  unified MCP surface
-- `core.release_check` — combine comparison, evaluation, and chaos evidence
-  into a deterministic readiness decision
-- `core.incident_summary` — combine incident signals for investigation
-- `core.export_report` — export the evidence accumulated by a workflow session
+- `core.compare_runs` — Lens baseline/candidate comparison stored for the
+  release check (same behavior as `lens.compare_runs`)
+- `core.release_check` — fail-closed readiness from a Lens comparison, an Evals
+  report judged by the Evals gate, and a chaos report; missing, malformed or
+  failed-call evidence blocks the release
+- `core.incident_summary` — regressions, chaos crashes/timeouts, failed cases
+  and blocked gates; `no_signals` when nothing failed
+- `core.export_report` — the session's evidence as one MCP-local
+  `mcp.unified-report.v1` envelope (not an AIOS artifact)
 - `lens.analyze_workflow` — run AgenticLens recommendations against a
   workflow artifact
 - `lens.report_summary` — render a Markdown workflow report
@@ -368,10 +390,10 @@ full detail):
 
 - **Sidecar runtime controls**: richer control surfaces require an
   authenticated, task-scoped runtime bridge
-- **Phase 4 (Unified Workflows)** — first unified comparison, release-check,
-  incident-summary, and report-export tools are shipped in `0.4.0`; broader
-  joined observability + chaos workflows remain in progress,
-  incident/readiness reporting, a higher-level control surface
+- **Phase 4 (Unified Workflows)** — the unified comparison, release-check,
+  incident-summary and report-export tools ship in `0.4.0`. Authenticated
+  Tower/Sidecar stop/revoke, tool-level authorization and correlated denial
+  evidence remain open
 - **Control Tower coordination** — local connector tools ship in 0.3.6 for
   Tower 0.7.0; hosted per-user credential binding remains planned
 - **Phase 5/6** — PyPI + MCP Registry publishing, operational intelligence
