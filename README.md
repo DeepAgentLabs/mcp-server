@@ -136,7 +136,7 @@ and `chaos.export_aios_run` behave the same hosted as locally. Only
 
 Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
-pin `agenticlens==0.10.0` and `agentic-chaos==0.7.0` (since MCP 0.3.12).
+pin `agenticlens==0.10.0` and `agentic-chaos==0.8.0` (since MCP 0.3.13).
 
 ## AgenticLens 0.8.0 suite tools (MCP 0.3.9)
 
@@ -171,7 +171,7 @@ source's `sha256` is the digest of the report's canonical JSON. The tool calls
 no model and stores nothing. It needs `agenticlens>=0.9.0`; older installs
 get an "unavailable" error while other Lens tools keep working.
 
-## MCP Surface (current, `0.3.12`)
+## MCP Surface (current, `0.3.13`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
