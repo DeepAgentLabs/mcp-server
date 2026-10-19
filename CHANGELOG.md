@@ -6,6 +6,22 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.14 - 2026-10-19
+
+Pairs with Agentic Evals 0.9.0 (roadmap v0.9 judge reliability, cost and
+live-target resilience).
+
+### Changed
+
+- Re-sync the bundled native Evals report and gate schemas from
+  `agentic-evals==0.9.0`, so `evals.validate_artifact` and the Lens report tools
+  enforce the new optional judge summary, live-target summary and per-case
+  `target_status` fields. Reports from Evals 0.7.2 to 0.8.0 still validate.
+- Pin the published AWS/Render images to `agentic-evals==0.9.0` alongside
+  Lens 0.10.0 and Chaos 0.8.0. No MCP tool is added or changed.
+- Document Evals 0.9.0 validation: structural only, with no gate
+  recomputation, and an unavailable judgment never treated as a pass.
+
 ## 0.3.13 - 2026-10-18
 
 Pairs with Agentic Chaos 0.8.0 (roadmap v0.8 workflows, declarative
