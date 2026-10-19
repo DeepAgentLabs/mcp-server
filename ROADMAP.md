@@ -10,8 +10,8 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.4.0` — see [CHANGELOG.md](CHANGELOG.md). It ships the
-first Phase 4 slice: `core.compare_runs`, a fail-closed `core.release_check`
+Release version: `0.4.0` — see [CHANGELOG.md](CHANGELOG.md). It completes
+Phase 4: `core.compare_runs`, a fail-closed `core.release_check`
 over Lens, Evals and Chaos evidence, `core.incident_summary` and
 `core.export_report` ([guide](docs/unified-workflows.md)). Hosted image pins and
 sibling dependency ranges are unchanged.
@@ -61,10 +61,13 @@ discovery. The 2026-09-11 audit above describes the earlier `0.2.0` release stat
   `spec.validate_artifact` and schema resources (`0.1.3`); `spec_version`
   routing per the v0.5 compatibility rules, rule-cited conformance reports, and
   catalog resources in `0.3.3`
-- **Phase 4: Unified Workflows** 🏗️ In progress — unified comparison,
-  fail-closed release-check, incident-summary and report-export tools shipped
-  in `0.4.0`; local Tower connector since `0.3.6`; access-containment items open
-- **Phase 5: Publishing and Adoption** 🚧 Planned
+- **Phase 4: Unified Workflows** ✅ Complete — unified comparison,
+  fail-closed release-check, incident-summary and report-export tools in
+  `0.4.0`; local Tower connector since `0.3.6`
+- **Phase 5: Publishing and Adoption** 🏗️ In progress — PyPI, GitHub Release,
+  MCP Registry and AWS release automation are in place; hosted access control
+  (tool-level permissions, revocation at dispatch, denial evidence, hosted Tower
+  credentials) moved here from Phase 4 on 2026-10-19
 - **Phase 6: Operational Intelligence** 🚧 Planned
 
 ## Local and Hosted Delivery Status
@@ -93,7 +96,7 @@ hosted, except chaos execution, which stays local-only.
   verified successfully on 2026-10-04. Starting with `0.3.0`, AWS deployment
   follows successful PyPI publication in the version-tag release workflow.
   Pushes/merges to `main` and manual CI checks do not deploy AWS.
-- **Remaining delivery work:** continue Phase 5 registry/adoption work, and
+- **Remaining delivery work:** Phase 5 hosted access control and adoption work,
   improve release rollback and hosted operational coverage. Keep package and
   hosted deployment versions aligned through the shared release tag.
 
@@ -444,11 +447,12 @@ Future spec milestones (new schema sets, frozen markers) need a newer
 
 ## Phase 4: Unified Workflows
 
-Status: in progress. `0.4.0` ships the unified-workflow slice over existing
+Status: ✅ complete as of `0.4.0`. The unified workflows compose existing
 Lens, Evals, Chaos and session APIs, and the local Control Tower connector has
-shipped since `0.3.6`. The access-containment items under "Operational safety
-roadmap" (authenticated stop/revoke, tool-level authorization, correlated
-denial evidence) remain open.
+shipped since `0.3.6`. The access-containment items (authenticated
+stop/revoke, tool-level authorization, correlated denial evidence) were moved
+to Phase 5 on 2026-10-19: they protect hosted users rather than add workflows,
+and they depend on spec, Sidecar and Tower work first.
 
 Goals:
 
@@ -502,13 +506,28 @@ Control Tower integration notes:
 
 ## Phase 5: Publishing and Adoption
 
-Goals:
+Status: in progress.
 
-- verify PyPI packaging
-- publish to PyPI
-- authenticate with the MCP Registry
-- publish `server.json`
-- add CI for package build and registry publishing
+Publishing goals (in place):
+
+- ~~verify PyPI packaging~~ ✅
+- ~~publish to PyPI~~ ✅ version-tag releases
+- ~~authenticate with the MCP Registry~~ ✅
+- ~~publish `server.json`~~ ✅
+- ~~add CI for package build and registry publishing~~ ✅ `release-pypi.yml`
+
+Hosted access control (moved from Phase 4; see
+[Access containment and evidence](#access-containment-and-evidence-planned-extensions)):
+
+- tool-level permissions per hosted key (allow/deny lists, optional task
+  scope and expiry), enforced in `handle_call_tool`, configurable first through
+  the key-store configuration and then in the hosted user store
+- revocation and permissions re-checked at dispatch, covering queued calls,
+  retries and existing sessions; in-flight calls are not cancelled
+- correlated access-denial, revocation-acknowledgement and dispatch/completion
+  evidence for Tower, in a format defined by `ai-operations-spec` first
+- authenticated Tower/Sidecar stop/revoke and an independent operator path
+- per-user Tower credentials so hosted MCP can serve `tower.*` tools
 
 ## Phase 6: Operational Intelligence
 
@@ -591,15 +610,15 @@ return, or transform?`
 
 ## Access containment and evidence (planned extensions)
 
-Added 2026-10-11. Hosted bearer authentication, key replacement/revocation and
+Added 2026-10-11; moved from Phase 4 to Phase 5 on 2026-10-19. Hosted bearer authentication, key replacement/revocation and
 remote chaos restrictions exist. They do not terminate running agents or revoke
 unrelated downstream credentials.
 
-- [ ] Phase 4: integrate authenticated Tower/Sidecar stop/revoke; enforce access
+- [ ] Phase 5: integrate authenticated Tower/Sidecar stop/revoke; enforce access
       outside the LLM at dispatch, including queued calls, retries and existing
       sessions after revocation. Define the effective revocation point and limits
       on cancellation of in-flight calls.
-- [ ] Phase 4: deterministic tool-level authorization/delegated task scopes;
+- [ ] Phase 5: deterministic tool-level authorization/delegated task scopes;
       reject denied tools regardless of model/client requests. Test cross-user
       access, direct-call bypass and revoked/expired authority.
 - [ ] Keep an independently authorized operator revocation path after the agent's
@@ -611,7 +630,7 @@ unrelated downstream credentials.
       producer API to expose yet. This is a planned safety extension; it is not
       part of the core Phase 3a scope that `0.3.3` completes (finding provenance
       is digest-based traceability, not tamper evidence).
-- [ ] Phase 4/6: emit correlated access denials, revocation acknowledgements and
+- [ ] Phase 5/6: emit correlated access denials, revocation acknowledgements and
       dispatch/completion evidence for Tower and containment scoring.
 - [ ] Validate with Chaos/Evals fixtures for revoked keys, denied tools, injected
       instructions, queued dispatch and incomplete evidence. Preserve the remote
@@ -642,8 +661,8 @@ combines its Phase 6/6A: twelve local stdio tools over real authenticated HTTP
 queries and incident transitions, separate reader/writer credentials, and a cited
 investigation prompt. Human approval stays in Tower HTTP/CLI. Hosted calls are
 rejected until per-user Tower credentials exist. MCP remains usable without Tower.
-Unified cross-engine workflows shipped in `0.4.0`; access-containment Phase 4
-items remain planned.
+Unified cross-engine workflows shipped in `0.4.0`, completing Phase 4. Hosted
+Tower credentials and access containment are Phase 5 work.
 See [setup](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/main/docs/mcp-connector.md).
 
 ## Native Evals contract validation — MCP 0.3.8
