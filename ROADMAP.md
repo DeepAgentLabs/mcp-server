@@ -10,7 +10,7 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.3.11` (2026-10-18) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `0.3.12` (2026-10-18) — see [CHANGELOG.md](CHANGELOG.md).
 `0.3.11` adds `lens.modelfit_recommend` for AgenticLens 0.9.0 (v0.7 ModelFit)
 and pins the hosted images to `agenticlens` 0.9.0.
 `0.3.10` pins the hosted images to `agentic-chaos` 0.7.0.
@@ -69,7 +69,7 @@ hashes in DynamoDB. Remote chaos execution remains disabled.
 As of 2026-10-04, the hosted service is running at
 `https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
 Transport/signup and Sidecar discovery are included in the `0.3.0` release.
-Since `0.3.11` the hosted image installs `agenticlens` 0.9.0, `agentic-chaos`
+Since `0.3.12` the hosted image installs `agenticlens` 0.10.0, `agentic-chaos`
 0.7.0, and the `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a
 pinned commit and checksum-verified. (`0.3.9`–`0.3.10` installed Lens 0.8.0; `0.3.7`–`0.3.8` installed Lens 0.7.0; `0.3.5`–`0.3.6` installed Chaos 0.5.3;
 `0.3.4` installed Lens 0.6.1 and Chaos 0.5.1.) Chaos is installed only for its exporter and fault catalog; HTTP still
@@ -699,3 +699,27 @@ tool and pins hosted images to `agenticlens==0.9.0`. Experiment execution and
 runtime routing stay outside MCP; the tool stores nothing.
 
 See the [ModelFit guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.9.0/docs/modelfit.md).
+
+## AgenticLens 0.10.0 routing (MCP 0.3.12)
+
+`lens.routing_decide` explains a route from a supplied ModelFit `report`,
+`request` (`request_id`, `category_id`) and optional routing `policy`. It returns
+constraints, confidence, ranked targets, fallback chain and policy/report hashes.
+It is read-only in **every mode**, including `enforce`: no model invocation,
+callbacks, human approval execution or audit-file writes. `executed` is always
+false. An unrouteable decision stays blocked/escalated in the native result.
+Older Lens installs degrade only this tool with an explicit unavailable error.
+
+```json
+{
+  "report": {"...": "supply the complete ModelFit report"},
+  "request": {"request_id": "opaque-123", "category_id": "orders"},
+  "policy": {"minimum_confidence": "medium"}
+}
+```
+
+Hosted images pin `agenticlens==0.10.0` and retain `agentic-chaos==0.7.0`.
+The workspace source takes precedence over stale copies in sibling virtualenvs.
+See the [Lens routing guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.10.0/docs/routing.md)
+for callback execution and audit boundaries. Sidecar authority, Tower approvals,
+Evals scoring, Chaos faults and AIOS shared schemas remain independently owned.
