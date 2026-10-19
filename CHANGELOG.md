@@ -6,6 +6,20 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.3.13 - 2026-10-18
+
+Pairs with Agentic Chaos 0.8.0 (roadmap v0.8 workflows, declarative
+experiments and explosion radius).
+
+### Changed
+
+- Pin the published AWS/Render images to Chaos 0.8.0. Existing MCP tool
+  boundaries are unchanged.
+- `chaos.export_aios_run` passes through the workflow summary that Chaos 0.8
+  adds to merged workflow reports. No new MCP tool is added.
+- Document Chaos 0.8 workflow evidence and its limits. Hosted HTTP still
+  rejects `chaos.run_experiment`.
+
 ## 0.3.12 - 2026-10-18
 
 Pairs with AgenticLens 0.10.0 (roadmap v0.8 advisory runtime routing).

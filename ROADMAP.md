@@ -10,7 +10,9 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.3.12` (2026-10-18) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `0.3.13` (2026-10-18) — see [CHANGELOG.md](CHANGELOG.md).
+`0.3.13` pins the hosted images to `agentic-chaos` 0.8.0 (workflow summaries in AIOS exports).
+`0.3.12` adds read-only `lens.routing_decide` and pins the hosted images to `agenticlens` 0.10.0.
 `0.3.11` adds `lens.modelfit_recommend` for AgenticLens 0.9.0 (v0.7 ModelFit)
 and pins the hosted images to `agenticlens` 0.9.0.
 `0.3.10` pins the hosted images to `agentic-chaos` 0.7.0.
@@ -69,9 +71,9 @@ hashes in DynamoDB. Remote chaos execution remains disabled.
 As of 2026-10-04, the hosted service is running at
 `https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
 Transport/signup and Sidecar discovery are included in the `0.3.0` release.
-Since `0.3.12` the hosted image installs `agenticlens` 0.10.0, `agentic-chaos`
-0.7.0, and the `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a
-pinned commit and checksum-verified. (`0.3.9`–`0.3.10` installed Lens 0.8.0; `0.3.7`–`0.3.8` installed Lens 0.7.0; `0.3.5`–`0.3.6` installed Chaos 0.5.3;
+Since `0.3.13` the hosted image installs `agenticlens` 0.10.0, `agentic-chaos`
+0.8.0, and the `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a
+pinned commit and checksum-verified. (`0.3.12` installed Chaos 0.7.0; `0.3.9`–`0.3.10` installed Lens 0.8.0; `0.3.7`–`0.3.8` installed Lens 0.7.0; `0.3.5`–`0.3.6` installed Chaos 0.5.3;
 `0.3.4` installed Lens 0.6.1 and Chaos 0.5.1.) Chaos is installed only for its exporter and fault catalog; HTTP still
 rejects `chaos.run_experiment`. `tests/test_hosted_image.py` keeps these pins in step with
 the adapters. All Phase 3 features are therefore available both locally and
@@ -723,3 +725,34 @@ The workspace source takes precedence over stale copies in sibling virtualenvs.
 See the [Lens routing guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.10.0/docs/routing.md)
 for callback execution and audit boundaries. Sidecar authority, Tower approvals,
 Evals scoring, Chaos faults and AIOS shared schemas remain independently owned.
+
+## Chaos 0.8.0 interoperability
+
+Chaos 0.8.0 adds:
+
+- multi-stage chaos workflows: steps, steady-state health checks, parallel
+  branches, approval gates that can be resumed, and reusable templates
+- declarative YAML/JSON/TOML experiments, with validation that never executes
+  targets and cron schedule previews
+- `Scope` explosion-radius control (steps, providers and exclusions) on every
+  built-in fault and `cascade()`; custom faults get it by calling
+  `BaseFault.__init__`, setting `scope` or overriding `in_scope()`
+- a topology fuzzer that weights fault placement by fan-out
+
+Native event IDs and fault types are unchanged. Workflow provenance
+(`detail.workflow`) and an optional `ChaosReport.workflow` summary are
+additive. A workflow's steps merge into one native report for contracts and
+AIOS export.
+
+See the [v0.8 guide](https://github.com/DeepAgentLabs/agentic-chaos/blob/v0.8.0/docs/v0.8.md)
+and the [offline examples](https://github.com/DeepAgentLabs/agentic-chaos/tree/v0.8.0/examples/workflows).
+Workflow statuses, health checks and fuzz outcomes are resilience evidence.
+They are not scores, release gates or proof of containment. No new shared
+schema, automatic adapter or hosted execution capability is introduced.
+
+MCP 0.3.13 pins the published images to Chaos 0.8.0. `chaos.export_aios_run`
+carries the workflow summary of merged reports in the producer extension, and
+the existing registry discovers faults. Workflows, experiments and fuzzing
+are Python/CLI orchestration, not new MCP tools. Hosted HTTP continues to
+reject `chaos.run_experiment`, so no experiment target is executed by the
+hosted service.
