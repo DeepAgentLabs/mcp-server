@@ -9,8 +9,9 @@ nothing themselves:
   path as `lens.slo_summary`
 - chaos evidence must be a `chaos.run_experiment` result from Agentic Chaos
 
-This is the first Phase 4 slice. Authenticated stop/revoke, tool-level
-authorization and correlated denial evidence remain open Phase 4 work; see
+These tools complete Phase 4. Authenticated stop/revoke, tool-level
+authorization and correlated denial evidence are Phase 5 hosted access-control
+work; see
 [ROADMAP.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/ROADMAP.md).
 
 ## Tools

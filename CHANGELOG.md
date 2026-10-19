@@ -6,6 +6,14 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Roadmap only, decided after the 0.4.0 release: Phase 4 (Unified Workflows) is
+  now complete as of 0.4.0, which its release notes below still call the first
+  slice. The access-containment items (tool-level permissions, revocation at
+  dispatch, stop/revoke, denial evidence, hosted Tower credentials) move to
+  Phase 5.
+
 ## 0.4.0 - 2026-10-19
 
 First Phase 4 (Unified Workflows) slice. No sibling release, dependency range
