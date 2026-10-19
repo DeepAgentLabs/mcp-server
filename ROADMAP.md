@@ -10,7 +10,9 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.3.12` (2026-10-18) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `0.3.13` (2026-10-18) — see [CHANGELOG.md](CHANGELOG.md).
+`0.3.13` pins the hosted images to `agentic-chaos` 0.8.0 (workflow summaries in AIOS exports).
+`0.3.12` adds read-only `lens.routing_decide` and pins the hosted images to `agenticlens` 0.10.0.
 `0.3.11` adds `lens.modelfit_recommend` for AgenticLens 0.9.0 (v0.7 ModelFit)
 and pins the hosted images to `agenticlens` 0.9.0.
 `0.3.10` pins the hosted images to `agentic-chaos` 0.7.0.
