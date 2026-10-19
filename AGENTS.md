@@ -40,9 +40,14 @@ ecosystem through a unified interface for hosts, agents, and external systems.
 ### Current Roadmap Focus
 
 Phase 3 (lens provenance, chaos AIOS export and script policy, spec_version
-routing and rule-cited conformance) is complete as of `0.3.3`. The next major
-work is Phase 4: unified observability-plus-chaos workflows and the first
-Control Tower connector. Changes here should strengthen composition and interoperability, not
+routing and rule-cited conformance) is complete as of `0.3.3`. Phase 4 is in
+progress: the local Control Tower connector shipped in `0.3.6` and the unified
+`core.*` workflow tools (fail-closed release check, incident summary, report
+export) in `0.4.0`. Remaining Phase 4 work is access containment:
+authenticated stop/revoke, tool-level authorization and correlated denial
+evidence. Unified tools must stay compositions: delegate judgement to the
+sibling that owns it (Evals gate, Lens comparison, Chaos report) and fail
+closed on missing or invalid evidence. Changes here should strengthen composition and interoperability, not
 duplicate implementation logic from sibling repos.
 
 ### Before You Build Here
