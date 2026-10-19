@@ -621,7 +621,7 @@ See the [Sidecar integration contract](https://github.com/DeepAgentLabs/agentic-
 
 ## Tower connector delivered in 0.3.6
 
-The first Phase 4 Control Tower integration ships alongside Tower 0.6.0, which
+The first Phase 4 Control Tower integration ships alongside Tower 0.7.0, which
 combines its Phase 6/6A: twelve local stdio tools over real authenticated HTTP
 queries and incident transitions, separate reader/writer credentials, and a cited
 investigation prompt. Human approval stays in Tower HTTP/CLI. Hosted calls are

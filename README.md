@@ -6,7 +6,7 @@ ecosystem. It is designed to expose a single MCP interface that combines:
 - `agenticlens` style workflow inspection, profiling, and analysis
 - `agentic-chaos` style resilience testing and fault-injection workflows
 - `agentic-sidecar` style supervision-readiness and module-surface discovery
-- authenticated local Control Tower 0.6.0 investigation and approved recovery access
+- authenticated local Control Tower 0.7.0 investigation and read-only fleet posture access
 
 It sits above the **AI Operations Workflow Specification**, exposing a unified
 MCP-native control surface over the shared operational model used by the
@@ -33,7 +33,7 @@ libraries:
 - `agenticlens` remains the core profiling and analysis engine
 - `agentic-chaos` remains the core chaos and resilience engine
 - `agentic-sidecar` remains the core decision-supervision and governance engine
-- `agenticops-control-tower` 0.6.0 provides the operator-facing control plane
+- `agenticops-control-tower` 0.7.0 provides the operator-facing control plane
 - the `AI Operations Workflow Specification` remains the shared data contract
 - `deep-agentic-core-mcp` becomes the MCP-native interface that hosts can call
 
@@ -373,7 +373,7 @@ full detail):
   joined observability + chaos workflows remain in progress,
   incident/readiness reporting, a higher-level control surface
 - **Control Tower coordination** — local connector tools ship in 0.3.6 for
-  Tower 0.6.0; hosted per-user credential binding remains planned
+  Tower 0.7.0; hosted per-user credential binding remains planned
 - **Phase 5/6** — PyPI + MCP Registry publishing, operational intelligence
   features
 
