@@ -171,7 +171,7 @@ source's `sha256` is the digest of the report's canonical JSON. The tool calls
 no model and stores nothing. It needs `agenticlens>=0.9.0`; older installs
 get an "unavailable" error while other Lens tools keep working.
 
-## MCP Surface (current, `0.3.13`)
+## MCP Surface (current, `0.3.14`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
