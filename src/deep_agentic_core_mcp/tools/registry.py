@@ -323,6 +323,40 @@ def list_tools() -> list[dict[str, Any]]:
             "mutates_session": False,
         },
         {
+            "name": "lens.routing_decide",
+            "title": "Routing Decision",
+            "description": "Explain a model route from a saved ModelFit report and routing policy. "
+            "Returns selected targets, fallback chain, confidence, constraint rejections and "
+            "evidence/policy hashes. Read-only in every mode: no model calls, callbacks, "
+            "audit-file writes or approval execution. Needs agenticlens>=0.10.0.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "report": {"type": "object", "description": "ModelFit report JSON."},
+                    "request": {
+                        "type": "object",
+                        "properties": {
+                            "request_id": {"type": "string", "minLength": 1},
+                            "category_id": {"type": "string", "minLength": 1},
+                        },
+                        "required": ["request_id", "category_id"],
+                        "additionalProperties": False,
+                    },
+                    "policy": {
+                        "type": "object",
+                        "description": "Lens RoutingPolicy; default advisory.",
+                    },
+                    **_SESSION_ID_PROPERTY,
+                },
+                "required": ["report", "request"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
             "name": "chaos.list_faults",
             "title": "List Chaos Faults",
             "description": "List the supported fault types for chaos experiments.",
