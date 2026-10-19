@@ -11,7 +11,31 @@ The DeepAgentLabs MCP Server provides a unified MCP interface over several exist
 | AgenticLens reporting | Implemented |
 | Agentic Chaos fault injection | Implemented |
 | Agentic Sidecar discovery | Experimental |
-| AI Operations Spec validation | Experimental / unavailable locally |
+| AI Operations Spec validation | Implemented when schema assets are available |
+| Agentic Evals artifact validation | Implemented |
+| Control Tower local connector | Implemented with authentication |
+| Remote Streamable HTTP MCP | Implemented with bearer authentication |
+
+---
+
+## Agentic Evals
+
+`evals.validate_artifact` validates native Agentic Evals reports and gate
+decisions against the published schemas. It is a validation tool, not an Evals
+runner: suites, targets, and judges still run through `agentic-evals`.
+
+## Control Tower
+
+The local `tower.*` tools connect to an authenticated Control Tower service for
+readiness, evidence, investigation, incident, posture, preview, and approved
+recovery operations. Tower approval remains a human-controlled HTTP/CLI flow.
+
+## Local and remote modes
+
+The stdio server is intended for trusted local development and can run local
+chaos experiments. The authenticated Streamable HTTP server shares the
+analysis surface but disables arbitrary script execution and restricts Tower
+operations until per-user credentials are configured.
 
 ---
 

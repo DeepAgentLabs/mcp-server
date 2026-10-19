@@ -212,6 +212,8 @@ get an "unavailable" error while other Lens tools keep working.
   modules, framework adapters, and integration placeholders (added in `0.3.0`)
 - `spec.validate_artifact` — validate a workflow/run artifact against the
   schema set its `spec_version` names, with a rule-cited conformance report
+- `tower.*` — local authenticated Control Tower status, evidence,
+  investigation, incident, posture, preview, and approved recovery tools
 
 Sequential tool calls can share context via an optional `session_id`
 argument, backed by an in-memory session store — see `ROADMAP.md` Phase 2.

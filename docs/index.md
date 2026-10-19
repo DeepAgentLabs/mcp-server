@@ -14,7 +14,20 @@ The MCP server brings multiple agentic capabilities together behind a single MCP
 - **AgenticLens** — workflow inspection, profiling, analysis, and reporting
 - **Agentic Chaos** — controlled fault-injection and resilience experiments
 - **Agentic Sidecar** — supervision-readiness and module discovery
+- **Agentic Evals** — native evaluation report and release-gate validation
+- **Control Tower** — authenticated local operations, evidence, and recovery
 - **Core diagnostics** — health, version, verification, and session information
+
+## Choose a connection mode
+
+| Mode | Best for | Boundary |
+|---|---|---|
+| Local stdio | Development, local artifacts, and chaos experiments | Runs on the trusted machine and may execute configured scripts |
+| Hosted Streamable HTTP | Workflow analysis, reports, and shared access | Requires a bearer key; remote chaos execution is disabled |
+
+The hosted service is documented in [Remote Hosting](remote-hosting.md). The
+server does not automatically instrument an application: your application
+exports a workflow or evaluation artifact and sends it to the MCP tools.
 
 ## Key capabilities
 

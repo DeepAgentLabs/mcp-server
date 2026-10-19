@@ -54,6 +54,8 @@ package is installed.
 | AI Operations artifact validation (`spec_version` routing, rule-cited conformance) | Available, including the rule and compatibility catalogs | Requires canonical schema assets (`ai-operations-spec>=0.5.1` for rule IDs) |
 | Converting a chaos report to an AIOS run (`chaos.export_aios_run`) | Available (Agentic Chaos 0.6.0; no code runs) | Available with `agentic-chaos>=0.5.1` |
 | Agentic Chaos fault listing | Available (Agentic Chaos 0.6.0) | Available with Agentic Chaos installed |
+| Native Agentic Evals artifact validation | Available through `evals.validate_artifact` | Available from bundled schemas |
+| Control Tower investigation and recovery connector | Local only, with configured Tower credentials | Requires authenticated local Tower service |
 | Executing chaos experiments | Disabled and excluded from the HTTP catalog | Available over trusted local stdio |
 | Sidecar status and module discovery | Package not installed in the hosted image | Available with Sidecar installed; discovery only |
 | Sidecar runtime supervision / decision gates | No MCP execution tools implemented | No MCP execution tools implemented |
@@ -202,7 +204,7 @@ Call `core.health`, then `chaos.list_faults` to discover supported faults.
 Call `chaos.run_experiment` with a script path inside the configured workspace,
 selected faults, timeout, and session ID. It executes real code; review
 [SECURITY.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/SECURITY.md). A server-relative path refers to the machine
-[SECURITY.md](../SECURITY.md). To limit which scripts it may run, set
+[SECURITY.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/SECURITY.md). To limit which scripts it may run, set
 `DEEP_AGENTIC_CORE_MCP_ALLOWED_SCRIPT_GLOBS` (for example
 `my-agent/chaos/*.py`) and optionally `DEEP_AGENTIC_CORE_MCP_DENIED_SCRIPT_GLOBS`
 in the server's environment. Deny wins, and `.venv`, `site-packages` and `.git`
