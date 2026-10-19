@@ -1,0 +1,237 @@
+
+/* =========================================================
+   DeepAgentLabs MCP Server — Documentation Theme
+   ========================================================= */
+
+:root {
+  --md-default-bg-color: #f7f8f4;
+  --md-default-fg-color: #171914;
+  --md-default-fg-color--light: #50544b;
+  --md-default-fg-color--lighter: #74796e;
+  --md-default-fg-color--lightest: #dfe2d8;
+
+  --md-primary-fg-color: #b9e83b;
+  --md-primary-fg-color--light: #c9f15b;
+  --md-primary-fg-color--dark: #658c00;
+
+  --md-accent-fg-color: #658c00;
+  --md-typeset-a-color: #587800;
+
+  --md-code-bg-color: #eef0e9;
+  --md-code-fg-color: #24271f;
+}
+
+/* Main background and content */
+body,
+.md-container,
+.md-main {
+  background: #f7f8f4;
+  color: #171914;
+}
+
+.md-content {
+  max-width: 100%;
+}
+
+.md-content__inner {
+  padding-top: 1.5rem;
+}
+
+/* Header */
+.md-header {
+  background: #171914;
+  color: #f7f8f4;
+  box-shadow: none;
+}
+
+.md-header__title,
+.md-header__button {
+  color: #f7f8f4;
+}
+
+.md-header__button:hover {
+  color: #c9f15b;
+}
+
+/* Tabs */
+.md-tabs {
+  background: #171914;
+  color: #f7f8f4;
+}
+
+.md-tabs__link {
+  opacity: 0.8;
+}
+
+.md-tabs__link:hover,
+.md-tabs__link--active {
+  color: #c9f15b;
+  opacity: 1;
+}
+
+/* Navigation sidebar */
+.md-sidebar {
+  background: #f7f8f4;
+}
+
+.md-nav__link {
+  color: #50544b;
+}
+
+.md-nav__link:hover,
+.md-nav__link--active {
+  color: #587800;
+}
+
+.md-nav__link--active {
+  font-weight: 700;
+}
+
+/* Typography */
+.md-typeset {
+  color: #171914;
+  font-size: 0.76rem;
+  line-height: 1.8;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+  color: #171914;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.md-typeset h1 {
+  font-size: 2rem;
+}
+
+.md-typeset h2 {
+  margin-top: 2rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid #dfe2d8;
+}
+
+.md-typeset a {
+  color: #587800;
+}
+
+.md-typeset a:hover {
+  color: #3f5900;
+}
+
+/* Tables */
+.md-typeset table:not([class]) {
+  display: table;
+  width: 100%;
+  border: 1px solid #dfe2d8;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.md-typeset table:not([class]) th {
+  background: #eef2e5;
+  color: #171914;
+}
+
+.md-typeset table:not([class]) td,
+.md-typeset table:not([class]) th {
+  border-color: #e3e6dd;
+}
+
+/* Code blocks */
+.md-typeset pre {
+  border: 1px solid #dfe2d8;
+  border-radius: 10px;
+  background: #171914;
+  color: #f7f8f4;
+}
+
+.md-typeset pre > code {
+  background: transparent;
+  color: inherit;
+}
+
+.md-typeset code {
+  border-radius: 4px;
+}
+
+.md-typeset :not(pre) > code {
+  background: #e9eddf;
+  color: #3f5900;
+}
+
+/* Copy-code button */
+.md-typeset .md-clipboard {
+  color: #c3c8b9;
+}
+
+.md-typeset .md-clipboard:hover {
+  color: #c9f15b;
+}
+
+/* Admonitions and details */
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 10px;
+  border-color: #a3c94a;
+  box-shadow: none;
+  background: #ffffff;
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+  background: #eef2e5;
+  color: #171914;
+}
+
+/* Mermaid diagrams */
+.mermaid {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid #dfe2d8;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow-x: auto;
+}
+
+/* Search */
+.md-search__form {
+  border-radius: 8px;
+}
+
+.md-search-result__meta {
+  background: #eef0e9;
+}
+
+/* Footer */
+.md-footer {
+  background: #171914;
+  color: #f7f8f4;
+}
+
+.md-footer-meta {
+  background: #11130f;
+}
+
+/* Horizontal rules */
+.md-typeset hr {
+  border-bottom-color: #dfe2d8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .md-content__inner {
+    padding-top: 1rem;
+  }
+
+  .md-typeset h1 {
+    font-size: 1.7rem;
+  }
+
+  .mermaid {
+    padding: 0.5rem;
+  }
+}

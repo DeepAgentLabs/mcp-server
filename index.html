@@ -240,63 +240,13 @@
           </div>
 
 
-          <div class="network">
-
-            <div class="network-glow"></div>
-
-            <div class="network-line line-top"></div>
-            <div class="network-line line-right"></div>
-            <div class="network-line line-bottom"></div>
-            <div class="network-line line-left"></div>
-
-            <div class="network-node node-client">
-              MCP Client / Host
-            </div>
-
-            <div class="network-node node-lens">
-              AgenticLens
-            </div>
-
-            <div class="network-node node-chaos">
-              Agentic Chaos
-            </div>
-
-            <div class="network-node node-sidecar">
-              Agentic Sidecar
-            </div>
-
-            <div class="network-node node-core">
-              Core Diagnostics
-            </div>
-
-            <div class="network-center">
-              <span class="material-symbols-outlined">
-                hub
-              </span>
-              <strong>MCP SERVER</strong>
-              <small>v0.2.0</small>
-            </div>
-
+          <div class="architecture-animation">
+            <img
+            src="docs/assets/IMAGE.png"
+            alt="Animated DeepAgentLabs MCP server architecture"
+            class="architecture-gif"
+            />
           </div>
-
-
-          <div class="terminal-footer">
-
-            <span>
-              <span class="live-dot"></span>
-              Server ready
-            </span>
-
-            <span>
-              stdio
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
-
     </section>
 
 
@@ -773,7 +723,7 @@
       <div>
 
         <span class="eyebrow">
-          USE CASE
+          USE CASE 01
         </span>
 
         <h2>
@@ -952,4 +902,161 @@
 
   </div>
 
+</section>
+
+
+<!-- USE CASE 2: WORKFLOW FAULT TESTING -->
+<section id="workflow-fault-testing" class="section extra-use-case">
+  <div class="use-case-header">
+    <div>
+      <span class="section-eyebrow">USE CASE 02</span>
+      <h2>Workflow Fault Testing</h2>
+      <p>
+        Explore how controlled failures can help evaluate workflow
+        resilience using Agentic Chaos capabilities.
+      </p>
+    </div>
+    <span class="simulation-badge">Illustrative Workflow</span>
+  </div>
+
+  <div class="travel-grid">
+    <div class="travel-flow">
+      <div class="travel-node">
+        <span class="node-number">01</span>
+        <div>
+          <strong>Identify Available Faults</strong>
+          <p>Inspect the fault scenarios available for testing.</p>
+        </div>
+      </div>
+
+      <div class="travel-arrow">↓</div>
+
+      <div class="travel-node">
+        <span class="node-number">02</span>
+        <div>
+          <strong>Run a Controlled Experiment</strong>
+          <p>Execute a selected fault experiment against a test workflow.</p>
+        </div>
+      </div>
+
+      <div class="travel-arrow">↓</div>
+
+      <div class="travel-node">
+        <span class="node-number">03</span>
+        <div>
+          <strong>Review the Results</strong>
+          <p>Examine the available output and identify possible failure points.</p>
+        </div>
+      </div>
+
+      <div class="travel-result">
+        <span class="result-icon">✓</span>
+        <div>
+          <strong>Resilience Review</strong>
+          <p>Use the experiment evidence to understand workflow behaviour.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="use-case-terminal">
+      <div class="code-header">
+        <span>Agentic Chaos · Example</span>
+        <span class="terminal-status">DEMO</span>
+      </div>
+      <pre><code># Illustrative MCP tool sequence
+
+chaos.list_faults()
+
+# Select an appropriate test scenario
+# and review its requirements.
+
+chaos.run_experiment(...)
+
+# Inspect the returned experiment results.
+# Actual inputs depend on the tool schema.</code></pre>
+      <p class="terminal-note">
+        Demonstration concept. Available faults, required inputs,
+        and experiment results depend on the configured MCP server.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- USE CASE 3: AI EVALUATION AND RELEASE GATE -->
+<section id="ai-evaluation-release-gate" class="section extra-use-case">
+  <div class="use-case-header">
+    <div>
+      <span class="section-eyebrow">USE CASE 03</span>
+      <h2>AI Evaluation and Release Gate</h2>
+      <p>
+        Illustrate how workflow analysis, run comparisons, and audit
+        evidence can support an AI release-readiness review.
+      </p>
+    </div>
+    <span class="simulation-badge">Illustrative Workflow</span>
+  </div>
+
+  <div class="travel-grid">
+    <div class="travel-flow">
+      <div class="travel-node">
+        <span class="node-number">01</span>
+        <div>
+          <strong>Analyze the Workflow</strong>
+          <p>Review workflow behaviour using available analysis capabilities.</p>
+        </div>
+      </div>
+
+      <div class="travel-arrow">↓</div>
+
+      <div class="travel-node">
+        <span class="node-number">02</span>
+        <div>
+          <strong>Compare Runs and Metrics</strong>
+          <p>Inspect available comparisons and service-level indicators.</p>
+        </div>
+      </div>
+
+      <div class="travel-arrow">↓</div>
+
+      <div class="travel-node">
+        <span class="node-number">03</span>
+        <div>
+          <strong>Review Evaluation Evidence</strong>
+          <p>Examine audit information against predefined release criteria.</p>
+        </div>
+      </div>
+
+      <div class="travel-result">
+        <span class="result-icon">✓</span>
+        <div>
+          <strong>Release Readiness Review</strong>
+          <p>A team can use the evidence to make a release decision.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="use-case-terminal">
+      <div class="code-header">
+        <span>AgenticLens · Example</span>
+        <span class="terminal-status">DEMO</span>
+      </div>
+      <pre><code># Illustrative evaluation sequence
+
+lens.analyze_workflow(...)
+
+lens.compare_runs(...)
+
+lens.slo_summary(...)
+
+lens.audit_report(...)
+
+# Review the returned evidence against
+# your team's release criteria.</code></pre>
+      <p class="terminal-note">
+        This is an example evaluation process, not a claim that the MCP
+        server provides a built-in release-gate decision tool.
+      </p>
+    </div>
+  </div>
 </section>
