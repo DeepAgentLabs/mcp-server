@@ -9,7 +9,7 @@ import pytest
 from moto import mock_aws
 from starlette.applications import Starlette
 
-from deep_agentic_core_mcp.services.api_keys import DynamoKeyStore
+from deep_agentic_core_mcp.services.api_keys import DynamoKeyStore, KeyConflictError
 from deep_agentic_core_mcp.services.remote_sessions import RedisSessionStore
 from deep_agentic_core_mcp.signup import RedisSignupLimiter, signup_routes
 from deep_agentic_core_mcp.transport_http import create_app
@@ -39,12 +39,12 @@ def test_hashes_only_rotation_revocation_and_stable_identity(backend):
     assert rotated["user_id"] == first["user_id"]
     assert backend.authenticate(first["api_key"]) is None
     assert backend.authenticate(rotated["api_key"]) == first["user_id"]
-    with pytest.raises(backend.client.exceptions.TransactionCanceledException):
+    with pytest.raises(KeyConflictError):
         backend.rotate(first["user_id"], first["api_key"])
     backend.revoke(first["user_id"], rotated["api_key"])
     assert backend.authenticate(rotated["api_key"]) is None
     assert backend.authenticate(second["api_key"]) == second["user_id"]
-    with pytest.raises(backend.client.exceptions.TransactionCanceledException):
+    with pytest.raises(KeyConflictError):
         backend.rotate(first["user_id"], rotated["api_key"])
 
 
@@ -192,7 +192,7 @@ async def test_signup_fails_closed_on_storage_outage(backend, monkeypatch):
 @pytest.mark.asyncio
 async def test_dynamic_key_authentication_and_mcp_identity(backend, monkeypatch):
     monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_PUBLIC_URL", "https://mcp.example")
-    monkeypatch.delenv("DEEP_AGENTIC_CORE_MCP_REMOTE_TRANSPORT", raising=False)
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_REMOTE", "0")
     store = RedisSessionStore("redis://localhost")
     store.client = fakeredis.FakeRedis(decode_responses=True)
     app = create_app(key_store=backend, store=store, allowed_hosts=["mcp.example"])
