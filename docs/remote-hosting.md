@@ -2,7 +2,8 @@
 
 The stdio package and authenticated HTTP service share tool implementations.
 HTTP clients connect to `/mcp` with a unique per-user bearer key. Workflow state
-is shared across workers through Redis, while MCP transport is stateless and
+is shared across workers through Redis or PostgreSQL (e.g. Supabase), while MCP
+transport is stateless and
 requires no load-balancer session affinity. Users cannot inspect other users'
 workflows by supplying their session names.
 
@@ -10,11 +11,12 @@ workflows by supplying their session names.
 
 | Environment variable | Required | Purpose |
 | --- | --- | --- |
-| `DEEP_AGENTIC_CORE_MCP_API_KEYS` | Without DynamoDB | JSON object mapping stable user IDs to unique secrets |
+| `DEEP_AGENTIC_CORE_MCP_DATABASE_URL` | Redis or this | PostgreSQL/Supabase URL for keys, signup limits and (without Redis) sessions; apply `deploy/supabase/schema.sql` first |
+| `DEEP_AGENTIC_CORE_MCP_API_KEYS` | Without a database or DynamoDB | JSON object mapping stable user IDs to unique secrets |
 | `DEEP_AGENTIC_CORE_MCP_USERS_TABLE` | AWS signup | DynamoDB user/key table; overrides environment key configuration |
-| `DEEP_AGENTIC_CORE_MCP_PUBLIC_URL` | AWS signup | HTTPS origin for connection details and browser origin checks |
+| `DEEP_AGENTIC_CORE_MCP_PUBLIC_URL` | With signup | HTTPS origin for connection details and browser origin checks |
 | `DEEP_AGENTIC_CORE_MCP_TRUSTED_PROXY_HOPS` | No | Trusted suffix position in X-Forwarded-For; AWS sets 2 for its restricted CloudFront/ALB chain |
-| `DEEP_AGENTIC_CORE_MCP_REDIS_URL` | Yes | Shared Redis URL; use `rediss://` for TLS |
+| `DEEP_AGENTIC_CORE_MCP_REDIS_URL` | This or a database | Shared Redis URL; use `rediss://` for TLS; takes precedence for sessions |
 | `DEEP_AGENTIC_CORE_MCP_ALLOWED_HOSTS` | For remote hosting | Comma-separated Host values, e.g. `mcp.example.com` |
 | `DEEP_AGENTIC_CORE_MCP_ALLOWED_ORIGINS` | For browser clients | Exact permitted origins, e.g. `https://client.example.com`; absent Origin is permitted |
 | `DEEP_AGENTIC_CORE_MCP_HTTP_HOST` | No | Bind address; default `127.0.0.1`, container uses `0.0.0.0` |
@@ -34,7 +36,7 @@ random secrets of at least 32 characters; generate with `secrets.token_urlsafe(3
 Keep user IDs stable during key rotation to preserve session ownership. Replace
 credentials and restart all workers; during rolling rotation, old and new
 workers otherwise accept different keys. Removal revokes future access once all
-workers restart. Existing in-flight calls may finish. Redis state expires after
+workers restart. Existing in-flight calls may finish. Session state expires after
 one hour of inactivity, measured from a completed tool call. Sharing a key means
 sharing a user identity.
 
