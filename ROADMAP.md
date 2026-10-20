@@ -10,8 +10,8 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.4.0` — see [CHANGELOG.md](CHANGELOG.md). It completes
-Phase 4: `core.compare_runs`, a fail-closed `core.release_check`
+Release version: `0.4.1` (2026-10-19) — see [CHANGELOG.md](CHANGELOG.md). It adds Sidecar 0.9 discovery and manual AWS deployment.
+The 0.4.0 release completed Phase 4: `core.compare_runs`, a fail-closed `core.release_check`
 over Lens, Evals and Chaos evidence, `core.incident_summary` and
 `core.export_report` ([guide](docs/unified-workflows.md)). Hosted image pins and
 sibling dependency ranges are unchanged.

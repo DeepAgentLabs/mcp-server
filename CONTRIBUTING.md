@@ -69,24 +69,17 @@ Never commit credentials, generated API keys, or local deployment state.
 Pull requests, pushes to `main`, and manual CI runs perform lint, format, typing,
 tests across Python 3.10–3.13, and package build checks without deploying AWS.
 A pushed `v*` version tag runs the same validation before package publication.
-After PyPI succeeds, the release workflow deploys the tagged source to AWS.
-It publishes an immutable ECR image, updates the existing CloudFormation
-stack, and verifies MCP authentication and integration readiness. It preserves
-infrastructure parameters and rejects unrelated infrastructure changes.
-
-AWS deployment requires repository secrets `AWS_ACCESS_KEY_ID`,
-`AWS_SECRET_ACCESS_KEY`, and `MCP_SMOKE_KEY`. See
-[deploy/aws/CI-CD.md](deploy/aws/CI-CD.md) for permissions and operational limits.
-Infrastructure changes use the separate reviewed operator deployment flow.
-AWS deployment is a downstream release job; it does not publish to PyPI itself.
+From 0.4.1, tag releases do not deploy AWS. Existing immutable-image,
+CloudFormation and smoke-check scripts remain manual operator tools; package
+publication does not update the hosted service. See
+[deploy/aws/CI-CD.md](deploy/aws/CI-CD.md) for the separate operator flow.
 
 ## Releases
 
 Package releases start when a `v*` version tag is pushed. Creating a GitHub
 Release manually is not the trigger. `release-pypi.yml` publishes to PyPI using
 Trusted Publishing (OIDC), creates the GitHub Release from the changelog, and
-then publishes to the MCP Registry. AWS deployment runs after successful PyPI
-publication.
+then publishes to the MCP Registry. AWS deployment is a separate manual action.
 
 1. On a feature branch, update `pyproject.toml`,
    `src/deep_agentic_core_mcp/__init__.py`, both version fields in `server.json`,
@@ -98,7 +91,7 @@ publication.
    `git tag -a vX.Y.Z -F <release-notes-file> --cleanup=verbatim`.
 4. Push that tag: `git push origin vX.Y.Z`.
 5. Approve the existing `pypi` environment gate when required, then verify PyPI,
-   GitHub Release, MCP Registry, and AWS deployment jobs.
+   GitHub Release and MCP Registry jobs.
 
-AWS updates through CI only as part of a version-tag release after PyPI succeeds.
-A `main` push does not publish a package or deploy the hosted service.
+Neither a tag release nor a `main` push deploys the hosted service.
+A `main` push does not publish a package.
