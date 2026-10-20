@@ -14,10 +14,26 @@ def key_digest(token: str) -> str:
     return hashlib.sha256(token.encode()).hexdigest()
 
 
+class KeyConflictError(Exception):
+    """The account changed concurrently, or the presented key is no longer current."""
+
+
 class KeyStore(Protocol):
     def authenticate(self, token: str) -> str | None: ...
 
     def ping(self) -> bool: ...
+
+
+class AccountStore(KeyStore, Protocol):
+    """A key store that can also serve self-service signup and key management."""
+
+    def issue(self, display_name: str) -> dict[str, str]: ...
+
+    def profile(self, user: str) -> dict[str, str]: ...
+
+    def rotate(self, user: str, old_token: str) -> dict[str, str]: ...
+
+    def revoke(self, user: str, token: str) -> None: ...
 
 
 class StaticKeyStore:
@@ -143,6 +159,13 @@ class DynamoKeyStore:
         old_hash, new_hash = key_digest(old_token), key_digest(token)
         # Conditional transaction prevents concurrent rotations/revocations from
         # leaving a second usable key or resurrecting a revoked account.
+        try:
+            self._rotate(user, old_hash, new_hash)
+        except self.client.exceptions.TransactionCanceledException as exc:
+            raise KeyConflictError("Account changed") from exc
+        return {"user_id": user, "api_key": token}
+
+    def _rotate(self, user: str, old_hash: str, new_hash: str) -> None:
         self.client.transact_write_items(
             TransactItems=[
                 {
@@ -169,9 +192,14 @@ class DynamoKeyStore:
                 },
             ]
         )
-        return {"user_id": user, "api_key": token}
 
     def revoke(self, user: str, token: str) -> None:
+        try:
+            self._revoke(user, token)
+        except self.client.exceptions.ConditionalCheckFailedException as exc:
+            raise KeyConflictError("Account changed") from exc
+
+    def _revoke(self, user: str, token: str) -> None:
         self.client.update_item(
             TableName=self.table_name,
             Key={"pk": "USER#" + user},

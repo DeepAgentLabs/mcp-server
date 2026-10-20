@@ -6,7 +6,19 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- PostgreSQL (Supabase) storage for hosted API keys, per-user sessions and
+  signup limits, selected by `DEEP_AGENTIC_CORE_MCP_DATABASE_URL`. The Render
+  Blueprint now uses it instead of Render Key Value; `deploy/supabase/schema.sql`
+  creates the private schema and least-privilege service role. Its connection
+  pool is sized from the request concurrency limit and closed on shutdown or
+  failed startup.
+
 ### Changed
+
+- Key rotation/revocation conflicts raise `KeyConflictError` for every backend.
+- Fix transport and signup test fixtures that leaked remote mode into later tests.
 
 - Roadmap only, decided after the 0.4.0 release: Phase 4 (Unified Workflows) is
   now complete as of 0.4.0, which its release notes below still call the first

@@ -12,7 +12,7 @@ from starlette.requests import Request
 from starlette.responses import Response
 from starlette.routing import Route
 
-from deep_agentic_core_mcp.services.api_keys import DynamoKeyStore
+from deep_agentic_core_mcp.services.api_keys import AccountStore, KeyConflictError
 
 
 class SignupLimiter(Protocol):
@@ -44,7 +44,7 @@ class RedisSignupLimiter:
 
 
 def signup_routes(
-    keys: DynamoKeyStore,
+    keys: AccountStore,
     limiter: SignupLimiter,
     public_url: str,
     *,
@@ -134,9 +134,7 @@ def signup_routes(
                 result = {"status": "revoked"}
             else:
                 result = await asyncio.to_thread(keys.profile, user)
-        except keys.client.exceptions.TransactionCanceledException:
-            return reply({"error": "Account changed. Retry with your current key."}, 409)
-        except keys.client.exceptions.ConditionalCheckFailedException:
+        except KeyConflictError:
             return reply({"error": "Account changed. Retry with your current key."}, 409)
         except Exception:
             return reply({"error": "Account temporarily unavailable"}, 503)

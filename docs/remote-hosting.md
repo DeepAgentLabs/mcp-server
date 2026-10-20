@@ -2,7 +2,8 @@
 
 The stdio package and authenticated HTTP service share tool implementations.
 HTTP clients connect to `/mcp` with a unique per-user bearer key. Workflow state
-is shared across workers through Redis, while MCP transport is stateless and
+is shared across workers through Redis or PostgreSQL (e.g. Supabase), while MCP
+transport is stateless and
 requires no load-balancer session affinity. Users cannot inspect other users'
 workflows by supplying their session names.
 
@@ -10,11 +11,12 @@ workflows by supplying their session names.
 
 | Environment variable | Required | Purpose |
 | --- | --- | --- |
-| `DEEP_AGENTIC_CORE_MCP_API_KEYS` | Without DynamoDB | JSON object mapping stable user IDs to unique secrets |
+| `DEEP_AGENTIC_CORE_MCP_DATABASE_URL` | Redis or this | PostgreSQL/Supabase URL for keys, signup limits and (without Redis) sessions; apply `deploy/supabase/schema.sql` first |
+| `DEEP_AGENTIC_CORE_MCP_API_KEYS` | Without a database or DynamoDB | JSON object mapping stable user IDs to unique secrets |
 | `DEEP_AGENTIC_CORE_MCP_USERS_TABLE` | AWS signup | DynamoDB user/key table; overrides environment key configuration |
-| `DEEP_AGENTIC_CORE_MCP_PUBLIC_URL` | AWS signup | HTTPS origin for connection details and browser origin checks |
+| `DEEP_AGENTIC_CORE_MCP_PUBLIC_URL` | With signup | HTTPS origin for connection details and browser origin checks |
 | `DEEP_AGENTIC_CORE_MCP_TRUSTED_PROXY_HOPS` | No | Trusted suffix position in X-Forwarded-For; AWS sets 2 for its restricted CloudFront/ALB chain |
-| `DEEP_AGENTIC_CORE_MCP_REDIS_URL` | Yes | Shared Redis URL; use `rediss://` for TLS |
+| `DEEP_AGENTIC_CORE_MCP_REDIS_URL` | This or a database | Shared Redis URL; use `rediss://` for TLS; takes precedence for sessions |
 | `DEEP_AGENTIC_CORE_MCP_ALLOWED_HOSTS` | For remote hosting | Comma-separated Host values, e.g. `mcp.example.com` |
 | `DEEP_AGENTIC_CORE_MCP_ALLOWED_ORIGINS` | For browser clients | Exact permitted origins, e.g. `https://client.example.com`; absent Origin is permitted |
 | `DEEP_AGENTIC_CORE_MCP_HTTP_HOST` | No | Bind address; default `127.0.0.1`, container uses `0.0.0.0` |
@@ -34,7 +36,7 @@ random secrets of at least 32 characters; generate with `secrets.token_urlsafe(3
 Keep user IDs stable during key rotation to preserve session ownership. Replace
 credentials and restart all workers; during rolling rotation, old and new
 workers otherwise accept different keys. Removal revokes future access once all
-workers restart. Existing in-flight calls may finish. Redis state expires after
+workers restart. Existing in-flight calls may finish. Session state expires after
 one hour of inactivity, measured from a completed tool call. Sharing a key means
 sharing a user identity.
 
@@ -108,29 +110,46 @@ The same session name is private to each authenticated user. Omit it to use
 that user's private `default` workflow session. Never put credentials in query
 parameters or tool arguments.
 
-## Render deployment
+## Render deployment with Supabase storage
 
-The root `render.yaml` provisions a free Docker web service and a free,
-internal-only Key Value instance in Oregon. `deploy/docker/Dockerfile.render` builds from this
-repository alone: AgenticLens 0.5.0 comes from PyPI and the canonical AIOS schemas
-are downloaded at a pinned Git commit with SHA-256 verification.
+The root `render.yaml` provisions a free Docker web service in Oregon.
+`deploy/docker/Dockerfile.render` builds from this repository alone: hosted
+sibling packages come from PyPI and the canonical AIOS schemas are downloaded
+at a pinned Git commit with SHA-256 verification.
 
-Render's `PORT` and `RENDER_EXTERNAL_HOSTNAME` are used automatically. The Key
-Value connection string is injected through the Blueprint. Supply
-`DEEP_AGENTIC_CORE_MCP_API_KEYS` as the user-to-secret JSON mapping when applying
-it; never commit actual keys. For a custom domain, explicitly set
-`DEEP_AGENTIC_CORE_MCP_ALLOWED_HOSTS` to include both the assigned Render hostname
-and your custom hostname. Browser clients also need an allowed Origin.
+API keys (SHA-256 digests only), per-user workflow sessions and signup limits
+are stored in Supabase PostgreSQL when `DEEP_AGENTIC_CORE_MCP_DATABASE_URL` is
+set. Redis is used for sessions instead only if `DEEP_AGENTIC_CORE_MCP_REDIS_URL`
+is also set.
 
-After these files are pushed to the repository, create the Blueprint at:
-https://dashboard.render.com/blueprint/new?repo=https://github.com/DeepAgentLabs/mcp-server
+1. In the Supabase SQL editor, run `deploy/supabase/schema.sql`. It creates the
+   private `mcp` schema (not exposed through the Data API), enables row-level
+   security, and creates the least-privilege `mcp_service` login role.
+2. Set that role's password: `ALTER ROLE mcp_service WITH PASSWORD '<secret>';`
+3. Build the connection string from the project's **Connect → Transaction
+   pooler** URI (port 6543; Supabase direct connections are IPv6-only), using
+   `mcp_service.<project-ref>` as the user and appending `?sslmode=require`.
+4. Create the Blueprint at
+   https://dashboard.render.com/blueprint/new?repo=https://github.com/DeepAgentLabs/mcp-server
+   and supply `DEEP_AGENTIC_CORE_MCP_DATABASE_URL` and
+   `DEEP_AGENTIC_CORE_MCP_PUBLIC_URL` (`https://` plus your custom domain, or the
+   assigned `*.onrender.com` hostname). Never commit either value.
+
+Render's `PORT` and `RENDER_EXTERNAL_HOSTNAME` are used automatically, and the
+hostname in `DEEP_AGENTIC_CORE_MCP_PUBLIC_URL` is added to the allowed hosts.
+Users get keys from the signup page at the public URL. Browser clients also
+need an allowed Origin.
+
+For a custom domain, add it under the service's **Settings → Custom Domains**
+and create a `CNAME` record from it to the assigned `<service>.onrender.com`
+hostname (use `ALIAS`/`ANAME`, or Render's documented `A` record, for an apex
+domain). Render issues the TLS certificate once DNS resolves.
 
 Check `/healthz`, verify an unauthenticated `/mcp` request returns 401, and test
 an authenticated tool call before sharing the endpoint with users. The deployed
-MCP URL is `https://<assigned-hostname>/mcp`.
+MCP URL is `https://<public hostname>/mcp`.
 
-Free web services can spin down when idle, and free Key Value loses data on
-restart. This is an initial test deployment; upgrade for an always-available
-service and persistent session storage. Automatic deploys are disabled to avoid
-publishing later repository changes without an explicit deployment action.
-See [Render free-service limits](https://render.com/docs/free).
+Free web services spin down when idle; the first request afterwards is slow.
+Free Supabase projects pause after a week without activity. Automatic deploys
+are disabled to avoid publishing later repository changes without an explicit
+deployment action. See [Render free-service limits](https://render.com/docs/free).
