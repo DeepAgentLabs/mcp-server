@@ -14,6 +14,16 @@ This project follows [Semantic Versioning](https://semver.org/).
   dispatch, stop/revoke, denial evidence, hosted Tower credentials) move to
   Phase 5.
 
+## 0.4.1 - 2026-10-19
+
+- Discover installed Sidecar 0.9 task-authority, revocation and redacted-evidence
+  APIs without constructing a task or exposing runtime controls.
+- Pin Sidecar 0.9.0 in standalone hosted image recipes; native evidence remains
+  compatible and no new remote authority API is claimed.
+- Remove automatic AWS deployment from the release pipeline. Package/GitHub/MCP
+  Registry publication remains; existing deployment scripts are manual operator tools.
+- Document Sidecar authority, privacy, evidence and ownership boundaries.
+
 ## 0.4.0 - 2026-10-19
 
 First Phase 4 (Unified Workflows) slice. No sibling release, dependency range
