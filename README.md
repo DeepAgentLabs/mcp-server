@@ -642,3 +642,9 @@ the existing registry discovers faults. Workflows, experiments and fuzzing
 are Python/CLI orchestration, not new MCP tools. Hosted HTTP continues to
 reject `chaos.run_experiment`, so no experiment target is executed by the
 hosted service.
+
+## Sidecar 0.9.0 interoperability
+
+Task-authority/delegation and reader-safe summaries are available in Sidecar.
+See [compatibility and ownership boundaries](docs/sidecar-0.9.md). Existing
+native decisions/correlation stay compatible; no new normative schema is claimed.
