@@ -14,11 +14,10 @@ KEYS = {"alice": "a" * 40, "bob": "b" * 40}
 
 @pytest.fixture(autouse=True)
 def remote_environment(monkeypatch):
-    monkeypatch.delenv(config.REMOTE_TRANSPORT_ENV, raising=False)
+    # setenv records the prior state, so teardown also undoes create_app's flag.
+    monkeypatch.setenv(config.REMOTE_TRANSPORT_ENV, "0")
     monkeypatch.delenv("DEEP_AGENTIC_CORE_MCP_API_KEYS", raising=False)
     monkeypatch.delenv("DEEP_AGENTIC_CORE_MCP_REDIS_URL", raising=False)
-    yield
-    monkeypatch.delenv(config.REMOTE_TRANSPORT_ENV, raising=False)
 
 
 def app_for_test(**kwargs):
