@@ -55,6 +55,37 @@ def test_service_requires_credentials_and_storage():
         create_app(api_keys={"alice": "x" * 40, "bob": "x" * 40})
 
 
+class FakePool:
+    def __init__(self):
+        self.closed = False
+
+    def close(self):
+        self.closed = True
+
+
+def test_database_pool_is_sized_for_concurrency_and_closed(monkeypatch):
+    from deep_agentic_core_mcp import transport_http
+
+    pools = []
+
+    def fake_connect(url, *, max_size):
+        pools.append((url, max_size, FakePool()))
+        return pools[-1][2]
+
+    monkeypatch.setattr(transport_http, "connect", fake_connect)
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_DATABASE_URL", "postgresql://db")
+    monkeypatch.delenv("DEEP_AGENTIC_CORE_MCP_PUBLIC_URL", raising=False)
+    # Signup without an HTTPS public URL fails after the pool opened: it must be released.
+    with pytest.raises(ValueError, match="HTTPS public URL"):
+        create_app(max_concurrent_total=7)
+    assert pools[0][:2] == ("postgresql://db", 11)
+    assert pools[0][2].closed
+
+    app = create_app(api_keys=KEYS, allowed_hosts=["testserver"])
+    pool = app.state.db_pool
+    assert pool is pools[1][2] and pools[1][1] == 20 and not pool.closed
+
+
 @pytest.mark.asyncio
 async def test_mixed_case_configured_hostname_accepts_lowercase_proxy_host():
     app = create_app(

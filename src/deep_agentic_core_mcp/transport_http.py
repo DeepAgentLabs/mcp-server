@@ -57,10 +57,44 @@ def create_app(
     """
     if key_store is not None and api_keys is not None:
         raise ValueError("Supply only one authentication backend")
+    if min(requests_per_minute, max_concurrent_per_user, max_concurrent_total) < 1:
+        raise ValueError("Request and concurrency limits must be positive")
     database_url = os.environ.get("DEEP_AGENTIC_CORE_MCP_DATABASE_URL")
     pool: Any = None
     if database_url and (store is None or (key_store is None and api_keys is None)):
-        pool = connect(database_url)
+        # A session transaction holds a connection for a whole tool call, so every
+        # admitted request needs one, plus headroom for auth and signup queries.
+        pool = connect(database_url, max_size=max_concurrent_total + 4)
+    try:
+        return _build_app(
+            pool=pool,
+            api_keys=api_keys,
+            key_store=key_store,
+            store=store,
+            allowed_hosts=allowed_hosts,
+            allowed_origins=allowed_origins,
+            requests_per_minute=requests_per_minute,
+            max_concurrent_per_user=max_concurrent_per_user,
+            max_concurrent_total=max_concurrent_total,
+        )
+    except BaseException:
+        if pool is not None:
+            pool.close()
+        raise
+
+
+def _build_app(
+    *,
+    pool: Any,
+    api_keys: Mapping[str, str] | None,
+    key_store: KeyStore | None,
+    store: SessionStore | None,
+    allowed_hosts: list[str] | None,
+    allowed_origins: list[str] | None,
+    requests_per_minute: int,
+    max_concurrent_per_user: int,
+    max_concurrent_total: int,
+) -> Starlette:
     if key_store is None:
         table = os.environ.get("DEEP_AGENTIC_CORE_MCP_USERS_TABLE")
         if pool is not None and api_keys is None:
@@ -72,8 +106,6 @@ def create_app(
                 api_keys = json.loads(os.environ.get("DEEP_AGENTIC_CORE_MCP_API_KEYS", "{}"))
             key_store = StaticKeyStore(api_keys)
     auth_store = key_store
-    if min(requests_per_minute, max_concurrent_per_user, max_concurrent_total) < 1:
-        raise ValueError("Request and concurrency limits must be positive")
     if store is None:
         url = os.environ.get("DEEP_AGENTIC_CORE_MCP_REDIS_URL")
         if url:
@@ -166,12 +198,16 @@ def create_app(
     @contextlib.asynccontextmanager
     async def lifespan(app: Starlette) -> AsyncIterator[None]:
         del app
-        if not await asyncio.to_thread(session_store.ping):
-            raise RuntimeError("Session storage is unavailable")
-        if not await asyncio.to_thread(auth_store.ping):
-            raise RuntimeError("Authentication storage is unavailable")
-        async with session_manager.run():
-            yield
+        try:
+            if not await asyncio.to_thread(session_store.ping):
+                raise RuntimeError("Session storage is unavailable")
+            if not await asyncio.to_thread(auth_store.ping):
+                raise RuntimeError("Authentication storage is unavailable")
+            async with session_manager.run():
+                yield
+        finally:
+            if pool is not None:
+                await asyncio.to_thread(pool.close)
 
     endpoint = MCPEndpoint()
     routes = [Route("/healthz", healthz), Route("/mcp", endpoint), Route("/mcp/", endpoint)]
@@ -196,10 +232,12 @@ def create_app(
             trusted_proxy_hops=int(os.environ.get("DEEP_AGENTIC_CORE_MCP_TRUSTED_PROXY_HOPS", "0")),
             allowed_origins=allowed_origins,
         )
-    return Starlette(
+    app = Starlette(
         routes=routes,
         lifespan=lifespan,
     )
+    app.state.db_pool = pool
+    return app
 
 
 def main() -> None:

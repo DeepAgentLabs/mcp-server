@@ -11,7 +11,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 - PostgreSQL (Supabase) storage for hosted API keys, per-user sessions and
   signup limits, selected by `DEEP_AGENTIC_CORE_MCP_DATABASE_URL`. The Render
   Blueprint now uses it instead of Render Key Value; `deploy/supabase/schema.sql`
-  creates the private schema and least-privilege service role.
+  creates the private schema and least-privilege service role. Its connection
+  pool is sized from the request concurrency limit and closed on shutdown or
+  failed startup.
 
 ### Changed
 

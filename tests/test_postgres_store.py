@@ -199,3 +199,4 @@ async def test_app_uses_database_for_signup_auth_and_sessions(service_url, monke
                 "/api/account", headers={**headers, "origin": "https://mcp.example"}
             )
             assert account.json()["display_name"] == "Grace"
+    assert app.state.db_pool.closed
