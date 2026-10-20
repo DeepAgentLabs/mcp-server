@@ -147,3 +147,19 @@ def test_v09_discovery_is_read_only():
     }
     assert status["runtime_connected"] is False
     assert status["mcp_runtime_controls"] is False
+
+
+def test_sibling_venv_is_only_a_dependency_fallback(monkeypatch, tmp_path):
+    import sys
+
+    from deep_agentic_core_mcp.adapters import ensure_repo_on_path
+
+    sibling = tmp_path / "agentic-sidecar"
+    source = sibling / "src"
+    site = sibling / ".venv/lib/python3.12/site-packages"
+    site.mkdir(parents=True)
+    source.mkdir()
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_WORKSPACE_ROOT", str(tmp_path))
+    monkeypatch.setattr(sys, "path", ["/current/interpreter/site-packages"])
+    ensure_repo_on_path("agentic-sidecar")
+    assert sys.path == [str(source), "/current/interpreter/site-packages", str(site)]
