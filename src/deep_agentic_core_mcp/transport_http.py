@@ -12,6 +12,8 @@ import json
 import os
 import time
 from collections.abc import AsyncIterator, Mapping
+from typing import Any
+from urllib.parse import urlsplit
 
 from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
 from mcp.server.transport_security import TransportSecuritySettings
@@ -24,6 +26,12 @@ from starlette.types import Receive, Scope, Send
 from deep_agentic_core_mcp import config
 from deep_agentic_core_mcp.server import server
 from deep_agentic_core_mcp.services.api_keys import DynamoKeyStore, KeyStore, StaticKeyStore
+from deep_agentic_core_mcp.services.postgres_store import (
+    PostgresKeyStore,
+    PostgresSessionStore,
+    PostgresSignupLimiter,
+    connect,
+)
 from deep_agentic_core_mcp.services.remote_sessions import RedisSessionStore, SessionStore
 
 
@@ -38,18 +46,26 @@ def create_app(
     max_concurrent_per_user: int = 2,
     max_concurrent_total: int = 16,
 ) -> Starlette:
-    """Create a fail-closed app; an authentication backend and Redis are required.
+    """Create a fail-closed app; authentication and shared session storage are required.
 
     api_keys maps stable user IDs to unique secrets of at least 32 characters.
     Tests/development may explicitly supply MemorySessionStore. Stateless MCP
     transport avoids task affinity; workflow state lives in the supplied store.
     Rate/concurrency limits apply per process, storage quotas apply per user.
+    DEEP_AGENTIC_CORE_MCP_DATABASE_URL selects PostgreSQL (e.g. Supabase) for
+    keys and, unless Redis is configured, sessions and signup limits.
     """
     if key_store is not None and api_keys is not None:
         raise ValueError("Supply only one authentication backend")
+    database_url = os.environ.get("DEEP_AGENTIC_CORE_MCP_DATABASE_URL")
+    pool: Any = None
+    if database_url and (store is None or (key_store is None and api_keys is None)):
+        pool = connect(database_url)
     if key_store is None:
         table = os.environ.get("DEEP_AGENTIC_CORE_MCP_USERS_TABLE")
-        if table and api_keys is None:
+        if pool is not None and api_keys is None:
+            key_store = PostgresKeyStore(pool)
+        elif table and api_keys is None:
             key_store = DynamoKeyStore(table)
         else:
             if api_keys is None:
@@ -60,9 +76,15 @@ def create_app(
         raise ValueError("Request and concurrency limits must be positive")
     if store is None:
         url = os.environ.get("DEEP_AGENTIC_CORE_MCP_REDIS_URL")
-        if not url:
-            raise ValueError("Configure DEEP_AGENTIC_CORE_MCP_REDIS_URL for shared session storage")
-        store = RedisSessionStore(url)
+        if url:
+            store = RedisSessionStore(url)
+        elif pool is not None:
+            store = PostgresSessionStore(pool)
+        else:
+            raise ValueError(
+                "Configure DEEP_AGENTIC_CORE_MCP_REDIS_URL or DEEP_AGENTIC_CORE_MCP_DATABASE_URL"
+                " for shared session storage"
+            )
     session_store = store
     config.enable_remote_transport()
     session_manager = StreamableHTTPSessionManager(
@@ -153,19 +175,23 @@ def create_app(
 
     endpoint = MCPEndpoint()
     routes = [Route("/healthz", healthz), Route("/mcp", endpoint), Route("/mcp/", endpoint)]
-    if isinstance(auth_store, DynamoKeyStore):
-        from deep_agentic_core_mcp.signup import RedisSignupLimiter, signup_routes
+    if isinstance(auth_store, (DynamoKeyStore, PostgresKeyStore)):
+        from deep_agentic_core_mcp.signup import RedisSignupLimiter, SignupLimiter, signup_routes
 
         public_url = os.environ.get("DEEP_AGENTIC_CORE_MCP_PUBLIC_URL", "")
-        if not public_url.startswith("https://") or not isinstance(
-            session_store, RedisSessionStore
-        ):
+        limiter: SignupLimiter | None = None
+        if isinstance(session_store, RedisSessionStore):
+            limiter = RedisSignupLimiter(session_store.client)
+        elif isinstance(auth_store, PostgresKeyStore):
+            limiter = PostgresSignupLimiter(auth_store.pool)
+        if not public_url.startswith("https://") or limiter is None:
             raise ValueError(
-                "Signup requires an HTTPS public URL and Redis for shared signup limits"
+                "Signup requires an HTTPS public URL and Redis or PostgreSQL for shared"
+                " signup limits"
             )
         routes += signup_routes(
             auth_store,
-            RedisSignupLimiter(session_store.client),
+            limiter,
             public_url,
             trusted_proxy_hops=int(os.environ.get("DEEP_AGENTIC_CORE_MCP_TRUSTED_PROXY_HOPS", "0")),
             allowed_origins=allowed_origins,
@@ -184,6 +210,9 @@ def main() -> None:
     render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
     if render_hostname:
         default_hosts += "," + render_hostname
+    public_host = urlsplit(os.environ.get("DEEP_AGENTIC_CORE_MCP_PUBLIC_URL", "")).hostname
+    if public_host:
+        default_hosts += "," + public_host
     hosts = os.environ.get("DEEP_AGENTIC_CORE_MCP_ALLOWED_HOSTS", default_hosts)
     origins = os.environ.get("DEEP_AGENTIC_CORE_MCP_ALLOWED_ORIGINS", "")
     app = create_app(
