@@ -37,7 +37,7 @@ def test_real_v07_package_reports_capabilities_without_connecting_task(monkeypat
     status = adapter.status_summary()
     assert probe["runtime_ready"] is True
     assert status["package_status"] == "implemented"
-    assert set(status["installed_runtime_capabilities"]) == {
+    expected = {
         "decision_evaluation",
         "governance_enforcement",
         "plan_evaluation",
@@ -46,6 +46,9 @@ def test_real_v07_package_reports_capabilities_without_connecting_task(monkeypat
         "durable_audit",
         "local_operator_http",
     }
+    if hasattr(package, "AuthorityRegistry"):
+        expected |= {"task_authority", "authority_revocation", "redacted_evidence"}
+    assert set(status["installed_runtime_capabilities"]) == expected
     assert not status["runtime_connected"]
     assert not status["mcp_runtime_controls"]
     inventory = adapter.module_inventory()
@@ -124,3 +127,23 @@ def test_v07_discovery_and_inventory_without_an_installed_sibling(monkeypatch, t
         assert not result["mcp_runtime_controls"]
     (tmp_path / "operations").rmdir()
     assert adapter.module_inventory()["planned_runtime_modules"] == ["operations"]
+
+
+def test_v09_discovery_is_read_only():
+    def must_not_run(*args, **kwargs):
+        raise AssertionError("Discovery must not issue grants, revoke or read evidence")
+
+    package = SimpleNamespace(
+        Sidecar=SimpleNamespace(evaluate=must_not_run),
+        AuthorityRegistry=SimpleNamespace(grant=must_not_run, revoke=must_not_run),
+        BoundAgent=SimpleNamespace(evidence=must_not_run),
+    )
+    status = adapter._runtime_status(package)
+    assert set(status["installed_runtime_capabilities"]) == {
+        "decision_evaluation",
+        "task_authority",
+        "authority_revocation",
+        "redacted_evidence",
+    }
+    assert status["runtime_connected"] is False
+    assert status["mcp_runtime_controls"] is False
