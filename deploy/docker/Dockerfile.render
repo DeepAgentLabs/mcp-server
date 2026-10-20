@@ -8,7 +8,7 @@ COPY src ./src
 # Evals 0.9.0 (the producer of the native report/gate schemas bundled for evals.validate_artifact).
 # Chaos is installed for its exporter and fault catalog only; HTTP always
 # rejects chaos.run_experiment, so no target script is ever executed here.
-RUN pip install --no-cache-dir ".[http]" "agenticlens==0.10.0" "agentic-chaos==0.8.0" "agentic-evals==0.9.0"
+RUN pip install --no-cache-dir ".[http]" "agenticlens==0.10.0" "agentic-chaos==0.8.0" "agentic-evals==0.9.0" "agentic-sidecar==0.9.0"
 COPY scripts/fetch_schema_assets.py /tmp/fetch_schema_assets.py
 RUN python /tmp/fetch_schema_assets.py /opt/workspace/ai-operations-spec
 RUN useradd --create-home --uid 10001 mcp

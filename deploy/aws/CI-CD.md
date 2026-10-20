@@ -45,3 +45,12 @@ To retry a failed release deployment, rerun its failed job in GitHub Actions.
 To deploy new code, prepare and publish a new version tag. Rotate the IAM access key by updating both repository secrets, then
 remove the old key after a successful run. Rotate or revoke the MCP smoke key
 through its application account and update `MCP_SMOKE_KEY` when rotating.
+
+
+## Release pipeline from 0.4.1
+
+Tag releases validate, publish PyPI/GitHub Release and publish the MCP Registry.
+Automatic AWS deployment is removed from GitHub Actions. Existing AWS build and
+operator deployment scripts remain available for an explicit manual deployment;
+publishing a package does not update the running AWS service. Standalone image
+recipes include Sidecar 0.9.0 for package discovery, with no live runtime bridge.

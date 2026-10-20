@@ -28,3 +28,12 @@ docker build -f deploy/docker/Dockerfile.render -t deep-agentic-core-mcp:render 
 
 The adjacent `Dockerfile.*.dockerignore` files filter those direct build
 contexts. The helper is the portable option across Docker builders.
+
+
+## Release pipeline from 0.4.1
+
+Tag releases validate, publish PyPI/GitHub Release and publish the MCP Registry.
+Automatic AWS deployment is removed from GitHub Actions. Existing AWS build and
+operator deployment scripts remain available for an explicit manual deployment;
+publishing a package does not update the running AWS service. Standalone image
+recipes include Sidecar 0.9.0 for package discovery, with no live runtime bridge.
