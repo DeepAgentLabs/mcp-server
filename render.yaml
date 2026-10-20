@@ -1,4 +1,6 @@
 # yaml-language-server: $schema=https://render.com/schema/render.yaml.json
+# Keys, sessions and signup limits live in Supabase PostgreSQL; apply
+# deploy/supabase/schema.sql there first (see docs/remote-hosting.md).
 services:
   - type: web
     name: deep-agentic-core-mcp
@@ -11,18 +13,11 @@ services:
     healthCheckPath: /healthz
     autoDeployTrigger: "off"
     envVars:
-      - key: DEEP_AGENTIC_CORE_MCP_API_KEYS
+      # Supabase pooler URI for the mcp_service role, ending in ?sslmode=require
+      - key: DEEP_AGENTIC_CORE_MCP_DATABASE_URL
         sync: false
-      - key: DEEP_AGENTIC_CORE_MCP_REDIS_URL
-        fromService:
-          name: deep-agentic-core-mcp-sessions
-          type: keyvalue
-          property: connectionString
+      # https://<custom domain or assigned onrender.com hostname>; enables signup
+      - key: DEEP_AGENTIC_CORE_MCP_PUBLIC_URL
+        sync: false
       - key: DEEP_AGENTIC_CORE_MCP_HTTP_HOST
         value: 0.0.0.0
-  - type: keyvalue
-    name: deep-agentic-core-mcp-sessions
-    plan: free
-    region: oregon
-    maxmemoryPolicy: noeviction
-    ipAllowList: []
