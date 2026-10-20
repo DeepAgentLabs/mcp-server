@@ -130,9 +130,7 @@ Test transport-specific authorization and state isolation when changing dispatch
 - Pull requests, pushes to `main`, and manual CI runs perform checks and package
   builds without deploying AWS or publishing to PyPI.
 - Pushing a `v*` tag runs `release-pypi.yml`: the full test matrix and packaging
-  checks, PyPI publication, GitHub Release, MCP Registry publication, and AWS
-  deployment. AWS depends on successful PyPI publication and deploys the tagged
-  source using an immutable image. Infrastructure changes use the operator flow.
+  checks, PyPI publication, GitHub Release, MCP Registry publication. AWS deployment is manual from 0.4.1. Infrastructure changes use the operator flow.
 - Prepare matching versions in `pyproject.toml`, `__init__.py`, `server.json`,
   and `uv.lock`, plus dated changelog notes, before pushing the release tag.
 - Keep Docker files under `deploy/docker/` and infrastructure under `deploy/aws/`.
@@ -206,8 +204,17 @@ from the same tag and does all of the following:
 - publishes the package to PyPI via Trusted Publishing (OIDC)
 - creates the GitHub Release object for `vX.Y.Z`
 - publishes the server to the MCP Registry
-- deploys the tagged source to AWS after PyPI publication succeeds
+- leaves AWS deployment to an explicit manual operator action
 
 The GitHub Release title is the tag name, and its body is copied from the
 matching `CHANGELOG.md` section so the changelog, tag, PyPI release,
 GitHub Releases page, and MCP Registry publish all stay aligned.
+
+
+## Release pipeline from 0.4.1
+
+Tag releases validate, publish PyPI/GitHub Release and publish the MCP Registry.
+Automatic AWS deployment is removed from GitHub Actions. Existing AWS build and
+operator deployment scripts remain available for an explicit manual deployment;
+publishing a package does not update the running AWS service. Standalone image
+recipes include Sidecar 0.9.0 for package discovery, with no live runtime bridge.

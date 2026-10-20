@@ -48,7 +48,12 @@ def test_standalone_images_pin_phase3_sibling_versions(dockerfile: str) -> None:
 
 # Exact sibling releases the current hosted images ship (0.3.14: Lens 0.10.0, Chaos 0.8.0,
 # Evals 0.9.0, matching the bundled native Evals schemas).
-HOSTED_PINS = {"agenticlens": "0.10.0", "agentic-chaos": "0.8.0", "agentic-evals": "0.9.0"}
+HOSTED_PINS = {
+    "agenticlens": "0.10.0",
+    "agentic-chaos": "0.8.0",
+    "agentic-evals": "0.9.0",
+    "agentic-sidecar": "0.9.0",
+}
 
 
 @pytest.mark.parametrize("dockerfile", STANDALONE_IMAGES)
@@ -118,3 +123,10 @@ def test_workspace_image_copies_chaos_and_spec_catalogs() -> None:
     ):
         assert f"COPY {path}" in dockerfile
         assert f"!{path}" in ignore
+
+
+def test_release_does_not_automatically_deploy_aws():
+    workflow = (REPO / ".github/workflows/release-pypi.yml").read_text()
+    assert "  deploy:" not in workflow
+    assert "aws-actions/configure-aws-credentials" not in workflow
+    assert "scripts/aws_ci_deploy.py" not in workflow

@@ -190,7 +190,7 @@ The exported report is MCP-local, not an AIOS artifact. No sibling release or
 dependency floor changes. See the [unified workflows guide](docs/unified-workflows.md)
 and [`examples/unified_release_check.py`](examples/unified_release_check.py).
 
-## MCP Surface (current, `0.4.0`)
+## MCP Surface (current, `0.4.1`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -369,11 +369,11 @@ PyPI `0.2.0` release provides local stdio.
 |---|---|---|
 | `.github/workflows/ci.yml` | Pull request | Tests Python 3.10–3.13 and builds distributions; no AWS deployment |
 | `.github/workflows/ci.yml` | Push/merge to `main`, or manual run | Runs tests and package checks; no AWS deployment |
-| `.github/workflows/release-pypi.yml` | Push a `v*` version tag | Runs checks, publishes to PyPI, creates the GitHub Release, publishes MCP Registry metadata, and deploys AWS after PyPI succeeds |
+| `.github/workflows/release-pypi.yml` | Push a `v*` version tag | Runs checks, publishes to PyPI, creates the GitHub Release, publishes MCP Registry metadata; no AWS deployment |
 
-A push to `main` does not publish to PyPI or deploy AWS. A version-tag release
-deploys the same tagged source to AWS only after PyPI publication succeeds. Package releases use PyPI Trusted Publishing;
-AWS deployment uses the dedicated IAM user's GitHub secrets. See
+A push to `main` does not publish to PyPI or deploy AWS. Version-tag releases
+publish packages using PyPI Trusted Publishing. AWS deployment is an explicit
+manual operator action from 0.4.1. See
 [CONTRIBUTING.md](CONTRIBUTING.md) for releases and
 [the AWS CI guide](deploy/aws/CI-CD.md) for deployment setup and limits.
 
@@ -642,3 +642,9 @@ the existing registry discovers faults. Workflows, experiments and fuzzing
 are Python/CLI orchestration, not new MCP tools. Hosted HTTP continues to
 reject `chaos.run_experiment`, so no experiment target is executed by the
 hosted service.
+
+## Sidecar 0.9.0 interoperability
+
+Task-authority/delegation and reader-safe summaries are available in Sidecar.
+See [compatibility and ownership boundaries](docs/sidecar-0.9.md). Existing
+native decisions/correlation stay compatible; no new normative schema is claimed.

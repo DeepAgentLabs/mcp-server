@@ -28,6 +28,9 @@ def _runtime_status(package: Any) -> dict[str, Any]:
         (getattr(package, "TaskRuntime", None), "snapshot", "runtime_events"),
         (getattr(package, "TaskRuntime", None), "control", "task_controls"),
         (getattr(package, "EventJournal", None), "export", "durable_audit"),
+        (getattr(package, "AuthorityRegistry", None), "grant", "task_authority"),
+        (getattr(package, "AuthorityRegistry", None), "revoke", "authority_revocation"),
+        (getattr(package, "BoundAgent", None), "evidence", "redacted_evidence"),
     ):
         if callable(getattr(owner, method, None)):
             features.append(capability)

@@ -5,7 +5,7 @@ interface across the DeepAgentLabs ecosystem.
 
 ## Current Release
 
-**Version:** `0.4.0`
+**Version:** `0.4.1`
 **Released:** 2026-10-19
 
 ## Development Status
