@@ -540,6 +540,16 @@ structural; MCP never recomputes a gate or treats an unavailable judgment as a
 pass. Hosted images pin `agentic-evals==0.9.0`. See
 [the compatibility note](docs/evals-0.9-judge-reliability.md).
 
+## Evals 0.10.0 evaluation evidence
+
+Agentic Evals 0.10.0 exports evaluation reports as AIOS `0.4-draft`
+`evaluation` evidence merged into an existing Run. `spec.validate_artifact`
+reports those Runs as aligned (`AIOS-0.4-P08` passing), and a new test checks
+this against the installed Evals. MCP 0.4.2 pins `agentic-evals==0.10.0` in
+hosted images and development. Native schemas are unchanged, so
+`evals.validate_artifact` needs no sync. See
+[the compatibility note](docs/evals-0.10-aios-evidence.md).
+
 ## Chaos 0.7.0 interoperability
 
 Chaos 0.7.0 adds sequential fault cascades, deterministic monotonic breaking-point
