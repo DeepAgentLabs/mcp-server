@@ -322,6 +322,17 @@ def validate_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
     claim = claim_for(schema_set.marker if schema_set else "0.4-draft")
 
     if artifact_type not in {"workflow", "run"}:
+        if compatibility["decision"] != "reject":
+            # The marker is supported, but its schema set publishes no schema for
+            # this artifact type; never fall back to another marker's (AIOS-0.5-V03).
+            compatibility = {
+                **compatibility,
+                "decision": "reject",
+                "rule_id": "AIOS-0.5-V03",
+                "reason": f"no schema for artifact_type {artifact_type!r} is published "
+                "behind this spec_version; the artifact must be validated against the "
+                "schema its own marker names, never a different version's",
+            }
         return {
             "ok": False,
             "claim": claim,
@@ -475,6 +486,14 @@ def semantic_issues_for(artifact: dict[str, Any]) -> list[Issue]:
         ended = datetime.fromisoformat(artifact["ended_at"].replace("Z", "+00:00"))
         if ended < started:
             issues.append(("AIOS-0.4-P04", "ended_at must not precede started_at"))
+    for step in artifact.get("steps", []):
+        if step.get("started_at") and step.get("ended_at"):
+            step_started = datetime.fromisoformat(step["started_at"].replace("Z", "+00:00"))
+            step_ended = datetime.fromisoformat(step["ended_at"].replace("Z", "+00:00"))
+            if step_ended < step_started:
+                issues.append(
+                    ("AIOS-0.4-P04", f"Step {step['id']} ended_at must not precede started_at")
+                )
 
     for relationship in relationships:
         source = relationship["source"]
