@@ -160,9 +160,10 @@ class DynamoKeyStore:
 
     def set_access_policy(self, user: str, policy: AccessPolicy | None) -> None:
         values: dict[str, Any] = {}
-        expression = "REMOVE permissions"
+        # "permissions" is a DynamoDB reserved word, so it is always aliased.
+        expression = "REMOVE #p"
         if policy is not None:
-            expression = "SET permissions = :p"
+            expression = "SET #p = :p"
             # DynamoDB rejects floats; epoch seconds are stored as an ISO 8601 string.
             config = policy.to_config()
             if "expires_at" in config:
@@ -174,6 +175,7 @@ class DynamoKeyStore:
                 Key={"pk": "USER#" + user},
                 UpdateExpression=expression,
                 ConditionExpression="attribute_exists(pk)",
+                ExpressionAttributeNames={"#p": "permissions"},
                 **({"ExpressionAttributeValues": values} if values else {}),
             )
         except self.client.exceptions.ConditionalCheckFailedException as exc:
