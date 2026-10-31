@@ -6,7 +6,8 @@ ecosystem. It is designed to expose a single MCP interface that combines:
 - `agenticlens` style workflow inspection, profiling, and analysis
 - `agentic-chaos` style resilience testing and fault-injection workflows
 - `agentic-sidecar` style supervision-readiness and module-surface discovery
-- authenticated local Control Tower 0.7.0 investigation and read-only fleet posture access
+- authenticated local Control Tower investigation, read-only fleet posture access and (since
+  0.5.1) Control Tower 0.9 runbook tools
 
 It sits above the **AI Operations Workflow Specification**, exposing a unified
 MCP-native control surface over the shared operational model used by the
@@ -719,6 +720,17 @@ See [operator compatibility and ownership](docs/tower-0.8-live-operations.md) fo
 periodic detection, durable alerts, acknowledgements and joined incident console
 views. Existing native contracts and optional dependency ranges remain compatible;
 no runtime or patch release is required here.
+
+## Control Tower 0.9.0 runbooks (MCP 0.5.1)
+
+Local stdio adds eight `tower.runbook*` tools (twenty `tower.*` tools in total).
+Reader tools list installed runbooks, recommendations for an incident and
+execution history. Writer tools preview a catalog version with string
+parameters, execute the exact human-approved digest, cancel and verify. There is
+still no approval or revocation tool: a human approves through Tower HTTP/CLI
+with the separate approver credential. Recommendations come only from installed
+runbook versions, and hosted MCP still refuses Tower tools. See the
+[runbook tools guide](docs/tower-0.9-runbooks.md).
 
 ## Chaos 0.9.0 interoperability
 
