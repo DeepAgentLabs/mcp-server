@@ -303,3 +303,30 @@ def test_default_evidence_handler_writes_json_lines(monkeypatch, capsys):
     access_evidence.record("denial", correlation_id="c-1", user="alice", tool="core.version")
     line = json.loads(capsys.readouterr().out.strip())
     assert line["event"] == "denial" and line["correlation_id"] == "c-1"
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("tool", "message"),
+    [
+        ("chaos.run_experiment", "chaos.run_experiment is disabled over remote transport"),
+        ("tower.detect", "Tower connector is local-only"),
+    ],
+)
+async def test_hosted_only_denials_are_audited(tool, message, caplog):
+    caplog.set_level(logging.INFO, logger="deep_agentic_core_mcp.access")
+    payload = json.loads(
+        (
+            await handle_call_tool(
+                tool,
+                {},
+                owner="alice",
+                store=MemorySessionStore(),
+                authorizer=lambda: Principal("alice"),
+            )
+        )[0].text
+    )
+    assert payload["error"] == message and payload["access_denied"]
+    decision = payload["access_decision"]
+    assert decision["reason"] == "tool unavailable over hosted transport"
+    assert evidence(caplog)[-1]["correlation_id"] == decision["correlation_id"]

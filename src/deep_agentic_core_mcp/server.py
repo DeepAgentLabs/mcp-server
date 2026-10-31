@@ -335,15 +335,25 @@ async def handle_call_tool(
     if handler is None:
         return [TextContent(type="text", text=json.dumps({"error": f"Unknown tool: {name}"}))]
 
+    def transport_denial(message: str) -> dict[str, Any]:
+        if owner is None:
+            return {"ok": False, "error": message}
+        # Hidden from hosted tools/list, but a direct call is still audited.
+        evidence = access_evidence.record(
+            "denial",
+            correlation_id=access_evidence.new_correlation_id(),
+            user=owner,
+            tool=name,
+            reason="tool unavailable over hosted transport",
+        )
+        return _deny(evidence, message)
+
     def execute() -> dict[str, Any]:
         if name.startswith("tower.") and (owner is not None or config.is_remote_transport()):
-            return {"ok": False, "error": "Tower connector is local-only"}
+            return transport_denial("Tower connector is local-only")
         if owner is not None and store is not None:
             if name in _OPEN_WORLD_TOOLS:
-                return {
-                    "ok": False,
-                    "error": "chaos.run_experiment is disabled over remote transport",
-                }
+                return transport_denial("chaos.run_experiment is disabled over remote transport")
             if authorizer is None:
                 with store.transaction(owner):
                     return handler(arguments)
