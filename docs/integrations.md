@@ -67,7 +67,9 @@ The verified local environment reports:
 The MCP Server validates native Evals reports and gate decisions offline with
 `evals.validate_artifact`, and `core.release_check` and `lens.slo_summary` judge
 evaluation reports with the Evals release gate. The bundled schemas match
-Agentic Evals `0.9.0`.
+Agentic Evals `0.9.0`, unchanged in `0.10.0`, which hosted images pin.
+`spec.validate_artifact` validates Runs carrying Evals 0.10.0 AIOS evaluation
+evidence ([note](evals-0.10-aios-evidence.md)).
 
 ## AI Operations Specification
 
