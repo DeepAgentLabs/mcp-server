@@ -6,8 +6,17 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.4.2 - 2026-10-31
+
 ### Added
 
+- Agentic Evals 0.10.0 compatibility: hosted images and the development
+  dependency pin `agentic-evals==0.10.0`. `spec.validate_artifact` reports Runs
+  carrying Evals AIOS evaluation evidence as aligned, and
+  `tests/test_evals_aios_evidence.py` checks this, including an orphaned
+  evaluation cited as `AIOS-0.4-P08`. The bundled native Evals schemas are
+  unchanged (Evals 0.10.0 ships the same documents). See
+  `docs/evals-0.10-aios-evidence.md`.
 - PostgreSQL (Supabase) storage for hosted API keys, per-user sessions and
   signup limits, selected by `DEEP_AGENTIC_CORE_MCP_DATABASE_URL`. The Render
   Blueprint now uses it instead of Render Key Value; `deploy/supabase/schema.sql`
