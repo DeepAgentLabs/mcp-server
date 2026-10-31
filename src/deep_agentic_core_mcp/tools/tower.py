@@ -45,6 +45,19 @@ WRITE_OPERATIONS = {
 }
 # Runbook parameters are the only structured argument: a small string-to-string map.
 MAX_RUNBOOK_PARAMETERS = 20
+REQUIRED_ARGUMENTS = {
+    "versions": ("capability", "minimum_version"),
+    "detect": ("agent_id", "evidence_id"),
+    "preview": ("dependency",),
+    "execute": ("preview_digest",),
+    "verify": ("lens_evidence_id", "evals_evidence_id"),
+    "runbook_preview": ("runbook_id", "version", "parameters"),
+    "runbook_execute": ("preview_digest",),
+    "runbook_verify": ("lens_evidence_id", "evals_evidence_id"),
+}
+DEFAULT_DEADLINE_SECONDS = 10
+# Tower 0.9 bounds a runbook's worst case at 120 seconds, plus its lease slack.
+RUNBOOK_EXECUTE_DEADLINE_SECONDS = 150
 
 
 def query(arguments: dict[str, Any] | None) -> dict[str, Any]:
@@ -86,6 +99,8 @@ def query(arguments: dict[str, Any] | None) -> dict[str, Any]:
             path = path.replace("{" + key + "}", quote(value, safe=""))
     if set(args) - allowed:
         return {"ok": False, "error": "Unsupported Tower arguments"}
+    if any(args.get(key) is None for key in REQUIRED_ARGUMENTS.get(operation, ())):
+        return {"ok": False, "error": "Required Tower arguments are missing"}
     parameters = args.pop("parameters", None) if operation == "runbook_preview" else None
     if parameters is not None and not (
         isinstance(parameters, dict)
@@ -98,7 +113,20 @@ def query(arguments: dict[str, Any] | None) -> dict[str, Any]:
     if parameters is not None:
         args["parameters"] = parameters
     url = origin + path + ("?" + urlencode(args) if args and not write else "")
-    payload = json.dumps({"url": url, "arguments": args, "write": write, "token": token}).encode()
+    deadline = (
+        RUNBOOK_EXECUTE_DEADLINE_SECONDS
+        if operation == "runbook_execute"
+        else DEFAULT_DEADLINE_SECONDS
+    )
+    payload = json.dumps(
+        {
+            "url": url,
+            "arguments": args,
+            "write": write,
+            "token": token,
+            "timeout": deadline - 1,
+        }
+    ).encode()
     if len(payload) > 65536:
         return {"ok": False, "error": "Tower request exceeds connector limit"}
     try:
@@ -106,7 +134,7 @@ def query(arguments: dict[str, Any] | None) -> dict[str, Any]:
             [sys.executable, "-m", "deep_agentic_core_mcp.tools.tower_http"],
             input=payload,
             capture_output=True,
-            timeout=10,
+            timeout=deadline,
             check=False,
         )
         if completed.returncode != 0:
@@ -142,18 +170,7 @@ def tool_definitions() -> list[dict[str, Any]]:
             if "{" + key + "}" in path:
                 props[key] = {"type": "string", "minLength": 1}
                 required.append(key)
-        required.extend(
-            {
-                "versions": ["capability", "minimum_version"],
-                "detect": ["agent_id", "evidence_id"],
-                "preview": ["dependency"],
-                "execute": ["preview_digest"],
-                "verify": ["lens_evidence_id", "evals_evidence_id"],
-                "runbook_preview": ["runbook_id", "version", "parameters"],
-                "runbook_execute": ["preview_digest"],
-                "runbook_verify": ["lens_evidence_id", "evals_evidence_id"],
-            }.get(operation, [])
-        )
+        required.extend(key for key in REQUIRED_ARGUMENTS.get(operation, ()) if key not in required)
         tools.append(
             {
                 "name": "tower." + operation,
@@ -173,7 +190,7 @@ def tool_definitions() -> list[dict[str, Any]]:
                     if operation.startswith("runbook")
                     else "configured Tower 0.6 API"
                 ],
-                "expected_duration": "fast",
+                "expected_duration": "slow" if operation == "runbook_execute" else "fast",
                 "mutates_session": False,
             }
         )

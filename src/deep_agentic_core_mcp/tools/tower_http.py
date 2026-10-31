@@ -27,7 +27,8 @@ def request(payload: dict[str, Any]) -> dict[str, Any]:
         headers={"Authorization": "Bearer " + payload["token"], "Content-Type": "application/json"},
     )
     try:
-        with build_opener(NoRedirect()).open(req, timeout=9) as response:
+        timeout = min(max(float(payload.get("timeout", 9)), 1), 149)
+        with build_opener(NoRedirect()).open(req, timeout=timeout) as response:
             data = response.read(1024 * 1024 + 1)
             if len(data) > 1024 * 1024:
                 return {"ok": False, "error": "Tower response exceeds connector limit"}
