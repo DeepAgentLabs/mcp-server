@@ -6,6 +6,29 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.5.1 - 2026-10-31
+
+Pairs with Control Tower 0.9.0 automated runbooks. See `docs/tower-0.9-runbooks.md`.
+
+### Added
+
+- Local `tower.runbooks`, `tower.runbook_recommendations`,
+  `tower.runbook_executions` and `tower.runbook_execution` reader tools, and
+  `tower.runbook_preview`, `tower.runbook_execute`, `tower.runbook_cancel` and
+  `tower.runbook_verify` writer tools over Tower 0.9 runbook routes.
+  `parameters` accepts at most 20 string-to-string entries; no tool approves or
+  revokes.
+
+### Changed
+
+- The `tower.investigation` prompt recommends only eligible runbooks returned by
+  `tower.runbook_recommendations` when Tower 0.9 is configured.
+
+### Compatibility
+
+- Hosted MCP still hides and refuses every `tower.*` tool. Runbook tools return
+  `Tower HTTP 404` against Tower releases before 0.9.0.
+
 ## 0.5.0 - 2026-10-31
 
 Phase 5 (Publishing and Adoption) is complete with hosted access control.
