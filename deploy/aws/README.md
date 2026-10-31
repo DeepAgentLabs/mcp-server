@@ -36,8 +36,9 @@ that account. Existing in-flight requests may finish. No worker restart is
 required. The initial migrated `admin` identity has the same application
 permissions as other users; it is not an elevated role.
 
-DynamoDB stores `USER#<id>` records with display name, status, and current key
-hash; `KEY#<sha256>` records map hashes to stable user IDs. No plaintext keys
+DynamoDB stores `USER#<id>` records with display name, status, current key
+hash and, from 0.5.0, an optional `permissions` access-policy map (set with
+`deep-agentic-core-mcp-admin`; see `docs/access-control.md`); `KEY#<sha256>` records map hashes to stable user IDs. No plaintext keys
 are stored. Transactional signup and rotation prevent partial writes or
 concurrent key resurrection. Consistent reads enforce the current key and
 revocation status. The task role can get/write/update/delete only this table;

@@ -12,7 +12,7 @@ workflows by supplying their session names.
 | Environment variable | Required | Purpose |
 | --- | --- | --- |
 | `DEEP_AGENTIC_CORE_MCP_DATABASE_URL` | Redis or this | PostgreSQL/Supabase URL for keys, signup limits and (without Redis) sessions; apply `deploy/supabase/schema.sql` first |
-| `DEEP_AGENTIC_CORE_MCP_API_KEYS` | Without a database or DynamoDB | JSON object mapping stable user IDs to unique secrets |
+| `DEEP_AGENTIC_CORE_MCP_API_KEYS` | Without a database or DynamoDB | JSON object mapping stable user IDs to unique secrets, or to `{"key": ..., "permissions": {...}}` ([access control](access-control.md)) |
 | `DEEP_AGENTIC_CORE_MCP_USERS_TABLE` | AWS signup | DynamoDB user/key table; overrides environment key configuration |
 | `DEEP_AGENTIC_CORE_MCP_PUBLIC_URL` | With signup | HTTPS origin for connection details and browser origin checks |
 | `DEEP_AGENTIC_CORE_MCP_TRUSTED_PROXY_HOPS` | No | Trusted suffix position in X-Forwarded-For; AWS sets 2 for its restricted CloudFront/ALB chain |
@@ -32,6 +32,10 @@ random secrets of at least 32 characters; generate with `secrets.token_urlsafe(3
   "bob": "<bob's independently generated random secret>"
 }
 ```
+
+A user can map to `{"key": "<secret>", "permissions": {"allow": ["lens.*"]}}`
+instead of a plain secret. The `permissions` value is a per-key tool policy that
+is enforced at dispatch. See [hosted access control](access-control.md).
 
 Keep user IDs stable during key rotation to preserve session ownership. Replace
 credentials and restart all workers; during rolling rotation, old and new
@@ -124,7 +128,11 @@ is also set.
 
 1. In the Supabase SQL editor, run `deploy/supabase/schema.sql`. It creates the
    private `mcp` schema (not exposed through the Data API), enables row-level
-   security, and creates the least-privilege `mcp_service` login role.
+   security, and creates the least-privilege `mcp_service` login role. The file
+   can be re-run. Before deploying 0.5.0 to an existing project, re-run it (or
+   `ALTER TABLE mcp.users ADD COLUMN IF NOT EXISTS permissions jsonb;`) so the
+   access-policy column exists. Without that column, authentication fails with
+   HTTP 503.
 2. Set that role's password: `ALTER ROLE mcp_service WITH PASSWORD '<secret>';`
 3. Build the connection string from the project's **Connect → Transaction
    pooler** URI (port 6543; Supabase direct connections are IPv6-only), using
