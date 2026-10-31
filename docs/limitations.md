@@ -28,6 +28,15 @@ Because it executes code, experiments should be performed only with trusted and 
 
 A successful experiment does not necessarily mean that a fault was observed. The target may complete without producing a chaos event.
 
+## Hosted access control
+
+Per-key tool policies (0.5.0) are checked at dispatch. A revocation or policy
+change does not cancel a call that is already running. It also does not revoke
+credentials the agent holds for other systems. Access evidence is the MCP-local
+`mcp.access-decision.v1` log record; a shared AIOS format does not exist yet.
+Hosted `tower.*` tools and an authenticated Sidecar stop/revoke bridge are not
+available.
+
 ## Local execution
 
 The MCP Server is designed around local, trusted stdio execution.
