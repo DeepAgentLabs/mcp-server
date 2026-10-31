@@ -68,6 +68,15 @@ class PostgresKeyStore:
             ).fetchone()
         return Principal(str(row[0]), AccessPolicy.load(row[1])) if row else None
 
+    def stored_access_policy(self, user: str) -> Any:
+        with self.pool.connection() as conn:
+            row = conn.execute(
+                "SELECT permissions FROM mcp.users WHERE user_id = %s", (user,)
+            ).fetchone()
+        if row is None:
+            raise KeyError(user)
+        return row[0]
+
     def set_access_policy(self, user: str, policy: AccessPolicy | None) -> None:
         from psycopg.types.json import Jsonb
 

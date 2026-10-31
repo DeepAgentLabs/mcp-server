@@ -46,6 +46,10 @@ class AccountStore(KeyStore, Protocol):
 class PolicyAdminStore(Protocol):
     """Operator controls that need no agent key: permissions and revocation by user ID."""
 
+    def profile(self, user: str) -> dict[str, str]: ...
+
+    def stored_access_policy(self, user: str) -> Any: ...
+
     def set_access_policy(self, user: str, policy: AccessPolicy | None) -> None: ...
 
     def revoke_user(self, user: str) -> None: ...
@@ -147,6 +151,12 @@ class DynamoKeyStore:
             return None
         # Re-read after authentication so a policy change applies to the next dispatch.
         return Principal(user, AccessPolicy.load(self._get("USER#" + user).get("permissions")))
+
+    def stored_access_policy(self, user: str) -> Any:
+        account = self._get("USER#" + user)
+        if not account:
+            raise KeyError(user)
+        return account.get("permissions")
 
     def set_access_policy(self, user: str, policy: AccessPolicy | None) -> None:
         values: dict[str, Any] = {}
