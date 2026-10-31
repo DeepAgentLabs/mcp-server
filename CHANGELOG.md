@@ -24,6 +24,9 @@ See `docs/access-control.md`.
   apply to queued calls, retries and existing connections. Calls already
   running are not cancelled. An unreachable key store denies the call.
 - Hosted `tools/list` lists only the tools the caller's policy permits.
+- Direct hosted calls to `chaos.run_experiment` or `tower.*`, which are hidden
+  from hosted `tools/list`, are still refused and now return and log a
+  correlated denial record.
 - `core.access_status`: the caller's allow/deny lists, task scope, expiry and
   permitted tools. Over local stdio it returns `enforced: false`.
 - Correlated MCP-local `mcp.access-decision.v1` evidence. Denied calls return a
