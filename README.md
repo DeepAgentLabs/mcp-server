@@ -136,7 +136,7 @@ and `chaos.export_aios_run` behave the same hosted as locally. Only
 
 Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
-pin `agenticlens==0.11.0` (since MCP 0.4.3) and `agentic-chaos==0.8.0` (since MCP 0.3.13).
+pin `agenticlens==0.11.0` (since MCP 0.4.3) and `agentic-chaos==0.9.0` (since MCP 0.4.4).
 
 ## AgenticLens 0.8.0 suite tools (MCP 0.3.9)
 
