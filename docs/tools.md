@@ -3,11 +3,32 @@
 
 # Tool Reference
 
-39 tools, generated from `tools/registry.py` - the same data MCP
+40 tools, generated from `tools/registry.py` - the same data MCP
 clients see via `tools/list`. See [README.md](../README.md) for a one-line-per-tool
 overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
 ## Core
+
+### `core.access_status` — Access Status
+
+Report the calling hosted key's effective access policy: allow and deny globs, task scope, expiry, and the tools it may call right now. Policies are enforced at dispatch, outside the model; local stdio reports `enforced: false`.
+
+| | |
+| --- | --- |
+| Category | `core` |
+| Prerequisites | none |
+| Expected duration | instant |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {},
+  "additionalProperties": false
+}
+```
 
 ### `core.compare_runs` — Unified Run Comparison
 

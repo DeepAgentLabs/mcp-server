@@ -94,6 +94,18 @@ The HTTP tool surface excludes `chaos.run_experiment` and its dispatch rejects
 calls even when `DEEP_AGENTIC_CORE_MCP_ALLOW_REMOTE_CHAOS` is set. That override
 is retained for legacy/local integrations and cannot enable HTTP execution.
 
+From 0.5.0 each hosted key can carry an access policy: allow and deny tool
+globs, an expiry and a task scope. The server checks it at dispatch, outside the
+model. Before each handler runs, it re-authenticates the key and reloads the
+policy, so revoked, narrowed or expired keys are refused for queued calls,
+retries and existing connections. A call that is already running is not
+cancelled. Policies narrow the hosted surface and cannot re-enable chaos
+execution or `tower.*`. A stored policy that fails validation denies every tool.
+Denials return correlated `mcp.access-decision.v1` evidence, which is MCP-local
+and not an AIOS artifact. Operators can narrow or revoke any key by user ID
+with `deep-agentic-core-mcp-admin`, without the agent's key. See
+[hosted access control](docs/access-control.md).
+
 This is administrator-provisioned bearer-key access, not an OAuth server.
 Do not publish keys, bake them into images, or enable HTTP access without TLS.
 See [remote hosting](docs/remote-hosting.md) for configuration and rotation.

@@ -44,6 +44,7 @@ nav:
   - Getting Started: getting-started.md
   - User Guide: user-guide.md
   - Remote Hosting: remote-hosting.md
+  - Hosted Access Control: access-control.md
   - Architecture: architecture.md
   - Features: features.md
   - Configuration: configuration.md

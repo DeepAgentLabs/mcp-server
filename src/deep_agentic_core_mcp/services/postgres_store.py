@@ -16,6 +16,7 @@ from contextlib import contextmanager
 from typing import Any
 
 from deep_agentic_core_mcp.services import session
+from deep_agentic_core_mcp.services.access_policy import AccessPolicy, Principal
 from deep_agentic_core_mcp.services.api_keys import KeyConflictError, key_digest
 from deep_agentic_core_mcp.services.remote_sessions import decode, encode
 
@@ -54,6 +55,46 @@ class PostgresKeyStore:
                 (key_digest(token),),
             ).fetchone()
         return str(row[0]) if row else None
+
+    def authorize(self, token: str) -> Principal | None:
+        """Key, status and policy in one read, so a dispatch sees one consistent row."""
+        if len(token) < 32 or len(token) > 256 or any(c.isspace() for c in token):
+            return None
+        with self.pool.connection() as conn:
+            row = conn.execute(
+                "SELECT user_id, permissions FROM mcp.users"
+                " WHERE key_hash = %s AND status = 'active'",
+                (key_digest(token),),
+            ).fetchone()
+        return Principal(str(row[0]), AccessPolicy.load(row[1])) if row else None
+
+    def stored_access_policy(self, user: str) -> Any:
+        with self.pool.connection() as conn:
+            row = conn.execute(
+                "SELECT permissions FROM mcp.users WHERE user_id = %s", (user,)
+            ).fetchone()
+        if row is None:
+            raise KeyError(user)
+        return row[0]
+
+    def set_access_policy(self, user: str, policy: AccessPolicy | None) -> None:
+        from psycopg.types.json import Jsonb
+
+        value = None if policy is None else Jsonb(policy.to_config())
+        with self.pool.connection() as conn:
+            updated = conn.execute(
+                "UPDATE mcp.users SET permissions = %s WHERE user_id = %s", (value, user)
+            ).rowcount
+        if updated != 1:
+            raise KeyError(user)
+
+    def revoke_user(self, user: str) -> None:
+        with self.pool.connection() as conn:
+            updated = conn.execute(
+                "UPDATE mcp.users SET status = 'revoked' WHERE user_id = %s", (user,)
+            ).rowcount
+        if updated != 1:
+            raise KeyError(user)
 
     def issue(self, display_name: str) -> dict[str, str]:
         user = str(uuid.uuid4())

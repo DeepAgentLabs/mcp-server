@@ -7,11 +7,18 @@ import secrets
 import time
 import uuid
 from collections.abc import Mapping
+from datetime import datetime, timezone
 from typing import Any, Protocol
+
+from deep_agentic_core_mcp.services.access_policy import AccessPolicy, Principal
 
 
 def key_digest(token: str) -> str:
     return hashlib.sha256(token.encode()).hexdigest()
+
+
+def _iso(epoch: float) -> str:
+    return datetime.fromtimestamp(epoch, timezone.utc).isoformat().replace("+00:00", "Z")
 
 
 class KeyConflictError(Exception):
@@ -36,27 +43,55 @@ class AccountStore(KeyStore, Protocol):
     def revoke(self, user: str, token: str) -> None: ...
 
 
-class StaticKeyStore:
-    """Explicit local/development configuration, compatible with existing installs."""
+class PolicyAdminStore(Protocol):
+    """Operator controls that need no agent key: permissions and revocation by user ID."""
 
-    def __init__(self, api_keys: Mapping[str, str]) -> None:
+    def profile(self, user: str) -> dict[str, str]: ...
+
+    def stored_access_policy(self, user: str) -> Any: ...
+
+    def set_access_policy(self, user: str, policy: AccessPolicy | None) -> None: ...
+
+    def revoke_user(self, user: str) -> None: ...
+
+
+class StaticKeyStore:
+    """Explicit local/development configuration, compatible with existing installs.
+
+    Each user maps to a key string, or to {"key": ..., "permissions": {...}} to
+    attach an access policy (see services/access_policy.py).
+    """
+
+    def __init__(self, api_keys: Mapping[str, Any]) -> None:
         if not isinstance(api_keys, Mapping) or not api_keys:
             raise ValueError(
                 "Configure a nonempty DEEP_AGENTIC_CORE_MCP_API_KEYS user-to-key mapping"
             )
         self.credentials: dict[str, str] = {}
-        for user, secret in api_keys.items():
+        self.policies: dict[str, AccessPolicy] = {}
+        for user, entry in api_keys.items():
             if not isinstance(user, str) or not user or len(user) > 128:
                 raise ValueError("User IDs must be nonempty strings of at most 128 characters")
+            secret, permissions = entry, None
+            if isinstance(entry, Mapping):
+                if set(entry) - {"key", "permissions"}:
+                    raise ValueError("Key entries accept only 'key' and 'permissions'")
+                secret, permissions = entry.get("key"), entry.get("permissions")
             if not isinstance(secret, str) or len(secret) < 32 or any(c.isspace() for c in secret):
                 raise ValueError("Each user needs a unique bearer key of at least 32 characters")
             digest = key_digest(secret)
             if digest in self.credentials:
                 raise ValueError("Bearer keys must be unique per user")
             self.credentials[digest] = user
+            # Configuration errors fail at startup, not as a deny-all at runtime.
+            self.policies[user] = AccessPolicy.from_config(permissions)
 
     def authenticate(self, token: str) -> str | None:
         return self.credentials.get(key_digest(token))
+
+    def authorize(self, token: str) -> Principal | None:
+        user = self.authenticate(token)
+        return None if user is None else Principal(user, self.policies[user])
 
     def ping(self) -> bool:
         return True
@@ -97,7 +132,7 @@ class DynamoKeyStore:
         self._get("HEALTH")
         return True
 
-    def authenticate(self, token: str) -> str | None:
+    def _active_account(self, token: str) -> tuple[str, dict[str, Any]] | None:
         if len(token) < 32 or len(token) > 256 or any(c.isspace() for c in token):
             return None
         digest = key_digest(token)
@@ -107,8 +142,63 @@ class DynamoKeyStore:
             return None
         account = self._get("USER#" + user)
         if account.get("status") == "active" and account.get("key_hash") == digest:
-            return user
+            return user, account
         return None
+
+    def authenticate(self, token: str) -> str | None:
+        active = self._active_account(token)
+        return None if active is None else active[0]
+
+    def authorize(self, token: str) -> Principal | None:
+        # Status, key and policy come from the same consistent USER# read, so a
+        # revocation between two reads can never pair a revoked key with a policy.
+        active = self._active_account(token)
+        if active is None:
+            return None
+        user, account = active
+        return Principal(user, AccessPolicy.load(account.get("permissions")))
+
+    def stored_access_policy(self, user: str) -> Any:
+        account = self._get("USER#" + user)
+        if not account:
+            raise KeyError(user)
+        return account.get("permissions")
+
+    def set_access_policy(self, user: str, policy: AccessPolicy | None) -> None:
+        values: dict[str, Any] = {}
+        # "permissions" is a DynamoDB reserved word, so it is always aliased.
+        expression = "REMOVE #p"
+        if policy is not None:
+            expression = "SET #p = :p"
+            # DynamoDB rejects floats; epoch seconds are stored as an ISO 8601 string.
+            config = policy.to_config()
+            if "expires_at" in config:
+                config["expires_at"] = _iso(config["expires_at"])
+            values = {":p": config}
+        try:
+            self.client.update_item(
+                TableName=self.table_name,
+                Key={"pk": "USER#" + user},
+                UpdateExpression=expression,
+                ConditionExpression="attribute_exists(pk)",
+                ExpressionAttributeNames={"#p": "permissions"},
+                **({"ExpressionAttributeValues": values} if values else {}),
+            )
+        except self.client.exceptions.ConditionalCheckFailedException as exc:
+            raise KeyError(user) from exc
+
+    def revoke_user(self, user: str) -> None:
+        try:
+            self.client.update_item(
+                TableName=self.table_name,
+                Key={"pk": "USER#" + user},
+                UpdateExpression="SET #s = :revoked",
+                ConditionExpression="attribute_exists(pk)",
+                ExpressionAttributeNames={"#s": "status"},
+                ExpressionAttributeValues={":revoked": "revoked"},
+            )
+        except self.client.exceptions.ConditionalCheckFailedException as exc:
+            raise KeyError(user) from exc
 
     def issue(self, display_name: str) -> dict[str, str]:
         user = str(uuid.uuid4())

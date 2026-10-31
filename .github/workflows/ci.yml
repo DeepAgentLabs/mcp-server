@@ -93,9 +93,44 @@ jobs:
           uv run --no-sync python -c "import agentic_chaos; assert agentic_chaos.__version__ == '0.5.0'"
           uv run --no-sync pytest tests/test_chaos_v05.py
 
+  test-postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: pw
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: mcp-server
+      - name: Check out agenticlens
+        uses: actions/checkout@v7
+        with:
+          repository: DeepAgentLabs/agenticlens
+          path: agenticlens
+      - uses: astral-sh/setup-uv@v7
+      - name: Install MCP with the hosted extras
+        working-directory: mcp-server
+        run: |
+          uv sync --frozen --extra dev --extra http --python 3.12
+          uv pip install -e ../agenticlens
+      - name: Keys, access policies, sessions and signup limits against PostgreSQL
+        working-directory: mcp-server
+        env:
+          DEEP_AGENTIC_CORE_MCP_TEST_DATABASE_URL: postgresql://postgres:pw@localhost:5432/postgres
+        run: uv run --no-sync pytest tests/test_postgres_store.py
+
   package:
     runs-on: ubuntu-latest
-    needs: [test, test-chaos-v05]
+    needs: [test, test-chaos-v05, test-postgres]
     steps:
       - uses: actions/checkout@v7
         with:

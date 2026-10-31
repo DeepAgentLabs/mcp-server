@@ -5,8 +5,8 @@ interface across the DeepAgentLabs ecosystem.
 
 ## Current Release
 
-**Version:** `0.4.1`
-**Released:** 2026-10-19
+**Version:** `0.5.0`
+**Released:** 2026-10-31
 
 ## Development Status
 
@@ -20,7 +20,7 @@ interface across the DeepAgentLabs ecosystem.
 | Phase 3d | ✅ Implemented | Agentic Sidecar discovery |
 | Phase 3c | ✅ Complete | AI Operations Specification conformance |
 | Phase 4 | ✅ Complete | Unified workflows |
-| Phase 5 | 🏗️ In progress | Publishing, adoption and hosted access control |
+| Phase 5 | ✅ Complete | Publishing, adoption and hosted access control (`0.5.0`) |
 | Phase 6 | 🚧 Planned | Operational intelligence |
 
 ## Upcoming Work
@@ -45,12 +45,17 @@ Access-containment items moved to Phase 5 on 2026-10-19.
 ### Phase 5 — Publishing and Adoption
 
 - ~~PyPI packaging, publishing and MCP Registry metadata with release CI~~ ✅
-- Hosted access control (moved from Phase 4): tool-level permissions per key,
-  revocation re-checked at dispatch, authenticated Tower/Sidecar stop/revoke,
-  correlated denial evidence, and per-user hosted Tower credentials.
+- ~~Hosted access control (moved from Phase 4)~~ ✅ `0.5.0`: tool-level
+  permissions per key (allow/deny, expiry, task scope), revocation and policy
+  re-checked at dispatch, correlated `mcp.access-decision.v1` evidence,
+  `core.access_status` and the `deep-agentic-core-mcp-admin` operator path
+  ([guide](access-control.md)).
 
 ### Phase 6 — Operational Intelligence
 
+- Containment integrations moved from Phase 5: hosted `tower.*` with per-user
+  Tower credentials, an authenticated Sidecar stop/revoke bridge, and the shared
+  AIOS access-evidence format.
 - Guided onboarding.
 - Saved artifact browsing.
 - Explainable report recall and session history.

@@ -34,7 +34,10 @@ from deep_agentic_core_mcp.config import SERVER_NAME
 from deep_agentic_core_mcp.prompts.registry import list_prompts as _registry_prompts
 from deep_agentic_core_mcp.prompts.registry import render_prompt
 from deep_agentic_core_mcp.resources.catalog import list_resources as _catalog_resources
+from deep_agentic_core_mcp.services import access_evidence
+from deep_agentic_core_mcp.services.access_policy import Principal
 from deep_agentic_core_mcp.services.remote_sessions import SessionStore
+from deep_agentic_core_mcp.tools import access
 from deep_agentic_core_mcp.tools.chaos import export_aios_run, list_faults, run_experiment
 from deep_agentic_core_mcp.tools.core import health, session_state, verify, version
 from deep_agentic_core_mcp.tools.evals import validate_artifact as validate_evals_artifact
@@ -82,6 +85,7 @@ _TOOL_DISPATCH: dict[str, Callable[[dict[str, Any] | None], dict[str, Any]]] = {
     "core.version": version,
     "core.verify": verify,
     "core.session_state": session_state,
+    "core.access_status": access.access_status,
     "lens.analyze_workflow": analyze_workflow,
     "lens.report_summary": report_summary,
     "lens.compare_runs": compare_runs,
@@ -229,15 +233,80 @@ RESOURCE_CONTENT: dict[str, dict[str, Any]] = {
 # ---------------------------------------------------------------------------
 
 
-async def handle_list_tools() -> list[Tool]:
-    """Advertise available tools."""
-    if config.is_remote_transport():
+def _remote_tool_names() -> list[str]:
+    return [
+        tool.name
+        for tool in TOOLS
+        if tool.name not in _OPEN_WORLD_TOOLS and not tool.name.startswith("tower.")
+    ]
+
+
+async def handle_list_tools(principal: Principal | None = None) -> list[Tool]:
+    """Advertise available tools; a hosted caller sees only what its policy permits."""
+    if config.is_remote_transport() or principal is not None:
+        names = set(_remote_tool_names())
         return [
             tool
             for tool in TOOLS
-            if tool.name not in _OPEN_WORLD_TOOLS and not tool.name.startswith("tower.")
+            if tool.name in names and (principal is None or principal.policy.permits(tool.name))
         ]
     return TOOLS
+
+
+def _deny(evidence: dict[str, Any], message: str, revoked: bool = False) -> dict[str, Any]:
+    return {
+        "ok": False,
+        "error": message,
+        "access_denied": True,
+        "revoked": revoked,
+        "access_decision": evidence,
+    }
+
+
+def _authorize_dispatch(
+    name: str,
+    owner: str,
+    authorizer: Callable[[], Principal | None],
+    correlation_id: str,
+) -> tuple[Principal | None, dict[str, Any] | None]:
+    """Re-check the key and its policy immediately before the handler runs.
+
+    This runs after the caller has waited for its session lock, so a call that
+    was queued, retried or sent on an existing connection after revocation, a
+    policy change or expiry is rejected. Calls already running are not cancelled.
+    """
+    try:
+        principal = authorizer()
+    except Exception:  # noqa: BLE001 - an unreachable key store must fail closed
+        evidence = access_evidence.record(
+            "denial",
+            correlation_id=correlation_id,
+            user=owner,
+            tool=name,
+            reason="authorization unavailable at dispatch",
+        )
+        return None, _deny(evidence, "Access denied: authorization unavailable")
+    if principal is None or principal.user != owner:
+        evidence = access_evidence.record(
+            "revocation_acknowledged",
+            correlation_id=correlation_id,
+            user=owner,
+            tool=name,
+            reason="credential revoked or replaced before dispatch",
+        )
+        return None, _deny(evidence, "Access denied: credential revoked", revoked=True)
+    reason = principal.policy.denial_reason(name)
+    if reason is not None:
+        evidence = access_evidence.record(
+            "denial",
+            correlation_id=correlation_id,
+            user=owner,
+            tool=name,
+            task_id=principal.policy.task_id,
+            reason=reason,
+        )
+        return principal, _deny(evidence, f"Access denied: {reason}")
+    return principal, None
 
 
 async def handle_call_tool(
@@ -246,6 +315,7 @@ async def handle_call_tool(
     *,
     owner: str | None = None,
     store: SessionStore | None = None,
+    authorizer: Callable[[], Principal | None] | None = None,
 ) -> list[TextContent]:
     """Dispatch tool calls and return JSON results.
 
@@ -256,22 +326,72 @@ async def handle_call_tool(
     handler (a pydantic `ValidationError` from `Workflow.model_validate`, a
     `KeyError` from an artifact missing an expected field, ...), and that
     must become a structured MCP tool error here rather than propagate.
+
+    Hosted calls pass `authorizer`, which re-authenticates the caller's key and
+    reloads its access policy at dispatch; every hosted call then leaves
+    correlated `mcp.access-decision.v1` evidence (see services/access_evidence.py).
     """
     handler = _TOOL_DISPATCH.get(name)
     if handler is None:
         return [TextContent(type="text", text=json.dumps({"error": f"Unknown tool: {name}"}))]
 
+    def transport_denial(message: str) -> dict[str, Any]:
+        if owner is None:
+            return {"ok": False, "error": message}
+        # Hidden from hosted tools/list, but a direct call is still audited.
+        evidence = access_evidence.record(
+            "denial",
+            correlation_id=access_evidence.new_correlation_id(),
+            user=owner,
+            tool=name,
+            reason="tool unavailable over hosted transport",
+        )
+        return _deny(evidence, message)
+
     def execute() -> dict[str, Any]:
         if name.startswith("tower.") and (owner is not None or config.is_remote_transport()):
-            return {"ok": False, "error": "Tower connector is local-only"}
+            return transport_denial("Tower connector is local-only")
         if owner is not None and store is not None:
             if name in _OPEN_WORLD_TOOLS:
-                return {
-                    "ok": False,
-                    "error": "chaos.run_experiment is disabled over remote transport",
-                }
+                return transport_denial("chaos.run_experiment is disabled over remote transport")
+            if authorizer is None:
+                with store.transaction(owner):
+                    return handler(arguments)
+            correlation_id = access_evidence.new_correlation_id()
             with store.transaction(owner):
-                return handler(arguments)
+                principal, denied = _authorize_dispatch(name, owner, authorizer, correlation_id)
+                if denied is not None or principal is None:
+                    return denied or {"ok": False, "error": "Access denied"}
+                task_id = principal.policy.task_id
+                access_evidence.record(
+                    "dispatch",
+                    correlation_id=correlation_id,
+                    user=owner,
+                    tool=name,
+                    task_id=task_id,
+                )
+                with access.principal_scope(principal):
+                    try:
+                        result = handler(arguments)
+                    except Exception:
+                        access_evidence.record(
+                            "completion",
+                            correlation_id=correlation_id,
+                            user=owner,
+                            tool=name,
+                            task_id=task_id,
+                            outcome="error",
+                        )
+                        raise
+            access_evidence.record(
+                "completion",
+                correlation_id=correlation_id,
+                user=owner,
+                tool=name,
+                task_id=task_id,
+                outcome="error" if result.get("error") or result.get("ok") is False else "ok",
+            )
+            return result
         return handler(arguments)
 
     try:
@@ -328,9 +448,11 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> GetP
     )
 
 
-async def _on_list_tools(_: Any, params: PaginatedRequestParams) -> ListToolsResult:
+async def _on_list_tools(ctx: Any, params: PaginatedRequestParams) -> ListToolsResult:
     del params
-    return ListToolsResult(tools=await handle_list_tools())
+    request = getattr(ctx, "request", None)
+    principal = request.scope.get("deep_agentic_principal") if request is not None else None
+    return ListToolsResult(tools=await handle_list_tools(principal))
 
 
 async def _on_call_tool(ctx: Any, params: CallToolRequestParams) -> CallToolResult:
@@ -339,12 +461,15 @@ async def _on_call_tool(ctx: Any, params: CallToolRequestParams) -> CallToolResu
         # Trusted ASGI scope values, never client arguments or identity headers.
         identity = request.scope.get("deep_agentic_identity")
         store = request.scope.get("deep_agentic_store")
-        if identity is None or store is None:
+        authorizer = request.scope.get("deep_agentic_authorizer")
+        if identity is None or store is None or authorizer is None:
             return CallToolResult(
                 content=[TextContent(type="text", text='{"error":"Authentication required"}')],
                 is_error=True,
             )
-        content = await handle_call_tool(params.name, params.arguments, owner=identity, store=store)
+        content = await handle_call_tool(
+            params.name, params.arguments, owner=identity, store=store, authorizer=authorizer
+        )
     else:
         content = await handle_call_tool(params.name, params.arguments)
     is_error = False

@@ -95,6 +95,18 @@ def list_tools() -> list[dict[str, Any]]:
             "mutates_session": False,
         },
         {
+            "name": "core.access_status",
+            "title": "Access Status",
+            "description": "Report the calling hosted key's effective access policy: allow and "
+            "deny globs, task scope, expiry, and the tools it may call right now. Policies are "
+            "enforced at dispatch, outside the model; local stdio reports `enforced: false`.",
+            "input_schema": {"type": "object", "properties": {}, "additionalProperties": False},
+            "category": "core",
+            "prerequisites": [],
+            "expected_duration": "instant",
+            "mutates_session": False,
+        },
+        {
             "name": "lens.analyze_workflow",
             "title": "Analyze Workflow",
             "description": "Analyze an AgenticLens-compatible workflow artifact. Each "

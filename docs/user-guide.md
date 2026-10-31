@@ -240,9 +240,16 @@ sessions; update every client using the old key. Revocation closes access to
 that account. Requests already in progress may finish. Lost keys cannot be
 recovered in the current signup flow.
 
+An operator can also attach a tool policy to your key. Call `core.access_status`
+to see your allow and deny lists, task scope, expiry and the tools you can call
+now. A denied call returns `access_denied: true` and an `access_decision`
+record; quote its `correlation_id` when asking the operator about it. See
+[hosted access control](access-control.md).
+
 | Problem | Check |
 | --- | --- |
 | HTTP 401 | Missing, wrong, replaced, or revoked bearer key |
+| `Access denied: …` tool error | The key's policy excludes the tool, has expired, or the key was revoked while the call was queued; call `core.access_status` |
 | HTTP 403/421 | Browser Origin or Host is not allowed; operators must configure exact trusted values |
 | HTTP 429 | Request/concurrency or signup limits; respect Retry-After |
 | HTTP 503 | Authentication/session storage unavailable; retry later |
