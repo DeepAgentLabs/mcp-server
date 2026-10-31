@@ -82,6 +82,15 @@ except Exception as exc:  # noqa: BLE001 - reported per tool
     _ROUTING_ERROR = exc
 
 
+_OPTIMIZATION_ERROR: Exception | None = None
+try:
+    from agenticlens.models.trace import Run as _Run
+    from agenticlens.optimization import OptimizationConfig as _OptimizationConfig
+    from agenticlens.optimization import analyze_optimizations as _analyze_optimizations
+except Exception as exc:  # noqa: BLE001 - reported per tool
+    _OPTIMIZATION_ERROR = exc
+
+
 def _require_available() -> None:
     if _IMPORT_ERROR is not None:
         raise AdapterUnavailableError("agenticlens", _IMPORT_ERROR)
@@ -111,6 +120,7 @@ def describe_capabilities() -> list[str]:
         "suite_check",
         "modelfit_recommend",
         "routing_decide",
+        "optimization_analyze",
     ]
 
 
@@ -505,3 +515,38 @@ def routing_decide(
     )
     decision = router.decide(_RouteRequest.model_validate(request))
     return {"decision": decision.model_dump(mode="json"), "executed": False}
+
+
+def optimization_analyze(
+    traces: list[dict[str, Any]],
+    config: dict[str, Any] | None = None,
+    baseline_variant_id: str | None = None,
+) -> dict[str, Any]:
+    """Read-only optimization opportunities. No ledger writes; nothing changes."""
+    _require_available()
+    if _OPTIMIZATION_ERROR is not None:
+        raise AdapterUnavailableError("agenticlens>=0.11.0 (optimization)", _OPTIMIZATION_ERROR)
+    report = _analyze_optimizations(
+        [_Run.model_validate(trace) for trace in traces],
+        _OptimizationConfig.model_validate(config or {}),
+        baseline_variant_id=baseline_variant_id,
+    )
+    return {
+        "opportunities": [
+            {
+                "opportunity_id": item.opportunity_id,
+                "kind": item.kind,
+                "area": item.area,
+                "title": item.title,
+                "action": item.action,
+                "tokens_per_run": item.benefit.tokens_per_run,
+                "cost_usd_per_run": item.benefit.cost_usd_per_run,
+                "confidence": item.confidence,
+                "risks": [f"{risk.kind}:{risk.severity}" for risk in item.risks],
+            }
+            for item in report.opportunities
+        ],
+        "baseline_variant_id": report.tradeoffs.baseline_variant_id,
+        "advisory": True,
+        "optimization": report.model_dump(mode="json"),
+    }
