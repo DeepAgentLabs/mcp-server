@@ -137,7 +137,9 @@ Every hosted call also writes JSON lines to the `deep_agentic_core_mcp.access`
 logger. Allowed calls write a `dispatch` and a `completion` record (`outcome`
 is `ok` or `error`). Denied calls write `denial` or `revocation_acknowledged`.
 All records of one call share a `correlation_id`. They never include bearer
-keys, key digests or tool arguments.
+keys, key digests or tool arguments. `deep-agentic-core-mcp-http` prints them to
+stdout, one JSON object per line, unless the host has already configured a
+handler for that logger. On Render they appear in the service logs.
 
 `mcp.access-decision.v1` is an MCP-local record, not an AIOS artifact. A shared
 authority and evidence format for Tower and containment scoring belongs in
