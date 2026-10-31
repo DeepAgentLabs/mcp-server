@@ -38,6 +38,14 @@ flowchart TD
     E --> F
 ```
 
+## Hosted access status
+
+[`examples/hosted_access_status.py`](https://github.com/DeepAgentLabs/mcp-server/blob/main/examples/hosted_access_status.py)
+calls `core.access_status` with a hosted key and then tries one tool
+(`--tool`, default `core.version`). If the key's policy refuses the tool, it
+prints the `mcp.access-decision.v1` denial record. See
+[Hosted access control](access-control.md).
+
 ## Unified release check
 
 [`examples/unified_release_check.py`](https://github.com/DeepAgentLabs/mcp-server/blob/main/examples/unified_release_check.py)
