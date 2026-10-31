@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import functools
 import json
 import os
 import time
@@ -25,6 +26,7 @@ from starlette.types import Receive, Scope, Send
 
 from deep_agentic_core_mcp import config
 from deep_agentic_core_mcp.server import server
+from deep_agentic_core_mcp.services.access_policy import authorize
 from deep_agentic_core_mcp.services.api_keys import DynamoKeyStore, KeyStore, StaticKeyStore
 from deep_agentic_core_mcp.services.postgres_store import (
     PostgresKeyStore,
@@ -37,7 +39,7 @@ from deep_agentic_core_mcp.services.remote_sessions import RedisSessionStore, Se
 
 def create_app(
     *,
-    api_keys: Mapping[str, str] | None = None,
+    api_keys: Mapping[str, Any] | None = None,
     key_store: KeyStore | None = None,
     store: SessionStore | None = None,
     allowed_hosts: list[str] | None = None,
@@ -48,7 +50,8 @@ def create_app(
 ) -> Starlette:
     """Create a fail-closed app; authentication and shared session storage are required.
 
-    api_keys maps stable user IDs to unique secrets of at least 32 characters.
+    api_keys maps stable user IDs to unique secrets of at least 32 characters, or
+    to {"key": ..., "permissions": {...}} entries carrying a per-key access policy.
     Tests/development may explicitly supply MemorySessionStore. Stateless MCP
     transport avoids task affinity; workflow state lives in the supplied store.
     Rate/concurrency limits apply per process, storage quotas apply per user.
@@ -86,7 +89,7 @@ def create_app(
 def _build_app(
     *,
     pool: Any,
-    api_keys: Mapping[str, str] | None,
+    api_keys: Mapping[str, Any] | None,
     key_store: KeyStore | None,
     store: SessionStore | None,
     allowed_hosts: list[str] | None,
@@ -142,8 +145,8 @@ def _build_app(
             authorization = request.headers.get("authorization", "")
             scheme, _, token = authorization.partition(" ")
             try:
-                user = (
-                    await asyncio.to_thread(auth_store.authenticate, token)
+                principal = (
+                    await asyncio.to_thread(authorize, auth_store, token)
                     if scheme.lower() == "bearer"
                     else None
                 )
@@ -152,13 +155,14 @@ def _build_app(
                     scope, receive, send
                 )
                 return
-            if scheme.lower() != "bearer" or user is None:
+            if scheme.lower() != "bearer" or principal is None:
                 await PlainTextResponse(
                     "Authentication required",
                     status_code=401,
                     headers={"WWW-Authenticate": 'Bearer realm="mcp"'},
                 )(scope, receive, send)
                 return
+            user = principal.user
             now = time.monotonic()
             start, count = windows.get(user, (now, 0))
             if now - start >= 60:
@@ -178,6 +182,9 @@ def _build_app(
             # These values survive SDK task boundaries through ctx.request.scope.
             scope["deep_agentic_identity"] = user
             scope["deep_agentic_store"] = session_store
+            scope["deep_agentic_principal"] = principal
+            # Tool dispatch calls this again, after any wait, to re-check the key.
+            scope["deep_agentic_authorizer"] = functools.partial(authorize, auth_store, token)
             try:
                 await session_manager.handle_request(scope, receive, send)
             finally:
