@@ -132,7 +132,7 @@ class DynamoKeyStore:
         self._get("HEALTH")
         return True
 
-    def authenticate(self, token: str) -> str | None:
+    def _active_account(self, token: str) -> tuple[str, dict[str, Any]] | None:
         if len(token) < 32 or len(token) > 256 or any(c.isspace() for c in token):
             return None
         digest = key_digest(token)
@@ -142,15 +142,21 @@ class DynamoKeyStore:
             return None
         account = self._get("USER#" + user)
         if account.get("status") == "active" and account.get("key_hash") == digest:
-            return user
+            return user, account
         return None
 
+    def authenticate(self, token: str) -> str | None:
+        active = self._active_account(token)
+        return None if active is None else active[0]
+
     def authorize(self, token: str) -> Principal | None:
-        user = self.authenticate(token)
-        if user is None:
+        # Status, key and policy come from the same consistent USER# read, so a
+        # revocation between two reads can never pair a revoked key with a policy.
+        active = self._active_account(token)
+        if active is None:
             return None
-        # Re-read after authentication so a policy change applies to the next dispatch.
-        return Principal(user, AccessPolicy.load(self._get("USER#" + user).get("permissions")))
+        user, account = active
+        return Principal(user, AccessPolicy.load(account.get("permissions")))
 
     def stored_access_policy(self, user: str) -> Any:
         account = self._get("USER#" + user)

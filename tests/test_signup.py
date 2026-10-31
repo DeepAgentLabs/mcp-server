@@ -235,5 +235,5 @@ async def test_dynamic_key_authentication_and_mcp_identity(backend, monkeypatch)
         def unavailable(token):
             raise RuntimeError("Storage unavailable")
 
-        monkeypatch.setattr(backend, "authenticate", unavailable)
+        monkeypatch.setattr(backend, "authorize", unavailable)
         assert (await call(second["api_key"])).status_code == 503
