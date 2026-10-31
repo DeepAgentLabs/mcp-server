@@ -288,3 +288,18 @@ def test_hosted_access_status_example_prints_denial_evidence(monkeypatch, capsys
     example.main()
     out = capsys.readouterr().out
     assert '"denied"' in out and '"event": "denial"' in out
+
+
+def test_default_evidence_handler_writes_json_lines(monkeypatch, capsys):
+    from deep_agentic_core_mcp.services import access_evidence
+
+    logger = access_evidence.logger
+    monkeypatch.setattr(logger, "handlers", [])
+    monkeypatch.setattr(logger, "propagate", True)
+    monkeypatch.setattr(logger, "level", logging.NOTSET)
+    access_evidence.install_default_handler()
+    access_evidence.install_default_handler()  # idempotent
+    assert len(logger.handlers) == 1
+    access_evidence.record("denial", correlation_id="c-1", user="alice", tool="core.version")
+    line = json.loads(capsys.readouterr().out.strip())
+    assert line["event"] == "denial" and line["correlation_id"] == "c-1"

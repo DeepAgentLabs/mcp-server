@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import logging
+import sys
 import uuid
 from datetime import datetime, timezone
 from typing import Any
@@ -20,6 +21,20 @@ SCHEMA = "mcp.access-decision.v1"
 EVENTS = ("dispatch", "completion", "denial", "revocation_acknowledged")
 
 logger = logging.getLogger("deep_agentic_core_mcp.access")
+
+
+def install_default_handler() -> None:
+    """Emit evidence as JSON lines on stdout unless the host configured the logger.
+
+    Called by the hosted entrypoint: without a handler, Python drops INFO records.
+    """
+    if logger.handlers:
+        return
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(logging.Formatter("%(message)s"))
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
 
 
 def new_correlation_id() -> str:

@@ -26,6 +26,7 @@ from starlette.types import Receive, Scope, Send
 
 from deep_agentic_core_mcp import config
 from deep_agentic_core_mcp.server import server
+from deep_agentic_core_mcp.services import access_evidence
 from deep_agentic_core_mcp.services.access_policy import authorize
 from deep_agentic_core_mcp.services.api_keys import DynamoKeyStore, KeyStore, StaticKeyStore
 from deep_agentic_core_mcp.services.postgres_store import (
@@ -251,6 +252,7 @@ def main() -> None:
     """Run the authenticated service; use HTTPS at the load balancer."""
     import uvicorn
 
+    access_evidence.install_default_handler()
     default_hosts = "localhost,localhost:*,127.0.0.1,127.0.0.1:*"
     render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
     if render_hostname:
