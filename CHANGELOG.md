@@ -6,6 +6,24 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.4.5 - 2026-10-31
+
+### Fixed
+
+- `spec.validate_artifact` now fails a Step whose `ended_at` precedes its
+  `started_at` under `AIOS-0.4-P04`, as the Run-level check already did.
+- An artifact type the declared marker does not publish (for example a
+  provenance record labeled `0.4-draft`) is rejected with an
+  `AIOS-0.5-V03` compatibility decision instead of an accept decision
+  beside the error.
+
+### Added
+
+- `tests/test_spec_conformance_suite.py` runs the AIOS v0.6.1 portable
+  conformance suite from the sibling checkout: `0.4-draft` cases must match
+  the expected outcome and rule citations, and `0.6-draft` provenance cases
+  must be rejected under `AIOS-0.5-V03`. See `docs/aios-0.6.1.md`.
+
 ## 0.4.4 - 2026-10-31
 
 ### Added
