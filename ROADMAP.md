@@ -907,3 +907,12 @@ containment. No new shared schema, automatic adapter or hosted execution
 capability is introduced.
 
 MCP 0.4.4 pins the published images to Chaos 0.9.0. `chaos.export_aios_run` passes the `resilience_score` measurement and the producer extension through unchanged, and the existing registry discovers faults. Probes, scoring and history are Python/CLI capabilities, not new MCP tools. Hosted HTTP continues to reject `chaos.run_experiment`, so the hosted service neither executes experiment targets nor calls probe endpoints.
+
+## AIOS v0.6.1 provenance and conformance suite (MCP 0.4.5)
+
+MCP 0.4.5 runs the AIOS v0.6.1 portable conformance suite in CI and matches
+every `0.4-draft` case. It now fails Steps that end before they start
+(`AIOS-0.4-P04`) and rejects an artifact type the declared marker does not
+publish under `AIOS-0.5-V03`. `0.6-draft` provenance records are reported as
+published but unchecked and are rejected, never validated against v0.4. See
+[AIOS v0.6.1 compatibility](docs/aios-0.6.1.md).
