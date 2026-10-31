@@ -9,9 +9,10 @@ nothing themselves:
   path as `lens.slo_summary`
 - chaos evidence must be a `chaos.run_experiment` result from Agentic Chaos
 
-These tools complete Phase 4. Authenticated stop/revoke, tool-level
-authorization and correlated denial evidence are Phase 5 hosted access-control
-work; see
+These tools complete Phase 4. Tool-level authorization, revocation at
+dispatch and correlated denial evidence shipped in 0.5.0
+([hosted access control](access-control.md)). A per-key policy can limit
+which `core.*` tools a hosted key may call. See
 [ROADMAP.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/ROADMAP.md).
 
 ## Tools
