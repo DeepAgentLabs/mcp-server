@@ -60,6 +60,7 @@ nav:
   - Sidecar 0.8 Compatibility: sidecar-v0.8.md
   - Control Tower: tower-0.7-fleet-operations.md
   - Control Tower 0.8 Live Operations: tower-0.8-live-operations.md
+  - Control Tower 0.9 Runbook Tools: tower-0.9-runbooks.md
   - Examples: examples.md
   - Use Cases:
       - Overview: usecases/index.md
