@@ -12,6 +12,10 @@ CREATE TABLE IF NOT EXISTS mcp.users (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
+-- 0.5.0: optional per-key access policy (allow/deny globs, expires_at, task_id).
+-- NULL keeps the default hosted tool surface. Re-running this file adds it.
+ALTER TABLE mcp.users ADD COLUMN IF NOT EXISTS permissions jsonb;
+
 CREATE TABLE IF NOT EXISTS mcp.sessions (
   owner_hash text PRIMARY KEY,
   payload text NOT NULL,

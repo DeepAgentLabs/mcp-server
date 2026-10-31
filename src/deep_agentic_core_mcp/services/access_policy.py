@@ -13,6 +13,7 @@ import time
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from datetime import datetime
+from decimal import Decimal
 from fnmatch import fnmatchcase
 from typing import Any
 
@@ -39,7 +40,8 @@ def _expiry(value: Any) -> float | None:
         return None
     if isinstance(value, bool):
         raise ValueError("expires_at must be epoch seconds or an ISO 8601 timestamp")
-    if isinstance(value, (int, float)):
+    # DynamoDB returns stored numbers as Decimal.
+    if isinstance(value, (int, float, Decimal)):
         return float(value)
     if isinstance(value, str):
         try:
