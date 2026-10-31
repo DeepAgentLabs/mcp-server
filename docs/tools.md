@@ -3,7 +3,7 @@
 
 # Tool Reference
 
-38 tools, generated from `tools/registry.py` - the same data MCP
+39 tools, generated from `tools/registry.py` - the same data MCP
 clients see via `tools/list`. See [README.md](../README.md) for a one-line-per-tool
 overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
@@ -459,6 +459,52 @@ Input schema:
   },
   "required": [
     "reports"
+  ],
+  "additionalProperties": false
+}
+```
+
+### `lens.optimization_analyze` — Optimization Opportunities
+
+Rank evidence-backed optimizations from AgenticLens Run traces: prompt caching and compression, retrieval pruning and reranking, memory summarization, tool caching, retry policy, redundant steps, unnecessary handoffs and quality-cost trade-offs between variants. Each opportunity keeps projected benefit, confidence and quality risks separate. Advisory and read-only: no decision ledger writes and nothing is changed. Needs agenticlens>=0.11.0.
+
+| | |
+| --- | --- |
+| Category | `lens` |
+| Prerequisites | `agenticlens` |
+| Expected duration | fast |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "traces": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "minItems": 1,
+      "description": "AgenticLens Run trace JSON objects with unique run_id."
+    },
+    "config": {
+      "type": "object",
+      "description": "Lens OptimizationConfig thresholds; unknown keys fail."
+    },
+    "baseline_variant_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Variant to compare quality-cost trade-offs against."
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session to read/write shared state under. Defaults to 'default'."
+    }
+  },
+  "required": [
+    "traces"
   ],
   "additionalProperties": false
 }
