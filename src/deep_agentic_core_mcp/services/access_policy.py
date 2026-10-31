@@ -103,7 +103,9 @@ class AccessPolicy:
         return config
 
     def expired(self, now: float | None = None) -> bool:
-        return self.expires_at is not None and (time.time() if now is None else now) >= self.expires_at
+        return (
+            self.expires_at is not None and (time.time() if now is None else now) >= self.expires_at
+        )
 
     def denial_reason(self, tool: str, now: float | None = None) -> str | None:
         """Return why `tool` is denied, or None when the call may dispatch."""
