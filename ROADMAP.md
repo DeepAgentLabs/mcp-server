@@ -965,3 +965,16 @@ impact:
 | `ai-operations-spec` | No schema change. A shared access-evidence object is a future spec proposal | `tests/test_spec_conformance_suite.py` unchanged |
 | `agentic-sidecar` | No change; the stop/revoke bridge is Phase 6 | — |
 | `agenticlens`, `agentic-evals`, `agentic-chaos` | Documentation only; hosted pins unchanged | `tests/test_hosted_image.py` |
+
+## Control Tower 0.9.0 runbook tools (MCP 0.5.1)
+
+Tower Phase 9 ships versioned runbooks with exact-digest approval, bounded steps,
+compensation, cancellation, reconciliation and verified recovery. MCP 0.5.1 adds
+local `tower.runbooks`, `tower.runbook_recommendations`,
+`tower.runbook_executions`, `tower.runbook_execution`, `tower.runbook_preview`,
+`tower.runbook_execute`, `tower.runbook_cancel` and `tower.runbook_verify`.
+Approval stays human-only through Tower; hosted MCP keeps rejecting Tower tools
+until per-user credential binding (Phase 6). Tower's existing
+`deep-agentic-core-mcp>=0.3.6,<1` range admits 0.5.1, so no Tower change is needed.
+See [runbook tools](docs/tower-0.9-runbooks.md).
+
