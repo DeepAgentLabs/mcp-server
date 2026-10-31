@@ -6,6 +6,55 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.5.0 - 2026-10-31
+
+Phase 5 (Publishing and Adoption) is complete with hosted access control.
+See `docs/access-control.md`.
+
+### Added
+
+- Per-key hosted access policies: `allow` and `deny` tool-name globs, an
+  optional `expires_at` and an optional `task_id`. Deny wins. An expired policy
+  denies every tool except `core.access_status`. A stored policy that fails
+  validation denies every tool. Keys without a policy keep the default hosted
+  surface, and policies cannot re-enable `chaos.run_experiment` or `tower.*`.
+- Enforcement at dispatch, outside the model: before each hosted handler runs,
+  after the caller's session lock is acquired, the server re-authenticates the
+  key and reloads its policy. Revocation, policy changes and expiry therefore
+  apply to queued calls, retries and existing connections. Calls already
+  running are not cancelled. An unreachable key store denies the call.
+- Hosted `tools/list` lists only the tools the caller's policy permits.
+- `core.access_status`: the caller's allow/deny lists, task scope, expiry and
+  permitted tools. Over local stdio it returns `enforced: false`.
+- Correlated MCP-local `mcp.access-decision.v1` evidence. Denied calls return a
+  `denial` or `revocation_acknowledged` record in `access_decision`. Every
+  hosted call logs JSON `dispatch`/`completion` records (or the denial) to the
+  `deep_agentic_core_mcp.access` logger under one `correlation_id`. Records
+  never include keys, key digests or tool arguments.
+- Policy configuration: `DEEP_AGENTIC_CORE_MCP_API_KEYS` entries may be
+  `{"key": ..., "permissions": {...}}`, validated at startup. Supabase/PostgreSQL
+  stores policies in a new nullable `mcp.users.permissions` column, and DynamoDB
+  in a `permissions` map on the `USER#` item.
+- `deep-agentic-core-mcp-admin` operator CLI: `show`, `set-permissions`,
+  `clear-permissions` and `revoke` by user ID with the store's credentials, so
+  revocation does not depend on the agent's key.
+- `examples/hosted_access_status.py`.
+- CI runs the PostgreSQL store tests against a `postgres:16` service.
+
+### Changed
+
+- The HTTP endpoint authorizes keys into a principal (user plus policy);
+  third-party key stores that only implement `authenticate` keep the default
+  surface. Tower's `MCPAccessRevoker` interface is unchanged.
+
+### Upgrade notes
+
+- Supabase/PostgreSQL deployments must re-run `deploy/supabase/schema.sql`
+  (or `ALTER TABLE mcp.users ADD COLUMN IF NOT EXISTS permissions jsonb;`)
+  before deploying 0.5.0. Without the column, authentication fails with
+  HTTP 503. DynamoDB and environment-key deployments need no migration.
+- Hosted image pins and sibling dependency ranges are unchanged.
+
 ## 0.4.6 - 2026-10-31
 
 ### Changed
