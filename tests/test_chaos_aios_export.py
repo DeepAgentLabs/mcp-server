@@ -175,3 +175,49 @@ async def test_export_tool_is_offered_over_remote_transport(
 
     assert "chaos.export_aios_run" in names
     assert "chaos.run_experiment" not in names
+
+
+def _chaos_version() -> tuple[int, ...]:
+    from importlib.metadata import PackageNotFoundError, version
+
+    try:
+        return tuple(int(part) for part in version("agentic-chaos").split(".")[:2])
+    except (PackageNotFoundError, ValueError):
+        return (0, 0)
+
+
+@pytest.mark.skipif(_chaos_version() < (0, 9), reason="resilience scores need agentic-chaos>=0.9")
+async def test_export_tool_passes_the_chaos_resilience_score_through() -> None:
+    report = {
+        "id": "report-9",
+        "name": "scored",
+        "start_time": "2026-10-31T12:00:00Z",
+        "end_time": "2026-10-31T12:00:01Z",
+        "chaos_events": [
+            {
+                "id": "e1",
+                "fault_type": "rate_limit_storm",
+                "step_name": "llm",
+                "outcome": "errored",
+                "message": "429",
+                "timestamp": "2026-10-31T12:00:00.5Z",
+            }
+        ],
+        "probes": [{"probe": "ping", "phase": "post", "status": "passed"}],
+        "resilience": {"version": "1.0", "score": 88, "status": "scored", "grade": "B"},
+    }
+
+    payload = await _call("chaos.export_aios_run", {"report": report, "session_id": "aios"})
+
+    assert payload["ok"] is True
+    run = payload["aios_run"]
+    measurements = {m["name"]: m for m in run["measurements"]}
+    assert measurements["resilience_score"] == {
+        "name": "resilience_score",
+        "value": 88,
+        "unit": "score",
+        "kind": "derived",
+    }
+    extension = run["extensions"]["io.deepagentlabs.agentic-chaos"]
+    assert extension["resilience"]["grade"] == "B"
+    assert extension["probes"][0]["probe"] == "ping"
