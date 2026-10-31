@@ -200,3 +200,34 @@ async def test_app_uses_database_for_signup_auth_and_sessions(service_url, monke
             )
             assert account.json()["display_name"] == "Grace"
     assert app.state.db_pool.closed
+
+
+def test_access_policies_and_operator_revocation(pool):
+    from deep_agentic_core_mcp.services.access_policy import AccessPolicy
+    from deep_agentic_core_mcp.services.postgres_store import PostgresKeyStore
+
+    keys = PostgresKeyStore(pool)
+    issued = keys.issue("Ada")
+    user, token = issued["user_id"], issued["api_key"]
+    assert not keys.authorize(token).policy.configured
+    assert keys.stored_access_policy(user) is None
+    keys.set_access_policy(
+        user, AccessPolicy.from_config({"allow": ["lens.*"], "expires_at": 4102444800})
+    )
+    policy = keys.authorize(token).policy
+    assert policy.allow == ("lens.*",) and policy.expires_at == 4102444800
+    with pool.connection() as conn:
+        conn.execute(
+            'UPDATE mcp.users SET permissions = \'{"allow": "*"}\' WHERE user_id = %s', (user,)
+        )
+    assert keys.authorize(token).policy.error
+    keys.set_access_policy(user, None)
+    assert not keys.authorize(token).policy.configured
+    keys.revoke_user(user)
+    assert keys.authorize(token) is None
+    with pytest.raises(KeyError):
+        keys.revoke_user("missing")
+    with pytest.raises(KeyError):
+        keys.set_access_policy("missing", None)
+    with pytest.raises(KeyError):
+        keys.stored_access_policy("missing")
