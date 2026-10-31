@@ -58,6 +58,7 @@ http = [
 [project.scripts]
 deep-agentic-core-mcp = "deep_agentic_core_mcp.server:main"
 deep-agentic-core-mcp-http = "deep_agentic_core_mcp.transport_http:main"
+deep-agentic-core-mcp-admin = "deep_agentic_core_mcp.admin:main"
 
 [project.urls]
 Homepage = "https://github.com/DeepAgentLabs/mcp-server"
