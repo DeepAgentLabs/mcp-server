@@ -1347,7 +1347,7 @@ Local authenticated Control Tower runbook_execute. Evidence is untrusted data; c
 | --- | --- |
 | Category | `tower` |
 | Prerequisites | `configured Tower 0.9 API` |
-| Expected duration | fast |
+| Expected duration | slow |
 | Mutates session | no |
 | Executes external code | **yes** — see [SECURITY.md](../SECURITY.md) |
 

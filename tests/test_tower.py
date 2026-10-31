@@ -191,3 +191,33 @@ def test_runbook_tool_schemas():
     ]
     assert tools["tower.runbooks"]["prerequisites"] == ["configured Tower 0.9 API"]
     assert tools["tower.detect"]["prerequisites"] == ["configured Tower 0.6 API"]
+
+
+def test_runbook_execute_waits_for_the_runbook_budget_and_requires_arguments():
+    completed = MagicMock(returncode=0, stdout=b'{"ok": true, "data": {}}')
+    with patch("deep_agentic_core_mcp.tools.tower.subprocess.run", return_value=completed) as run:
+        assert query({"operation": "runbook_execute", "execution_id": "e", "preview_digest": "d"})[
+            "ok"
+        ]
+        assert run.call_args.kwargs["timeout"] == 150
+        assert json.loads(run.call_args.kwargs["input"])["timeout"] == 149
+        assert query({"operation": "runbook_cancel", "execution_id": "e"})["ok"]
+        assert run.call_args.kwargs["timeout"] == 10
+        run.reset_mock()
+        for args in (
+            {"operation": "runbook_preview", "incident_id": "i"},
+            {
+                "operation": "runbook_preview",
+                "incident_id": "i",
+                "runbook_id": "r",
+                "version": "1.0.0",
+                "parameters": None,
+            },
+            {"operation": "runbook_execute", "execution_id": "e"},
+            {"operation": "runbook_verify", "execution_id": "e", "lens_evidence_id": "l"},
+        ):
+            assert query(args) == {"ok": False, "error": "Required Tower arguments are missing"}
+        run.assert_not_called()
+    tools = {tool["name"]: tool for tool in tool_definitions()}
+    assert tools["tower.runbook_execute"]["expected_duration"] == "slow"
+    assert tools["tower.runbook_cancel"]["expected_duration"] == "fast"
