@@ -43,9 +43,12 @@ Phase 3 (lens provenance, chaos AIOS export and script policy, spec_version
 routing and rule-cited conformance) is complete as of `0.3.3`. Phase 4 is
 complete: the local Control Tower connector shipped in `0.3.6` and the unified
 `core.*` workflow tools (fail-closed release check, incident summary, report
-export) in `0.4.0`. Phase 5 is in progress; its open work is hosted access
-control: tool-level permissions, revocation at dispatch, authenticated
-stop/revoke, correlated denial evidence and hosted Tower credentials. Unified tools must stay compositions: delegate judgement to the
+export) in `0.4.0`. Phase 5 is complete as of `0.5.0`: per-key tool policies
+are enforced at dispatch (`services/access_policy.py`), the key and policy are
+re-checked after the session lock, and calls leave correlated
+`mcp.access-decision.v1` evidence (`services/access_evidence.py`). Phase 6 picks
+up hosted Tower credentials, the Sidecar stop/revoke bridge and the shared AIOS
+evidence format. Any new hosted dispatch path must go through the authorizer. Unified tools must stay compositions: delegate judgement to the
 sibling that owns it (Evals gate, Lens comparison, Chaos report) and fail
 closed on missing or invalid evidence. Changes here should strengthen composition and interoperability, not
 duplicate implementation logic from sibling repos.
@@ -114,6 +117,7 @@ objects (`ListToolsResult`, `CallToolResult`, `ListResourcesResult`).
 - Console script: `deep-agentic-core-mcp` → `server.py:main()`
 - Local server boot: `run_server()` → `stdio_server()` → `server.run()`
 - HTTP console script: `deep-agentic-core-mcp-http` → `transport_http.py:main()`
+- Operator console script: `deep-agentic-core-mcp-admin` → `admin.py:main()` (key policies, revocation)
 - Hosted signup and key lifecycle: `signup.py`, backed by DynamoDB
 
 ## Local and Hosted Deployment Contract
