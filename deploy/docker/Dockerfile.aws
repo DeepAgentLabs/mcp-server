@@ -3,8 +3,10 @@ FROM python:3.12-slim
 WORKDIR /app
 COPY pyproject.toml README.md ./
 COPY src ./src
-# Pairs: Lens 0.10.0 (diagnosis, suites, ModelFit, advisory routing),
-# Chaos 0.8.0 (AIOS run export; extension carries call counts and workflow summaries),
+# Pairs: Lens 0.11.0 (diagnosis, suites, ModelFit, advisory routing, optimization analysis),
+# Chaos 0.9.0 (AIOS run export; extension carries call counts, workflow summaries, probe
+# results and the resilience score, plus a derived resilience_score measurement),
+# Sidecar 0.9.1,
 # Evals 0.10.0 (the producer of the native report/gate schemas bundled for evals.validate_artifact;
 # unchanged since 0.9.0) and of AIOS evaluation evidence that spec.validate_artifact checks.
 # Chaos is installed for its exporter and fault catalog only; HTTP always
