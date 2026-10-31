@@ -15,6 +15,7 @@ The 0.4.0 release completed Phase 4: `core.compare_runs`, a fail-closed `core.re
 over Lens, Evals and Chaos evidence, `core.incident_summary` and
 `core.export_report` ([guide](docs/unified-workflows.md)). Hosted image pins and
 sibling dependency ranges are unchanged.
+`0.4.3` adds read-only `lens.optimization_analyze` and pins the hosted images to `agenticlens` 0.11.0.
 `0.3.14` syncs the bundled native Evals schemas to `agentic-evals` 0.9.0 and pins
 it in the hosted images. `0.3.13` pinned them to `agentic-chaos` 0.8.0.
 `0.3.12` adds read-only `lens.routing_decide` and pins the hosted images to `agenticlens` 0.10.0.
@@ -81,7 +82,7 @@ hashes in DynamoDB. Remote chaos execution remains disabled.
 As of 2026-10-04, the hosted service is running at
 `https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
 Transport/signup and Sidecar discovery are included in the `0.3.0` release.
-Since `0.3.14` the hosted image installs `agenticlens` 0.10.0, `agentic-evals` 0.9.0, `agentic-chaos`
+Since `0.4.3` the hosted image installs `agenticlens` 0.11.0 (`0.4.2` installed Lens 0.10.0 and `agentic-evals` 0.10.0). Since `0.3.14` it installed `agentic-evals` 0.9.0, `agentic-chaos`
 0.8.0, and the `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a
 pinned commit and checksum-verified. (`0.3.12` installed Chaos 0.7.0; `0.3.9`–`0.3.10` installed Lens 0.8.0; `0.3.7`–`0.3.8` installed Lens 0.7.0; `0.3.5`–`0.3.6` installed Chaos 0.5.3;
 `0.3.4` installed Lens 0.6.1 and Chaos 0.5.1.) Chaos is installed only for its exporter and fault catalog; HTTP still
@@ -772,6 +773,30 @@ tool and pins hosted images to `agenticlens==0.9.0`. Experiment execution and
 runtime routing stay outside MCP; the tool stores nothing.
 
 See the [ModelFit guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.9.0/docs/modelfit.md).
+
+## AgenticLens 0.11.0 optimization (MCP 0.4.3)
+
+`lens.optimization_analyze` ranks evidence-backed optimizations from supplied
+AgenticLens `Run` traces: prompt caching and compression, retrieval pruning and
+reranking, memory summarization, tool caching, retry policy, redundant steps,
+unnecessary handoffs and quality-cost trade-offs between variants. Each
+opportunity carries run/span evidence, projected benefit with its basis,
+confidence with reasons, and quality risks kept separate. It is advisory and
+read-only: it never writes a decision ledger, evaluates outcomes or changes a
+prompt, model or tool. Record decisions and evaluate adopted changes with the
+local `agenticlens optimize decide|outcome` CLI. Older Lens installs degrade
+only this tool with an explicit `agenticlens>=0.11.0` unavailable error.
+
+```json
+{
+  "traces": [{"...": "complete AgenticLens Run objects with unique run_id"}],
+  "config": {"monthly_runs": 30000},
+  "baseline_variant_id": "large"
+}
+```
+
+Hosted images pin `agenticlens==0.11.0`. See the
+[Lens optimization guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.11.0/docs/optimization.md).
 
 ## AgenticLens 0.10.0 routing (MCP 0.3.12)
 
