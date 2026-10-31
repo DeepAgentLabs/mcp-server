@@ -11,6 +11,9 @@ from deep_agentic_core_mcp.adapters.agenticlens import diagnose_run as adapter_d
 from deep_agentic_core_mcp.adapters.agenticlens import (
     modelfit_recommend as adapter_modelfit_recommend,
 )
+from deep_agentic_core_mcp.adapters.agenticlens import (
+    optimization_analyze as adapter_optimization_analyze,
+)
 from deep_agentic_core_mcp.adapters.agenticlens import report_summary as adapter_report_summary
 from deep_agentic_core_mcp.adapters.agenticlens import routing_decide as adapter_routing_decide
 from deep_agentic_core_mcp.adapters.agenticlens import score_analysis as adapter_score_analysis
@@ -272,4 +275,28 @@ def routing_decide(arguments: dict[str, Any] | None) -> dict[str, Any]:
         session.record_call(session_id, "lens.routing_decide", ok=False, note=str(exc))
         return {"ok": False, "error": str(exc)}
     session.record_call(session_id, "lens.routing_decide", ok=True)
+    return result
+
+
+def optimization_analyze(arguments: dict[str, Any] | None) -> dict[str, Any]:
+    """Rank evidence-backed optimizations from traces without recording decisions."""
+    if not arguments or not arguments.get("traces"):
+        return {"ok": False, "error": "Missing required 'traces' argument"}
+    session_id = arguments.get("session_id", session.DEFAULT_SESSION_ID)
+    try:
+        result = {
+            "ok": True,
+            **adapter_optimization_analyze(
+                arguments["traces"],
+                config=arguments.get("config"),
+                baseline_variant_id=arguments.get("baseline_variant_id"),
+            ),
+        }
+    except AdapterUnavailableError as exc:
+        session.record_call(session_id, "lens.optimization_analyze", ok=False, note=str(exc))
+        return {"ok": False, "error": str(exc)}
+    except ValueError as exc:
+        session.record_call(session_id, "lens.optimization_analyze", ok=False, note=str(exc))
+        return {"ok": False, "error": f"Invalid optimization input: {exc}"}
+    session.record_call(session_id, "lens.optimization_analyze", ok=True)
     return result

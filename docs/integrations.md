@@ -24,7 +24,7 @@ The MCP Server exposes these capabilities through:
 - `lens.slo_summary`
 - `lens.audit_report`
 
-The current compatibility target is AgenticLens `0.10.0`. Optional imports
+The current compatibility target is AgenticLens `0.11.0` (`lens.optimization_analyze`). Optional imports
 degrade cleanly when the package is absent or older than the requested feature.
 
 ## Agentic Chaos

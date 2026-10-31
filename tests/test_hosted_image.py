@@ -20,8 +20,9 @@ STANDALONE_IMAGES = ["Dockerfile.aws", "Dockerfile.render"]
 
 # Minimum sibling versions whose behavior the hosted tools rely on
 # (agenticlens 0.7.0 adds lens.diagnose_run and lens.score_analysis; 0.8.0 adds
-# lens.suite_from_traces and lens.suite_check; 0.9.0 adds lens.modelfit_recommend).
-REQUIRED_PINS = {"agenticlens": (0, 10, 0), "agentic-chaos": (0, 5, 1)}
+# lens.suite_from_traces and lens.suite_check; 0.9.0 adds lens.modelfit_recommend;
+# 0.10.0 adds lens.routing_decide; 0.11.0 adds lens.optimization_analyze).
+REQUIRED_PINS = {"agenticlens": (0, 11, 0), "agentic-chaos": (0, 5, 1)}
 
 # Spec-root-relative paths the ai_operations_spec adapter reads.
 SPEC_ASSETS = {
@@ -46,10 +47,10 @@ def test_standalone_images_pin_phase3_sibling_versions(dockerfile: str) -> None:
         assert _version(match.group(1)) >= minimum, f"{dockerfile} pins {package} too old"
 
 
-# Exact sibling releases the current hosted images ship (0.4.2: Lens 0.10.0, Chaos 0.8.0,
+# Exact sibling releases the current hosted images ship (0.4.3: Lens 0.11.0, Chaos 0.8.0,
 # Evals 0.10.0, whose native schemas are the 0.9.0 documents bundled here).
 HOSTED_PINS = {
-    "agenticlens": "0.10.0",
+    "agenticlens": "0.11.0",
     "agentic-chaos": "0.8.0",
     "agentic-evals": "0.10.0",
     "agentic-sidecar": "0.9.0",

@@ -136,7 +136,7 @@ and `chaos.export_aios_run` behave the same hosted as locally. Only
 
 Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
-pin `agenticlens==0.10.0` and `agentic-chaos==0.8.0` (since MCP 0.3.13).
+pin `agenticlens==0.11.0` (since MCP 0.4.3) and `agentic-chaos==0.8.0` (since MCP 0.3.13).
 
 ## AgenticLens 0.8.0 suite tools (MCP 0.3.9)
 
@@ -228,6 +228,8 @@ and [`examples/unified_release_check.py`](examples/unified_release_check.py).
   experiment reports under hard constraints (`agenticlens>=0.9.0`)
 - `lens.routing_decide` — explain runtime model selection and fallback chains from
   ModelFit evidence without invoking models (`agenticlens>=0.10.0`)
+- `lens.optimization_analyze` — rank evidence-backed optimizations from traces with
+  separate benefit, confidence and quality risk (`agenticlens>=0.11.0`)
 - `chaos.list_faults` — list the supported fault types
 - `chaos.run_experiment` — run a workspace-sandboxed, policy-checked target
   script under selected faults and attach an AIOS run export
@@ -597,6 +599,30 @@ stays a local `agenticlens experiment run` step; ModelFit recommends and does
 not route traffic.
 
 See the [ModelFit guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.9.0/docs/modelfit.md).
+
+## AgenticLens 0.11.0 optimization (MCP 0.4.3)
+
+`lens.optimization_analyze` ranks evidence-backed optimizations from supplied
+AgenticLens `Run` traces: prompt caching and compression, retrieval pruning and
+reranking, memory summarization, tool caching, retry policy, redundant steps,
+unnecessary handoffs and quality-cost trade-offs between variants. Each
+opportunity carries run/span evidence, projected benefit with its basis,
+confidence with reasons, and quality risks kept separate. It is advisory and
+read-only: it never writes a decision ledger, evaluates outcomes or changes a
+prompt, model or tool. Record decisions and evaluate adopted changes with the
+local `agenticlens optimize decide|outcome` CLI. Older Lens installs degrade
+only this tool with an explicit `agenticlens>=0.11.0` unavailable error.
+
+```json
+{
+  "traces": [{"...": "complete AgenticLens Run objects with unique run_id"}],
+  "config": {"monthly_runs": 30000},
+  "baseline_variant_id": "large"
+}
+```
+
+Hosted images pin `agenticlens==0.11.0`. See the
+[Lens optimization guide](https://github.com/DeepAgentLabs/agenticlens/blob/v0.11.0/docs/optimization.md).
 
 ## AgenticLens 0.10.0 routing (MCP 0.3.12)
 

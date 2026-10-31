@@ -357,6 +357,43 @@ def list_tools() -> list[dict[str, Any]]:
             "mutates_session": False,
         },
         {
+            "name": "lens.optimization_analyze",
+            "title": "Optimization Opportunities",
+            "description": "Rank evidence-backed optimizations from AgenticLens Run traces: "
+            "prompt caching and compression, retrieval pruning and reranking, memory "
+            "summarization, tool caching, retry policy, redundant steps, unnecessary handoffs "
+            "and quality-cost trade-offs between variants. Each opportunity keeps projected "
+            "benefit, confidence and quality risks separate. Advisory and read-only: no "
+            "decision ledger writes and nothing is changed. Needs agenticlens>=0.11.0.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "traces": {
+                        "type": "array",
+                        "items": {"type": "object"},
+                        "minItems": 1,
+                        "description": "AgenticLens Run trace JSON objects with unique run_id.",
+                    },
+                    "config": {
+                        "type": "object",
+                        "description": "Lens OptimizationConfig thresholds; unknown keys fail.",
+                    },
+                    "baseline_variant_id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Variant to compare quality-cost trade-offs against.",
+                    },
+                    **_SESSION_ID_PROPERTY,
+                },
+                "required": ["traces"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
             "name": "chaos.list_faults",
             "title": "List Chaos Faults",
             "description": "List the supported fault types for chaos experiments.",

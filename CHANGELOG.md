@@ -6,6 +6,24 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.4.3 - 2026-10-31
+
+### Added
+
+- AgenticLens 0.11.0 (roadmap v0.9 Optimization Intelligence) compatibility:
+  read-only `lens.optimization_analyze` ranks evidence-backed optimizations from
+  supplied `Run` traces (prompt caching and compression, retrieval pruning and
+  reranking, memory summarization, tool caching, retry policy, redundant steps,
+  unnecessary handoffs, quality-cost trade-offs) with projected benefit,
+  confidence and quality risks kept separate. It never writes a decision ledger
+  or changes anything. Older Lens installs degrade only this tool with an
+  explicit `agenticlens>=0.11.0` unavailable error.
+
+### Changed
+
+- Hosted images pin `agenticlens==0.11.0`; `tests/test_hosted_image.py` requires
+  at least 0.11.0.
+
 ## 0.4.2 - 2026-10-31
 
 ### Added
