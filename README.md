@@ -414,13 +414,13 @@ full detail):
 
 - **Sidecar runtime controls**: richer control surfaces require an
   authenticated, task-scoped runtime bridge
-- **Phase 5 (Publishing and Adoption)** — publishing is automated; next is
-  hosted access control, moved from Phase 4: tool-level permissions per key,
-  revocation at dispatch, authenticated Tower/Sidecar stop/revoke, correlated
-  denial evidence and hosted Tower credentials
+- **Phase 5 (Publishing and Adoption)** — complete in 0.5.0: automated
+  publishing plus hosted access control (per-key tool permissions, revocation
+  at dispatch, correlated denial evidence, operator revocation)
 - **Control Tower coordination** — local connector tools ship in 0.3.6 for
-  Tower 0.7.0; hosted per-user credential binding remains planned
-- **Phase 6** — operational intelligence features
+  Tower 0.7.0; hosted per-user credential binding moves to Phase 6
+- **Phase 6** — containment integrations (hosted Tower credentials, Sidecar
+  stop/revoke bridge, AIOS access evidence) and operational intelligence features
 
 ## Development
 
