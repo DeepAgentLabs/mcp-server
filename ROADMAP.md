@@ -10,7 +10,14 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.4.1` (2026-10-19) — see [CHANGELOG.md](CHANGELOG.md). It adds Sidecar 0.9 discovery and manual AWS deployment.
+Release version: `0.5.0` (2026-10-31) — see [CHANGELOG.md](CHANGELOG.md). It completes
+Phase 5 with hosted access control: per-key tool permissions (allow/deny globs,
+expiry, task scope) enforced at dispatch, revocation and policy re-checked for
+queued calls, retries and existing connections, correlated
+`mcp.access-decision.v1` evidence, `core.access_status`, and the
+`deep-agentic-core-mcp-admin` operator CLI ([guide](docs/access-control.md)).
+Hosted image pins and sibling dependency ranges are unchanged.
+`0.4.1` (2026-10-19) added Sidecar 0.9 discovery and manual AWS deployment.
 The 0.4.0 release completed Phase 4: `core.compare_runs`, a fail-closed `core.release_check`
 over Lens, Evals and Chaos evidence, `core.incident_summary` and
 `core.export_report` ([guide](docs/unified-workflows.md)). Hosted image pins and
@@ -65,10 +72,12 @@ discovery. The 2026-09-11 audit above describes the earlier `0.2.0` release stat
 - **Phase 4: Unified Workflows** ✅ Complete — unified comparison,
   fail-closed release-check, incident-summary and report-export tools in
   `0.4.0`; local Tower connector since `0.3.6`
-- **Phase 5: Publishing and Adoption** 🏗️ In progress — PyPI, GitHub Release,
-  MCP Registry and AWS release automation are in place; hosted access control
-  (tool-level permissions, revocation at dispatch, denial evidence, hosted Tower
-  credentials) moved here from Phase 4 on 2026-10-19
+- **Phase 5: Publishing and Adoption** ✅ Complete — PyPI, GitHub Release and
+  MCP Registry release automation; hosted access control (tool-level
+  permissions, revocation at dispatch, correlated denial evidence, operator
+  revocation path) in `0.5.0`. Hosted Tower credentials, an authenticated
+  Sidecar stop/revoke bridge and the shared AIOS evidence format moved to
+  Phase 6 on 2026-10-31 because each depends on sibling work first
 - **Phase 6: Operational Intelligence** 🚧 Planned
 
 ## Local and Hosted Delivery Status
@@ -97,8 +106,10 @@ hosted, except chaos execution, which stays local-only.
   verified successfully on 2026-10-04. Starting with `0.3.0`, AWS deployment
   follows successful PyPI publication in the version-tag release workflow.
   Pushes/merges to `main` and manual CI checks do not deploy AWS.
-- **Remaining delivery work:** Phase 5 hosted access control and adoption work,
-  improve release rollback and hosted operational coverage. Keep package and
+- **Remaining delivery work:** Phase 6 containment integrations (hosted Tower
+  credentials, Sidecar stop/revoke bridge, AIOS access evidence), release
+  rollback and hosted operational coverage. Hosted access control shipped in
+  `0.5.0`. Keep package and
   hosted deployment versions aligned through the shared release tag.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for release steps and
@@ -507,7 +518,7 @@ Control Tower integration notes:
 
 ## Phase 5: Publishing and Adoption
 
-Status: in progress.
+Status: ✅ complete as of `0.5.0` ([guide](docs/access-control.md)).
 
 Publishing goals (in place):
 
@@ -520,19 +531,42 @@ Publishing goals (in place):
 Hosted access control (moved from Phase 4; see
 [Access containment and evidence](#access-containment-and-evidence-planned-extensions)):
 
-- tool-level permissions per hosted key (allow/deny lists, optional task
+- ~~tool-level permissions per hosted key (allow/deny lists, optional task
   scope and expiry), enforced in `handle_call_tool`, configurable first through
-  the key-store configuration and then in the hosted user store
-- revocation and permissions re-checked at dispatch, covering queued calls,
-  retries and existing sessions; in-flight calls are not cancelled
-- correlated access-denial, revocation-acknowledgement and dispatch/completion
-  evidence for Tower, in a format defined by `ai-operations-spec` first
-- authenticated Tower/Sidecar stop/revoke and an independent operator path
-- per-user Tower credentials so hosted MCP can serve `tower.*` tools
+  the key-store configuration and then in the hosted user store~~ ✅ `0.5.0`:
+  `services/access_policy.py`; environment `{key, permissions}` entries,
+  Supabase `mcp.users.permissions` and DynamoDB `USER#` `permissions`
+- ~~revocation and permissions re-checked at dispatch, covering queued calls,
+  retries and existing sessions; in-flight calls are not cancelled~~ ✅ `0.5.0`:
+  re-authorized after the user's session lock is acquired
+  (`tests/test_access_dispatch.py`)
+- ~~correlated access-denial, revocation-acknowledgement and dispatch/completion
+  evidence for Tower~~ ✅ `0.5.0` as the MCP-local `mcp.access-decision.v1`
+  record. The shared format in `ai-operations-spec` moves to Phase 6
+- ~~an independent operator path~~ ✅ `0.5.0`: `deep-agentic-core-mcp-admin
+  revoke|set-permissions` by user ID with store credentials. Tower's existing
+  `MCPAccessRevoker` now also stops queued calls
+- authenticated Sidecar stop/revoke bridge → Phase 6 (**depends on** a Sidecar
+  task-scoped runtime control API reachable from MCP)
+- per-user Tower credentials so hosted MCP can serve `tower.*` tools → Phase 6
+  (**coordinate with** `agenticops-control-tower` hosted authentication)
+
+Delivered in `0.5.0`:
+
+- `core.access_status` — the caller's policy, expiry, task scope and permitted tools
+- hosted `tools/list` filtered by the caller's policy
+- `deep-agentic-core-mcp-admin` — `show`, `set-permissions`, `clear-permissions`, `revoke`
+- [`examples/hosted_access_status.py`](examples/hosted_access_status.py)
+- CI runs the PostgreSQL store tests against a `postgres:16` service
 
 ## Phase 6: Operational Intelligence
 
 Goals:
+
+- containment integrations moved from Phase 5: hosted `tower.*` with per-user
+  Tower credentials; an authenticated Sidecar stop/revoke bridge; emitting the
+  AIOS access-evidence format once `ai-operations-spec` defines it (replacing or
+  mapping `mcp.access-decision.v1`)
 
 - add guided onboarding wizard for first-time setup
 - add saved artifact browsing through MCP resources
@@ -615,15 +649,16 @@ Added 2026-10-11; moved from Phase 4 to Phase 5 on 2026-10-19. Hosted bearer aut
 remote chaos restrictions exist. They do not terminate running agents or revoke
 unrelated downstream credentials.
 
-- [ ] Phase 5: integrate authenticated Tower/Sidecar stop/revoke; enforce access
-      outside the LLM at dispatch, including queued calls, retries and existing
-      sessions after revocation. Define the effective revocation point and limits
-      on cancellation of in-flight calls.
-- [ ] Phase 5: deterministic tool-level authorization/delegated task scopes;
-      reject denied tools regardless of model/client requests. Test cross-user
-      access, direct-call bypass and revoked/expired authority.
-- [ ] Keep an independently authorized operator revocation path after the agent's
-      key is revoked; document local stdio trust separately from hosted HTTP auth.
+- [x] Phase 5 (`0.5.0`): enforce access outside the LLM at dispatch, including
+      queued calls, retries and existing sessions after revocation. The effective
+      revocation point is the dispatch re-check after the session lock; in-flight
+      calls are not cancelled. Authenticated Sidecar stop/revoke → Phase 6.
+- [x] Phase 5 (`0.5.0`): deterministic tool-level authorization and delegated task
+      scopes; denied tools are rejected regardless of model or client requests.
+      Tests cover cross-user access, direct-call bypass and revoked/expired authority.
+- [x] Keep an independently authorized operator revocation path after the agent's
+      key is revoked (`deep-agentic-core-mcp-admin revoke`); local stdio trust is
+      documented separately from hosted HTTP auth (`docs/access-control.md`).
 - [ ] Phase 3a/6: expose producer policy/action correlation and Lens integrity
       verification, including failed/unknown status. Schema validity is not
       cryptographic verification. **Blocked by** `agenticlens`: integrity-protected
@@ -631,8 +666,10 @@ unrelated downstream credentials.
       producer API to expose yet. This is a planned safety extension; it is not
       part of the core Phase 3a scope that `0.3.3` completes (finding provenance
       is digest-based traceability, not tamper evidence).
-- [ ] Phase 5/6: emit correlated access denials, revocation acknowledgements and
-      dispatch/completion evidence for Tower and containment scoring.
+- [x] Phase 5 (`0.5.0`): emit correlated access denials, revocation
+      acknowledgements and dispatch/completion evidence (MCP-local
+      `mcp.access-decision.v1`). Phase 6: the shared AIOS format for Tower and
+      containment scoring.
 - [ ] Validate with Chaos/Evals fixtures for revoked keys, denied tools, injected
       instructions, queued dispatch and incomplete evidence. Preserve the remote
       arbitrary-chaos execution restriction until sandbox requirements are met.
@@ -916,3 +953,15 @@ every `0.4-draft` case. It now fails Steps that end before they start
 publish under `AIOS-0.5-V03`. `0.6-draft` provenance records are reported as
 published but unchecked and are rejected, never validated against v0.4. See
 [AIOS v0.6.1 compatibility](docs/aios-0.6.1.md).
+
+## Hosted access control (MCP 0.5.0)
+
+Phase 5 closes with per-key tool permissions enforced at dispatch. Sibling
+impact:
+
+| Sibling | Impact | Validate in |
+| --- | --- | --- |
+| `agenticops-control-tower` | `MCPAccessRevoker` interface unchanged; revocation now also stops queued calls. `>=0.3.6,<1` admits 0.5.0 | Tower `tests/` with `--with deep-agentic-core-mcp==0.5.0` |
+| `ai-operations-spec` | No schema change. A shared access-evidence object is a future spec proposal | `tests/test_spec_conformance_suite.py` unchanged |
+| `agentic-sidecar` | No change; the stop/revoke bridge is Phase 6 | — |
+| `agenticlens`, `agentic-evals`, `agentic-chaos` | Documentation only; hosted pins unchanged | `tests/test_hosted_image.py` |
