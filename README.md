@@ -190,7 +190,27 @@ The exported report is MCP-local, not an AIOS artifact. No sibling release or
 dependency floor changes. See the [unified workflows guide](docs/unified-workflows.md)
 and [`examples/unified_release_check.py`](examples/unified_release_check.py).
 
-## MCP Surface (current, `0.4.1`)
+## Hosted access control (MCP 0.5.0)
+
+`0.5.0` adds per-key tool permissions to hosted HTTP. Each key can carry allow
+and deny tool globs, an expiry and a task scope. The server enforces them at
+dispatch, outside the model. Before each handler runs, it re-authenticates the
+key and reloads its policy, so a revoked, narrowed or expired key is refused
+for queued calls, retries and existing connections as well as new requests.
+Calls already running finish. Hosted `tools/list` shows only permitted tools, and
+`core.access_status` reports the caller's effective policy.
+
+Denials carry an `mcp.access-decision.v1` record. Every hosted call also logs
+`dispatch`/`completion` (or `denial`/`revocation_acknowledged`) records that
+share a `correlation_id`. These records are MCP-local, not AIOS artifacts.
+Operators use `deep-agentic-core-mcp-admin` to set, inspect or clear a key's
+policy, or to revoke it by user ID without the agent's key. Supabase deployments
+need the `permissions` column from `deploy/supabase/schema.sql`. Tower's MCP
+revocation adapter is unchanged and now also stops queued calls. See
+[hosted access control](docs/access-control.md) and
+[`examples/hosted_access_status.py`](examples/hosted_access_status.py).
+
+## MCP Surface (current, `0.5.0`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -198,6 +218,8 @@ and [`examples/unified_release_check.py`](examples/unified_release_check.py).
 - `core.verify` — checks agenticlens/agentic-chaos/agentic-sidecar/ai-operations-spec
   connectivity and reports readiness
 - `core.session_state` — inspect what the active session has accumulated
+- `core.access_status` — the caller's effective hosted access policy and the
+  tools it may call now; local stdio reports `enforced: false` (0.5.0)
 - `core.compare_runs` — Lens baseline/candidate comparison stored for the
   release check (same behavior as `lens.compare_runs`)
 - `core.release_check` — fail-closed readiness from a Lens comparison, an Evals
