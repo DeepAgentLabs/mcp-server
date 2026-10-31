@@ -21,6 +21,10 @@ READ_OPERATIONS = {
     "evidence": ("/agents/{agent_id}/evidence/history", {"source", "limit"}),
     "incidents": ("/incidents", set()),
     "incident": ("/incidents/{incident_id}", set()),
+    "runbooks": ("/runbooks", set()),
+    "runbook_recommendations": ("/incidents/{incident_id}/runbooks", set()),
+    "runbook_executions": ("/incidents/{incident_id}/runbook-executions", set()),
+    "runbook_execution": ("/runbook-executions/{execution_id}", set()),
 }
 WRITE_OPERATIONS = {
     "detect": ("/incidents/detect", {"agent_id", "evidence_id"}),
@@ -28,7 +32,19 @@ WRITE_OPERATIONS = {
     "preview": ("/incidents/{incident_id}/preview", {"dependency", "expires_in_seconds"}),
     "execute": ("/incidents/{incident_id}/execute", {"preview_digest"}),
     "verify": ("/incidents/{incident_id}/verify", {"lens_evidence_id", "evals_evidence_id"}),
+    "runbook_preview": (
+        "/incidents/{incident_id}/runbooks/preview",
+        {"runbook_id", "version", "parameters", "expires_in_seconds"},
+    ),
+    "runbook_execute": ("/runbook-executions/{execution_id}/execute", {"preview_digest"}),
+    "runbook_cancel": ("/runbook-executions/{execution_id}/cancel", set()),
+    "runbook_verify": (
+        "/runbook-executions/{execution_id}/verify",
+        {"lens_evidence_id", "evals_evidence_id"},
+    ),
 }
+# Runbook parameters are the only structured argument: a small string-to-string map.
+MAX_RUNBOOK_PARAMETERS = 20
 
 
 def query(arguments: dict[str, Any] | None) -> dict[str, Any]:
@@ -62,7 +78,7 @@ def query(arguments: dict[str, Any] | None) -> dict[str, Any]:
     if not token:
         return {"ok": False, "error": "Tower credential unavailable for this operation"}
     path, allowed = operations[operation]
-    for key in ("agent_id", "incident_id"):
+    for key in ("agent_id", "incident_id", "execution_id"):
         if "{" + key + "}" in path:
             value = args.pop(key, None)
             if not isinstance(value, str) or not value or value in (".", ".."):
@@ -70,8 +86,17 @@ def query(arguments: dict[str, Any] | None) -> dict[str, Any]:
             path = path.replace("{" + key + "}", quote(value, safe=""))
     if set(args) - allowed:
         return {"ok": False, "error": "Unsupported Tower arguments"}
+    parameters = args.pop("parameters", None) if operation == "runbook_preview" else None
+    if parameters is not None and not (
+        isinstance(parameters, dict)
+        and len(parameters) <= MAX_RUNBOOK_PARAMETERS
+        and all(isinstance(k, str) and isinstance(v, str) for k, v in parameters.items())
+    ):
+        return {"ok": False, "error": "Runbook parameters must map strings to strings"}
     if any(not isinstance(value, (str, int)) or isinstance(value, bool) for value in args.values()):
         return {"ok": False, "error": "Tower arguments must be scalar strings or integers"}
+    if parameters is not None:
+        args["parameters"] = parameters
     url = origin + path + ("?" + urlencode(args) if args and not write else "")
     payload = json.dumps({"url": url, "arguments": args, "write": write, "token": token}).encode()
     if len(payload) > 65536:
@@ -107,7 +132,13 @@ def tool_definitions() -> list[dict[str, Any]]:
             for key in sorted(parameters)
         }
         required = []
-        for key in ("agent_id", "incident_id"):
+        if "parameters" in parameters:
+            props["parameters"] = {
+                "type": "object",
+                "additionalProperties": {"type": "string"},
+                "maxProperties": MAX_RUNBOOK_PARAMETERS,
+            }
+        for key in ("agent_id", "incident_id", "execution_id"):
             if "{" + key + "}" in path:
                 props[key] = {"type": "string", "minLength": 1}
                 required.append(key)
@@ -118,6 +149,9 @@ def tool_definitions() -> list[dict[str, Any]]:
                 "preview": ["dependency"],
                 "execute": ["preview_digest"],
                 "verify": ["lens_evidence_id", "evals_evidence_id"],
+                "runbook_preview": ["runbook_id", "version", "parameters"],
+                "runbook_execute": ["preview_digest"],
+                "runbook_verify": ["lens_evidence_id", "evals_evidence_id"],
             }.get(operation, [])
         )
         tools.append(
@@ -134,7 +168,11 @@ def tool_definitions() -> list[dict[str, Any]]:
                     "additionalProperties": False,
                 },
                 "category": "tower",
-                "prerequisites": ["configured Tower 0.6 API"],
+                "prerequisites": [
+                    "configured Tower 0.9 API"
+                    if operation.startswith("runbook")
+                    else "configured Tower 0.6 API"
+                ],
                 "expected_duration": "fast",
                 "mutates_session": False,
             }
