@@ -21,7 +21,9 @@ v0.4 schemas and rule catalog are unchanged.
 
 ## Dependencies
 
-No runtime dependency changes. Hosted images keep their pinned AIOS v0.5.1
-schema assets, which validate `0.4-draft` artifacts exactly as before. A
+No runtime dependency changes. From MCP 0.4.6, hosted images pin AIOS v0.6.1
+schema assets, so hosted `core.verify` also lists `0.6-draft` under
+`published_unchecked_versions`; `0.4-draft` validation is byte-for-byte the
+same schemas and rule catalog as before. A
 passing suite run is repository-local evidence, not stable conformance or
 independent review.
