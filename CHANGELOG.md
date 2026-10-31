@@ -6,6 +6,17 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.4.6 - 2026-10-31
+
+### Changed
+
+- Hosted images (`Dockerfile.render`, `Dockerfile.aws`) fetch
+  checksum-verified AIOS spec assets from the `v0.6.1` tag instead of
+  `v0.5.1`. Only `specification/v0.5/compatibility.json` changes, so the
+  hosted server now reports `0.6-draft` as a published but unchecked marker
+  and rejects provenance records with the accurate `AIOS-0.5-V03` reason.
+  The `0.4-draft` schemas and rule catalog are identical.
+
 ## 0.4.5 - 2026-10-31
 
 ### Fixed
