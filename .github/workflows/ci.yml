@@ -111,10 +111,17 @@ jobs:
       - uses: actions/checkout@v7
         with:
           path: mcp-server
+      - name: Check out agenticlens
+        uses: actions/checkout@v7
+        with:
+          repository: DeepAgentLabs/agenticlens
+          path: agenticlens
       - uses: astral-sh/setup-uv@v7
       - name: Install MCP with the hosted extras
         working-directory: mcp-server
-        run: uv sync --frozen --extra dev --extra http --python 3.12
+        run: |
+          uv sync --frozen --extra dev --extra http --python 3.12
+          uv pip install -e ../agenticlens
       - name: Keys, access policies, sessions and signup limits against PostgreSQL
         working-directory: mcp-server
         env:
