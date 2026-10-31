@@ -51,6 +51,7 @@ nav:
   - Unified Workflows: unified-workflows.md
   - Chaos 0.7 Compatibility: chaos-0.7.md
   - Chaos 0.8 Compatibility: chaos-0.8.md
+  - Chaos 0.9 Compatibility: chaos-0.9.md
   - Evals CLI Compatibility: evals-0.8-cli.md
   - Evals Report Contract: evals-report-contract.md
   - Evals 0.9 Judge Reliability: evals-0.9-judge-reliability.md

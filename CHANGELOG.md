@@ -6,6 +6,22 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.4.4 - 2026-10-31
+
+### Added
+
+- Agentic Chaos 0.9.0 (roadmap v0.9 Resilience Probes & Resilience Score)
+  compatibility: `chaos.export_aios_run` passes a scored report's derived
+  `resilience_score` measurement and its probe/score producer extension
+  through unchanged (`tests/test_chaos_aios_export.py`). Probes, scoring and
+  run history stay Python/CLI capabilities; no new MCP tool, and hosted HTTP
+  still rejects `chaos.run_experiment`. See `docs/chaos-0.9.md`.
+
+### Changed
+
+- Hosted images pin `agentic-chaos==0.9.0` and `agentic-sidecar==0.9.1`;
+  `tests/test_hosted_image.py` requires Chaos 0.9.0 or later.
+
 ## 0.4.3 - 2026-10-31
 
 ### Added
