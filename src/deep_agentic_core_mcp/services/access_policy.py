@@ -9,6 +9,7 @@ is trusted and never consults a policy.
 
 from __future__ import annotations
 
+import math
 import time
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
@@ -42,6 +43,9 @@ def _expiry(value: Any) -> float | None:
         raise ValueError("expires_at must be epoch seconds or an ISO 8601 timestamp")
     # DynamoDB returns stored numbers as Decimal.
     if isinstance(value, (int, float, Decimal)):
+        # NaN would never compare as expired, and infinities break timestamp rendering.
+        if not math.isfinite(value):
+            raise ValueError("expires_at must be a finite number of epoch seconds")
         return float(value)
     if isinstance(value, str):
         try:

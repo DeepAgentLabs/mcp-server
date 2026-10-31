@@ -57,6 +57,8 @@ def test_expiry_denies_every_tool_except_access_status(expires_at):
         {"expires_at": "2026-11-01T00:00:00"},
         {"expires_at": "tomorrow"},
         {"expires_at": True},
+        {"expires_at": float("nan")},
+        {"expires_at": float("inf")},
         {"task_id": ""},
         {"task_id": 7},
         {"tools": ["*"]},
