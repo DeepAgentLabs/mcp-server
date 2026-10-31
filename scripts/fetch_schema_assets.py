@@ -10,8 +10,8 @@ import hashlib
 import urllib.request
 from pathlib import Path
 
-# ai-operations-spec v0.5.1 (merge commit the tag points at).
-COMMIT = "41a4bcad1a905bd57f834d42064a25cd5b0b313b"
+# ai-operations-spec v0.6.1 (merge commit the tag points at).
+COMMIT = "12897eebe91a5cddeb678d995f1b95e16a2d8030"
 CHECKSUMS = {
     "specification/v0.4/schemas/common.schema.json": (
         "d0236f74f78ab1545c4b332b0f8789f88a2638621d94a10d2a8e14f449f99ab0"
@@ -26,7 +26,7 @@ CHECKSUMS = {
         "bfdd6f011d15f185548c7ddb3deca7cb214b199fd97034f2ff7da31d949c9faf"
     ),
     "specification/v0.5/compatibility.json": (
-        "2096e45456d8d95758ffcb6b4026369541cf7d25fe23eef0dbec253ef6d24ead"
+        "168d41a97aee1a03994aae4c45ee3f6e4d3d339b7cc626c5ecd0da61d96adfe1"
     ),
 }
 
