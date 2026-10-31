@@ -46,12 +46,12 @@ def test_standalone_images_pin_phase3_sibling_versions(dockerfile: str) -> None:
         assert _version(match.group(1)) >= minimum, f"{dockerfile} pins {package} too old"
 
 
-# Exact sibling releases the current hosted images ship (0.3.14: Lens 0.10.0, Chaos 0.8.0,
-# Evals 0.9.0, matching the bundled native Evals schemas).
+# Exact sibling releases the current hosted images ship (0.4.2: Lens 0.10.0, Chaos 0.8.0,
+# Evals 0.10.0, whose native schemas are the 0.9.0 documents bundled here).
 HOSTED_PINS = {
     "agenticlens": "0.10.0",
     "agentic-chaos": "0.8.0",
-    "agentic-evals": "0.9.0",
+    "agentic-evals": "0.10.0",
     "agentic-sidecar": "0.9.0",
 }
 
