@@ -256,3 +256,35 @@ async def test_local_stdio_is_trusted_and_unchanged():
 async def test_hosted_list_without_policy_matches_remote_surface():
     names = {t.name for t in await handle_list_tools(Principal("alice"))}
     assert "chaos.run_experiment" not in names and not any(n.startswith("tower.") for n in names)
+
+
+def test_hosted_access_status_example_prints_denial_evidence(monkeypatch, capsys):
+    import importlib.util
+    import io
+    from pathlib import Path
+
+    path = Path(__file__).parents[1] / "examples" / "hosted_access_status.py"
+    spec = importlib.util.spec_from_file_location("hosted_access_status", path)
+    example = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(example)
+    replies = {
+        "core.access_status": {"enforced": True, "permitted_tools": ["core.access_status"]},
+        "core.version": {
+            "ok": False,
+            "access_denied": True,
+            "access_decision": {"event": "denial"},
+        },
+    }
+
+    def fake_urlopen(request, timeout):
+        assert request.headers["Authorization"] == "Bearer " + "k" * 40
+        name = json.loads(request.data)["params"]["name"]
+        body = {"result": {"content": [{"text": json.dumps(replies[name])}]}}
+        return io.BytesIO(json.dumps(body).encode())
+
+    monkeypatch.setattr(example.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setenv("MCP_API_KEY", "k" * 40)
+    monkeypatch.setattr("sys.argv", ["hosted_access_status.py"])
+    example.main()
+    out = capsys.readouterr().out
+    assert '"denied"' in out and '"event": "denial"' in out
