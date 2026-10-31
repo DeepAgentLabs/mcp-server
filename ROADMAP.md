@@ -10,7 +10,9 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.5.0` (2026-10-31) — see [CHANGELOG.md](CHANGELOG.md). It completes
+Release version: `0.5.1` (2026-10-31) — see [CHANGELOG.md](CHANGELOG.md). It adds local
+`tower.runbook*` tools for Control Tower 0.9 runbooks ([guide](docs/tower-0.9-runbooks.md)).
+`0.5.0` (2026-10-31) completes
 Phase 5 with hosted access control: per-key tool permissions (allow/deny globs,
 expiry, task scope) enforced at dispatch, revocation and policy re-checked for
 queued calls, retries and existing connections, correlated

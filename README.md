@@ -211,7 +211,7 @@ revocation adapter is unchanged and now also stops queued calls. See
 [hosted access control](docs/access-control.md) and
 [`examples/hosted_access_status.py`](examples/hosted_access_status.py).
 
-## MCP Surface (current, `0.5.0`)
+## MCP Surface (current, `0.5.1`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -265,6 +265,10 @@ revocation adapter is unchanged and now also stops queued calls. See
   modules, framework adapters, and integration placeholders (added in `0.3.0`)
 - `spec.validate_artifact` — validate a workflow/run artifact against the
   schema set its `spec_version` names, with a rule-cited conformance report
+- `tower.*` (local stdio only) — twenty authenticated Control Tower tools for
+  inventory, evidence, incidents and, since `0.5.1`, Tower 0.9 runbooks
+  (`tower.runbooks`, `tower.runbook_recommendations`, `tower.runbook_preview`,
+  `tower.runbook_execute`, ...); no approval tool, hidden from hosted MCP
 
 Sequential tool calls can share context via an optional `session_id`
 argument, backed by an in-memory session store — see `ROADMAP.md` Phase 2.

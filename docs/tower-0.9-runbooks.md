@@ -27,10 +27,12 @@ so Tower applies the same role, scope and approval checks to MCP as to every
 other surface. Recommendations come only from installed runbook versions, which
 keeps the model from inventing executable actions.
 
-A runbook can take longer than the connector's ten-second request deadline. If
-`tower.runbook_execute` reports a deadline, Tower may still be running the steps:
-read `tower.runbook_execution` before doing anything else, and never retry
-execution blindly. Tower rejects a second execute of a consumed approval anyway.
+`tower.runbook_execute` is marked `slow` and waits up to 150 seconds, covering
+Tower's 120-second worst-case runbook budget; other Tower tools keep the
+ten-second deadline. If execution still reports a deadline, Tower may be running
+the steps: read `tower.runbook_execution` before doing anything else, and never
+retry blindly. Tower rejects a second execute of a consumed approval anyway.
+Required arguments are checked before any request is sent.
 
 Hosted MCP still hides and refuses every `tower.*` tool until per-user Tower
 credential binding exists. The `tower.investigation` prompt now points the model
