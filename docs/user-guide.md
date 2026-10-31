@@ -45,10 +45,11 @@ package is installed.
 
 | Capability | Hosted server | Local server |
 | --- | --- | --- |
-| AgenticLens analysis and Markdown reports (with finding provenance) | Available (AgenticLens 0.10.0) | Requires AgenticLens installation (`>=0.6.1` for step provenance on every finding) |
-| AgenticLens run diagnosis and score analysis (`lens.diagnose_run`, `lens.score_analysis`) | Available (AgenticLens 0.10.0) | Requires `agenticlens>=0.7.0` |
-| AgenticLens suite drafting and approval checks (`lens.suite_from_traces`, `lens.suite_check`) | Available (AgenticLens 0.10.0; nothing stored) | Requires `agenticlens>=0.8.0` |
-| AgenticLens ModelFit recommendations (`lens.modelfit_recommend`) | Available (AgenticLens 0.10.0; nothing stored, no model called) | Requires `agenticlens>=0.9.0` |
+| AgenticLens analysis and Markdown reports (with finding provenance) | Available (AgenticLens 0.11.0) | Requires AgenticLens installation (`>=0.6.1` for step provenance on every finding) |
+| AgenticLens run diagnosis and score analysis (`lens.diagnose_run`, `lens.score_analysis`) | Available (AgenticLens 0.11.0) | Requires `agenticlens>=0.7.0` |
+| AgenticLens suite drafting and approval checks (`lens.suite_from_traces`, `lens.suite_check`) | Available (AgenticLens 0.11.0; nothing stored) | Requires `agenticlens>=0.8.0` |
+| AgenticLens ModelFit recommendations (`lens.modelfit_recommend`) | Available (AgenticLens 0.11.0; nothing stored, no model called) | Requires `agenticlens>=0.9.0` |
+| AgenticLens optimization opportunities (`lens.optimization_analyze`) | Available (AgenticLens 0.11.0; advisory, nothing stored) | Requires `agenticlens>=0.11.0` |
 | Baseline/candidate run comparison | Available | Requires AgenticLens installation |
 | Unified release check, incident summary and report export (`core.release_check`, `core.incident_summary`, `core.export_report`) | Available; pass a local `chaos_report` because chaos execution is disabled | Available; the Lens-backed gates require AgenticLens |
 | Evaluation-report SLO gates and audit/HTML reports | Available through `lens.*` | Requires AgenticLens installation |
@@ -181,6 +182,7 @@ consumers:
 - `lens.suite_from_traces`: `{"runs": [<Run object>, ...], "name": "prod-regression", "version": "1.0.0", "strategy": "hash"}`
 - `lens.suite_check`: `{"suite": <agentic-evals TestSuite object>, "threshold": 0.85}`
 - `lens.modelfit_recommend`: `{"reports": [<ExperimentReport object>], "config": {"defaults": {"min_pass_rate": 0.85}, "categories": [{"id": "orders", "tags": ["orders"]}]}, "variant_metadata": {"mid-b": {"provider": "provider-b"}}}`
+- `lens.optimization_analyze`: `{"traces": [<Run object>, ...], "config": {"monthly_runs": 30000}, "baseline_variant_id": "large"}`
 - `lens.compare_runs`: `{"baseline": [<Run object>], "candidate": [<Run object>], "session_id": "release-check"}`
 
 Use JSON conforming to AgenticLens's `EvaluationReport` or `Run` models. Validate
