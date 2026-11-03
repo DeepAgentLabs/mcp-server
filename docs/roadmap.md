@@ -5,8 +5,8 @@ interface across the DeepAgentLabs ecosystem.
 
 ## Current Release
 
-**Version:** `0.5.0`
-**Released:** 2026-10-31
+**Version:** `0.5.2`
+**Released:** 2026-11-02
 
 ## Development Status
 
@@ -21,7 +21,7 @@ interface across the DeepAgentLabs ecosystem.
 | Phase 3c | ✅ Complete | AI Operations Specification conformance |
 | Phase 4 | ✅ Complete | Unified workflows |
 | Phase 5 | ✅ Complete | Publishing, adoption and hosted access control (`0.5.0`) |
-| Phase 6 | 🚧 Planned | Operational intelligence |
+| Phase 6 | 🚧 Planned | Containment integrations, paired Chaos validation and operational intelligence |
 
 ## Upcoming Work
 
@@ -52,6 +52,19 @@ Access-containment items moved to Phase 5 on 2026-10-19.
   ([guide](access-control.md)).
 
 ### Phase 6 — Operational Intelligence
+
+Phase 6 is a coordinated MCP/Chaos delivery: the Sidecar stop/revoke bridge
+must ship alongside a Chaos sibling release validating actual enforcement.
+Require zero forbidden dispatches after effective acknowledgement, including
+queues/retries/existing sessions; report in-flight effects separately. A bypassed
+negative control must fail, and missing or unverified evidence cannot pass.
+Run real adapters in CI on isolated targets with synthetic credentials.
+
+The target is MCP 0.6.0 plus a Chaos 0.9.x validation patch (0.10.0 if new public
+APIs are needed). Both candidate wheels must pass the shared matrix before the
+milestone closes. Evals v0.11 scoring follows; it is not a dependency of these
+native containment assertions. See the
+[canonical acceptance gate](https://github.com/DeepAgentLabs/mcp-server/blob/main/ROADMAP.md#coordinated-mcp-and-chaos-release-planned).
 
 - Containment integrations moved from Phase 5: hosted `tower.*` with per-user
   Tower credentials, an authenticated Sidecar stop/revoke bridge, and the shared
