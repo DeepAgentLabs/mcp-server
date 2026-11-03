@@ -4,6 +4,17 @@ All notable changes to this project will be documented here.
 
 This project follows [Semantic Versioning](https://semver.org/).
 
+## [0.6.1] - 2026-11-03
+
+### Changed
+
+- Pin Evals 0.11.0 and hosted Lens 0.12.1 for authenticated containment scoring
+  and synchronized embedded report schemas/examples.
+- Score the Phase 6 real MCP/Sidecar dispatch snapshot with Evals, including
+  authenticated bypass, incomplete coverage and unknown-key negative controls.
+- Preserve native access records, report/gate schema 1.0 and hosted tool behavior.
+  Snapshot coverage remains producer-declared; existing in-flight work is separate.
+
 ## [Unreleased]
 
 ## 0.6.0 - 2026-11-03
