@@ -110,3 +110,22 @@ class RedisSessionStore:
                 pipe.execute()
             except WatchError as exc:
                 raise RuntimeError("Concurrent session update; retry this tool call") from exc
+
+
+@contextmanager
+def dispatch_transaction(store: SessionStore, owner: str) -> Iterator[None]:
+    """Serialize dispatch and task revocation, including Redis workers.
+
+    Redis's optimistic state transaction alone cannot reserve side effects. The
+    separate guard has no expiry: a crashed worker requires operator reconciliation
+    rather than letting a lease expire underneath a live handler. Acquisition is
+    bounded; contention fails closed and stop callers can retry revocation.
+    Memory and PostgreSQL transactions already hold their mutex/row lock.
+    """
+    if isinstance(store, RedisSessionStore):
+        key = "deep-agentic-core-mcp:dispatch:" + hashlib.sha256(owner.encode()).hexdigest()
+        with store.client.lock(key, timeout=None, blocking_timeout=5), store.transaction(owner):
+            yield
+    else:
+        with store.transaction(owner):
+            yield

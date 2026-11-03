@@ -63,11 +63,11 @@ async def call(client, slow=False):
     return json.loads(response.json()["result"]["content"][0]["text"])
 
 
-def setup(monkeypatch, revoker=None):
+def setup(monkeypatch, revoker=None, sessions=None):
     monkeypatch.setenv(config.REMOTE_TRANSPORT_ENV, "0")
     monkeypatch.delenv("DEEP_AGENTIC_CORE_MCP_DATABASE_URL", raising=False)
     keys = Keys({"alice": {"key": AGENT, "permissions": {"task_id": "task-601"}}})
-    sessions = MemorySessionStore()
+    sessions = sessions or MemorySessionStore()
     runtime = TaskRuntime("task-601")
     sidecar = Sidecar(runtime=runtime, mode="govern", on_sidecar_failure="fail_closed")
     runtime.revokers["mcp"] = revoker or TaskKeyRevoker("alice", "task-601", keys, sessions)
@@ -511,3 +511,53 @@ async def test_operator_requires_explicit_stop_permission(monkeypatch):
     ):
         assert (await stop(client)).status_code == 403
         assert not runtime.stopped
+
+
+async def test_redis_workers_serialize_revocation_with_authorized_dispatch(monkeypatch):
+    import fakeredis
+
+    from deep_agentic_core_mcp.server import handle_call_tool
+    from deep_agentic_core_mcp.services.access_policy import authorize
+    from deep_agentic_core_mcp.services.remote_sessions import RedisSessionStore
+
+    client = fakeredis.FakeRedis(decode_responses=True)
+    first, second = RedisSessionStore("redis://localhost"), RedisSessionStore("redis://localhost")
+    first.client = second.client = client
+    _, keys, _, _ = setup(monkeypatch, sessions=first)
+    entered, release = threading.Event(), threading.Event()
+    effects = []
+
+    def slow(args):
+        entered.set()
+        assert release.wait(5)
+        effects.append("reserved-before-ack")
+        return {"ok": True}
+
+    monkeypatch.setitem(_TOOL_DISPATCH, "core.version", slow)
+    running = asyncio.create_task(
+        handle_call_tool(
+            "core.version",
+            {},
+            owner="alice",
+            store=first,
+            authorizer=lambda: authorize(keys, AGENT),
+        )
+    )
+    assert await asyncio.to_thread(entered.wait, 5)
+    guards = client.keys("deep-agentic-core-mcp:dispatch:*")
+    assert guards and all(client.ttl(key) == -1 for key in guards)
+    # A second worker's revoker shares Redis's guard, not the first worker's Python mutex.
+    revoking = asyncio.create_task(
+        asyncio.to_thread(TaskKeyRevoker("alice", "task-601", keys, second), "task-601")
+    )
+    await asyncio.sleep(0.1)
+    assert not revoking.done()
+    release.set()
+    assert json.loads((await running)[0].text)["ok"]
+    assert await revoking is True
+    result = await handle_call_tool(
+        "core.version", {}, owner="alice", store=first, authorizer=lambda: authorize(keys, AGENT)
+    )
+    assert json.loads(result[0].text)["revoked"]
+    assert effects == ["reserved-before-ack"]
+    assert not client.keys("deep-agentic-core-mcp:dispatch:*")

@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Protocol
 
+from deep_agentic_core_mcp.services.remote_sessions import dispatch_transaction
+
 
 class Runtime(Protocol):
     task_id: str
@@ -76,7 +78,7 @@ class TaskKeyRevoker:
 
         if task_id != self.task_id:
             return False
-        with self.sessions.transaction(self.owner):
+        with dispatch_transaction(self.sessions, self.owner):
             policy = AccessPolicy.load(self.keys.stored_access_policy(self.owner))
             if policy.error is not None or policy.task_id != self.task_id:
                 return False

@@ -37,7 +37,7 @@ from deep_agentic_core_mcp.prompts.registry import render_prompt
 from deep_agentic_core_mcp.resources.catalog import list_resources as _catalog_resources
 from deep_agentic_core_mcp.services import access_evidence
 from deep_agentic_core_mcp.services.access_policy import Principal
-from deep_agentic_core_mcp.services.remote_sessions import SessionStore
+from deep_agentic_core_mcp.services.remote_sessions import SessionStore, dispatch_transaction
 from deep_agentic_core_mcp.services.tower_credentials import for_user
 from deep_agentic_core_mcp.tools import access
 from deep_agentic_core_mcp.tools.chaos import export_aios_run, list_faults, run_experiment
@@ -377,10 +377,10 @@ async def handle_call_tool(
             if authorizer is None:
                 if name.startswith("tower."):
                     return transport_denial("Hosted Tower requires dispatch authorization")
-                with store.transaction(owner):
+                with dispatch_transaction(store, owner):
                     return handler(arguments)
             correlation_id = access_evidence.new_correlation_id()
-            with store.transaction(owner):
+            with dispatch_transaction(store, owner):
                 principal, denied = _authorize_dispatch(name, owner, authorizer, correlation_id)
                 if denied is not None or principal is None:
                     return denied or {"ok": False, "error": "Access denied"}
