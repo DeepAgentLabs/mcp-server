@@ -458,3 +458,47 @@ def test_gate_and_approval_failures_do_not_dispatch(monkeypatch, failure):
         wrapped()
     assert effects == []
     assert sidecar.runtime.snapshot()["executed"] == 0
+
+
+async def test_control_applies_host_and_origin_protection(monkeypatch):
+    app, _, runtime, _ = setup(monkeypatch)
+    async with (
+        app.router.lifespan_context(app),
+        httpx.AsyncClient(
+            transport=httpx.ASGITransport(app=app), base_url="http://testserver"
+        ) as client,
+    ):
+        for extra, expected in [
+            ({"Host": "attacker.example"}, 421),
+            ({"Origin": "https://attacker.example"}, 403),
+        ]:
+            response = await client.post(
+                "/control/tasks/task-601/stop",
+                headers={"Authorization": "Bearer " + OPERATOR, **extra},
+            )
+            assert response.status_code == expected
+            assert not runtime.stopped
+
+
+async def test_operator_requires_explicit_stop_permission(monkeypatch):
+    monkeypatch.setenv(config.REMOTE_TRANSPORT_ENV, "0")
+    monkeypatch.delenv("DEEP_AGENTIC_CORE_MCP_DATABASE_URL", raising=False)
+    runtime = TaskRuntime("task-601")
+    Sidecar(runtime=runtime, mode="govern", on_sidecar_failure="fail_closed")
+    # A task scope alone must not silently inherit the default wildcard agent surface.
+    operators = StaticKeyStore({"alice": {"key": OPERATOR, "permissions": {"task_id": "task-601"}}})
+    app = create_app(
+        api_keys={"alice": AGENT},
+        store=MemorySessionStore(),
+        operator_store=operators,
+        sidecar_bridge=SidecarBridge({"task-601": TaskBinding("alice", runtime)}),
+        allowed_hosts=["testserver"],
+    )
+    async with (
+        app.router.lifespan_context(app),
+        httpx.AsyncClient(
+            transport=httpx.ASGITransport(app=app), base_url="http://testserver"
+        ) as client,
+    ):
+        assert (await stop(client)).status_code == 403
+        assert not runtime.stopped

@@ -17,10 +17,10 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
-from mcp.server.transport_security import TransportSecuritySettings
+from mcp.server.transport_security import TransportSecurityMiddleware, TransportSecuritySettings
 from starlette.applications import Starlette
 from starlette.requests import Request
-from starlette.responses import JSONResponse, PlainTextResponse
+from starlette.responses import JSONResponse, PlainTextResponse, Response
 from starlette.routing import Route
 from starlette.types import Receive, Scope, Send
 
@@ -134,17 +134,19 @@ def _build_app(
             )
     session_store = store
     config.enable_remote_transport()
+    security_settings = TransportSecuritySettings(
+        allowed_hosts=[host.lower() for host in allowed_hosts]
+        if allowed_hosts is not None
+        else ["localhost", "localhost:*", "127.0.0.1", "127.0.0.1:*"],
+        allowed_origins=allowed_origins if allowed_origins is not None else [],
+    )
+    control_security = TransportSecurityMiddleware(security_settings)
     session_manager = StreamableHTTPSessionManager(
         app=server,
         json_response=True,
         stateless=True,
         max_request_body_size=1024 * 1024,
-        security_settings=TransportSecuritySettings(
-            allowed_hosts=[host.lower() for host in allowed_hosts]
-            if allowed_hosts is not None
-            else ["localhost", "localhost:*", "127.0.0.1", "127.0.0.1:*"],
-            allowed_origins=allowed_origins if allowed_origins is not None else [],
-        ),
+        security_settings=security_settings,
     )
     active: dict[str, int] = {}
     windows: dict[str, tuple[float, int]] = {}
@@ -253,7 +255,10 @@ def _build_app(
         )
     if sidecar_bridge is not None and operator_store is not None:
 
-        async def stop_task(request: Request) -> JSONResponse:
+        async def stop_task(request: Request) -> Response:
+            rejected = await control_security.validate_request(request)
+            if rejected is not None:
+                return rejected
             scheme, _, token = request.headers.get("authorization", "").partition(" ")
             try:
                 principal = (
@@ -265,6 +270,8 @@ def _build_app(
                 if (
                     principal is None
                     or await asyncio.to_thread(auth_store.authenticate, token) is not None
+                    or not principal.policy.configured
+                    or "sidecar.stop" not in principal.policy.allow
                     or principal.policy.task_id != task_id
                     or not principal.policy.permits("sidecar.stop")
                 ):
