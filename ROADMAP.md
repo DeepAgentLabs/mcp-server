@@ -1,5 +1,14 @@
 # Roadmap
 
+## Release sequencing
+
+The final package-local roadmap phase uses **v0.7**, followed by further
+minor releases as needed. **v1.0 is reserved for one coordinated DeepAgentLabs
+ecosystem release**, after the shared readiness and compatibility gates pass.
+Completing this minor milestone does not independently declare stable APIs or
+AIOS conformance. Existing acceptance criteria remain required. See the
+[ecosystem release policy](https://github.com/DeepAgentLabs/.github/blob/main/profile/RELEASE_POLICY.md).
+
 See [ROADMAP_AUDIT.md](ROADMAP_AUDIT.md) for an evidence-based audit of the
 claims below against actual source, tests, and release metadata (dated
 2026-09-11). It confirmed the phase statuses here are accurate with one
@@ -644,6 +653,15 @@ Goals:
 - add explainable report recall and session history
 - add report and investigation narrative generation
 
+## Next minor: v0.7 — Integration and release readiness
+
+Continue compatibility, documentation and end-to-end acceptance work over the
+existing Phase 6 delivery in minor releases. Validate the supported sibling
+matrix and retain native evidence ownership and hosted-access restrictions.
+This is a release-readiness target, not a claim that additional tools or
+stable contracts have shipped. Reserve the major version for the coordinated
+ecosystem v1.0 release after all participating projects meet their gates.
+
 ## Open Questions
 
 - Which MCP Python SDK will be the long-term foundation?
@@ -755,8 +773,8 @@ in this server or expose shared/exclusive configuration through public tools.
 Sidecar 0.8 provides Shared/Exclusive context-only, guardrails-only or combined
 configuration, explicit host context delivery and mandatory guardrail composition.
 Exclusive rules cannot weaken shared restrictions. Cross-framework privacy,
-revocation and delegated authority remain v0.9 validation; stable schemas remain
-v1.0. Native correlated Lens readback requires Lens 0.7.1. All sibling packages
+revocation and delegated authority remain v0.9 validation; contract readiness continues in v0.10; the stable freeze is reserved for
+the coordinated ecosystem v1.0 release. Native correlated Lens readback requires Lens 0.7.1. All sibling packages
 stay optional; no dependency floor is increased without a runtime requirement.
 See the [Sidecar integration contract](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md).
 
