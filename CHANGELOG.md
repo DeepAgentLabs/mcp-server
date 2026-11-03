@@ -6,7 +6,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-## 0.6.0 - 2026-11-02
+## 0.6.0 - 2026-11-03
 
 - Bind hosted Tower credentials per authenticated user with dispatch authorization.
 - Add independent task-scoped operator stop/revoke bridging to live Sidecar runtimes,

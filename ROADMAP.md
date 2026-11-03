@@ -10,7 +10,7 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.6.0` (2026-11-02) — see [CHANGELOG.md](CHANGELOG.md). It adds
+Release version: `0.6.0` (2026-11-03) — see [CHANGELOG.md](CHANGELOG.md). It adds
 read-only `lens.execution_verify` and pins hosted images to Lens 0.12.0.
 `0.5.1` (2026-10-31) added local
 `tower.runbook*` tools for Control Tower 0.9 runbooks ([guide](docs/tower-0.9-runbooks.md)).
