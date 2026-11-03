@@ -68,5 +68,22 @@ def record(
         evidence["reason"] = reason
     if outcome is not None:
         evidence["outcome"] = outcome
+    evidence["extensions"] = {
+        "io.deepagentlabs.access": {
+            "format": "access/1",
+            "event_id": new_correlation_id(),
+            "producer": "deep-agentic-core-mcp",
+            "subject": user,
+            "task_id": task_id,
+            "correlation_id": correlation_id,
+            "occurred_at": evidence["recorded_at"],
+            "kind": {"dispatch": "dispatched", "completion": "completed", "denial": "denied"}.get(
+                event, event
+            ),
+            "tool": tool,
+            **({"reason": reason} if reason is not None else {}),
+            **({"outcome": outcome} if outcome is not None else {}),
+        }
+    }
     logger.info(json.dumps(evidence, sort_keys=True))
     return evidence

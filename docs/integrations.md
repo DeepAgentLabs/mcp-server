@@ -38,15 +38,16 @@ The MCP Server exposes:
 - `chaos.list_faults`
 - `chaos.run_experiment`
 
-The current compatibility target is Agentic Chaos `0.8.0`. MCP uses its
+The current compatibility target is Agentic Chaos `0.10.0`. MCP uses its
 exporter and fault catalog; arbitrary chaos execution remains local-only.
 
 ## Agentic Sidecar
 
-**Status:** Discovery only
+**Status:** Discovery plus explicit host-bound operator stop/revoke (0.6.0)
 
-Sidecar ships a local decision runtime, but MCP exposes only discovery; it
-does not bridge Sidecar runtime controls.
+Sidecar ships a local decision runtime. MCP model tools expose discovery;
+operators can stop a live host-bound runtime through a separate authenticated
+endpoint with exact task scope. See [Phase 6 setup](phase6-containment.md).
 
 The MCP Server exposes:
 

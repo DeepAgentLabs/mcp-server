@@ -4,6 +4,7 @@ import asyncio
 import json
 from collections.abc import Callable
 from typing import Any
+from urllib.parse import quote, unquote
 
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
@@ -36,11 +37,13 @@ from deep_agentic_core_mcp.prompts.registry import render_prompt
 from deep_agentic_core_mcp.resources.catalog import list_resources as _catalog_resources
 from deep_agentic_core_mcp.services import access_evidence
 from deep_agentic_core_mcp.services.access_policy import Principal
-from deep_agentic_core_mcp.services.remote_sessions import SessionStore
+from deep_agentic_core_mcp.services.remote_sessions import SessionStore, dispatch_transaction
+from deep_agentic_core_mcp.services.tower_credentials import for_user
 from deep_agentic_core_mcp.tools import access
 from deep_agentic_core_mcp.tools.chaos import export_aios_run, list_faults, run_experiment
 from deep_agentic_core_mcp.tools.core import health, session_state, verify, version
 from deep_agentic_core_mcp.tools.evals import validate_artifact as validate_evals_artifact
+from deep_agentic_core_mcp.tools.intelligence import onboard, report_recall
 from deep_agentic_core_mcp.tools.lens import (
     analyze_workflow,
     audit_report,
@@ -83,6 +86,8 @@ server = Server(SERVER_NAME, version=config.VERSION)
 _TOOL_DISPATCH: dict[str, Callable[[dict[str, Any] | None], dict[str, Any]]] = {
     "evals.validate_artifact": validate_evals_artifact,
     "core.health": health,
+    "core.onboard": onboard,
+    "core.report_recall": report_recall,
     "core.version": version,
     "core.verify": verify,
     "core.session_state": session_state,
@@ -235,18 +240,22 @@ RESOURCE_CONTENT: dict[str, dict[str, Any]] = {
 # ---------------------------------------------------------------------------
 
 
-def _remote_tool_names() -> list[str]:
+def _remote_tool_names(principal: Principal | None = None) -> list[str]:
     return [
         tool.name
         for tool in TOOLS
-        if tool.name not in _OPEN_WORLD_TOOLS and not tool.name.startswith("tower.")
+        if (tool.name != "chaos.run_experiment")
+        and (
+            not tool.name.startswith("tower.")
+            or (principal is not None and for_user(principal.user) is not None)
+        )
     ]
 
 
 async def handle_list_tools(principal: Principal | None = None) -> list[Tool]:
     """Advertise available tools; a hosted caller sees only what its policy permits."""
     if config.is_remote_transport() or principal is not None:
-        names = set(_remote_tool_names())
+        names = set(_remote_tool_names(principal))
         return [
             tool
             for tool in TOOLS
@@ -351,16 +360,27 @@ async def handle_call_tool(
         return _deny(evidence, message)
 
     def execute() -> dict[str, Any]:
-        if name.startswith("tower.") and (owner is not None or config.is_remote_transport()):
+        if (
+            name.startswith("tower.")
+            and owner is not None
+            and (store is None or authorizer is None)
+        ):
+            return transport_denial("Hosted Tower requires dispatch authorization and storage")
+        if name.startswith("tower.") and (
+            (owner is not None and for_user(owner) is None)
+            or (owner is None and config.is_remote_transport())
+        ):
             return transport_denial("Tower connector is local-only")
         if owner is not None and store is not None:
-            if name in _OPEN_WORLD_TOOLS:
+            if name == "chaos.run_experiment":
                 return transport_denial("chaos.run_experiment is disabled over remote transport")
             if authorizer is None:
-                with store.transaction(owner):
+                if name.startswith("tower."):
+                    return transport_denial("Hosted Tower requires dispatch authorization")
+                with dispatch_transaction(store, owner):
                     return handler(arguments)
             correlation_id = access_evidence.new_correlation_id()
-            with store.transaction(owner):
+            with dispatch_transaction(store, owner):
                 principal, denied = _authorize_dispatch(name, owner, authorizer, correlation_id)
                 if denied is not None or principal is None:
                     return denied or {"ok": False, "error": "Access denied"}
@@ -409,12 +429,28 @@ async def handle_call_tool(
 
 async def handle_list_resources() -> list[Resource]:
     """Advertise available resources."""
-    return RESOURCES
+    from deep_agentic_core_mcp.services import session
+
+    return [
+        *RESOURCES,
+        *[
+            Resource(
+                uri="resource://sessions/" + quote(identifier, safe=""),
+                name="Saved session " + identifier,
+                mime_type="application/json",
+            )
+            for identifier in sorted(session.all_sessions())
+        ],
+    ]
 
 
 async def handle_read_resource(uri: str) -> list[TextResourceContents]:
     """Return resource contents for known MCP resources."""
-    payload = RESOURCE_CONTENT.get(uri)
+    payload: dict[str, Any] | None
+    if uri.startswith("resource://sessions/"):
+        payload = report_recall({"session_id": unquote(uri.removeprefix("resource://sessions/"))})
+    else:
+        payload = RESOURCE_CONTENT.get(uri)
     if payload is None:
         return [
             TextResourceContents(
@@ -484,13 +520,54 @@ async def _on_call_tool(ctx: Any, params: CallToolRequestParams) -> CallToolResu
     return CallToolResult(content=list(content), structured_content=None, is_error=is_error)
 
 
-async def _on_list_resources(_: Any, params: PaginatedRequestParams) -> ListResourcesResult:
+async def _on_list_resources(ctx: Any, params: PaginatedRequestParams) -> ListResourcesResult:
     del params
-    return ListResourcesResult(resources=await handle_list_resources())
+    request = getattr(ctx, "request", None)
+    if request is None:
+        return ListResourcesResult(resources=await handle_list_resources())
+    recalled = await _on_call_tool(
+        ctx, CallToolRequestParams(name="core.report_recall", arguments={})
+    )
+    content = recalled.content[0]
+    assert isinstance(content, TextContent)
+    payload = json.loads(content.text)
+    saved = [
+        Resource(
+            uri=item["uri"],
+            name="Saved session " + item["session_id"],
+            mime_type="application/json",
+        )
+        for item in payload.get("sessions", [])
+    ]
+    return ListResourcesResult(resources=[*RESOURCES, *saved])
 
 
-async def _on_read_resource(_: Any, params: ReadResourceRequestParams) -> ReadResourceResult:
-    return ReadResourceResult(contents=list(await handle_read_resource(str(params.uri))))
+async def _on_read_resource(ctx: Any, params: ReadResourceRequestParams) -> ReadResourceResult:
+    uri = str(params.uri)
+    if uri.startswith("resource://sessions/") and getattr(ctx, "request", None) is not None:
+        recalled = await _on_call_tool(
+            ctx,
+            CallToolRequestParams(
+                name="core.report_recall",
+                arguments={"session_id": unquote(uri.removeprefix("resource://sessions/"))},
+            ),
+        )
+        return ReadResourceResult(
+            contents=[
+                TextResourceContents(
+                    uri=uri,
+                    mime_type="application/json",
+                    text=json.dumps(recalled.structured_content)
+                    if recalled.structured_content
+                    else (
+                        recalled.content[0].text
+                        if isinstance(recalled.content[0], TextContent)
+                        else "{}"
+                    ),
+                )
+            ]
+        )
+    return ReadResourceResult(contents=list(await handle_read_resource(uri)))
 
 
 async def _on_list_prompts(_: Any, params: PaginatedRequestParams) -> ListPromptsResult:

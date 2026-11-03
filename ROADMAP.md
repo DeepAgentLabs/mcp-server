@@ -10,8 +10,12 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.5.2` (2026-11-02) — see [CHANGELOG.md](CHANGELOG.md). It adds
-read-only `lens.execution_verify` and pins hosted images to Lens 0.12.0.
+Release version: `0.6.0` (2026-11-03) — see [CHANGELOG.md](CHANGELOG.md). Phase 6
+adds hosted per-user Tower credentials, task-scoped Sidecar stop/revoke,
+exploratory access evidence, guided setup and saved-report recall. The paired
+Chaos 0.10.0 assertions run against real adapters with Lens authentication;
+Sidecar 0.9.2 admits the paired dependencies. `0.5.2` (2026-11-02) added
+read-only `lens.execution_verify` and pinned hosted images to Lens 0.12.0.
 `0.5.1` (2026-10-31) added local
 `tower.runbook*` tools for Control Tower 0.9 runbooks ([guide](docs/tower-0.9-runbooks.md)).
 `0.5.0` (2026-10-31) completes
@@ -67,8 +71,7 @@ discovery. The 2026-09-11 audit above describes the earlier `0.2.0` release stat
   `chaos.export_aios_run`, and the script allow/deny policy in `0.3.3`
 - **Phase 3d: Agentic Sidecar Discovery** ✅ Complete — `sidecar.status` and
   `sidecar.module_inventory` are included in `0.3.0` as discovery/readiness
-  tools. Sidecar has a local decision runtime; MCP integration with its
-  enforcement and live operator controls remains planned.
+  tools. Sidecar has a local decision runtime; live operator stop/revoke is available through explicit host bindings in 0.6.0.
 - **Phase 3c: AI Operations Specification Conformance** ✅ Complete —
   `spec.validate_artifact` and schema resources (`0.1.3`); `spec_version`
   routing per the v0.5 compatibility rules, rule-cited conformance reports, and
@@ -82,7 +85,7 @@ discovery. The 2026-09-11 audit above describes the earlier `0.2.0` release stat
   revocation path) in `0.5.0`. Hosted Tower credentials, an authenticated
   Sidecar stop/revoke bridge and the shared AIOS evidence format moved to
   Phase 6 on 2026-10-31 because each depends on sibling work first
-- **Phase 6: Operational Intelligence** 🚧 Planned
+- **Phase 6: Operational Intelligence** ✅ Implemented in 0.6.0; paired release acceptance below
 
 ## Local and Hosted Delivery Status
 
@@ -565,7 +568,9 @@ Delivered in `0.5.0`:
 
 ## Phase 6: Operational Intelligence
 
-### Coordinated MCP and Chaos release (planned)
+<a id="coordinated-mcp-and-chaos-release-planned"></a>
+
+### Coordinated MCP and Chaos release
 
 MCP Phase 6 includes the authenticated Sidecar stop/revoke bridge **and** a
 coordinated `agentic-chaos` sibling release containing adversarial containment
@@ -582,31 +587,31 @@ an independent step postponed until after the MCP release.
 
 **Shared acceptance gate:**
 
-- [ ] Test denied tools, stopped tasks, revoked/expired credentials and narrowed
+- [x] Test denied tools, stopped tasks, revoked/expired credentials and narrowed
       or revoked delegated authority through the actual supported enforcing paths.
-- [ ] Exercise queued calls, retries, existing sessions and concurrent dispatch
+- [x] Exercise queued calls, retries, existing sessions and concurrent dispatch
       around the effective stop/revocation acknowledgement. Require zero forbidden
       dispatches after that point; report already-running calls and completed side
       effects separately. Request receipt alone is not effective acknowledgement.
-- [ ] Test unauthorized and cross-task/cross-user control requests, injected
+- [x] Test unauthorized and cross-task/cross-user control requests, injected
       instructions, and failures of gate, approval and evidence paths. Tests use
       isolated targets and synthetic credentials; hosted arbitrary chaos execution
       remains disabled.
-- [ ] Record seeds, payloads, package/policy/configuration versions, control
+- [x] Record seeds, payloads, package/policy/configuration versions, control
       acknowledgements and actual dispatch/completion observations. A verdict or
       safe answer alone cannot satisfy the gate.
-- [ ] Make a deliberately bypassed-enforcement scenario fail the containment
+- [x] Make a deliberately bypassed-enforcement scenario fail the containment
       assertions. Missing required observations and failed/unknown/incomplete Lens
       verification must not produce a passing containment result.
-- [ ] Exercise the real MCP/Sidecar/Lens adapters in CI without silently skipping
+- [x] Exercise the real MCP/Sidecar/Lens adapters in CI without silently skipping
       them; validate the candidate wheels together and publish the tested version
       matrix and reproducible commands.
 
-Target MCP **0.6.0**, paired with a Chaos **0.9.x** validation patch if its public
-API stays unchanged; use Chaos **0.10.0** if implementation adds public APIs.
-Finalize version numbers when packaging. Publish both sibling releases and close
-this acceptance gate before marking Phase 6 complete. Patch Sidecar, Lens or
-Tower only when implementation or dependency compatibility requires it.
+Release pairing: MCP **0.6.0**, Chaos **0.10.0** (new public assertion API),
+Sidecar **0.9.2** (optional dependency compatibility), and Lens **0.12.0**.
+Candidate wheels pass the shared acceptance matrix. Publication uses each
+reviewed merge commit's tag-driven release workflow. Tower and Evals need no
+runtime patch; the spec-owned profile stays exploratory.
 
 Evals v0.11 remains the following milestone: it consumes this evidence for
 reusable containment scoring and release gates. The paired release uses native
@@ -615,7 +620,14 @@ shipped or turn the Chaos resilience score into a containment score.
 Shared AIOS authority/access semantics still require spec-owned definitions;
 existing namespaced evidence must retain its producer attribution.
 
-### Remaining Phase 6 deliverables
+### Operational intelligence delivered in 0.6.0
+
+`core.onboard` guides setup; `core.report_recall` browses saved evidence and
+history with deterministic source-cited investigation notes. Saved resources
+use `resource://sessions/{id}`, with hosted reads authorized through recall.
+See [the guide](docs/phase6-containment.md).
+
+### Original Phase 6 scope (implementation above)
 
 Goals:
 
@@ -753,7 +765,7 @@ queries and incident transitions, separate reader/writer credentials, and a cite
 investigation prompt. Human approval stays in Tower HTTP/CLI. Hosted calls are
 rejected until per-user Tower credentials exist. MCP remains usable without Tower.
 Unified cross-engine workflows shipped in `0.4.0`, completing Phase 4. Hosted
-Tower credentials and access containment are Phase 5 work.
+Tower credentials and the task-scoped stop/revoke bridge ship in 0.6.0.
 See [setup](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/main/docs/mcp-connector.md).
 
 ## Native Evals contract validation — MCP 0.3.8
@@ -1038,3 +1050,11 @@ Authenticated AIOS execution bundles now integrate through Lens-owned verificati
 Host-configured trust preserves verified/failed/unknown/incomplete results and
 redacted causal IDs. No deployment health or containment verdict is inferred.
 See [the integration guide](docs/lens-execution-evidence.md).
+
+## MCP Phase 6 coordinated delivery — 2026-11-02
+
+The MCP 0.6.0 / Chaos 0.10.0 / Sidecar 0.9.2 release includes live task-scoped
+stop/revoke, hosted Tower user bindings and authenticated native assertions.
+See the [tested matrix, limitations and commands](docs/phase6-containment.md).
+Release acceptance requires CI and publication of the paired wheels. Evals
+v0.11 reusable containment scoring remains the following milestone.

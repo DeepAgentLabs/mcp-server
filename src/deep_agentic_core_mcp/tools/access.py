@@ -24,6 +24,10 @@ def principal_scope(principal: Principal) -> Iterator[None]:
         _PRINCIPAL.reset(token)
 
 
+def current_principal() -> Principal | None:
+    return _PRINCIPAL.get()
+
+
 def access_status(_: dict[str, Any] | None = None) -> dict[str, Any]:
     """Report the caller's effective policy and the tools it can call now."""
     principal = _PRINCIPAL.get()
@@ -55,6 +59,6 @@ def access_status(_: dict[str, Any] | None = None) -> dict[str, Any]:
         "task_id": policy.task_id,
         "expires_at": expires_at,
         "expired": policy.expired(),
-        "permitted_tools": [name for name in _remote_tool_names() if policy.permits(name)],
+        "permitted_tools": [name for name in _remote_tool_names(principal) if policy.permits(name)],
         "evidence_schema": SCHEMA,
     }

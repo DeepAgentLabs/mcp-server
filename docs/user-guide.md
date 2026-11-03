@@ -304,3 +304,10 @@ run export described in section 6 (requires `agentic-chaos>=0.5.1`).
 
 Use `evals.validate_artifact` for reports or gate decisions. This offline tool
 works without Lens. See [the contract guide](evals-report-contract.md).
+
+## Operational intelligence and containment (0.6.0)
+
+Start with `core.onboard`, browse saved sessions with `core.report_recall` or
+`resource://sessions/{id}`, and recall source-cited stored investigation notes.
+For hosted Tower credentials and independent task-scoped Sidecar stop/revoke,
+see [the operator guide](phase6-containment.md).

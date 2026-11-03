@@ -46,9 +46,10 @@ complete: the local Control Tower connector shipped in `0.3.6` and the unified
 export) in `0.4.0`. Phase 5 is complete as of `0.5.0`: per-key tool policies
 are enforced at dispatch (`services/access_policy.py`), the key and policy are
 re-checked after the session lock, and calls leave correlated
-`mcp.access-decision.v1` evidence (`services/access_evidence.py`). Phase 6 picks
-up hosted Tower credentials, the Sidecar stop/revoke bridge and the shared AIOS
-evidence format. Any new hosted dispatch path must go through the authorizer. Unified tools must stay compositions: delegate judgement to the
+`mcp.access-decision.v1` evidence (`services/access_evidence.py`). Phase 6 (0.6.0) binds hosted Tower credentials per user, bridges live
+Sidecar stop/revoke with independent operator auth and adds the spec-owned
+exploratory access extension. Paired Chaos 0.10 assertions authenticate observations
+with Lens. Read docs/phase6-containment.md before changing these boundaries. Any new hosted dispatch path must go through the authorizer. Unified tools must stay compositions: delegate judgement to the
 sibling that owns it (Evals gate, Lens comparison, Chaos report) and fail
 closed on missing or invalid evidence. Changes here should strengthen composition and interoperability, not
 duplicate implementation logic from sibling repos.
@@ -221,4 +222,4 @@ Tag releases validate, publish PyPI/GitHub Release and publish the MCP Registry.
 Automatic AWS deployment is removed from GitHub Actions. Existing AWS build and
 operator deployment scripts remain available for an explicit manual deployment;
 publishing a package does not update the running AWS service. Standalone image
-recipes include Sidecar 0.9.0 for package discovery, with no live runtime bridge.
+recipes include Sidecar 0.9.2; a live runtime bridge requires explicit host bindings.

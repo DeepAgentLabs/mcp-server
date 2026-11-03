@@ -17,10 +17,10 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
-from mcp.server.transport_security import TransportSecuritySettings
+from mcp.server.transport_security import TransportSecurityMiddleware, TransportSecuritySettings
 from starlette.applications import Starlette
 from starlette.requests import Request
-from starlette.responses import PlainTextResponse
+from starlette.responses import JSONResponse, PlainTextResponse, Response
 from starlette.routing import Route
 from starlette.types import Receive, Scope, Send
 
@@ -29,6 +29,7 @@ from deep_agentic_core_mcp.server import server
 from deep_agentic_core_mcp.services import access_evidence
 from deep_agentic_core_mcp.services.access_policy import authorize
 from deep_agentic_core_mcp.services.api_keys import DynamoKeyStore, KeyStore, StaticKeyStore
+from deep_agentic_core_mcp.services.containment import SidecarBridge
 from deep_agentic_core_mcp.services.postgres_store import (
     PostgresKeyStore,
     PostgresSessionStore,
@@ -40,6 +41,8 @@ from deep_agentic_core_mcp.services.remote_sessions import RedisSessionStore, Se
 
 def create_app(
     *,
+    operator_store: KeyStore | None = None,
+    sidecar_bridge: SidecarBridge | None = None,
     api_keys: Mapping[str, Any] | None = None,
     key_store: KeyStore | None = None,
     store: SessionStore | None = None,
@@ -59,6 +62,10 @@ def create_app(
     DEEP_AGENTIC_CORE_MCP_DATABASE_URL selects PostgreSQL (e.g. Supabase) for
     keys and, unless Redis is configured, sessions and signup limits.
     """
+    if (operator_store is None) != (sidecar_bridge is None):
+        raise ValueError("Sidecar control requires independent operator authentication")
+    if operator_store is key_store and operator_store is not None:
+        raise ValueError("Agent and operator authentication must be separate")
     if key_store is not None and api_keys is not None:
         raise ValueError("Supply only one authentication backend")
     if min(requests_per_minute, max_concurrent_per_user, max_concurrent_total) < 1:
@@ -71,6 +78,8 @@ def create_app(
         pool = connect(database_url, max_size=max_concurrent_total + 4)
     try:
         return _build_app(
+            operator_store=operator_store,
+            sidecar_bridge=sidecar_bridge,
             pool=pool,
             api_keys=api_keys,
             key_store=key_store,
@@ -89,6 +98,8 @@ def create_app(
 
 def _build_app(
     *,
+    operator_store: KeyStore | None,
+    sidecar_bridge: SidecarBridge | None,
     pool: Any,
     api_keys: Mapping[str, Any] | None,
     key_store: KeyStore | None,
@@ -123,17 +134,19 @@ def _build_app(
             )
     session_store = store
     config.enable_remote_transport()
+    security_settings = TransportSecuritySettings(
+        allowed_hosts=[host.lower() for host in allowed_hosts]
+        if allowed_hosts is not None
+        else ["localhost", "localhost:*", "127.0.0.1", "127.0.0.1:*"],
+        allowed_origins=allowed_origins if allowed_origins is not None else [],
+    )
+    control_security = TransportSecurityMiddleware(security_settings)
     session_manager = StreamableHTTPSessionManager(
         app=server,
         json_response=True,
         stateless=True,
         max_request_body_size=1024 * 1024,
-        security_settings=TransportSecuritySettings(
-            allowed_hosts=[host.lower() for host in allowed_hosts]
-            if allowed_hosts is not None
-            else ["localhost", "localhost:*", "127.0.0.1", "127.0.0.1:*"],
-            allowed_origins=allowed_origins if allowed_origins is not None else [],
-        ),
+        security_settings=security_settings,
     )
     active: dict[str, int] = {}
     windows: dict[str, tuple[float, int]] = {}
@@ -240,6 +253,35 @@ def _build_app(
             trusted_proxy_hops=int(os.environ.get("DEEP_AGENTIC_CORE_MCP_TRUSTED_PROXY_HOPS", "0")),
             allowed_origins=allowed_origins,
         )
+    if sidecar_bridge is not None and operator_store is not None:
+
+        async def stop_task(request: Request) -> Response:
+            rejected = await control_security.validate_request(request)
+            if rejected is not None:
+                return rejected
+            scheme, _, token = request.headers.get("authorization", "").partition(" ")
+            try:
+                principal = (
+                    await asyncio.to_thread(authorize, operator_store, token)
+                    if scheme.lower() == "bearer"
+                    else None
+                )
+                task_id = request.path_params["task_id"]
+                if (
+                    principal is None
+                    or await asyncio.to_thread(auth_store.authenticate, token) is not None
+                    or not principal.policy.configured
+                    or "sidecar.stop" not in principal.policy.allow
+                    or principal.policy.task_id != task_id
+                    or not principal.policy.permits("sidecar.stop")
+                ):
+                    return JSONResponse({"error": "Control denied"}, status_code=403)
+                result = await asyncio.to_thread(sidecar_bridge.stop, principal.user, task_id)
+                return JSONResponse(result, status_code=200 if result["ok"] else 409)
+            except Exception:
+                return JSONResponse({"error": "Control unavailable"}, status_code=503)
+
+        routes.append(Route("/control/tasks/{task_id}/stop", stop_task, methods=["POST"]))
     app = Starlette(
         routes=routes,
         lifespan=lifespan,

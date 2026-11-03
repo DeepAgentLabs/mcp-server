@@ -6,6 +6,18 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.6.0 - 2026-11-03
+
+- Bind hosted Tower credentials per authenticated user with dispatch authorization.
+- Add independent task-scoped operator stop/revoke bridging to live Sidecar runtimes,
+  preserving native acknowledgement, failure and in-flight limits.
+- Add the spec-owned exploratory access profile as a producer-attributed extension.
+- Add read-only guided onboarding, saved-session resources and source-cited report recall.
+- Validate candidate MCP/Chaos wheels with actual Sidecar/Lens adapters, seed-601
+  adversarial scenarios and an observed bypassed-enforcement negative control.
+- Pair with Chaos 0.10.0 and Sidecar 0.9.2; hosted arbitrary chaos remains disabled.
+
+
 ## 0.5.2 - 2026-11-02
 
 - Add Lens execution-bundle verification with host-owned trust, redacted causal
