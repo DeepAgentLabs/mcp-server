@@ -5,7 +5,7 @@ interface across the DeepAgentLabs ecosystem.
 
 ## Current Release
 
-**Version:** `0.5.2`
+**Version:** `0.6.0`
 **Released:** 2026-11-02
 
 ## Development Status
@@ -103,3 +103,8 @@ with the DeepAgentLabs ecosystem across:
 - evaluation and readiness
 - decision supervision
 - operational intelligence
+
+## Phase 6 candidate
+
+See [the implemented containment and intelligence guide](phase6-containment.md).
+Paired wheel CI and publication close the release gate.

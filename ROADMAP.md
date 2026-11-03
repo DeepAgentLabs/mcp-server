@@ -10,7 +10,7 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.5.2` (2026-11-02) — see [CHANGELOG.md](CHANGELOG.md). It adds
+Release version: `0.6.0` (2026-11-02) — see [CHANGELOG.md](CHANGELOG.md). It adds
 read-only `lens.execution_verify` and pins hosted images to Lens 0.12.0.
 `0.5.1` (2026-10-31) added local
 `tower.runbook*` tools for Control Tower 0.9 runbooks ([guide](docs/tower-0.9-runbooks.md)).
@@ -82,7 +82,7 @@ discovery. The 2026-09-11 audit above describes the earlier `0.2.0` release stat
   revocation path) in `0.5.0`. Hosted Tower credentials, an authenticated
   Sidecar stop/revoke bridge and the shared AIOS evidence format moved to
   Phase 6 on 2026-10-31 because each depends on sibling work first
-- **Phase 6: Operational Intelligence** 🚧 Planned
+- **Phase 6: Operational Intelligence** — implemented in the 0.6.0 candidate; paired release gate below
 
 ## Local and Hosted Delivery Status
 
@@ -565,7 +565,7 @@ Delivered in `0.5.0`:
 
 ## Phase 6: Operational Intelligence
 
-### Coordinated MCP and Chaos release (planned)
+### Coordinated MCP and Chaos release (0.6.0 candidate)
 
 MCP Phase 6 includes the authenticated Sidecar stop/revoke bridge **and** a
 coordinated `agentic-chaos` sibling release containing adversarial containment
@@ -615,7 +615,14 @@ shipped or turn the Chaos resilience score into a containment score.
 Shared AIOS authority/access semantics still require spec-owned definitions;
 existing namespaced evidence must retain its producer attribution.
 
-### Remaining Phase 6 deliverables
+### Operational intelligence delivered in 0.6.0
+
+`core.onboard` guides setup; `core.report_recall` browses saved evidence and
+history with deterministic source-cited investigation notes. Saved resources
+use `resource://sessions/{id}`, with hosted reads authorized through recall.
+See [the guide](docs/phase6-containment.md).
+
+### Original Phase 6 scope (implementation above)
 
 Goals:
 
@@ -1038,3 +1045,11 @@ Authenticated AIOS execution bundles now integrate through Lens-owned verificati
 Host-configured trust preserves verified/failed/unknown/incomplete results and
 redacted causal IDs. No deployment health or containment verdict is inferred.
 See [the integration guide](docs/lens-execution-evidence.md).
+
+## MCP Phase 6 coordinated delivery — 2026-11-02
+
+The MCP 0.6.0 / Chaos 0.10.0 / Sidecar 0.9.2 candidate includes live task-scoped
+stop/revoke, hosted Tower user bindings and authenticated native assertions.
+See the [tested matrix, limitations and commands](docs/phase6-containment.md).
+Release acceptance requires CI and publication of the paired wheels. Evals
+v0.11 reusable containment scoring remains the following milestone.

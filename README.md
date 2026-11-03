@@ -791,3 +791,10 @@ Authenticated AIOS execution bundles now integrate through Lens-owned verificati
 Host-configured trust preserves verified/failed/unknown/incomplete results and
 redacted causal IDs. No deployment health or containment verdict is inferred.
 See [the integration guide](docs/lens-execution-evidence.md).
+
+## MCP Phase 6 coordinated containment
+
+MCP 0.6.0 adds hosted per-user Tower bindings, an authenticated Sidecar stop/revoke
+bridge, read-only onboarding and source-cited saved-report recall. Chaos 0.10.0
+provides Lens-authenticated native containment assertions; Sidecar 0.9.2 admits
+the paired Chaos version. [Phase 6 guide](docs/phase6-containment.md).
