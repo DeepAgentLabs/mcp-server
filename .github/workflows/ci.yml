@@ -31,14 +31,14 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agentic-chaos
-          ref: 4d94fd8
+          ref: 4d94fd8daca08befb08c472707bbc8999db6269d
           path: agentic-chaos
 
       - name: Check out ai-operations-spec
         uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/ai-operations-spec
-          ref: 9646283
+          ref: 96462835948cc0d367e0c8f8b7c163fb3c8c1efa
           path: ai-operations-spec
 
       - name: Install uv
@@ -148,14 +148,14 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agentic-chaos
-          ref: 4d94fd8
+          ref: 4d94fd8daca08befb08c472707bbc8999db6269d
           path: agentic-chaos
 
       - name: Check out ai-operations-spec
         uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/ai-operations-spec
-          ref: 9646283
+          ref: 96462835948cc0d367e0c8f8b7c163fb3c8c1efa
           path: ai-operations-spec
 
       - name: Install uv
@@ -194,17 +194,17 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agentic-chaos
-          ref: 4d94fd8
+          ref: 4d94fd8daca08befb08c472707bbc8999db6269d
           path: agentic-chaos
       - uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/ai-operations-spec
-          ref: 9646283
+          ref: 96462835948cc0d367e0c8f8b7c163fb3c8c1efa
           path: ai-operations-spec
       - uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agentic-sidecar
-          ref: 9bd9042
+          ref: 9bd9042add7d6b14c3600033fc3199ad37eb4e13
           path: agentic-sidecar
       - uses: astral-sh/setup-uv@v7
       - name: Build candidate wheels and install released enforcing adapters
