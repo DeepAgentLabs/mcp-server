@@ -41,6 +41,7 @@ theme:
 
 nav:
   - MCP Phase 6 Containment: phase6-containment.md
+  - Evals 0.11 Containment Scoring: evals-0.11-containment.md
   - Home: index.md
   - Getting Started: getting-started.md
   - User Guide: user-guide.md

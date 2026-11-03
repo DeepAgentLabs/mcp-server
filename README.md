@@ -137,7 +137,8 @@ and `chaos.export_aios_run` behave the same hosted as locally. Only
 
 Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
-pin `agenticlens==0.12.0` (since MCP 0.5.2) and `agentic-chaos==0.10.0` and `agentic-sidecar==0.9.2` (MCP 0.6.0).
+pin `agenticlens==0.12.1`, `agentic-evals==0.11.0`, `agentic-chaos==0.10.0`
+and `agentic-sidecar==0.9.2` (MCP 0.6.1).
 
 ## AgenticLens 0.8.0 suite tools (MCP 0.3.9)
 
@@ -211,7 +212,7 @@ revocation adapter is unchanged and now also stops queued calls. See
 [hosted access control](docs/access-control.md) and
 [`examples/hosted_access_status.py`](examples/hosted_access_status.py).
 
-## MCP Surface (current, `0.6.0`)
+## MCP Surface (current, `0.6.1`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -788,3 +789,8 @@ MCP 0.6.0 adds hosted per-user Tower bindings, an authenticated Sidecar stop/rev
 bridge, read-only onboarding and source-cited saved-report recall. Chaos 0.10.0
 provides Lens-authenticated native containment assertions; Sidecar 0.9.2 admits
 the paired Chaos version. [Phase 6 guide](docs/phase6-containment.md).
+
+## Evals 0.11 containment scoring
+
+MCP stays a thin access/orchestration surface. The hosted exact Evals pin moves to 0.11.0 in 0.6.1; native access records and tool contracts remain unchanged. The Phase 6 acceptance test scores real handler observations and a deliberately bypassed authorizer.
+See [the compatibility matrix and operator example](docs/evals-0.11-containment.md).
