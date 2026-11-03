@@ -794,3 +794,10 @@ the paired Chaos version. [Phase 6 guide](docs/phase6-containment.md).
 
 MCP stays a thin access/orchestration surface. The hosted exact Evals pin moves to 0.11.0 in 0.6.1; native access records and tool contracts remain unchanged. The Phase 6 acceptance test scores real handler observations and a deliberately bypassed authorizer.
 See [the compatibility matrix and operator example](docs/evals-0.11-containment.md).
+
+## AIOS v0.6.2 implementation guidance
+
+AIOS v0.6.2 publishes cumulative-layer migration guidance, a non-normative
+OpenTelemetry companion profile and a strict documentation site build.
+Existing draft markers, native evidence and runtime dependencies are unchanged;
+no package patch release is needed. See [compatibility and offline example](docs/aios-0.6.2.md).
