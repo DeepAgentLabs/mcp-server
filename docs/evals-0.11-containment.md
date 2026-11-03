@@ -5,7 +5,7 @@ Evals 0.11.0 supplies `ContainmentEvaluator` and the six-scenario
 observations separately from task success. Missing evidence, missing policy or
 configuration versions, incomplete coverage and bypassed enforcement fail.
 
-Lens 0.12.0 authenticates the exact ordered snapshot. Coverage remains
+Lens 0.12.1 (unchanged integrity API from 0.12.0) authenticates the exact ordered snapshot. Coverage remains
 producer-declared. Chaos 0.10.0 supplies attacks and native scenario assertions;
 Sidecar 0.9.2 owns authority, enforcement and effective stop receipts. MCP 0.6.1
 pins Evals 0.11.0 and validates scores against the Phase 6 real-adapter harness.

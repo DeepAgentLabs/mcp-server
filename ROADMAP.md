@@ -10,7 +10,10 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.6.0` (2026-11-03) — see [CHANGELOG.md](CHANGELOG.md). Phase 6
+Release version: `0.6.1` (2026-11-03) — see [CHANGELOG.md](CHANGELOG.md).
+This patch pins Evals 0.11.0 and hosted Lens 0.12.1 and scores real
+Phase 6 dispatch evidence with Evals; native tool/report schemas are unchanged.
+Phase 6 (`0.6.0`)
 adds hosted per-user Tower credentials, task-scoped Sidecar stop/revoke,
 exploratory access evidence, guided setup and saved-report recall. The paired
 Chaos 0.10.0 assertions run against real adapters with Lens authentication;
