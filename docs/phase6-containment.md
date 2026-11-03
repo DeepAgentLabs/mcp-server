@@ -48,7 +48,7 @@ MCP's task-dedicated key must retain that task policy. The revoker checks it und
 the same session transaction used by dispatch, waits for in-flight MCP handlers
 to leave it, then revokes the user credential. Queued/retried/existing-connection
 calls reauthenticate after the transaction lock. External key/policy writes must
-use the same transaction. A credential serves one task; a mismatch fails without
+use the same `services.remote_sessions.dispatch_transaction` guard. A credential serves one task; a mismatch fails without
 revoking a different task. Already-reserved Sidecar calls may complete and cause
 side effects after stop; cancellation and unrelated downstream credentials are
 harness-owned. This is a host binding, not automatic remote runtime discovery.
@@ -109,3 +109,16 @@ hosted state uses the configured shared store and existing quotas/history limits
 AIOS 0.6.1 denotes the existing Run/schema compatibility baseline. The new
 exploratory access profile is in the coordinated spec repository revision,
 not the historical v0.6.1 tag. It is not promoted to a normative schema family.
+
+## Shared Redis dispatch guard
+
+Redis session snapshots use optimistic writes. MCP dispatch and task revocation
+therefore also acquire a per-user shared Redis guard. It has no expiry, preventing
+a lease from expiring underneath an active handler; acquisition waits at most five
+seconds and fails closed if busy or unavailable. A stop may latch but report failed
+revocation under contention: retry it after reconciling the in-flight work.
+After a worker crash, an operator must reconcile its running invocations before
+clearing the orphaned `deep-agentic-core-mcp:dispatch:{owner-sha256}` guard.
+Never clear it while an original handler may still run. Memory and PostgreSQL
+retain their existing mutex/row-lock transaction boundaries. Custom session
+backends must provide equivalent serialization before enabling the live bridge.
