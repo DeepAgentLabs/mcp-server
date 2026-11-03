@@ -369,6 +369,26 @@ def list_tools() -> list[dict[str, Any]]:
             "mutates_session": False,
         },
         {
+            "name": "lens.execution_verify",
+            "title": "Verify Execution Evidence",
+            "description": "Verify a Lens AIOS execution bundle with host-configured keys. "
+            "Return verification, coverage and causal IDs without raw payloads. No execution.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "bundle": {"type": "object"},
+                    "run_id": {"type": "string", "minLength": 1},
+                    **_SESSION_ID_PROPERTY,
+                },
+                "required": ["bundle", "run_id"],
+                "additionalProperties": False,
+            },
+            "category": "lens",
+            "prerequisites": ["agenticlens"],
+            "expected_duration": "fast",
+            "mutates_session": False,
+        },
+        {
             "name": "lens.optimization_analyze",
             "title": "Optimization Opportunities",
             "description": "Rank evidence-backed optimizations from AgenticLens Run traces: "
