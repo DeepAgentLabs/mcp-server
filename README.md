@@ -425,7 +425,12 @@ full detail):
 - **Control Tower coordination** — local connector tools ship in 0.3.6 for
   Tower 0.7.0; hosted per-user credential binding moves to Phase 6
 - **Phase 6** — containment integrations (hosted Tower credentials, Sidecar
-  stop/revoke bridge, AIOS access evidence) and operational intelligence features
+  stop/revoke bridge, AIOS access evidence) and operational intelligence features.
+  A coordinated **Chaos sibling release** must test actual forbidden dispatches
+  after acknowledged stop/revoke, including queues, retries, existing sessions
+  and a bypassed negative control. Both releases share the
+  [Phase 6 acceptance gate](ROADMAP.md#coordinated-mcp-and-chaos-release-planned).
+  Evals v0.11 containment scoring follows this paired delivery.
 
 ## Development
 
