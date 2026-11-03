@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from deep_agentic_core_mcp.tools.intelligence import tool_definitions as intelligence_tools
 from deep_agentic_core_mcp.tools.tower import tool_definitions
 
 _SESSION_ID_PROPERTY = {
@@ -12,7 +13,7 @@ _SESSION_ID_PROPERTY = {
 }
 
 
-def list_tools() -> list[dict[str, Any]]:
+def _base_tools() -> list[dict[str, Any]]:
     """Return the current tool inventory for the server.
 
     Beyond the MCP-standard `name`/`title`/`description`/`input_schema`,
@@ -639,3 +640,8 @@ def list_tools() -> list[dict[str, Any]]:
             "mutates_session": False,
         },
     ]
+
+
+def list_tools() -> list[dict[str, Any]]:
+    """Return tool metadata including operational intelligence composition tools."""
+    return _base_tools() + intelligence_tools()
