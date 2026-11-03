@@ -10,8 +10,12 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.6.0` (2026-11-03) — see [CHANGELOG.md](CHANGELOG.md). It adds
-read-only `lens.execution_verify` and pins hosted images to Lens 0.12.0.
+Release version: `0.6.0` (2026-11-03) — see [CHANGELOG.md](CHANGELOG.md). Phase 6
+adds hosted per-user Tower credentials, task-scoped Sidecar stop/revoke,
+exploratory access evidence, guided setup and saved-report recall. The paired
+Chaos 0.10.0 assertions run against real adapters with Lens authentication;
+Sidecar 0.9.2 admits the paired dependencies. `0.5.2` (2026-11-02) added
+read-only `lens.execution_verify` and pinned hosted images to Lens 0.12.0.
 `0.5.1` (2026-10-31) added local
 `tower.runbook*` tools for Control Tower 0.9 runbooks ([guide](docs/tower-0.9-runbooks.md)).
 `0.5.0` (2026-10-31) completes
@@ -603,11 +607,11 @@ an independent step postponed until after the MCP release.
       them; validate the candidate wheels together and publish the tested version
       matrix and reproducible commands.
 
-Target MCP **0.6.0**, paired with a Chaos **0.9.x** validation patch if its public
-API stays unchanged; use Chaos **0.10.0** if implementation adds public APIs.
-Finalize version numbers when packaging. Publish both sibling releases and close
-this acceptance gate before marking Phase 6 complete. Patch Sidecar, Lens or
-Tower only when implementation or dependency compatibility requires it.
+Release pairing: MCP **0.6.0**, Chaos **0.10.0** (new public assertion API),
+Sidecar **0.9.2** (optional dependency compatibility), and Lens **0.12.0**.
+Candidate wheels pass the shared acceptance matrix. Publication uses each
+reviewed merge commit's tag-driven release workflow. Tower and Evals need no
+runtime patch; the spec-owned profile stays exploratory.
 
 Evals v0.11 remains the following milestone: it consumes this evidence for
 reusable containment scoring and release gates. The paired release uses native

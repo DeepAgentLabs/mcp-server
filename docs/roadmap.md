@@ -21,9 +21,9 @@ interface across the DeepAgentLabs ecosystem.
 | Phase 3c | ✅ Complete | AI Operations Specification conformance |
 | Phase 4 | ✅ Complete | Unified workflows |
 | Phase 5 | ✅ Complete | Publishing, adoption and hosted access control (`0.5.0`) |
-| Phase 6 | 🚧 Planned | Containment integrations, paired Chaos validation and operational intelligence |
+| Phase 6 | ✅ Complete | Task-scoped containment, paired Chaos validation and operational intelligence (`0.6.0`) |
 
-## Upcoming Work
+## Delivered Milestones
 
 ### Phase 3 — Ecosystem Integrations
 
@@ -60,19 +60,20 @@ queues/retries/existing sessions; report in-flight effects separately. A bypasse
 negative control must fail, and missing or unverified evidence cannot pass.
 Run real adapters in CI on isolated targets with synthetic credentials.
 
-The target is MCP 0.6.0 plus a Chaos 0.9.x validation patch (0.10.0 if new public
-APIs are needed). Both candidate wheels must pass the shared matrix before the
-milestone closes. Evals v0.11 scoring follows; it is not a dependency of these
-native containment assertions. See the
-[canonical acceptance gate](https://github.com/DeepAgentLabs/mcp-server/blob/main/ROADMAP.md#coordinated-mcp-and-chaos-release-planned).
+The release pairing is MCP 0.6.0, Chaos 0.10.0 and Sidecar 0.9.2, with
+Lens 0.12.0 snapshot authentication. Required CI validates the candidate wheels
+with actual enforcing adapters and publishes seed-601 observations. Evals v0.11
+reusable containment scoring follows; it is not part of the native assertions.
+See the [operator guide and limits](phase6-containment.md).
 
-- Containment integrations moved from Phase 5: hosted `tower.*` with per-user
-  Tower credentials, an authenticated Sidecar stop/revoke bridge, and the shared
-  AIOS access-evidence format.
-- Guided onboarding.
-- Saved artifact browsing.
-- Explainable report recall and session history.
-- Investigation and narrative generation.
+Delivered in 0.6.0:
+
+- Hosted `tower.*` with per-user credentials and dispatch authorization.
+- Independently authorized task-scoped Sidecar stop/revoke and a spec-owned
+  exploratory access extension; no new normative AIOS artifact is claimed.
+- `core.onboard` guided setup and `core.report_recall` source-cited recall.
+- Tenant-scoped saved-artifact resources, session history and deterministic
+  report/investigation narratives from stored producer findings.
 
 ## Dependencies
 
@@ -80,18 +81,23 @@ The MCP Server integrates capabilities from:
 
 - `agenticlens` — workflow analysis and reporting
 - `agentic-chaos` — resilience and fault-injection testing
-- `agentic-sidecar` — discovery and readiness information
+- `agentic-sidecar` — discovery and explicit live host-bound stop/revoke
 - `ai-operations-spec` — shared artifact and validation contract
 
-Future control-plane capabilities will depend on the availability of
-`agenticops-control-tower` APIs.
+`agenticops-control-tower` supplies the authenticated control-plane APIs;
+`agentic-evals` owns native evaluation and gate semantics.
 
 ## Known Limitations
 
-- Tool handlers are currently synchronous, so long-running operations can block
-  the server while they execute.
-- `chaos.run_experiment` is currently confined to the workspace root but does
-  not have a more restrictive script allowlist.
+- Hosted arbitrary chaos execution remains disabled; local scripts are trusted
+  and constrained by workspace and script policy, not a sandbox.
+- Sidecar reservations already in flight may complete and cause side effects.
+  Downstream cancellation and unrelated credentials remain harness-owned.
+- Live runtime bindings are explicit; no automatic distributed runtime discovery
+  or fleet atomicity is claimed.
+- Redis guards fail closed and require operator reconciliation after worker crashes.
+- Evidence completeness remains producer-declared; authenticated snapshots do not
+  prove exhaustive observation or containment of uninstrumented paths.
 
 ## Vision
 
@@ -104,7 +110,7 @@ with the DeepAgentLabs ecosystem across:
 - decision supervision
 - operational intelligence
 
-## Phase 6 candidate
+## Phase 6 acceptance
 
 See [the implemented containment and intelligence guide](phase6-containment.md).
 Paired wheel CI and publication close the release gate.
