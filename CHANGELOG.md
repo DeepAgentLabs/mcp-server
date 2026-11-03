@@ -6,6 +6,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.5.2 - 2026-11-02
+
+- Add Lens execution-bundle verification with host-owned trust, redacted causal
+  links and distinct verification states. See docs/lens-execution-evidence.md.
+
 ## 0.5.1 - 2026-10-31
 
 Pairs with Control Tower 0.9.0 automated runbooks. See `docs/tower-0.9-runbooks.md`.
