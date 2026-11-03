@@ -51,9 +51,9 @@ def test_standalone_images_pin_phase3_sibling_versions(dockerfile: str) -> None:
 # Exact sibling releases the current hosted images ship (0.5.2: Lens 0.12.0, Chaos 0.9.0,
 # Evals 0.10.0, whose native schemas are the 0.9.0 documents bundled here).
 HOSTED_PINS = {
-    "agenticlens": "0.12.0",
+    "agenticlens": "0.12.1",
     "agentic-chaos": "0.10.0",
-    "agentic-evals": "0.10.0",
+    "agentic-evals": "0.11.0",
     "agentic-sidecar": "0.9.2",
 }
 
