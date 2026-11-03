@@ -223,3 +223,12 @@ Automatic AWS deployment is removed from GitHub Actions. Existing AWS build and
 operator deployment scripts remain available for an explicit manual deployment;
 publishing a package does not update the running AWS service. Standalone image
 recipes include Sidecar 0.9.2; a live runtime bridge requires explicit host bindings.
+
+## Coordinated major release policy
+
+Keep the remaining local roadmap phases on minor versions. Reserve v1.0 for
+one coordinated ecosystem release after each project's acceptance and
+compatibility gates pass. Follow the current minor target in ROADMAP.md and
+[the shared release policy](https://github.com/DeepAgentLabs/.github/blob/main/profile/RELEASE_POLICY.md).
+A documentation-only roadmap update does not bump package metadata or publish
+a new package release. Schema versions remain independent of package versions.
