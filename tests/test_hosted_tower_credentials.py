@@ -81,3 +81,15 @@ async def test_user_binding_and_policy_are_both_required(bindings):
 def test_malformed_bindings_fail_closed(monkeypatch, entry):
     monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_TOWER_BINDINGS", json.dumps({"alice": entry}))
     assert for_user("alice") is None
+
+
+async def test_incomplete_hosted_context_never_uses_global_credentials(bindings):
+    with patch("deep_agentic_core_mcp.tools.tower.subprocess.run") as worker:
+        for context in [
+            {},
+            {"store": MemorySessionStore()},
+            {"authorizer": lambda: Principal("alice")},
+        ]:
+            result = await handle_call_tool("tower.agents", {}, owner="alice", **context)
+            assert json.loads(result[0].text)["access_denied"]
+        worker.assert_not_called()

@@ -360,6 +360,12 @@ async def handle_call_tool(
         return _deny(evidence, message)
 
     def execute() -> dict[str, Any]:
+        if (
+            name.startswith("tower.")
+            and owner is not None
+            and (store is None or authorizer is None)
+        ):
+            return transport_denial("Hosted Tower requires dispatch authorization and storage")
         if name.startswith("tower.") and (
             (owner is not None and for_user(owner) is None)
             or (owner is None and config.is_remote_transport())
