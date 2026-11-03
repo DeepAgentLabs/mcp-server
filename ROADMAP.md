@@ -565,6 +565,58 @@ Delivered in `0.5.0`:
 
 ## Phase 6: Operational Intelligence
 
+### Coordinated MCP and Chaos release (planned)
+
+MCP Phase 6 includes the authenticated Sidecar stop/revoke bridge **and** a
+coordinated `agentic-chaos` sibling release containing adversarial containment
+validation. Chaos validation is a required acceptance gate for this phase, not
+an independent step postponed until after the MCP release.
+
+| Owner | Required delivery |
+| --- | --- |
+| MCP | Authenticated, task-scoped Sidecar stop/revoke integration; hosted per-user Tower credentials; native authorization, acknowledgement and dispatch/completion evidence |
+| Sidecar | Stop latching and pre-action dispatch enforcement at supported runtime boundaries; explicit in-flight and credential-revocation limits |
+| Chaos | Reproducible isolated scenarios, fault injection, observed forbidden-dispatch assertions and deliberately bypassed negative controls |
+| Lens | Authenticate saved evidence and expose coverage/integrity and causal IDs through the released execution APIs |
+| Tower | Present attributed evidence and requested/acknowledged/failed/unsupported outcomes without redefining enforcement |
+
+**Shared acceptance gate:**
+
+- [ ] Test denied tools, stopped tasks, revoked/expired credentials and narrowed
+      or revoked delegated authority through the actual supported enforcing paths.
+- [ ] Exercise queued calls, retries, existing sessions and concurrent dispatch
+      around the effective stop/revocation acknowledgement. Require zero forbidden
+      dispatches after that point; report already-running calls and completed side
+      effects separately. Request receipt alone is not effective acknowledgement.
+- [ ] Test unauthorized and cross-task/cross-user control requests, injected
+      instructions, and failures of gate, approval and evidence paths. Tests use
+      isolated targets and synthetic credentials; hosted arbitrary chaos execution
+      remains disabled.
+- [ ] Record seeds, payloads, package/policy/configuration versions, control
+      acknowledgements and actual dispatch/completion observations. A verdict or
+      safe answer alone cannot satisfy the gate.
+- [ ] Make a deliberately bypassed-enforcement scenario fail the containment
+      assertions. Missing required observations and failed/unknown/incomplete Lens
+      verification must not produce a passing containment result.
+- [ ] Exercise the real MCP/Sidecar/Lens adapters in CI without silently skipping
+      them; validate the candidate wheels together and publish the tested version
+      matrix and reproducible commands.
+
+Target MCP **0.6.0**, paired with a Chaos **0.9.x** validation patch if its public
+API stays unchanged; use Chaos **0.10.0** if implementation adds public APIs.
+Finalize version numbers when packaging. Publish both sibling releases and close
+this acceptance gate before marking Phase 6 complete. Patch Sidecar, Lens or
+Tower only when implementation or dependency compatibility requires it.
+
+Evals v0.11 remains the following milestone: it consumes this evidence for
+reusable containment scoring and release gates. The paired release uses native
+scenario assertions and negative controls; it does not claim Evals v0.11 has
+shipped or turn the Chaos resilience score into a containment score.
+Shared AIOS authority/access semantics still require spec-owned definitions;
+existing namespaced evidence must retain its producer attribution.
+
+### Remaining Phase 6 deliverables
+
 Goals:
 
 - containment integrations moved from Phase 5: hosted `tower.*` with per-user
@@ -663,18 +715,15 @@ unrelated downstream credentials.
 - [x] Keep an independently authorized operator revocation path after the agent's
       key is revoked (`deep-agentic-core-mcp-admin revoke`); local stdio trust is
       documented separately from hosted HTTP auth (`docs/access-control.md`).
-- [ ] Phase 3a/6: expose producer policy/action correlation and Lens integrity
-      verification, including failed/unknown status. Schema validity is not
-      cryptographic verification. **Blocked by** `agenticlens`: integrity-protected
-      export/verification is still an open item on its roadmap, so there is no
-      producer API to expose yet. This is a planned safety extension; it is not
-      part of the core Phase 3a scope that `0.3.3` completes (finding provenance
-      is digest-based traceability, not tamper evidence).
+- [x] Lens 0.12.0 / MCP 0.5.2: expose authenticated snapshot verification,
+      declared coverage and producer causal IDs through `lens.execution_verify`.
+      Failed/unknown/incomplete remain distinct. This verifies supplied evidence;
+      live stop/revoke correlation and shared access semantics remain Phase 6 work.
 - [x] Phase 5 (`0.5.0`): emit correlated access denials, revocation
       acknowledgements and dispatch/completion evidence (MCP-local
       `mcp.access-decision.v1`). Phase 6: the shared AIOS format for Tower and
       containment scoring.
-- [ ] Validate with Chaos/Evals fixtures for revoked keys, denied tools, injected
+- [ ] Phase 6 paired Chaos release: validate fixtures for revoked keys, denied tools, injected
       instructions, queued dispatch and incomplete evidence. Preserve the remote
       arbitrary-chaos execution restriction until sandbox requirements are met.
 
