@@ -457,10 +457,6 @@ Input schema:
     "run_id": {
       "type": "string",
       "minLength": 1
-    },
-    "session_id": {
-      "type": "string",
-      "description": "Session to read/write shared state under. Defaults to 'default'."
     }
   },
   "required": [

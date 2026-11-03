@@ -11,7 +11,7 @@ from deep_agentic_core_mcp.adapters import ensure_repo_on_path
 def execution_verify(arguments: dict[str, Any] | None) -> dict[str, Any]:
     """Never accept keys, trust-store paths, or precomputed verdicts from callers."""
     arguments = arguments or {}
-    if set(arguments) - {"bundle", "run_id", "session_id"}:
+    if set(arguments) - {"bundle", "run_id"}:
         return {"ok": False, "error": "Unexpected verification arguments"}
     try:
         ensure_repo_on_path("agenticlens")

@@ -378,7 +378,6 @@ def list_tools() -> list[dict[str, Any]]:
                 "properties": {
                     "bundle": {"type": "object"},
                     "run_id": {"type": "string", "minLength": 1},
-                    **_SESSION_ID_PROPERTY,
                 },
                 "required": ["bundle", "run_id"],
                 "additionalProperties": False,
