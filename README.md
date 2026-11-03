@@ -788,3 +788,8 @@ MCP 0.6.0 adds hosted per-user Tower bindings, an authenticated Sidecar stop/rev
 bridge, read-only onboarding and source-cited saved-report recall. Chaos 0.10.0
 provides Lens-authenticated native containment assertions; Sidecar 0.9.2 admits
 the paired Chaos version. [Phase 6 guide](docs/phase6-containment.md).
+
+## Evals 0.11 containment scoring
+
+MCP stays a thin access/orchestration surface. The hosted exact Evals pin moves to 0.11.0 in 0.6.1; native access records and tool contracts remain unchanged. The Phase 6 acceptance test scores real handler observations and a deliberately bypassed authorizer.
+See [the compatibility matrix and operator example](docs/evals-0.11-containment.md).

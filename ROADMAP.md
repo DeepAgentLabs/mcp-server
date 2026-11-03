@@ -1057,4 +1057,10 @@ The MCP 0.6.0 / Chaos 0.10.0 / Sidecar 0.9.2 release includes live task-scoped
 stop/revoke, hosted Tower user bindings and authenticated native assertions.
 See the [tested matrix, limitations and commands](docs/phase6-containment.md).
 Release acceptance requires CI and publication of the paired wheels. Evals
-v0.11 reusable containment scoring remains the following milestone.
+v0.11 reusable containment scoring now ships in 0.11.0; see
+[the updated matrix](docs/evals-0.11-containment.md).
+
+## Evals 0.11 containment scoring
+
+MCP stays a thin access/orchestration surface. The hosted exact Evals pin moves to 0.11.0 in 0.6.1; native access records and tool contracts remain unchanged. The Phase 6 acceptance test scores real handler observations and a deliberately bypassed authorizer.
+See [the compatibility matrix and operator example](docs/evals-0.11-containment.md).
