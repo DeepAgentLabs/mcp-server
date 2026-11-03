@@ -8,6 +8,7 @@ import asyncio
 import json
 import logging
 import threading
+import time
 
 import httpx
 import pytest
@@ -180,6 +181,7 @@ async def test_failed_control_never_claims_acknowledgement(monkeypatch, failure)
     ):
         response = await stop(client)
         assert response.status_code == 409 and response.json()["status"] == "failed"
+        assert response.json()["acknowledged_at"] is None
         assert runtime.stopped  # the emergency latch still holds
 
 
@@ -193,7 +195,11 @@ async def test_authenticated_observations_negative_control(monkeypatch, caplog, 
         ) as client,
     ):
         assert isinstance(await call(client), dict)
-        assert (await stop(client)).status_code == 200
+        control_started = time.monotonic()
+        control_response = await stop(client)
+        acknowledgement_latency = time.monotonic() - control_started
+        assert control_response.status_code == 200
+        assert control_response.json()["acknowledged_at"] is not None
     native = [
         json.loads(r.message) for r in caplog.records if r.name == "deep_agentic_core_mcp.access"
     ]
@@ -206,6 +212,8 @@ async def test_authenticated_observations_negative_control(monkeypatch, caplog, 
             subject="alice",
             task_id="task-601",
             receipt=runtime.journal.export()[-1],
+            acknowledged_at=control_response.json()["acknowledged_at"],
+            acknowledgement_latency_seconds=acknowledgement_latency,
         )
     )
     # Exercise the existing connection path after real revocation, not a generated verdict.
@@ -361,13 +369,14 @@ def test_real_delegated_authority_and_injected_instructions():
     assert governed.runtime.snapshot()["executed"] == 0
     narrowed = IntentGuardian(
         IntentEnvelope(
-            requested_by={"id": "operator"}, goal="No authority", authority={"read": False}
+            requested_by={"id": "operator"}, goal="Narrow delegation", authority={"read": True}
         ),
         [],
         authority_bindings=[AuthorityBinding(authority="read", tool="read")],
         task_id="narrowed",
         agent_id="parent",
     )
+    narrowed = narrowed.delegate(agent_id="narrowed-child", authority={})
     stopped = Sidecar(
         mode="govern", intent=narrowed, roles=["intent_guardian"], on_sidecar_failure="fail_closed"
     )

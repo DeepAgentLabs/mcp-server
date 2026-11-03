@@ -7,6 +7,7 @@ frontends must route control to that host; no distributed stop is inferred.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Any, Protocol
 
 
@@ -51,6 +52,7 @@ class SidecarBridge:
             "ok": acknowledged,
             "status": "acknowledged" if acknowledged else "failed",
             "task_id": task_id,
+            "acknowledged_at": datetime.now(timezone.utc).isoformat() if acknowledged else None,
             "receipt": receipt,
         }
 
