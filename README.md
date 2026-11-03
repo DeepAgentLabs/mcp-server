@@ -409,28 +409,18 @@ manual operator action from 0.4.1. See
 For PyPI-based verification, the `mcp-name` marker above must match the
 `name` field in `server.json`.
 
-## What's Next
+## Delivery status and next steps
 
-Phase 2 (session management, rich diagnostics, tool annotations, prompt
-registry, `core.verify`) is complete as of `0.2.0`, and Phase 3 (3a AgenticLens,
-3b Agentic Chaos, 3c AI Operations Specification, 3d Sidecar discovery) is
-complete as of `0.3.3`. What's still open (see [ROADMAP.md](ROADMAP.md) for
-full detail):
+Phase 6 ships in 0.6.0: hosted per-user Tower credentials, the independently
+controlled task-scoped Sidecar stop/revoke bridge, exploratory access evidence,
+guided setup, saved-artifact resources and source-cited recall. Chaos 0.10.0
+provides native authenticated scenario assertions and observed bypass negative
+controls. See [the paired acceptance gate](ROADMAP.md#coordinated-mcp-and-chaos-release)
+and [operator setup](docs/phase6-containment.md).
 
-- **Sidecar runtime controls**: richer control surfaces require an
-  authenticated, task-scoped runtime bridge
-- **Phase 5 (Publishing and Adoption)** — complete in 0.5.0: automated
-  publishing plus hosted access control (per-key tool permissions, revocation
-  at dispatch, correlated denial evidence, operator revocation)
-- **Control Tower coordination** — local connector tools ship in 0.3.6 for
-  Tower 0.7.0; hosted per-user credential binding moves to Phase 6
-- **Phase 6** — containment integrations (hosted Tower credentials, Sidecar
-  stop/revoke bridge, AIOS access evidence) and operational intelligence features.
-  A coordinated **Chaos sibling release** must test actual forbidden dispatches
-  after acknowledged stop/revoke, including queues, retries, existing sessions
-  and a bypassed negative control. Both releases share the
-  [Phase 6 acceptance gate](ROADMAP.md#coordinated-mcp-and-chaos-release-planned).
-  Evals v0.11 containment scoring follows this paired delivery.
+Evals v0.11 reusable containment scoring follows this delivery. Remote arbitrary
+chaos execution, distributed runtime discovery and guaranteed cancellation of
+already-reserved side effects remain outside the supported boundaries.
 
 ## Development
 

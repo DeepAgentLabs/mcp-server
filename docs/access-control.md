@@ -26,8 +26,9 @@ entry can still remove it. A stored policy that fails validation denies every
 tool, `core.access_status` included. It never falls back to the default
 surface.
 
-Hosted HTTP still rejects `chaos.run_experiment` and `tower.*`. A policy can
-narrow the hosted surface but cannot widen it.
+Hosted HTTP rejects `chaos.run_experiment`. Since 0.6.0, `tower.*` additionally
+requires a valid host-configured per-user Tower binding; policies cannot supply
+credentials or widen the available transport surface.
 
 ## When it is enforced
 
@@ -143,7 +144,8 @@ handler for that logger. On Render they appear in the service logs.
 
 `mcp.access-decision.v1` is an MCP-local record, not an AIOS artifact. A shared
 authority and evidence format for Tower and containment scoring belongs in
-`ai-operations-spec` first. Until that exists, Tower and log pipelines join on
+`ai-operations-spec` first. The 0.6.0 spec-owned exploratory `io.deepagentlabs.access` extension adds an
+explicit mapping without changing the native record. Pipelines still join on
 `correlation_id`, `subject` and `task_id`.
 
 ## Control Tower and Sidecar
@@ -155,8 +157,8 @@ and those calls leave a `revocation_acknowledged` record. Tower still reports
 in-flight calls and downstream credentials as outside complete containment, which
 matches this server's limits.
 
-Hosted `tower.*` tools with per-user Tower credentials are still roadmap work.
-So is an authenticated stop/revoke bridge to Sidecar's runtime controls.
+MCP 0.6.0 adds per-user hosted Tower credentials and an independently authorized,
+explicitly task-scoped Sidecar stop/revoke bridge. See [setup and limits](phase6-containment.md).
 
 ## Example
 

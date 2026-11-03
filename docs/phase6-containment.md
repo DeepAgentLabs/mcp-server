@@ -39,7 +39,9 @@ Sidecar owns the stop latch and pre-action reservation lock. Its native receipt
 retains running invocation IDs, cancellation outcomes, epoch, revocations and
 audit errors. The bridge returns `acknowledged` only when the native receipt
 acknowledges access revocation, the MCP revoker succeeded and audit did not fail.
-A failed revoker or evidence sink returns `failed`; the emergency latch still
+`acknowledged_at` is recorded after successful MCP revocation; Sidecar's native
+`effective_at` remains its earlier latch/control timestamp. A failed revoker or
+evidence sink returns `failed`; the emergency latch still
 holds. Unknown bindings return `unsupported`. A requested stop is not an ack.
 
 MCP's task-dedicated key must retain that task policy. The revoker checks it under
@@ -103,3 +105,7 @@ Saved sessions are also listed/read at `resource://sessions/{encoded-session-id}
 Hosted reads pass through the authorized recall tool and tenant transaction;
 a guessed URI cannot read another user's session. Stdio state is process-local;
 hosted state uses the configured shared store and existing quotas/history limits.
+
+AIOS 0.6.1 denotes the existing Run/schema compatibility baseline. The new
+exploratory access profile is in the coordinated spec repository revision,
+not the historical v0.6.1 tag. It is not promoted to a normative schema family.

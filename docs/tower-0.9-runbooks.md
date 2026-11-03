@@ -44,3 +44,9 @@ new tools need Tower 0.9.0; against an older Tower they return `Tower HTTP 404`.
 Use Tower's [runbook guide](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/v0.9.0/docs/runbooks.md)
 for definitions, step outcomes, request bodies and limits, and its
 [standalone walkthrough](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/v0.9.0/examples/runbook_recovery.py).
+
+## Hosted access in MCP 0.6.0
+
+These tools also work over hosted HTTP with a server-configured per-user Tower
+binding and dispatch authorization. Human approval remains separate. See
+[Phase 6 setup and credential boundaries](phase6-containment.md).
