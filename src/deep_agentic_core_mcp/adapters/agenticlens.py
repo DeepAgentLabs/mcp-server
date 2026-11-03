@@ -121,6 +121,7 @@ def describe_capabilities() -> list[str]:
         "modelfit_recommend",
         "routing_decide",
         "optimization_analyze",
+        "execution_verify",
     ]
 
 

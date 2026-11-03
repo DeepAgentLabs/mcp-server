@@ -10,7 +10,9 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.5.1` (2026-10-31) — see [CHANGELOG.md](CHANGELOG.md). It adds local
+Release version: `0.5.2` (2026-11-02) — see [CHANGELOG.md](CHANGELOG.md). It adds
+read-only `lens.execution_verify` and pins hosted images to Lens 0.12.0.
+`0.5.1` (2026-10-31) added local
 `tower.runbook*` tools for Control Tower 0.9 runbooks ([guide](docs/tower-0.9-runbooks.md)).
 `0.5.0` (2026-10-31) completes
 Phase 5 with hosted access control: per-key tool permissions (allow/deny globs,
@@ -93,7 +95,7 @@ hashes in DynamoDB. Remote chaos execution remains disabled.
 As of 2026-10-04, the hosted service is running at
 `https://mcp.deepagentlabs.io/mcp` with signup at `https://mcp.deepagentlabs.io`.
 Transport/signup and Sidecar discovery are included in the `0.3.0` release.
-Since `0.4.3` the hosted image installs `agenticlens` 0.11.0 (`0.4.2` installed Lens 0.10.0 and `agentic-evals` 0.10.0). Since `0.3.14` it installed `agentic-evals` 0.9.0, `agentic-chaos`
+The `0.5.2` image recipes install `agenticlens` 0.12.0 (`0.4.3` used Lens 0.11.0; `0.4.2` used Lens 0.10.0 and `agentic-evals` 0.10.0). Since `0.3.14` it installed `agentic-evals` 0.9.0, `agentic-chaos`
 0.8.0, and the `ai-operations-spec` 0.5.1 schemas and catalogs, fetched at a
 pinned commit and checksum-verified. (`0.3.12` installed Chaos 0.7.0; `0.3.9`–`0.3.10` installed Lens 0.8.0; `0.3.7`–`0.3.8` installed Lens 0.7.0; `0.3.5`–`0.3.6` installed Chaos 0.5.3;
 `0.3.4` installed Lens 0.6.1 and Chaos 0.5.1.) Chaos is installed only for its exporter and fault catalog; HTTP still
@@ -980,3 +982,10 @@ until per-user credential binding (Phase 6). Tower's existing
 `deep-agentic-core-mcp>=0.3.6,<1` range admits 0.5.1, so no Tower change is needed.
 See [runbook tools](docs/tower-0.9-runbooks.md).
 
+
+## Lens execution evidence (0.5.2)
+
+Authenticated AIOS execution bundles now integrate through Lens-owned verification.
+Host-configured trust preserves verified/failed/unknown/incomplete results and
+redacted causal IDs. No deployment health or containment verdict is inferred.
+See [the integration guide](docs/lens-execution-evidence.md).

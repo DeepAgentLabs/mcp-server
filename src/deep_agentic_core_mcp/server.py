@@ -55,6 +55,7 @@ from deep_agentic_core_mcp.tools.lens import (
     suite_check,
     suite_from_traces,
 )
+from deep_agentic_core_mcp.tools.lens_evidence import execution_verify
 from deep_agentic_core_mcp.tools.registry import list_tools as _registry_tools
 from deep_agentic_core_mcp.tools.sidecar import module_inventory, status
 from deep_agentic_core_mcp.tools.spec import validate_artifact
@@ -98,6 +99,7 @@ _TOOL_DISPATCH: dict[str, Callable[[dict[str, Any] | None], dict[str, Any]]] = {
     "lens.modelfit_recommend": modelfit_recommend,
     "lens.routing_decide": routing_decide,
     "lens.optimization_analyze": optimization_analyze,
+    "lens.execution_verify": execution_verify,
     "chaos.list_faults": list_faults,
     "chaos.run_experiment": run_experiment,
     "chaos.export_aios_run": export_aios_run,

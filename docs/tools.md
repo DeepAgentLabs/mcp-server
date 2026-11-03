@@ -3,7 +3,7 @@
 
 # Tool Reference
 
-48 tools, generated from `tools/registry.py` - the same data MCP
+49 tools, generated from `tools/registry.py` - the same data MCP
 clients see via `tools/list`. See [README.md](../README.md) for a one-line-per-tool
 overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
@@ -429,6 +429,39 @@ Input schema:
   },
   "required": [
     "run"
+  ],
+  "additionalProperties": false
+}
+```
+
+### `lens.execution_verify` — Verify Execution Evidence
+
+Verify a Lens AIOS execution bundle with host-configured keys. Return verification, coverage and causal IDs without raw payloads. No execution.
+
+| | |
+| --- | --- |
+| Category | `lens` |
+| Prerequisites | `agenticlens` |
+| Expected duration | fast |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "bundle": {
+      "type": "object"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "bundle",
+    "run_id"
   ],
   "additionalProperties": false
 }

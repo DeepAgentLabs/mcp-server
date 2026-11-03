@@ -137,7 +137,7 @@ and `chaos.export_aios_run` behave the same hosted as locally. Only
 
 Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
-pin `agenticlens==0.11.0` (since MCP 0.4.3) and `agentic-chaos==0.9.0` (since MCP 0.4.4).
+pin `agenticlens==0.12.0` (since MCP 0.5.2) and `agentic-chaos==0.9.0` (since MCP 0.4.4).
 
 ## AgenticLens 0.8.0 suite tools (MCP 0.3.9)
 
@@ -211,7 +211,7 @@ revocation adapter is unchanged and now also stops queued calls. See
 [hosted access control](docs/access-control.md) and
 [`examples/hosted_access_status.py`](examples/hosted_access_status.py).
 
-## MCP Surface (current, `0.5.1`)
+## MCP Surface (current, `0.5.2`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -779,3 +779,10 @@ every `0.4-draft` case. It now fails Steps that end before they start
 publish under `AIOS-0.5-V03`. `0.6-draft` provenance records are reported as
 published but unchecked and are rejected, never validated against v0.4. See
 [AIOS v0.6.1 compatibility](docs/aios-0.6.1.md).
+
+## Lens execution evidence (0.5.2)
+
+Authenticated AIOS execution bundles now integrate through Lens-owned verification.
+Host-configured trust preserves verified/failed/unknown/incomplete results and
+redacted causal IDs. No deployment health or containment verdict is inferred.
+See [the integration guide](docs/lens-execution-evidence.md).
