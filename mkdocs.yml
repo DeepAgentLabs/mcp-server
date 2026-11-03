@@ -40,6 +40,7 @@ theme:
     repo: fontawesome/brands/github
 
 nav:
+  - MCP Phase 6 Containment: phase6-containment.md
   - Home: index.md
   - Getting Started: getting-started.md
   - User Guide: user-guide.md
