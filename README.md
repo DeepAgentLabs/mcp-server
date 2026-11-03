@@ -779,3 +779,10 @@ every `0.4-draft` case. It now fails Steps that end before they start
 publish under `AIOS-0.5-V03`. `0.6-draft` provenance records are reported as
 published but unchecked and are rejected, never validated against v0.4. See
 [AIOS v0.6.1 compatibility](docs/aios-0.6.1.md).
+
+## Lens execution evidence (0.5.2)
+
+Authenticated AIOS execution bundles now integrate through Lens-owned verification.
+Host-configured trust preserves verified/failed/unknown/incomplete results and
+redacted causal IDs. No deployment health or containment verdict is inferred.
+See [the integration guide](docs/lens-execution-evidence.md).

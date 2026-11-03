@@ -980,3 +980,10 @@ until per-user credential binding (Phase 6). Tower's existing
 `deep-agentic-core-mcp>=0.3.6,<1` range admits 0.5.1, so no Tower change is needed.
 See [runbook tools](docs/tower-0.9-runbooks.md).
 
+
+## Lens execution evidence (0.5.2)
+
+Authenticated AIOS execution bundles now integrate through Lens-owned verification.
+Host-configured trust preserves verified/failed/unknown/incomplete results and
+redacted causal IDs. No deployment health or containment verdict is inferred.
+See [the integration guide](docs/lens-execution-evidence.md).
