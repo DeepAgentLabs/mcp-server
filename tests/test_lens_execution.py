@@ -67,3 +67,23 @@ async def test_hosted_permission_denies_before_verification(monkeypatch):
         authorizer=lambda: Principal("alice", AccessPolicy(allow=["core.*"])),
     )
     assert json.loads(content[0].text)["access_denied"] is True
+
+
+def test_incomplete_evidence_keeps_coverage_without_causal_claims(monkeypatch, tmp_path):
+    from agenticlens.integrity import Coverage, seal
+
+    trust(monkeypatch, tmp_path)
+    bundle = json.loads(FIXTURE.read_text())
+    coverage = Coverage(stream_id="run-evidence", description="partial capture", complete=False)
+    bundle["manifest"] = seal(
+        [bundle["artifact"]], coverage=coverage, key_id="test", key=KEY
+    ).model_dump()
+    result = execution_verify({"bundle": bundle, "run_id": "run-evidence"})
+    assert result["ok"] is False
+    assert result["verification"]["status"] == "incomplete"
+    assert result["verification"]["coverage"]["complete"] is False
+    assert result["causal_links"] == []
+    assert (
+        execution_verify({"bundle": bundle, "run_id": "run-evidence", "session_id": "unused"})["ok"]
+        is False
+    )
