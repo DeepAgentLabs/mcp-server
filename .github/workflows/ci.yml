@@ -25,6 +25,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agenticlens
+          ref: v0.12.0
           path: agenticlens
 
       - name: Check out agentic-chaos
@@ -33,13 +34,6 @@ jobs:
           repository: DeepAgentLabs/agentic-chaos
           ref: v0.10.0
           path: agentic-chaos
-
-      - name: Check out the paired Sidecar candidate
-        uses: actions/checkout@v7
-        with:
-          repository: DeepAgentLabs/agentic-sidecar
-          ref: 2673df4d4d8e3160955f0fff139e79d5819ec926
-          path: agentic-sidecar
 
       - name: Check out ai-operations-spec
         uses: actions/checkout@v7
@@ -60,7 +54,7 @@ jobs:
         working-directory: mcp-server
         run: |
           uv sync --frozen --extra dev --extra http --python ${{ matrix.python-version }}
-          uv pip install -e ../agenticlens -e ../agentic-chaos -e ../agentic-sidecar
+          uv pip install -e ../agenticlens -e ../agentic-chaos agentic-sidecar==0.9.2
 
       - name: Lint (ruff check)
         working-directory: mcp-server
@@ -124,6 +118,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agenticlens
+          ref: v0.12.0
           path: agenticlens
       - uses: astral-sh/setup-uv@v7
       - name: Install MCP with the hosted extras
@@ -149,6 +144,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agenticlens
+          ref: v0.12.0
           path: agenticlens
 
       - name: Check out agentic-chaos
@@ -157,13 +153,6 @@ jobs:
           repository: DeepAgentLabs/agentic-chaos
           ref: v0.10.0
           path: agentic-chaos
-
-      - name: Check out the paired Sidecar candidate
-        uses: actions/checkout@v7
-        with:
-          repository: DeepAgentLabs/agentic-sidecar
-          ref: 2673df4d4d8e3160955f0fff139e79d5819ec926
-          path: agentic-sidecar
 
       - name: Check out ai-operations-spec
         uses: actions/checkout@v7
@@ -184,7 +173,7 @@ jobs:
         working-directory: mcp-server
         run: |
           uv sync --frozen --extra dev --extra http --python 3.12
-          uv pip install -e ../agenticlens -e ../agentic-chaos -e ../agentic-sidecar
+          uv pip install -e ../agenticlens -e ../agentic-chaos agentic-sidecar==0.9.2
 
       - name: Build distributions
         working-directory: mcp-server
@@ -218,7 +207,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agentic-sidecar
-          ref: 2673df4d4d8e3160955f0fff139e79d5819ec926
+          ref: v0.9.2
           path: agentic-sidecar
       - uses: astral-sh/setup-uv@v7
       - name: Build candidate wheels and install released enforcing adapters
