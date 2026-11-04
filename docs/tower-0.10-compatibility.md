@@ -45,3 +45,13 @@ Tower 0.10+ and a configured reader credential. Hosted callers also need a
 per-user Tower binding and an MCP policy permitting `tower.capability_contract`.
 An unbound hosted caller cannot fall back to process credentials. This read does
 not register agents, approve actions or declare the contract stable.
+
+With a local configured connector, run:
+
+```bash
+uv run python examples/tower_capability_contract.py
+```
+
+The hosted equivalent is `python3 examples/hosted_access_status.py --tool tower.capability_contract`
+against a server upgraded to MCP 0.6.5. Package publication does not deploy that
+hosted server; an older server reports an unknown tool.
