@@ -248,3 +248,11 @@ jobs:
         run: >-
           uv run --extra dev --with 'agenticops-control-tower[api]==0.10.0'
           python -m pytest tests/test_tower_contract_integration.py --no-cov
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+      - name: Build documentation with strict link checking
+        run: uv run --extra docs mkdocs build --strict
