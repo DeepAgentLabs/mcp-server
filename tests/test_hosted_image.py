@@ -48,7 +48,7 @@ def test_standalone_images_pin_phase3_sibling_versions(dockerfile: str) -> None:
         assert _version(match.group(1)) >= minimum, f"{dockerfile} pins {package} too old"
 
 
-# Exact sibling releases shipped in MCP 0.6.6. Native Evals report/gate
+# Exact sibling releases shipped in MCP 0.7.0. Native Evals report/gate
 # schemas remain the 0.9.0 documents bundled here.
 HOSTED_PINS = {
     "agenticlens": "0.13.0",
