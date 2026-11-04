@@ -28,7 +28,10 @@ def bindings(monkeypatch):
     return value
 
 
-async def test_user_binding_and_policy_are_both_required(bindings):
+@pytest.mark.parametrize(
+    "operation,path", [("agents", "/agents"), ("capability_contract", "/contracts/capabilities")]
+)
+async def test_user_binding_and_policy_are_both_required(bindings, operation, path):
     store = MemorySessionStore()
     completed = MagicMock(returncode=0, stdout=b'{"ok":true}')
     with patch(
@@ -37,7 +40,7 @@ async def test_user_binding_and_policy_are_both_required(bindings):
         for user in ("alice", "bob"):
             principal = Principal(user)
             result = await handle_call_tool(
-                "tower.agents",
+                "tower." + operation,
                 {},
                 owner=user,
                 store=store,
@@ -45,13 +48,13 @@ async def test_user_binding_and_policy_are_both_required(bindings):
             )
             assert json.loads(result[0].text)["ok"]
             sent = json.loads(worker.call_args.kwargs["input"])
-            assert sent["url"] == f"https://{user}.example/agents"
+            assert sent["url"] == f"https://{user}.example{path}"
             assert sent["token"] == user + "-read"
-            assert "tower.agents" in {t.name for t in await handle_list_tools(principal)}
+            assert "tower." + operation in {t.name for t in await handle_list_tools(principal)}
         denied = Principal("alice", AccessPolicy(allow=("core.*",)))
         before = worker.call_count
         result = await handle_call_tool(
-            "tower.agents", {}, owner="alice", store=store, authorizer=lambda: denied
+            "tower." + operation, {}, owner="alice", store=store, authorizer=lambda: denied
         )
         assert json.loads(result[0].text)["access_denied"]
         assert worker.call_count == before
@@ -83,13 +86,14 @@ def test_malformed_bindings_fail_closed(monkeypatch, entry):
     assert for_user("alice") is None
 
 
-async def test_incomplete_hosted_context_never_uses_global_credentials(bindings):
+@pytest.mark.parametrize("operation", ["agents", "capability_contract"])
+async def test_incomplete_hosted_context_never_uses_global_credentials(bindings, operation):
     with patch("deep_agentic_core_mcp.tools.tower.subprocess.run") as worker:
         for context in [
             {},
             {"store": MemorySessionStore()},
             {"authorizer": lambda: Principal("alice")},
         ]:
-            result = await handle_call_tool("tower.agents", {}, owner="alice", **context)
+            result = await handle_call_tool("tower." + operation, {}, owner="alice", **context)
             assert json.loads(result[0].text)["access_denied"]
         worker.assert_not_called()

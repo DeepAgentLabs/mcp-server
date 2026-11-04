@@ -64,7 +64,7 @@ async def test_hosted_dispatch_never_uses_process_credentials(monkeypatch):
 
 
 async def test_dispatch_and_annotations():
-    assert len(tool_definitions()) == 20
+    assert len(tool_definitions()) == 21
     names = {tool.name: tool for tool in TOOLS}
     assert names["tower.agents"].annotations.read_only_hint
     assert not names["tower.execute"].annotations.read_only_hint
@@ -221,3 +221,64 @@ def test_runbook_execute_waits_for_the_runbook_budget_and_requires_arguments():
     tools = {tool["name"]: tool for tool in tool_definitions()}
     assert tools["tower.runbook_execute"]["expected_duration"] == "slow"
     assert tools["tower.runbook_cancel"]["expected_duration"] == "fast"
+
+
+async def test_capability_contract_dispatch_is_read_only_and_preserves_candidate():
+    descriptor = {
+        "contract_version": "tower.capabilities.v1",
+        "maturity": "candidate",
+        "schemas": {"registration": {"type": "object"}},
+    }
+    completed = MagicMock(
+        returncode=0, stdout=json.dumps({"ok": True, "data": descriptor}).encode()
+    )
+    with patch("deep_agentic_core_mcp.tools.tower.subprocess.run", return_value=completed) as run:
+        result = await handle_call_tool("tower.capability_contract", {})
+        assert json.loads(result[0].text) == {"ok": True, "data": descriptor}
+        request = json.loads(run.call_args.kwargs["input"])
+        assert request["url"] == "http://127.0.0.1:8000/contracts/capabilities"
+        assert request["token"] == "reader-secret" and not request["write"]
+        run.reset_mock()
+        for extra in (
+            {"url": "https://attacker.example"},
+            {"token": "override"},
+            {"operation": "execute"},
+            {"agent_id": "other"},
+        ):
+            if "operation" in extra:
+                # Dispatcher owns the operation; model arguments cannot change it.
+                result = await handle_call_tool("tower.capability_contract", extra)
+                assert json.loads(run.call_args.kwargs["input"])["write"] is False
+                run.reset_mock()
+            else:
+                result = await handle_call_tool("tower.capability_contract", extra)
+                assert not json.loads(result[0].text)["ok"]
+                run.assert_not_called()
+    tools = {tool.name: tool for tool in TOOLS}
+    tool = tools["tower.capability_contract"]
+    assert tool.annotations.read_only_hint and not tool.annotations.open_world_hint
+    definition = {tool["name"]: tool for tool in tool_definitions()}[tool.name]
+    assert definition["prerequisites"] == ["configured Tower 0.10 API"]
+    assert definition["input_schema"]["properties"] == {}
+    assert not definition["input_schema"]["additionalProperties"]
+
+
+@pytest.mark.parametrize("status", [401, 403, 404])
+def test_contract_http_errors_are_secret_safe(status):
+    from urllib.error import HTTPError
+
+    from deep_agentic_core_mcp.tools.tower_http import request
+
+    opener = MagicMock()
+    opener.open.side_effect = HTTPError(
+        "https://tower/contracts/capabilities", status, "secret-body", {}, None
+    )
+    with patch("deep_agentic_core_mcp.tools.tower_http.build_opener", return_value=opener):
+        assert request(
+            {
+                "url": "https://tower/contracts/capabilities",
+                "arguments": {},
+                "write": False,
+                "token": "secret",
+            }
+        ) == {"ok": False, "error": f"Tower HTTP {status}"}
