@@ -239,4 +239,4 @@ jobs:
       - name: Test against published Tower 0.10.0
         run: >-
           uv run --extra dev --with 'agenticops-control-tower[api]==0.10.0'
-          pytest tests/test_tower_contract_integration.py --no-cov
+          python -m pytest tests/test_tower_contract_integration.py --no-cov
