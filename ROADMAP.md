@@ -1107,3 +1107,8 @@ Hosted image recipes also pin 0.12.0; deployment remains an explicit operator ac
 
 MCP 0.6.3 advances standalone image recipes to Sidecar 0.10.0. Hosted access receipts and Phase 6 live bindings remain unchanged; publishing does not deploy AWS.
 See [candidate contracts, migration and operator example](docs/sidecar-0.10.md).
+
+## Lens 0.13 readiness compatibility — 2026-11-04
+
+MCP 0.6.4 updates its hosted image recipes and integration CI to Lens 0.13.0, alongside Evals 0.12.0, Sidecar 0.10.0 and Chaos 0.10.0. Existing MCP tools and hosted authorization are unchanged. Lens project HTTP routes are not exposed through new MCP tools or automatically deployed.
+See [compatibility, boundaries and offline operator example](docs/lens-0.13.md).
