@@ -36,3 +36,4 @@ def test_baseline_matches_sdk_lock_and_evals_development_pin():
     assert f'name = "mcp"\nversion = "{sdk}"' in lock
     evals = baseline["packages"]["agentic-evals"]
     assert f'"agentic-evals=={evals}"' in (REPO / "pyproject.toml").read_text()
+    assert f"agentic-evals=={evals}" in (REPO / ".github/workflows/ci.yml").read_text()
