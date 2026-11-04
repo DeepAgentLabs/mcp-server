@@ -1113,3 +1113,7 @@ See [candidate contracts, migration and operator example](docs/sidecar-0.10.md).
 
 MCP 0.6.4 updates its hosted image recipes and integration CI to Lens 0.13.0, alongside Evals 0.12.0, Sidecar 0.10.0 and Chaos 0.10.0. Existing MCP tools and hosted authorization are unchanged. Lens project HTTP routes are not exposed through new MCP tools or automatically deployed.
 See [compatibility, boundaries and offline operator example](docs/lens-0.13.md).
+
+## Tower 0.10 capability contract readiness
+
+See [compatibility, operator example and dependency boundaries](docs/tower-0.10-compatibility.md). Tower publishes the local candidate `tower.capabilities.v1` with Python/Node HTTP validation. MCP owns tool transport and access checks. Existing tower.* tools keep using existing inventory routes; no new tool or hosted binding is needed. Existing optional dependencies remain sufficient; no package release or stable ecosystem claim is introduced.
