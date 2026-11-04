@@ -54,6 +54,12 @@ sibling that owns it (Evals gate, Lens comparison, Chaos report) and fail
 closed on missing or invalid evidence. Changes here should strengthen composition and interoperability, not
 duplicate implementation logic from sibling repos.
 
+The v0.7 integration-readiness milestone adds `core.compatibility` and a packaged
+candidate matrix in `resources/compatibility.json`. Keep it aligned with image
+pins and CI using `tests/test_readiness_matrix.py`. It reports distribution
+metadata only, not imported-source or live-host acceptance. The built-wheel
+stdio protocol smoke runs without optional siblings. See docs/release-readiness.md.
+
 ### Before You Build Here
 
 - Prefer adapting and exposing sibling-package behavior over rebuilding it in

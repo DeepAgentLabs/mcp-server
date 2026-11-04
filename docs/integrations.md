@@ -24,7 +24,7 @@ The MCP Server exposes these capabilities through:
 - `lens.slo_summary`
 - `lens.audit_report`
 
-The current compatibility target is AgenticLens `0.11.0` (`lens.optimization_analyze`). Optional imports
+The current compatibility target is AgenticLens `0.13.0` (including execution verification). Optional imports
 degrade cleanly when the package is absent or older than the requested feature.
 
 ## Agentic Chaos
@@ -38,7 +38,7 @@ The MCP Server exposes:
 - `chaos.list_faults`
 - `chaos.run_experiment`
 
-The current compatibility target is Agentic Chaos `0.10.0`. MCP uses its
+The current compatibility target is Agentic Chaos `0.11.0`. MCP uses its
 exporter and fault catalog; arbitrary chaos execution remains local-only.
 
 ## Agentic Sidecar
@@ -93,3 +93,11 @@ graph TD
     A --> D[Agentic Sidecar]
     A --> E[AI Operations Specification]
 ```
+
+## MCP 0.7 acceptance baseline
+
+See [release readiness](release-readiness.md) for all sibling pins, the MCP SDK
+baseline, AIOS asset revisions and the remote Tower contract boundary.
+`core.compatibility` observes installed distributions; adapters may use explicit
+workspace checkouts. Native sibling schemas, optional dependency ranges and
+producer evidence ownership remain unchanged.

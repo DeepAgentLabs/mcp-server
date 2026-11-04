@@ -19,8 +19,12 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.6.6` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
-This patch refreshes ChaosHub/Sidecar image pins. The 0.6.5 release added read-only `tower.capability_contract` over Tower 0.10 candidate
+Release version: `0.7.0` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
+The v0.7 local readiness milestone is complete: packaged candidate matrix,
+`core.compatibility`, installed-wheel MCP protocol acceptance, aligned released
+sibling CI, upgrade/rollback and support documentation. See
+[the acceptance matrix and remaining gates](docs/release-readiness.md).
+The preceding 0.6.6 patch refreshed ChaosHub/Sidecar image pins. The 0.6.5 release added read-only `tower.capability_contract` over Tower 0.10 candidate
 discovery, with existing reader credentials and hosted per-user authorization.
 Published-Tower acceptance runs in CI. Existing Phase 6 dispatch scoring and
 native report schemas are unchanged.
@@ -124,15 +128,12 @@ hosted, except chaos execution, which stays local-only.
 - **Package publishing:** version tags run the full CI matrix and packaging
   checks before publishing to PyPI, creating the GitHub Release, and publishing
   MCP Registry metadata. Adoption work remains in Phase 5.
-- **AWS continuous deployment:** the first main-triggered deployment was
-  verified successfully on 2026-10-04. Starting with `0.3.0`, AWS deployment
-  follows successful PyPI publication in the version-tag release workflow.
-  Pushes/merges to `main` and manual CI checks do not deploy AWS.
-- **Remaining delivery work:** Phase 6 containment integrations (hosted Tower
-  credentials, Sidecar stop/revoke bridge, AIOS access evidence), release
-  rollback and hosted operational coverage. Hosted access control shipped in
-  `0.5.0`. Keep package and
-  hosted deployment versions aligned through the shared release tag.
+- **AWS deployment:** manual operator action since 0.4.1. Package tags run
+  CI, publish PyPI/GitHub and publish MCP Registry metadata; they do not deploy.
+- **Delivery readiness:** Phase 6 containment integrations shipped in 0.6.0;
+  Evals scoring in 0.6.1. The v0.7 milestone aligns the shipped matrix and
+  documents smoke checks/rollback. Independent deployment acceptance and the
+  coordinated ecosystem v1.0 gates remain open.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for release steps and
 [deploy/aws/CI-CD.md](deploy/aws/CI-CD.md) for AWS deployment behavior.
@@ -656,30 +657,32 @@ Goals:
 - add explainable report recall and session history
 - add report and investigation narrative generation
 
-## Next minor: v0.7 — Integration and release readiness
+## v0.7 — Integration and release readiness
 
-Continue compatibility, documentation and end-to-end acceptance work over the
-existing Phase 6 delivery in minor releases. Validate the supported sibling
-matrix and retain native evidence ownership and hosted-access restrictions.
-This is a release-readiness target, not a claim that additional tools or
-stable contracts have shipped. Reserve the major version for the coordinated
-ecosystem v1.0 release after all participating projects meet their gates.
+Status: complete in 0.7.0, subject to the release CI gates.
 
-## Open Questions
+- [x] Packaged candidate acceptance matrix and read-only `core.compatibility`.
+- [x] Exact released sibling matrix in hosted images and paired containment CI:
+  Lens 0.13.0, Chaos 0.11.0, Evals 0.12.0, Sidecar 0.10.1.
+- [x] Built-wheel protocol acceptance from an empty workspace without siblings.
+- [x] Published Tower 0.10 candidate contract acceptance and pinned AIOS assets.
+- [x] Support boundaries, onboarding/session/prompt examples and upgrade/rollback guide.
+- [x] Sibling and organization-profile documentation alignment.
 
-- Which MCP Python SDK will be the long-term foundation?
-- Should the first release depend on local sibling checkouts or published PyPI
-  releases only?
-- Should `deep-agentic-core-mcp` be a thin wrapper package or eventually own
-  workflow orchestration logic directly?
-- ~~Is stdio-only enough for v0, or do we want a remote deployment path early?~~
-  Resolved: an optional Streamable HTTP transport (`transport_http.py`, the
-  `http` extra) now ships alongside stdio, sharing the same tool surface.
-  HTTP now requires per-user bearer credentials and shared Redis state,
-  enforces user isolation and storage quotas, and uses stateless transport.
-  AWS infrastructure now includes a DynamoDB-backed public key signup portal,
-  immediate key rotation/revocation, and migration of existing user identities.
-  Verified email signup, account recovery, OAuth onboarding, and billing remain future work.
+See [release readiness](docs/release-readiness.md) for reproducible commands.
+No stable API freeze, native schema change, automatic AWS deployment or AIOS
+conformance certification is implied. Reserve v1.0 for the coordinated ecosystem
+release after independent project acceptance and review gates pass.
+
+## Future work and open gates
+
+- Independent security and hosted deployment acceptance, including operator
+  execution of the documented rollback flow.
+- Coordinated ecosystem candidate/stable compatibility and migration freeze.
+- Independent AIOS review and implementation acceptance.
+- Verified-email signup, account recovery, OAuth onboarding and billing.
+- Remote chaos requires isolated workers and explicit authorization; distributed
+  runtime discovery and guaranteed in-flight cancellation are not supported.
 
 ## Known Limitations
 
@@ -697,25 +700,18 @@ ecosystem v1.0 release after all participating projects meet their gates.
   Isolated workers and explicit authorization remain prerequisites for a
   future remote execution feature.
 
-## Documentation Backlog
+## Integrator documentation
 
-Identified while writing `docs/tools.md` in `0.2.0` and re-flagged by a
-subsequent review; deliberately deferred rather than missed. All three are
-about *using* the server (a new integrator's first fifteen minutes), not
-about the tool surface itself, which `docs/tools.md` already covers:
+The original documentation backlog is closed in 0.7.0:
 
-- **`docs/getting-started.md`** — install + MCP client config (e.g. Claude
-  Desktop) + a first `core.health`/`lens.analyze_workflow` call, walked
-  through end to end.
-- **Session workflow walkthrough** — `lens.analyze_workflow` ->
-  `lens.compare_runs` -> `chaos.run_experiment` sharing a `session_id`.
-  Phase 2's headline feature (see above); currently only demonstrated in
-  test code (`tests/test_server.py`), not in any doc a new integrator would
-  read.
-- **Prompts overview** — what the 3 shipped prompts (`lens.workflow_summary`,
-  `lens.compare_summary`, `chaos.experiment_brief`) actually render, given an
-  example set of arguments. Currently only discoverable by reading
-  `prompts/registry.py` directly.
+- [Getting started](docs/getting-started.md): installation, MCP client configuration
+  and first analysis with shared session state.
+- [Examples](docs/examples.md): shared-session walkthrough, executable release
+  workflow and prompt arguments/semantics.
+- [Release readiness](docs/release-readiness.md): compatibility, support, upgrades
+  and operator rollback.
+
+The historical audit remains dated evidence of the 0.2.0 state, not a current backlog.
 
 ## Capability North Star
 
@@ -759,7 +755,7 @@ unrelated downstream credentials.
       acknowledgements and dispatch/completion evidence (MCP-local
       `mcp.access-decision.v1`). Phase 6: the shared AIOS format for Tower and
       containment scoring.
-- [ ] Phase 6 paired Chaos release: validate fixtures for revoked keys, denied tools, injected
+- [x] Phase 6 paired Chaos release (0.6.0, refreshed by the 0.7 matrix): validate fixtures for revoked keys, denied tools, injected
       instructions, queued dispatch and incomplete evidence. Preserve the remote
       arbitrary-chaos execution restriction until sandbox requirements are met.
 

@@ -5,8 +5,8 @@ interface across the DeepAgentLabs ecosystem.
 
 ## Current Release
 
-**Version:** `0.6.0`
-**Released:** 2026-11-03
+**Version:** `0.7.0`
+**Released:** 2026-11-04
 
 ## Development Status
 
@@ -22,6 +22,16 @@ interface across the DeepAgentLabs ecosystem.
 | Phase 4 | ✅ Complete | Unified workflows |
 | Phase 5 | ✅ Complete | Publishing, adoption and hosted access control (`0.5.0`) |
 | Phase 6 | ✅ Complete | Task-scoped containment, paired Chaos validation and operational intelligence (`0.6.0`) |
+
+## v0.7 integration readiness — complete
+
+Packaged candidate compatibility baseline and `core.compatibility`, released
+sibling CI alignment, standalone installed-wheel protocol acceptance, support
+policy, onboarding/session/prompt examples and upgrade/rollback documentation.
+See [the tested matrix and remaining gates](release-readiness.md).
+
+The coordinated v1.0 release remains gated on each project's readiness,
+independent AIOS review and operator security/deployment acceptance.
 
 ## Delivered Milestones
 
@@ -62,8 +72,8 @@ Run real adapters in CI on isolated targets with synthetic credentials.
 
 The release pairing is MCP 0.6.0, Chaos 0.10.0 and Sidecar 0.9.2, with
 Lens 0.12.0 snapshot authentication. Required CI validates the candidate wheels
-with actual enforcing adapters and publishes seed-601 observations. Evals v0.11
-reusable containment scoring follows; it is not part of the native assertions.
+with actual enforcing adapters and publishes seed-601 observations. Evals reusable containment scoring shipped in MCP 0.6.1; the 0.7 matrix tests
+Evals 0.12.0 alongside the native Chaos assertions.
 See the [operator guide and limits](phase6-containment.md).
 
 Delivered in 0.6.0:

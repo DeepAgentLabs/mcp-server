@@ -1,5 +1,21 @@
 # deep-agentic-core-mcp
 
+## Current release: 0.7.0
+
+The integration-readiness milestone adds read-only `core.compatibility`, a
+packaged candidate matrix, installed-wheel MCP protocol acceptance, and aligned
+Chaos 0.11.0 / Sidecar 0.10.1 CI. Lens 0.13.0, Evals 0.12.0, Tower 0.10.0 and
+AIOS repository 0.7.0 retain their native contracts. No sibling dependency
+becomes mandatory. See [support, upgrade and rollback](docs/release-readiness.md).
+
+```bash
+uv run python examples/compatibility_check.py
+```
+
+`core.compatibility {}` reports installed distribution observations;
+`core.verify {}` separately probes adapters. Neither certifies a production
+deployment. Package publication does not deploy the hosted AWS service.
+
 ## Release sequencing
 
 The final package-local roadmap phase uses **v0.7**, followed by further
@@ -221,8 +237,9 @@ revocation adapter is unchanged and now also stops queued calls. See
 [hosted access control](docs/access-control.md) and
 [`examples/hosted_access_status.py`](examples/hosted_access_status.py).
 
-## MCP Surface (current, `0.6.5`)
+## MCP Surface (current, `0.7.0`)
 
+- `core.compatibility` — candidate baseline and installed distribution observations
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
 - `core.version` — server package version
@@ -428,7 +445,8 @@ provides native authenticated scenario assertions and observed bypass negative
 controls. See [the paired acceptance gate](ROADMAP.md#coordinated-mcp-and-chaos-release)
 and [operator setup](docs/phase6-containment.md).
 
-Evals v0.11 reusable containment scoring follows this delivery. Remote arbitrary
+Evals reusable containment scoring shipped in MCP 0.6.1 and is exercised
+against Evals 0.12.0 in the 0.7 matrix. Remote arbitrary
 chaos execution, distributed runtime discovery and guaranteed cancellation of
 already-reserved side effects remain outside the supported boundaries.
 

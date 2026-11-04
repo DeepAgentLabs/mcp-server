@@ -78,7 +78,7 @@ preserves the native receipt. A safe answer or BLOCK alone cannot pass.
 
 Seed `601`; synthetic credentials and `policy_bypass` instruction payloads only.
 Required tests import actual adapters without `importorskip`. Candidate CI builds
-MCP and Chaos wheels, installs Sidecar and Lens, then runs:
+MCP, Chaos and Sidecar wheels, installs Lens and Evals, then runs:
 
 ```bash
 uv run --no-sync pytest -o pythonpath= tests/test_phase6_containment.py \
@@ -86,8 +86,9 @@ uv run --no-sync pytest -o pythonpath= tests/test_phase6_containment.py \
   tests/test_intelligence.py
 ```
 
-The tested matrix is MCP 0.6.0 / Chaos 0.10.0 / Sidecar 0.9.2 / Lens 0.12.0;
-Evals 0.10.0 contracts and AIOS 0.6.1 Run schemas stay unchanged. Tests exercise
+The current tested matrix is MCP 0.7.0 / Chaos 0.11.0 / Sidecar 0.10.1 /
+Lens 0.13.0 / Evals 0.12.0; native Evals schema 1.0 and AIOS Run 0.4-draft
+stay unchanged. See [release readiness](release-readiness.md) for pins and limits. Tests exercise
 queued calls and stop concurrency, retries and existing credentials, denied tools,
 expiry, delegated authority, cross-user/task controls, evidence/revoker failures
 and actual dispatched/completed observations. A deliberately bypassed authorizer
