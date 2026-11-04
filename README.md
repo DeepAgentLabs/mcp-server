@@ -275,7 +275,7 @@ revocation adapter is unchanged and now also stops queued calls. See
   modules, framework adapters, and integration placeholders (added in `0.3.0`)
 - `spec.validate_artifact` — validate a workflow/run artifact against the
   schema set its `spec_version` names, with a rule-cited conformance report
-- `tower.*` (local stdio only) — twenty authenticated Control Tower tools for
+- `tower.*` (local stdio; hosted with per-user bindings and dispatch authorization) — twenty-one authenticated Control Tower tools for
   inventory, evidence, incidents and, since `0.5.1`, Tower 0.9 runbooks
   (`tower.runbooks`, `tower.runbook_recommendations`, `tower.runbook_preview`,
   `tower.runbook_execute`, ...); no approval tool, hidden from hosted MCP
@@ -732,7 +732,7 @@ no runtime or patch release is required here.
 
 ## Control Tower 0.9.0 runbooks (MCP 0.5.1)
 
-Local stdio adds eight `tower.runbook*` tools (twenty `tower.*` tools in total).
+Local stdio adds eight `tower.runbook*` tools (twenty-one `tower.*` tools in total, including 0.6.5 capability discovery).
 Reader tools list installed runbooks, recommendations for an incident and
 execution history. Writer tools preview a catalog version with string
 parameters, execute the exact human-approved digest, cancel and verify. There is

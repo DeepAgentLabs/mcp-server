@@ -49,6 +49,8 @@ not register agents, approve actions or declare the contract stable.
 With a local configured connector, run:
 
 ```bash
+export AGENTICOPS_TOWER_URL=http://127.0.0.1:8000
+# Set AGENTICOPS_TOWER_READ_TOKEN in the MCP process environment.
 uv run python examples/tower_capability_contract.py
 ```
 

@@ -20,14 +20,15 @@ entry below have been updated accordingly; see the audit for full detail.
 ## Release Status
 
 Release version: `0.6.5` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
-This patch pairs hosted recipes and wheel CI with Lens 0.13.0, Evals 0.12.0,
-Sidecar 0.10.0 and Chaos 0.10.0. Existing real Phase 6 dispatch scoring and
-native tool/report schemas are unchanged.
+This patch adds read-only `tower.capability_contract` over Tower 0.10 candidate
+discovery, with existing reader credentials and hosted per-user authorization.
+Published-Tower acceptance runs in CI. Existing Phase 6 dispatch scoring and
+native report schemas are unchanged.
 Phase 6 (`0.6.0`)
 adds hosted per-user Tower credentials, task-scoped Sidecar stop/revoke,
 exploratory access evidence, guided setup and saved-report recall. The paired
 Chaos 0.10.0 assertions run against real adapters with Lens authentication;
-Sidecar 0.9.2 admitted the original paired dependencies; current 0.6.4 image
+Sidecar 0.9.2 admitted the original paired dependencies; the 0.6.4 image
 recipes and installed-wheel CI use Sidecar 0.10.0 candidate contracts. `0.5.2` (2026-11-02) added
 read-only `lens.execution_verify` and pinned hosted images to Lens 0.12.0.
 `0.5.1` (2026-10-31) added local
