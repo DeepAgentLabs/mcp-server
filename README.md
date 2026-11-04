@@ -832,4 +832,4 @@ See [compatibility, boundaries and offline operator example](docs/lens-0.13.md).
 
 ## Tower 0.10 capability contract readiness
 
-See [compatibility, operator example and dependency boundaries](docs/tower-0.10-compatibility.md). Tower publishes the local candidate `tower.capabilities.v1` with Python/Node HTTP validation. MCP owns tool transport and access checks. Existing tower.* tools keep using existing inventory routes; no new tool or hosted binding is needed. Existing optional dependencies remain sufficient; no package release or stable ecosystem claim is introduced.
+See [compatibility, operator example and dependency boundaries](docs/tower-0.10-compatibility.md). Tower publishes the local candidate `tower.capabilities.v1` with Python/Node HTTP validation. MCP owns tool transport and access checks. Existing tower.* tools keep using existing Tower API routes (inventory, incidents, configuration and runbooks); no new tool or hosted binding is needed. Existing optional dependencies remain sufficient; no package release or stable ecosystem claim is introduced.

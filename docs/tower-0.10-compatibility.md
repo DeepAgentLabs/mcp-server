@@ -9,7 +9,7 @@ Schemas, status values and existing merge/replacement semantics. CPython and
 Node.js HTTP clients are tested against a live server and durable SQLite
 readback. Existing routes and payloads remain compatible.
 
-MCP owns tool transport and access checks. Existing tower.* tools keep using existing inventory routes; no new tool or hosted binding is needed.
+MCP owns tool transport and access checks. Existing tower.* tools keep using existing Tower API routes (inventory, incidents, configuration and runbooks); no new tool or hosted binding is needed.
 
 ## Operator example
 
