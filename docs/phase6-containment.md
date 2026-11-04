@@ -27,7 +27,7 @@ The embedding host creates a live `TaskRuntime`, binds its Sidecar, installs
 `TaskKeyRevoker(owner, task_id, keys, sessions)` at `runtime.revokers['mcp']`, and
 passes `SidecarBridge({task_id: TaskBinding(owner, runtime)})` and an independent
 `operator_store` to `transport_http.create_app`. See
-[the host example](../examples/phase6_host.py).
+[the host example](https://github.com/DeepAgentLabs/mcp-server/blob/main/examples/phase6_host.py).
 
 Operator keys have `allow: ['sidecar.stop']` and an exact `task_id`. POST
 `/control/tasks/{task_id}/stop` with an operator bearer key; agent keys are refused.
