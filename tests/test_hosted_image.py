@@ -52,9 +52,9 @@ def test_standalone_images_pin_phase3_sibling_versions(dockerfile: str) -> None:
 # schemas remain the 0.9.0 documents bundled here.
 HOSTED_PINS = {
     "agenticlens": "0.13.0",
-    "agentic-chaos": "0.10.0",
+    "agentic-chaos": "0.11.0",
     "agentic-evals": "0.12.0",
-    "agentic-sidecar": "0.10.0",
+    "agentic-sidecar": "0.10.1",
 }
 
 
