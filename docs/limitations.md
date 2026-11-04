@@ -1,57 +1,41 @@
 # Limitations
 
-The MCP Server currently has several limitations based on the capabilities and integration status of the current release.
+The current candidate acceptance matrix and upgrade/rollback steps are in
+[release readiness](release-readiness.md). Package publication does not deploy
+the hosted service or demonstrate production health.
 
-## AI Operations Specification dependency
+## Optional integrations and draft contracts
 
-The `spec.validate_artifact` tool depends on AI Operations Specification v0.4 schema documents.
+The base package runs without sibling packages. `core.health` and `core.verify`
+report unavailable adapters as degraded. AIOS validation requires the configured
+schema/catalog assets; schemas remain draft. `core.compatibility` reads installed
+distribution metadata, which may differ from explicit workspace source imports.
+It does not probe the remote Tower server or make a readiness verdict.
 
-In the current local development environment, the required schema documents were not available, so artifact validation could not be successfully verified.
+## Local chaos execution
 
-## Agentic Sidecar runtime
+`chaos.run_experiment` executes trusted local Python scripts. Workspace confinement
+and allow/deny globs do not sandbox script behavior. HTTP always rejects this
+tool, including when the legacy remote override is set. A completed experiment
+does not prove a fault was observed or a containment boundary held.
 
-The Agentic Sidecar integration is currently a scaffold.
+## Hosted authority and task control
 
-The current environment reports:
+Per-key policies are checked again at dispatch, including queued calls and
+existing sessions. Revocation does not cancel a running call or revoke unrelated
+credentials. Hosted Tower tools require explicit per-user bindings. Sidecar task
+controls require explicit live runtime bindings and independent operator auth;
+package discovery does not connect a task automatically.
 
-- Package status: `scaffold`
-- Release stage: `pre-alpha`
-- Runtime ready: `false`
+Sidecar actions already reserved may complete with side effects. There is no
+automatic distributed runtime discovery, fleet atomicity or guaranteed downstream
+cancellation. Redis guards fail closed; a worker crash requires operator
+reconciliation before clearing an orphaned guard.
 
-The available Sidecar tools currently provide status and module discovery rather than the full decision runtime.
+## Evidence
 
-## Chaos experiments
-
-`chaos.run_experiment` executes a target script under selected fault configurations.
-
-Because it executes code, experiments should be performed only with trusted and controlled scripts.
-
-A successful experiment does not necessarily mean that a fault was observed. The target may complete without producing a chaos event.
-
-## Hosted access control
-
-Per-key tool policies (0.5.0) are checked at dispatch. A revocation or policy
-change does not cancel a call that is already running. It also does not revoke
-credentials the agent holds for other systems. Access evidence is the MCP-local
-`mcp.access-decision.v1` log record; a shared AIOS format does not exist yet.
-Hosted `tower.*` tools and an authenticated Sidecar stop/revoke bridge are not
-available.
-
-## Local execution
-
-The MCP Server is designed around local, trusted stdio execution.
-
-Remote deployment and broader networked execution are not the primary focus of the current implementation.
-
-## Integration availability
-
-The overall server health can be reported as `degraded` when an optional integration is unavailable.
-
-Use `core.health` and `core.verify` to inspect the availability and readiness of individual integrations.
-
-## Version and maturity
-
-The current MCP Server release documented here is:
-
-```text
-0.2.0
+Lens snapshot authentication verifies supplied evidence. Coverage remains
+producer-declared; uninstrumented paths are not proven safe. MCP access records
+and the spec-owned exploratory extension preserve producer attribution. Native
+Evals gates, Chaos assertions, Sidecar receipts and Tower deployment health are
+distinct. Missing or invalid evidence cannot pass the unified release check.

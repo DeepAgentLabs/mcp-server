@@ -113,6 +113,8 @@ def test_v07_discovery_and_inventory_without_an_installed_sibling(monkeypatch, t
     assert status["version"] == "0.7.0"
     assert status["runtime_ready"]
     assert status["package_status"] == "implemented"
+    assert "live MCP controls require host bindings" in status["current_focus"]
+    assert not status["runtime_connected"]
     assert set(status["installed_runtime_capabilities"]) == expected
     assert set(adapter.probe()["installed_runtime_capabilities"]) == expected
     inventory = adapter.module_inventory()

@@ -10,8 +10,8 @@ The DeepAgentLabs MCP Server provides a unified MCP interface over several exist
 | AgenticLens workflow analysis | Implemented |
 | AgenticLens reporting | Implemented |
 | Agentic Chaos fault injection | Implemented |
-| Agentic Sidecar discovery | Experimental |
-| AI Operations Spec validation | Experimental / unavailable locally |
+| Agentic Sidecar discovery and explicit operator bridge | Implemented (0.6.0) |
+| AI Operations Spec validation | Implemented; draft schemas require configured assets |
 | Unified release check and incident workflows | Implemented (0.4.0) |
 
 ---
@@ -29,6 +29,12 @@ their engines:
 - `core.export_report` exports the session's evidence as an MCP-local envelope.
 
 See [Unified workflows](unified-workflows.md).
+
+## Candidate compatibility (0.7.0)
+
+`core.compatibility` returns the packaged matrix and installed distribution
+observations without importing optional producers or contacting Tower. See
+[release readiness](release-readiness.md); matches are not runtime verdicts.
 
 ## Core Diagnostics
 

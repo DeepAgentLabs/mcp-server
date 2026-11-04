@@ -10,7 +10,12 @@ remain manual operator tools. Follow the reviewed operator flow in
 resources are unchanged by this pipeline change. Do not infer hosted deployment
 version or health from a successful package release.
 
-Standalone image recipes pin Sidecar 0.9.0 for package discovery; they expose no
-live Sidecar task controls. Use an immutable image reference for manual deployments.
+Standalone images pin Lens 0.13.0, Chaos 0.11.0, Evals 0.12.0 and Sidecar
+0.10.1. Live Sidecar controls require explicit host runtime bindings and an
+independently authorized operator; installing Sidecar does not create a binding. Use an immutable image reference for manual deployments.
 Existing GitHub AWS secrets are not consumed by the release workflow. Credential
 rotation and infrastructure provisioning remain separate operator responsibilities.
+
+See [MCP 0.7 upgrade, smoke checks and rollback](../../docs/release-readiness.md)
+for operational acceptance. Restore an immutable prior image only after
+reconciling in-flight effects and dispatch guards; never restore revoked keys.

@@ -53,7 +53,7 @@ def _runtime_status(package: Any) -> dict[str, Any]:
             "v0.1 — Sidecar Runtime, Policy Advisor & Rule-Based Decision Gate"
         ),
         "current_focus": (
-            "Installed local status/audit/operator APIs; MCP runtime bridging remains planned."
+            "Installed local status/audit/operator APIs; live MCP controls require host bindings."
             if "local_operator_http" in features
             else "Installed deterministic decision supervision."
             if ready

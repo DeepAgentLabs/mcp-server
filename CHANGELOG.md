@@ -6,6 +6,30 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.7.0 - 2026-11-04
+
+### Added
+
+- Read-only `core.compatibility` with a packaged candidate acceptance matrix and
+  explicit installed-distribution observations. Missing/different packages do
+  not become runtime, remote Tower or deployment-health verdicts.
+- Installed-wheel stdio protocol acceptance from an empty workspace without
+  optional siblings, covering initialization, discovery, tool calls, prompt
+  rendering, resource reading and degraded adapter verification.
+- Support policy, upgrade/rollback guide, runnable compatibility example and
+  hosted diagnostic policy-denial regression coverage.
+
+### Changed
+
+- Align Python 3.10–3.13 and paired-wheel CI with shipped Chaos 0.11.0 and
+  Sidecar 0.10.1; retain Lens 0.13.0, Evals 0.12.0, Tower 0.10.0 and pinned AIOS
+  assets. Gate generated tool docs, SDK baseline and the offline example in CI.
+- Close the local v0.7 integration-readiness milestone and update onboarding,
+  session/prompt examples, limitations, sibling and organization-profile docs.
+- Native schemas, optional dependency ranges, hosted access restrictions and
+  manual AWS deployment remain unchanged. Coordinated v1.0 and independent
+  AIOS/security/deployment acceptance remain separate gates.
+
 ## 0.6.6 - 2026-11-04
 
 ### Changed

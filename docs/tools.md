@@ -3,7 +3,7 @@
 
 # Tool Reference
 
-52 tools, generated from `tools/registry.py` - the same data MCP
+53 tools, generated from `tools/registry.py` - the same data MCP
 clients see via `tools/list`. See [README.md](../README.md) for a one-line-per-tool
 overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
@@ -67,6 +67,27 @@ Input schema:
       "description": "Session to read/write shared state under. Defaults to 'default'."
     }
   },
+  "additionalProperties": false
+}
+```
+
+### `core.compatibility` — Candidate Compatibility Baseline
+
+Inspect the packaged candidate acceptance matrix and local installed distribution versions. This does not verify imported workspace code, adapter readiness, remote Tower versions, deployment health or stable conformance.
+
+| | |
+| --- | --- |
+| Category | `core` |
+| Prerequisites | none |
+| Expected duration | instant |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "properties": {},
   "additionalProperties": false
 }
 ```

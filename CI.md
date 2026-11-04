@@ -64,6 +64,8 @@ Run `make test-cov` instead of `make test` when:
 ## CI parity
 
 The GitHub Actions CI workflow runs the same lint, format, and typecheck steps
-across Python 3.10–3.13 using `uv`. CI also runs `pytest --cov` (coverage
-enabled), while `make test` runs without coverage. Use `make test-cov` locally
-for exact parity.
+across Python 3.10–3.13 using `uv`. CI runs `pytest`; `make test-cov` adds optional local coverage.
+The paired-wheel lane requires real released adapters, and the package job
+checks standalone wheel resources and actual stdio MCP initialization/tool calls.
+Tower and PostgreSQL acceptance run in dedicated jobs. See
+[the candidate matrix and reproduction commands](docs/release-readiness.md).
