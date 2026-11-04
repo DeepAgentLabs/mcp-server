@@ -6,6 +6,15 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.6.4 - 2026-11-04
+
+- Pair hosted image recipes and integration CI with Lens 0.13.0 production
+  readiness candidate, Evals 0.12.0, Sidecar 0.10.0 and Chaos 0.10.0.
+- Align installed-wheel containment acceptance with that same released matrix.
+- Document Lens project artifact-service boundaries; existing tools and hosted
+  authorization remain unchanged. Publication does not deploy a new service.
+
+
 ## 0.6.3 - 2026-11-04
 
 - Pin standalone image recipes to Sidecar 0.10.0 candidate contract readiness.

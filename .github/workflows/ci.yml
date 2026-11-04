@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agenticlens
-          ref: v0.12.1
+          ref: v0.13.0
           path: agenticlens
 
       - name: Check out agentic-chaos
@@ -54,7 +54,7 @@ jobs:
         working-directory: mcp-server
         run: |
           uv sync --frozen --extra dev --extra http --python ${{ matrix.python-version }}
-          uv pip install -e ../agenticlens -e ../agentic-chaos agentic-sidecar==0.9.2
+          uv pip install -e ../agenticlens -e ../agentic-chaos agentic-sidecar==0.10.0
 
       - name: Lint (ruff check)
         working-directory: mcp-server
@@ -118,7 +118,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agenticlens
-          ref: v0.12.1
+          ref: v0.13.0
           path: agenticlens
       - uses: astral-sh/setup-uv@v7
       - name: Install MCP with the hosted extras
@@ -144,7 +144,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agenticlens
-          ref: v0.12.1
+          ref: v0.13.0
           path: agenticlens
 
       - name: Check out agentic-chaos
@@ -173,7 +173,7 @@ jobs:
         working-directory: mcp-server
         run: |
           uv sync --frozen --extra dev --extra http --python 3.12
-          uv pip install -e ../agenticlens -e ../agentic-chaos agentic-sidecar==0.9.2
+          uv pip install -e ../agenticlens -e ../agentic-chaos agentic-sidecar==0.10.0
 
       - name: Build distributions
         working-directory: mcp-server
@@ -207,7 +207,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agentic-sidecar
-          ref: v0.9.2
+          ref: v0.10.0
           path: agentic-sidecar
       - uses: astral-sh/setup-uv@v7
       - name: Build candidate wheels and install released enforcing adapters
@@ -217,13 +217,13 @@ jobs:
           uv build --wheel --out-dir ../candidate-wheels
           uv build ../agentic-chaos --wheel --out-dir ../candidate-wheels
           uv build ../agentic-sidecar --wheel --out-dir ../candidate-wheels
-          uv pip install --reinstall ../candidate-wheels/*.whl agenticlens==0.12.1 agentic-evals==0.12.0
+          uv pip install --reinstall ../candidate-wheels/*.whl agenticlens==0.13.0 agentic-evals==0.12.0
       - name: Required real adapter acceptance from wheels
         env:
           PHASE6_EVIDENCE_DIR: ${{ github.workspace }}/phase6-evidence
         working-directory: mcp-server
         run: |
-          uv run --no-sync python -c "import agentic_chaos, agentic_sidecar, agenticlens, agentic_evals; assert agentic_chaos.__version__ == '0.10.0'; assert agentic_sidecar.__version__ == '0.9.2'; assert agenticlens.__version__ == '0.12.1'; assert agentic_evals.__version__ == '0.12.0'"
+          uv run --no-sync python -c "import agentic_chaos, agentic_sidecar, agenticlens, agentic_evals; assert agentic_chaos.__version__ == '0.10.0'; assert agentic_sidecar.__version__ == '0.10.0'; assert agenticlens.__version__ == '0.13.0'; assert agentic_evals.__version__ == '0.12.0'"
           uv run --no-sync pytest -o pythonpath= tests/test_phase6_containment.py tests/test_access_dispatch.py tests/test_hosted_tower_credentials.py tests/test_intelligence.py
       - uses: actions/upload-artifact@v7
         with:
