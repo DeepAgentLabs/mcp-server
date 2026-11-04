@@ -495,3 +495,10 @@ async def test_handle_get_prompt_unknown_name() -> None:
     result = await handle_get_prompt("nonexistent.prompt", None)
     assert result.messages == []
     assert result.description is not None and "Unknown" in result.description
+
+
+async def test_capability_contract_is_registered_read_only():
+    from deep_agentic_core_mcp.server import handle_list_tools
+
+    tools = {tool.name: tool for tool in await handle_list_tools()}
+    assert tools["tower.capability_contract"].annotations.read_only_hint

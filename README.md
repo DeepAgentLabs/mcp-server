@@ -221,7 +221,7 @@ revocation adapter is unchanged and now also stops queued calls. See
 [hosted access control](docs/access-control.md) and
 [`examples/hosted_access_status.py`](examples/hosted_access_status.py).
 
-## MCP Surface (current, `0.6.4`)
+## MCP Surface (current, `0.6.5`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -275,7 +275,7 @@ revocation adapter is unchanged and now also stops queued calls. See
   modules, framework adapters, and integration placeholders (added in `0.3.0`)
 - `spec.validate_artifact` — validate a workflow/run artifact against the
   schema set its `spec_version` names, with a rule-cited conformance report
-- `tower.*` (local stdio only) — twenty authenticated Control Tower tools for
+- `tower.*` (local stdio; hosted with per-user bindings and dispatch authorization) — twenty-one authenticated Control Tower tools for
   inventory, evidence, incidents and, since `0.5.1`, Tower 0.9 runbooks
   (`tower.runbooks`, `tower.runbook_recommendations`, `tower.runbook_preview`,
   `tower.runbook_execute`, ...); no approval tool, hidden from hosted MCP
@@ -732,7 +732,7 @@ no runtime or patch release is required here.
 
 ## Control Tower 0.9.0 runbooks (MCP 0.5.1)
 
-Local stdio adds eight `tower.runbook*` tools (twenty `tower.*` tools in total).
+Local stdio adds eight `tower.runbook*` tools (twenty-one `tower.*` tools in total, including 0.6.5 capability discovery).
 Reader tools list installed runbooks, recommendations for an incident and
 execution history. Writer tools preview a catalog version with string
 parameters, execute the exact human-approved digest, cancel and verify. There is
@@ -832,4 +832,4 @@ See [compatibility, boundaries and offline operator example](docs/lens-0.13.md).
 
 ## Tower 0.10 capability contract readiness
 
-See [compatibility, operator example and dependency boundaries](docs/tower-0.10-compatibility.md). Tower publishes the local candidate `tower.capabilities.v1` with Python/Node HTTP validation. MCP owns tool transport and access checks. Existing tower.* tools keep using existing Tower API routes (inventory, incidents, configuration and runbooks); no new tool or hosted binding is needed. Existing optional dependencies remain sufficient; no package release or stable ecosystem claim is introduced.
+See [compatibility, operator example and dependency boundaries](docs/tower-0.10-compatibility.md). Tower publishes the local candidate `tower.capabilities.v1` with Python/Node HTTP validation. MCP owns tool transport and access checks. Existing tower.* tools keep using existing Tower API routes (inventory, incidents, configuration and runbooks); MCP 0.6.5 adds read-only `tower.capability_contract`; existing host bindings are reused. Existing optional dependencies remain sufficient; MCP 0.6.5 exposes discovery without a stable ecosystem claim.
