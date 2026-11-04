@@ -19,8 +19,8 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.6.5` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
-This patch adds read-only `tower.capability_contract` over Tower 0.10 candidate
+Release version: `0.6.6` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
+This patch refreshes ChaosHub/Sidecar image pins. The 0.6.5 release added read-only `tower.capability_contract` over Tower 0.10 candidate
 discovery, with existing reader credentials and hosted per-user authorization.
 Published-Tower acceptance runs in CI. Existing Phase 6 dispatch scoring and
 native report schemas are unchanged.
@@ -1118,3 +1118,8 @@ See [compatibility, boundaries and offline operator example](docs/lens-0.13.md).
 ## Tower 0.10 capability contract readiness
 
 See [compatibility, operator example and dependency boundaries](docs/tower-0.10-compatibility.md). Tower publishes the local candidate `tower.capabilities.v1` with Python/Node HTTP validation. MCP owns tool transport and access checks. Existing tower.* tools keep using existing Tower API routes (inventory, incidents, configuration and runbooks); MCP 0.6.5 adds read-only `tower.capability_contract`; existing host bindings are reused. Existing optional dependencies remain sufficient; MCP 0.6.5 exposes discovery without a stable ecosystem claim.
+
+## Chaos 0.11 ChaosHub compatibility — 2026-11-04
+
+MCP 0.6.6 pins Chaos 0.11.0 and Sidecar 0.10.1 in the AWS/Render image recipes. No new hub tool, remote target execution or automatic plugin loading is exposed; hosted chaos.run_experiment remains disabled. Local trusted orchestration retains existing behavior. Publishing does not deploy a running service.
+See [the compatibility guide and offline operator example](docs/chaos-0.11-chaoshub.md).

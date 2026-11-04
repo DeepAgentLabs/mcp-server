@@ -6,6 +6,16 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.6.6] - 2026-11-04
+
+### Changed
+
+- Pin agentic-chaos 0.11.0 and agentic-sidecar 0.10.1 in AWS/Render image recipes
+  and update the installed-image regression expectation.
+- Document ChaosHub compatibility. No new MCP tool, hosted recipe execution or
+  automatic plugin imports; running AWS services are not deployed by this release.
+
+
 ## 0.6.5 - 2026-11-04
 
 - Add read-only `tower.capability_contract` over Tower 0.10's authenticated
