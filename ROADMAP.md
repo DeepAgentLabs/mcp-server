@@ -19,8 +19,8 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.6.5` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
-This patch adds read-only `tower.capability_contract` over Tower 0.10 candidate
+Release version: `0.6.6` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
+This patch refreshes ChaosHub/Sidecar image pins. The 0.6.5 release added read-only `tower.capability_contract` over Tower 0.10 candidate
 discovery, with existing reader credentials and hosted per-user authorization.
 Published-Tower acceptance runs in CI. Existing Phase 6 dispatch scoring and
 native report schemas are unchanged.
