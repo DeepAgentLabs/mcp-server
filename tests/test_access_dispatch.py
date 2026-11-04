@@ -4,6 +4,7 @@ import asyncio
 import json
 import logging
 import threading
+from contextlib import contextmanager
 
 import httpx
 import pytest
@@ -149,19 +150,29 @@ async def test_expired_policy_denies_everything_but_access_status():
 async def test_revocation_and_policy_changes_apply_to_queued_calls(monkeypatch, caplog):
     """A call waiting on the user's session lock re-checks the key when it dispatches."""
     caplog.set_level(logging.INFO, logger="deep_agentic_core_mcp.access")
-    started, release = threading.Event(), threading.Event()
+    started, release, admitted = threading.Event(), threading.Event(), threading.Event()
+
+    class ObservedSessionStore(MemorySessionStore):
+        @contextmanager
+        def transaction(self, owner):
+            if started.is_set() and not release.is_set():
+                # Reaching the dispatch transaction proves endpoint authentication
+                # completed. Signal before waiting for the running call's lock.
+                admitted.set()
+            with super().transaction(owner):
+                yield
 
     def slow(arguments):
         if arguments and arguments.get("slow"):
             started.set()
-            assert release.wait(timeout=5)
+            assert release.wait(timeout=15)
         return {"ok": True}
 
     monkeypatch.setitem(_TOOL_DISPATCH, "core.version", slow)
     store = keys()
     app = create_app(
         key_store=store,
-        store=MemorySessionStore(),
+        store=ObservedSessionStore(),
         allowed_hosts=["testserver"],
         max_concurrent_per_user=3,
     )
@@ -169,7 +180,7 @@ async def test_revocation_and_policy_changes_apply_to_queued_calls(monkeypatch, 
         running = asyncio.create_task(call(client, "core.version", ALICE, {"slow": True}))
         assert await asyncio.to_thread(started.wait, 5)
         queued = asyncio.create_task(call(client, "core.version", ALICE))
-        await asyncio.sleep(0.2)  # admitted by the endpoint, now waiting on the lock
+        assert await asyncio.to_thread(admitted.wait, 10)
         store.revoke_user("alice")
         release.set()
         is_error, first = await running
