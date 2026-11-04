@@ -6,6 +6,14 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.6.3 - 2026-11-04
+
+- Pin standalone image recipes to Sidecar 0.10.0 candidate contract readiness.
+- Document native correlation, authority, access-receipt and AIOS boundaries.
+- Replace a fixed sleep in the queued revocation regression test with an explicit
+  dispatch-queue admission signal, eliminating an authentication timing race.
+- Hosted handlers and live runtime bridge are unchanged; publication does not deploy AWS.
+
 ## 0.6.2 - 2026-11-04
 
 - Validate against Evals 0.12.0 and document its candidate API, support policy

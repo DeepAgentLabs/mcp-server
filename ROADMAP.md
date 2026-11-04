@@ -19,14 +19,15 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.6.2` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `0.6.3` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
 This patch pins Evals 0.12.0 and hosted Lens 0.12.1 and scores real
 Phase 6 dispatch evidence with Evals; native tool/report schemas are unchanged.
 Phase 6 (`0.6.0`)
 adds hosted per-user Tower credentials, task-scoped Sidecar stop/revoke,
 exploratory access evidence, guided setup and saved-report recall. The paired
 Chaos 0.10.0 assertions run against real adapters with Lens authentication;
-Sidecar 0.9.2 admits the paired dependencies. `0.5.2` (2026-11-02) added
+Sidecar 0.9.2 admitted the original paired dependencies; 0.6.3 image recipes
+now pin Sidecar 0.10.0 candidate contracts. `0.5.2` (2026-11-02) added
 read-only `lens.execution_verify` and pinned hosted images to Lens 0.12.0.
 `0.5.1` (2026-10-31) added local
 `tower.runbook*` tools for Control Tower 0.9 runbooks ([guide](docs/tower-0.9-runbooks.md)).
@@ -1101,3 +1102,8 @@ v1.0 acceptance remains open.
 
 0.6.2 advances the exact Evals validation pin to 0.12.0 after publication.
 Hosted image recipes also pin 0.12.0; deployment remains an explicit operator action.
+
+## Sidecar 0.10 compatibility — 2026-11-04
+
+MCP 0.6.3 advances standalone image recipes to Sidecar 0.10.0. Hosted access receipts and Phase 6 live bindings remain unchanged; publishing does not deploy AWS.
+See [candidate contracts, migration and operator example](docs/sidecar-0.10.md).

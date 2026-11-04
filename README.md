@@ -147,7 +147,7 @@ and `chaos.export_aios_run` behave the same hosted as locally. Only
 Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
 pin `agenticlens==0.12.1`, `agentic-evals==0.12.0`, `agentic-chaos==0.10.0`
-and `agentic-sidecar==0.9.2` (MCP 0.6.2).
+and `agentic-sidecar==0.10.0` (MCP 0.6.3).
 
 ## AgenticLens 0.8.0 suite tools (MCP 0.3.9)
 
@@ -221,7 +221,7 @@ revocation adapter is unchanged and now also stops queued calls. See
 [hosted access control](docs/access-control.md) and
 [`examples/hosted_access_status.py`](examples/hosted_access_status.py).
 
-## MCP Surface (current, `0.6.2`)
+## MCP Surface (current, `0.6.3`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -819,3 +819,8 @@ v1.0 acceptance remains open.
 
 0.6.2 advances the exact Evals validation pin to 0.12.0 after publication.
 Hosted image recipes also pin 0.12.0; deployment remains an explicit operator action.
+
+## Sidecar 0.10 compatibility — 2026-11-04
+
+MCP 0.6.3 advances standalone image recipes to Sidecar 0.10.0. Hosted access receipts and Phase 6 live bindings remain unchanged; publishing does not deploy AWS.
+See [candidate contracts, migration and operator example](docs/sidecar-0.10.md).
