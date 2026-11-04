@@ -19,8 +19,8 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.6.1` (2026-11-03) — see [CHANGELOG.md](CHANGELOG.md).
-This patch pins Evals 0.11.0 and hosted Lens 0.12.1 and scores real
+Release version: `0.6.2` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
+This patch pins Evals 0.12.0 and hosted Lens 0.12.1 and scores real
 Phase 6 dispatch evidence with Evals; native tool/report schemas are unchanged.
 Phase 6 (`0.6.0`)
 adds hosted per-user Tower credentials, task-scoped Sidecar stop/revoke,
@@ -1092,3 +1092,12 @@ AIOS v0.7.0 publishes cumulative-layer migration guidance, a non-normative
 OpenTelemetry companion profile and a strict documentation site build.
 Existing draft markers, native evidence and runtime dependencies are unchanged;
 no package patch release is needed. See [compatibility and offline example](docs/aios-0.7.0.md).
+
+## Evals 0.12 readiness compatibility
+
+See [the candidate API, unchanged native schema and support matrix](docs/evals-0.12.md).
+Existing compatible dependency ranges remain sufficient; coordinated ecosystem
+v1.0 acceptance remains open.
+
+0.6.2 advances the exact Evals validation pin to 0.12.0 after publication.
+Hosted image recipes also pin 0.12.0; deployment remains an explicit operator action.

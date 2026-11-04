@@ -146,8 +146,8 @@ and `chaos.export_aios_run` behave the same hosted as locally. Only
 
 Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
-pin `agenticlens==0.12.1`, `agentic-evals==0.11.0`, `agentic-chaos==0.10.0`
-and `agentic-sidecar==0.9.2` (MCP 0.6.1).
+pin `agenticlens==0.12.1`, `agentic-evals==0.12.0`, `agentic-chaos==0.10.0`
+and `agentic-sidecar==0.9.2` (MCP 0.6.2).
 
 ## AgenticLens 0.8.0 suite tools (MCP 0.3.9)
 
@@ -221,7 +221,7 @@ revocation adapter is unchanged and now also stops queued calls. See
 [hosted access control](docs/access-control.md) and
 [`examples/hosted_access_status.py`](examples/hosted_access_status.py).
 
-## MCP Surface (current, `0.6.1`)
+## MCP Surface (current, `0.6.2`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -810,3 +810,12 @@ AIOS v0.7.0 publishes cumulative-layer migration guidance, a non-normative
 OpenTelemetry companion profile and a strict documentation site build.
 Existing draft markers, native evidence and runtime dependencies are unchanged;
 no package patch release is needed. See [compatibility and offline example](docs/aios-0.7.0.md).
+
+## Evals 0.12 readiness compatibility
+
+See [the candidate API, unchanged native schema and support matrix](docs/evals-0.12.md).
+Existing compatible dependency ranges remain sufficient; coordinated ecosystem
+v1.0 acceptance remains open.
+
+0.6.2 advances the exact Evals validation pin to 0.12.0 after publication.
+Hosted image recipes also pin 0.12.0; deployment remains an explicit operator action.
