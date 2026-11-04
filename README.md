@@ -854,5 +854,6 @@ See [compatibility, operator example and dependency boundaries](docs/tower-0.10-
 
 ## Chaos 0.11 ChaosHub compatibility — 2026-11-04
 
-MCP 0.6.6 pins Chaos 0.11.0 and Sidecar 0.10.1 in the AWS/Render image recipes. No new hub tool, remote target execution or automatic plugin loading is exposed; hosted chaos.run_experiment remains disabled. Local trusted orchestration retains existing behavior. Publishing does not deploy a running service.
+MCP 0.6.6 introduced the Chaos 0.11.0 and Sidecar 0.10.1 AWS/Render image
+pins retained by MCP 0.7.0. No new hub tool, remote target execution or automatic plugin loading is exposed; hosted chaos.run_experiment remains disabled. Local trusted orchestration retains existing behavior. Publishing does not deploy a running service.
 See [the compatibility guide and offline operator example](docs/chaos-0.11-chaoshub.md).

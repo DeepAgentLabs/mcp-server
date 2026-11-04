@@ -36,4 +36,6 @@ Tag releases validate, publish PyPI/GitHub Release and publish the MCP Registry.
 Automatic AWS deployment is removed from GitHub Actions. Existing AWS build and
 operator deployment scripts remain available for an explicit manual deployment;
 publishing a package does not update the running AWS service. Standalone image
-recipes include Sidecar 0.9.0 for package discovery, with no live runtime bridge.
+recipes include Sidecar 0.10.1, Lens 0.13.0, Chaos 0.11.0 and Evals 0.12.0.
+Live Sidecar controls require explicit host runtime bindings and independent
+operator authorization. See [the current matrix and rollback guide](../../docs/release-readiness.md).
