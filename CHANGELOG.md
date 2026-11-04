@@ -6,6 +6,14 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.6.2 - 2026-11-04
+
+- Validate against Evals 0.12.0 and document its candidate API, support policy
+  and coordinated-major acceptance boundaries. Native report/gate schema 1.0
+  and AIOS 0.4-draft exports are unchanged.
+- Pin Evals 0.12.0 in hosted image recipes and development checks. Publishing
+  this patch does not deploy or modify a running hosted service.
+
 ## 0.6.1 - 2026-11-03
 
 ### Changed
