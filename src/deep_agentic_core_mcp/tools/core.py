@@ -11,6 +11,7 @@ from deep_agentic_core_mcp.config import SERVER_NAME, VERSION, script_policy
 from deep_agentic_core_mcp.prompts.registry import list_prompts
 from deep_agentic_core_mcp.resources.catalog import list_resources
 from deep_agentic_core_mcp.services import session
+from deep_agentic_core_mcp.services.compatibility import compatibility_report
 from deep_agentic_core_mcp.tools.registry import list_tools
 
 _ADAPTER_PROBES = {
@@ -61,3 +62,8 @@ def session_state(arguments: dict[str, Any] | None = None) -> dict[str, Any]:
     """Return what the active session currently holds, so shared context is inspectable."""
     session_id = (arguments or {}).get("session_id", session.DEFAULT_SESSION_ID)
     return {"session_id": session_id, **session.get_session(session_id).summary()}
+
+
+def compatibility(_: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Describe the candidate matrix separately from runtime readiness."""
+    return compatibility_report()

@@ -1,0 +1,35 @@
+{
+  "baseline_id": "mcp-0.7",
+  "maturity": "candidate",
+  "python": [
+    "3.10",
+    "3.11",
+    "3.12",
+    "3.13"
+  ],
+  "packages": {
+    "mcp": "2.0.0",
+    "agenticlens": "0.13.0",
+    "agentic-chaos": "0.11.0",
+    "agentic-evals": "0.12.0",
+    "agentic-sidecar": "0.10.1"
+  },
+  "tower": {
+    "version": "0.10.0",
+    "contract": "tower.capabilities.v1",
+    "transport": "authenticated-http"
+  },
+  "aios": {
+    "repository_version": "0.7.0",
+    "run_workflow_marker": "0.4-draft",
+    "provenance_marker": "0.6-draft",
+    "acceptance_commit": "ebec965feab2c58f7b32a29000e21c34f6e01006",
+    "image_asset_commit": "12897eebe91a5cddeb678d995f1b95e16a2d8030"
+  },
+  "limits": [
+    "Exact versions record the acceptance baseline, not minimum requirements or a stable API promise.",
+    "Distribution metadata does not verify imported workspace code, adapter readiness, remote Tower versions or hosted deployment health.",
+    "Optional sibling packages may be absent. Use core.verify for adapter readiness.",
+    "AIOS remains draft; native report schemas and producer evidence ownership are unchanged."
+  ]
+}

@@ -41,7 +41,7 @@ from deep_agentic_core_mcp.services.remote_sessions import SessionStore, dispatc
 from deep_agentic_core_mcp.services.tower_credentials import for_user
 from deep_agentic_core_mcp.tools import access
 from deep_agentic_core_mcp.tools.chaos import export_aios_run, list_faults, run_experiment
-from deep_agentic_core_mcp.tools.core import health, session_state, verify, version
+from deep_agentic_core_mcp.tools.core import compatibility, health, session_state, verify, version
 from deep_agentic_core_mcp.tools.evals import validate_artifact as validate_evals_artifact
 from deep_agentic_core_mcp.tools.intelligence import onboard, report_recall
 from deep_agentic_core_mcp.tools.lens import (
@@ -90,6 +90,7 @@ _TOOL_DISPATCH: dict[str, Callable[[dict[str, Any] | None], dict[str, Any]]] = {
     "core.report_recall": report_recall,
     "core.version": version,
     "core.verify": verify,
+    "core.compatibility": compatibility,
     "core.session_state": session_state,
     "core.access_status": access.access_status,
     "lens.analyze_workflow": analyze_workflow,

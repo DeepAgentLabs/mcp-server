@@ -71,6 +71,18 @@ def _base_tools() -> list[dict[str, Any]]:
             "mutates_session": False,
         },
         {
+            "name": "core.compatibility",
+            "title": "Candidate Compatibility Baseline",
+            "description": "Inspect the packaged candidate acceptance matrix and local installed "
+            "distribution versions. This does not verify imported workspace code, adapter "
+            "readiness, remote Tower versions, deployment health or stable conformance.",
+            "input_schema": {"type": "object", "properties": {}, "additionalProperties": False},
+            "category": "core",
+            "prerequisites": [],
+            "expected_duration": "instant",
+            "mutates_session": False,
+        },
+        {
             "name": "core.verify",
             "title": "Verify Integrations",
             "description": "Check connectivity to agenticlens, agentic-chaos, "
