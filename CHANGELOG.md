@@ -6,6 +6,17 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 0.6.5 - 2026-11-04
+
+- Add read-only `tower.capability_contract` over Tower 0.10's authenticated
+  `/contracts/capabilities` route, preserving candidate maturity and schemas.
+- Reuse local reader credentials or host-owned per-user bindings and existing
+  hosted dispatch authorization; tool arguments cannot select origins or tokens.
+- Test real published Tower 0.10.0 discovery and authorization, safe older-server
+  404 handling, hosted policy denial and credential isolation.
+- Update generated tool docs and examples. No Tower package dependency or sibling
+  schema change is introduced. Publishing does not deploy the hosted AWS service.
+
 ## 0.6.4 - 2026-11-04
 
 - Pair hosted image recipes and integration CI with Lens 0.13.0 production
