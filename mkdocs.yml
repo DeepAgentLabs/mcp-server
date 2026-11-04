@@ -40,6 +40,7 @@ theme:
     repo: fontawesome/brands/github
 
 nav:
+  - MCP 0.7 release readiness: release-readiness.md
   - Chaos 0.11 ChaosHub: chaos-0.11-chaoshub.md
   - Tower 0.10 contract readiness: tower-0.10-compatibility.md
   - Lens 0.13 readiness: lens-0.13.md
