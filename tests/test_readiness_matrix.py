@@ -27,3 +27,12 @@ def test_candidate_baseline_matches_image_and_ci(image):
     assert f"agenticops-control-tower[api]=={baseline['tower']['version']}" in workflow
     assert "ref: v0.10.0\n          path: agentic-chaos" not in workflow
     assert "ref: v0.10.0\n          path: agentic-sidecar" not in workflow
+
+
+def test_baseline_matches_sdk_lock_and_evals_development_pin():
+    baseline = compatibility.compatibility_report()["baseline"]
+    lock = (REPO / "uv.lock").read_text()
+    sdk = baseline["packages"]["mcp"]
+    assert f'name = "mcp"\nversion = "{sdk}"' in lock
+    evals = baseline["packages"]["agentic-evals"]
+    assert f'"agentic-evals=={evals}"' in (REPO / "pyproject.toml").read_text()

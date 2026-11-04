@@ -175,6 +175,13 @@ jobs:
           uv sync --frozen --extra dev --extra http --python 3.12
           uv pip install -e ../agenticlens -e ../agentic-chaos agentic-sidecar==0.10.1
 
+      - name: Check generated tool docs and offline compatibility example
+        working-directory: mcp-server
+        run: |
+          uv run --no-sync python scripts/generate_tools_doc.py
+          git diff --exit-code docs/tools.md
+          uv run --no-sync python examples/compatibility_check.py
+
       - name: Build distributions
         working-directory: mcp-server
         run: |

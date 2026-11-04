@@ -44,6 +44,10 @@ async def main() -> None:
             verified = await client.call_tool("core.verify", {})
             assert not json.loads(verified.content[0].text)["ok"]
             assert (await client.list_prompts()).prompts
+            prompt = await client.get_prompt(
+                "lens.workflow_summary", {"workflow_name": "wheel-smoke"}
+            )
+            assert "wheel-smoke" in prompt.messages[0].content.text
             resources = await client.list_resources()
             assert resources.resources
             await client.read_resource("resource://examples/sample_workflow")
