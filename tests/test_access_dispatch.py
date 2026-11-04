@@ -341,3 +341,42 @@ async def test_hosted_only_denials_are_audited(tool, message, caplog):
     decision = payload["access_decision"]
     assert decision["reason"] == "tool unavailable over hosted transport"
     assert evidence(caplog)[-1]["correlation_id"] == decision["correlation_id"]
+
+
+async def test_compatibility_tool_obeys_hosted_key_policy(monkeypatch):
+    """The new diagnostic surface must use the same dispatch authorization."""
+    from deep_agentic_core_mcp.services.api_keys import StaticKeyStore
+    from deep_agentic_core_mcp.services.remote_sessions import MemorySessionStore
+    from deep_agentic_core_mcp.transport_http import create_app
+
+    monkeypatch.setenv(config.REMOTE_TRANSPORT_ENV, "0")
+    app = create_app(
+        key_store=StaticKeyStore(
+            {"alice": {"key": "a" * 40, "permissions": {"deny": ["core.compatibility"]}}}
+        ),
+        store=MemorySessionStore(),
+        allowed_hosts=["testserver"],
+    )
+    async with app.router.lifespan_context(app), client_for(app) as client:
+        headers = {
+            "Authorization": "Bearer " + "a" * 40,
+            "Accept": "application/json, text/event-stream",
+            "MCP-Protocol-Version": "2025-11-25",
+        }
+        listed = await client.post(
+            "/mcp", headers=headers, json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"}
+        )
+        assert "core.compatibility" not in {
+            tool["name"] for tool in listed.json()["result"]["tools"]
+        }
+        denied = await client.post(
+            "/mcp",
+            headers=headers,
+            json={
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {"name": "core.compatibility", "arguments": {}},
+            },
+        )
+        assert denied.json()["result"]["isError"]
