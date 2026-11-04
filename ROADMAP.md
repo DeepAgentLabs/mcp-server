@@ -152,15 +152,15 @@ status should explicitly account for upstream and downstream dependencies.
 - `agentic-sidecar`
   Provides decision-supervision and governance behavior. Today the MCP server
   exposes installed API readiness and module inventory. Sidecar v0.7 adds local
-  task status/audit/operator APIs; exposing them through MCP requires a separate
-  authenticated task-scoped bridge. Discovery is not a live task connection.
+  task status/audit/operator APIs; MCP 0.6.0 adds the independently authenticated
+  task-scoped host bridge. Discovery is not a live task connection.
 - `ai-operations-spec`
   Provides the canonical artifact model and validation rules surfaced through
   `spec.*` tools and used as the ecosystem exchange contract.
 - `agenticops-control-tower`
-  Provides the future operator-facing control plane. Once that sibling package
-  ships real APIs, MCP should expose those surfaces as connectors rather than
-  reimplementing control-plane behavior locally.
+  Provides authenticated operator APIs, native evidence and candidate capability
+  contracts surfaced by the thin `tower.*` HTTP connector. MCP 0.6.0 added
+  hosted per-user bindings; MCP 0.6.5 added candidate contract discovery.
 
 For roadmap work, distinguish:
 
