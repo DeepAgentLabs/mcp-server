@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agentic-chaos
-          ref: v0.10.0
+          ref: v0.11.0
           path: agentic-chaos
 
       - name: Check out ai-operations-spec
@@ -54,7 +54,7 @@ jobs:
         working-directory: mcp-server
         run: |
           uv sync --frozen --extra dev --extra http --python ${{ matrix.python-version }}
-          uv pip install -e ../agenticlens -e ../agentic-chaos agentic-sidecar==0.10.0
+          uv pip install -e ../agenticlens -e ../agentic-chaos agentic-sidecar==0.10.1
 
       - name: Lint (ruff check)
         working-directory: mcp-server
@@ -151,7 +151,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agentic-chaos
-          ref: v0.10.0
+          ref: v0.11.0
           path: agentic-chaos
 
       - name: Check out ai-operations-spec
@@ -173,7 +173,7 @@ jobs:
         working-directory: mcp-server
         run: |
           uv sync --frozen --extra dev --extra http --python 3.12
-          uv pip install -e ../agenticlens -e ../agentic-chaos agentic-sidecar==0.10.0
+          uv pip install -e ../agenticlens -e ../agentic-chaos agentic-sidecar==0.10.1
 
       - name: Build distributions
         working-directory: mcp-server
@@ -186,6 +186,7 @@ jobs:
         run: |
           for wheel in dist/*.whl; do
             uv run --isolated --no-project --with "$wheel" python -I scripts/smoke_evals_contract.py
+            uv run --isolated --no-project --with "$wheel" python -I scripts/smoke_protocol.py
           done
 
   paired-containment-wheels:
@@ -197,7 +198,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agentic-chaos
-          ref: v0.10.0
+          ref: v0.11.0
           path: agentic-chaos
       - uses: actions/checkout@v7
         with:
@@ -207,7 +208,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: DeepAgentLabs/agentic-sidecar
-          ref: v0.10.0
+          ref: v0.10.1
           path: agentic-sidecar
       - uses: astral-sh/setup-uv@v7
       - name: Build candidate wheels and install released enforcing adapters
@@ -223,7 +224,7 @@ jobs:
           PHASE6_EVIDENCE_DIR: ${{ github.workspace }}/phase6-evidence
         working-directory: mcp-server
         run: |
-          uv run --no-sync python -c "import agentic_chaos, agentic_sidecar, agenticlens, agentic_evals; assert agentic_chaos.__version__ == '0.10.0'; assert agentic_sidecar.__version__ == '0.10.0'; assert agenticlens.__version__ == '0.13.0'; assert agentic_evals.__version__ == '0.12.0'"
+          uv run --no-sync python -c "import agentic_chaos, agentic_sidecar, agenticlens, agentic_evals; assert agentic_chaos.__version__ == '0.11.0'; assert agentic_sidecar.__version__ == '0.10.1'; assert agenticlens.__version__ == '0.13.0'; assert agentic_evals.__version__ == '0.12.0'"
           uv run --no-sync pytest -o pythonpath= tests/test_phase6_containment.py tests/test_access_dispatch.py tests/test_hosted_tower_credentials.py tests/test_intelligence.py
       - uses: actions/upload-artifact@v7
         with:
