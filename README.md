@@ -221,7 +221,7 @@ revocation adapter is unchanged and now also stops queued calls. See
 [hosted access control](docs/access-control.md) and
 [`examples/hosted_access_status.py`](examples/hosted_access_status.py).
 
-## MCP Surface (current, `0.6.4`)
+## MCP Surface (current, `0.6.5`)
 
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
@@ -832,4 +832,4 @@ See [compatibility, boundaries and offline operator example](docs/lens-0.13.md).
 
 ## Tower 0.10 capability contract readiness
 
-See [compatibility, operator example and dependency boundaries](docs/tower-0.10-compatibility.md). Tower publishes the local candidate `tower.capabilities.v1` with Python/Node HTTP validation. MCP owns tool transport and access checks. Existing tower.* tools keep using existing Tower API routes (inventory, incidents, configuration and runbooks); no new tool or hosted binding is needed. Existing optional dependencies remain sufficient; no package release or stable ecosystem claim is introduced.
+See [compatibility, operator example and dependency boundaries](docs/tower-0.10-compatibility.md). Tower publishes the local candidate `tower.capabilities.v1` with Python/Node HTTP validation. MCP owns tool transport and access checks. Existing tower.* tools keep using existing Tower API routes (inventory, incidents, configuration and runbooks); MCP 0.6.5 adds read-only `tower.capability_contract`; existing host bindings are reused. Existing optional dependencies remain sufficient; MCP 0.6.5 exposes discovery without a stable ecosystem claim.

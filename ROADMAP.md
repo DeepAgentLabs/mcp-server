@@ -19,7 +19,7 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.6.4` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `0.6.5` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
 This patch pairs hosted recipes and wheel CI with Lens 0.13.0, Evals 0.12.0,
 Sidecar 0.10.0 and Chaos 0.10.0. Existing real Phase 6 dispatch scoring and
 native tool/report schemas are unchanged.
@@ -1116,4 +1116,4 @@ See [compatibility, boundaries and offline operator example](docs/lens-0.13.md).
 
 ## Tower 0.10 capability contract readiness
 
-See [compatibility, operator example and dependency boundaries](docs/tower-0.10-compatibility.md). Tower publishes the local candidate `tower.capabilities.v1` with Python/Node HTTP validation. MCP owns tool transport and access checks. Existing tower.* tools keep using existing Tower API routes (inventory, incidents, configuration and runbooks); no new tool or hosted binding is needed. Existing optional dependencies remain sufficient; no package release or stable ecosystem claim is introduced.
+See [compatibility, operator example and dependency boundaries](docs/tower-0.10-compatibility.md). Tower publishes the local candidate `tower.capabilities.v1` with Python/Node HTTP validation. MCP owns tool transport and access checks. Existing tower.* tools keep using existing Tower API routes (inventory, incidents, configuration and runbooks); MCP 0.6.5 adds read-only `tower.capability_contract`; existing host bindings are reused. Existing optional dependencies remain sufficient; MCP 0.6.5 exposes discovery without a stable ecosystem claim.

@@ -311,3 +311,7 @@ Start with `core.onboard`, browse saved sessions with `core.report_recall` or
 `resource://sessions/{id}`, and recall source-cited stored investigation notes.
 For hosted Tower credentials and independent task-scoped Sidecar stop/revoke,
 see [the operator guide](phase6-containment.md).
+
+## Tower capability discovery
+
+MCP 0.6.5 adds read-only `tower.capability_contract` with `{}`. See [credentials, candidate semantics and older-server errors](tower-0.10-compatibility.md#discover-through-mcp-065).
