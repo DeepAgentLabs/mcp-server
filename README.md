@@ -1,11 +1,10 @@
 # deep-agentic-core-mcp
 
-## Current release: 0.8.0
+## Current release: 1.0.0
 
 The local integration candidate adds offline validation for AIOS 0.4/0.6/0.8
 draft families, held-byte provenance resolution and native access audit exports.
-Its acceptance baseline is Lens 0.14.0, Chaos 0.11.0, Evals 0.12.0,
-Sidecar 0.11.0, Tower 0.11.0 and AIOS repository 0.8.1. Optional sibling
+Its coordinated baseline is version 1.0.0 of all seven ecosystem projects. Optional sibling
 packages retain their own contracts. See [support, upgrade and rollback](docs/release-readiness.md).
 
 ```bash
@@ -16,14 +15,15 @@ uv run python examples/compatibility_check.py
 `core.verify {}` separately probes adapters. Neither certifies a production
 deployment. Package publication does not deploy the hosted AWS service.
 
-## Release sequencing
+## Coordinated 1.0.0 milestone
 
-The final package-local roadmap phase uses **v0.7**, followed by further
-minor releases as needed. **v1.0 is reserved for one coordinated DeepAgentLabs
-ecosystem release**, after the shared readiness and compatibility gates pass.
-Completing this minor milestone does not independently declare stable APIs or
-AIOS conformance. Existing acceptance criteria remain required. See the
-[ecosystem release policy](https://github.com/DeepAgentLabs/.github/blob/main/profile/RELEASE_POLICY.md).
+Version 1.0.0 marks the coordinated DeepAgentLabs milestone on 2026-11-05.
+Development and roadmap delivery continue after this release. Existing draft
+and candidate schema markers retain their maturity; package versions do not
+certify AIOS conformance or production deployment readiness. Independent review,
+independent implementations, security/deployment acceptance, live-provider
+validation and the stable contract freeze remain tracked follow-up work.
+See the [ecosystem release policy](https://github.com/DeepAgentLabs/.github/blob/main/profile/RELEASE_POLICY.md).
 
 `deep-agentic-core-mcp` is the shared MCP server layer for the DeepAgentLabs
 ecosystem. It is designed to expose a single MCP interface that combines:
@@ -869,5 +869,5 @@ optional adoption guidance; no runtime dependency or patch release is required.
 
 See [the implementation and migration guide](docs/coordinated-v1-readiness.md)
 for the current candidate scope, interoperability evidence and remaining gates.
-Current version: 0.8.0. Internal tests do not close independent review,
+Current version: 1.0.0. Internal tests do not close independent review,
 live-provider/deployment acceptance or the coordinated stable freeze.
