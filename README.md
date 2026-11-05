@@ -1,12 +1,12 @@
 # deep-agentic-core-mcp
 
-## Current release: 0.7.0
+## Current release: 0.8.0
 
-The integration-readiness milestone adds read-only `core.compatibility`, a
-packaged candidate matrix, installed-wheel MCP protocol acceptance, and aligned
-Chaos 0.11.0 / Sidecar 0.10.1 CI. Lens 0.13.0, Evals 0.12.0, Tower 0.10.0 and
-AIOS repository 0.7.0 retain their native contracts. No sibling dependency
-becomes mandatory. See [support, upgrade and rollback](docs/release-readiness.md).
+The local integration candidate adds offline validation for AIOS 0.4/0.6/0.8
+draft families, held-byte provenance resolution and native access audit exports.
+Its acceptance baseline is Lens 0.14.0, Chaos 0.11.0, Evals 0.12.0,
+Sidecar 0.11.0, Tower 0.11.0 and AIOS repository 0.8.1. Optional sibling
+packages retain their own contracts. See [support, upgrade and rollback](docs/release-readiness.md).
 
 ```bash
 uv run python examples/compatibility_check.py
@@ -162,8 +162,8 @@ and `chaos.export_aios_run` behave the same hosted as locally. Only
 
 Both need `agenticlens>=0.7.0`; with an older install they return a clear
 "unavailable" error and every other Lens tool keeps working. The hosted images
-pin `agenticlens==0.13.0`, `agentic-evals==0.12.0`, `agentic-chaos==0.11.0`
-and `agentic-sidecar==0.10.1` (MCP 0.6.6).
+pin `agenticlens==0.14.0`, `agentic-evals==0.12.0`, `agentic-chaos==0.11.0`
+and `agentic-sidecar==0.11.0` (MCP 0.8.0).
 
 ## AgenticLens 0.8.0 suite tools (MCP 0.3.9)
 
@@ -237,7 +237,7 @@ revocation adapter is unchanged and now also stops queued calls. See
 [hosted access control](docs/access-control.md) and
 [`examples/hosted_access_status.py`](examples/hosted_access_status.py).
 
-## MCP Surface (current, `0.7.0`)
+## MCP Surface (current, `0.8.0`)
 
 - `core.compatibility` — candidate baseline and installed distribution observations
 - `core.health` — rich diagnostics: adapter availability/version, loaded

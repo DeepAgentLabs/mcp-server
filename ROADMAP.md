@@ -19,8 +19,9 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.7.0` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
-The v0.7 local readiness milestone is complete: packaged candidate matrix,
+Release version: `0.8.0` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
+The v0.8 companion-adoption increment adds offline validation and native access
+audit exports over the completed v0.7 local readiness milestone: packaged candidate matrix,
 `core.compatibility`, installed-wheel MCP protocol acceptance, aligned released
 sibling CI, upgrade/rollback and support documentation. See
 [the acceptance matrix and remaining gates](docs/release-readiness.md).

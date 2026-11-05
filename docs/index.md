@@ -2,7 +2,7 @@
 
 ## Unified MCP interface for agentic workflows
 
-**Version:** 0.7.0
+**Version:** 0.8.0
 **Maturity:** Alpha
 
 `deep-agentic-core-mcp` is the shared MCP server layer for the DeepAgentLabs ecosystem. It provides one MCP interface for workflow analysis, resilience testing, server diagnostics, and supervision-readiness discovery.
