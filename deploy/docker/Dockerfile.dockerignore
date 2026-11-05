@@ -7,6 +7,7 @@
 !agenticlens/
 !agenticlens/**
 !ai-operations-spec/
+!ai-operations-spec/LICENSE
 !ai-operations-spec/specification/
 !ai-operations-spec/specification/v0.4/
 !ai-operations-spec/specification/v0.4/schemas/
@@ -14,6 +15,14 @@
 !ai-operations-spec/specification/v0.4/conformance-rules.json
 !ai-operations-spec/specification/v0.5/
 !ai-operations-spec/specification/v0.5/compatibility.json
+!ai-operations-spec/specification/v0.6/
+!ai-operations-spec/specification/v0.6/schemas/
+!ai-operations-spec/specification/v0.6/schemas/**
+!ai-operations-spec/specification/v0.6/provenance-rules.json
+!ai-operations-spec/specification/v0.8/
+!ai-operations-spec/specification/v0.8/schemas/
+!ai-operations-spec/specification/v0.8/schemas/**
+!ai-operations-spec/specification/v0.8/operational-rules.json
 !agentic-chaos/
 !agentic-chaos/pyproject.toml
 !agentic-chaos/README.md

@@ -27,11 +27,19 @@ REQUIRED_PINS = {"agenticlens": (0, 12, 0), "agentic-chaos": (0, 9, 0)}
 
 # Spec-root-relative paths the ai_operations_spec adapter reads.
 SPEC_ASSETS = {
+    "LICENSE",
     "specification/v0.4/schemas/common.schema.json",
     "specification/v0.4/schemas/workflow.schema.json",
     "specification/v0.4/schemas/run.schema.json",
     "specification/v0.4/conformance-rules.json",
     "specification/v0.5/compatibility.json",
+    "specification/v0.6/schemas/provenance.schema.json",
+    "specification/v0.6/provenance-rules.json",
+    "specification/v0.8/schemas/common.schema.json",
+    "specification/v0.8/schemas/verification_signal.schema.json",
+    "specification/v0.8/schemas/audit_event.schema.json",
+    "specification/v0.8/schemas/investigation_report.schema.json",
+    "specification/v0.8/operational-rules.json",
 }
 
 
@@ -51,10 +59,10 @@ def test_standalone_images_pin_phase3_sibling_versions(dockerfile: str) -> None:
 # Exact sibling releases shipped in MCP 0.7.0. Native Evals report/gate
 # schemas remain the 0.9.0 documents bundled here.
 HOSTED_PINS = {
-    "agenticlens": "0.13.0",
+    "agenticlens": "0.14.0",
     "agentic-chaos": "0.11.0",
     "agentic-evals": "0.12.0",
-    "agentic-sidecar": "0.10.1",
+    "agentic-sidecar": "0.11.0",
 }
 
 

@@ -1,5 +1,5 @@
 {
-  "baseline_id": "mcp-0.7",
+  "baseline_id": "mcp-0.8",
   "maturity": "candidate",
   "python": [
     "3.10",
@@ -9,22 +9,23 @@
   ],
   "packages": {
     "mcp": "2.0.0",
-    "agenticlens": "0.13.0",
+    "agenticlens": "0.14.0",
     "agentic-chaos": "0.11.0",
     "agentic-evals": "0.12.0",
-    "agentic-sidecar": "0.10.1"
+    "agentic-sidecar": "0.11.0"
   },
   "tower": {
-    "version": "0.10.0",
+    "version": "0.11.0",
     "contract": "tower.capabilities.v1",
     "transport": "authenticated-http"
   },
   "aios": {
-    "repository_version": "0.7.0",
+    "repository_version": "0.8.1",
     "run_workflow_marker": "0.4-draft",
     "provenance_marker": "0.6-draft",
-    "acceptance_commit": "ebec965feab2c58f7b32a29000e21c34f6e01006",
-    "image_asset_commit": "12897eebe91a5cddeb678d995f1b95e16a2d8030"
+    "acceptance_commit": "78f1fb682125afc30a3c12003e9beb3c577f793f",
+    "image_asset_commit": "78f1fb682125afc30a3c12003e9beb3c577f793f",
+    "operational_marker": "0.8-draft"
   },
   "limits": [
     "Exact versions record the acceptance baseline, not minimum requirements or a stable API promise.",

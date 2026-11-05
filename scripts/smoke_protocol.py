@@ -35,7 +35,7 @@ async def main() -> None:
             result = await client.call_tool("core.compatibility", {})
             assert not result.is_error
             report = json.loads(result.content[0].text)
-            assert report["baseline"]["baseline_id"] == "mcp-0.7"
+            assert report["baseline"]["baseline_id"] == "mcp-0.8"
             for package, observation in report["local_distributions"].items():
                 if package != "mcp":
                     assert observation["status"] == "not_installed", package
