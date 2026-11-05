@@ -4,7 +4,7 @@ Use Python 3.10–3.13 and an MCP-compatible client. The base package supports
 local stdio without installing optional ecosystem producers.
 
 ```bash
-python -m pip install deep-agentic-core-mcp==0.7.0
+python -m pip install deep-agentic-core-mcp==0.8.0
 ```
 
 Add this server to your client's MCP configuration (merge it with any existing
