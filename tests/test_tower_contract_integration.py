@@ -1,4 +1,4 @@
-"""Optional real Tower 0.10 acceptance; CI installs the published API extra explicitly."""
+"""Optional real Tower 0.11 acceptance; CI installs the published API extra explicitly."""
 
 import json
 import socket

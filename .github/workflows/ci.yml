@@ -231,7 +231,7 @@ jobs:
           PHASE6_EVIDENCE_DIR: ${{ github.workspace }}/phase6-evidence
         working-directory: mcp-server
         run: |
-          uv run --no-sync python -c "import agentic_chaos, agentic_sidecar, agenticlens, agentic_evals; assert agentic_chaos.__version__ == '0.11.0'; assert agentic_sidecar.__version__ == '0.10.1'; assert agenticlens.__version__ == '0.13.0'; assert agentic_evals.__version__ == '0.12.0'"
+          uv run --no-sync python -c "import agentic_chaos, agentic_sidecar, agenticlens, agentic_evals; assert agentic_chaos.__version__ == '0.11.0'; assert agentic_sidecar.__version__ == '0.11.0'; assert agenticlens.__version__ == '0.14.0'; assert agentic_evals.__version__ == '0.12.0'"
           uv run --no-sync pytest -o pythonpath= tests/test_phase6_containment.py tests/test_access_dispatch.py tests/test_hosted_tower_credentials.py tests/test_intelligence.py
       - uses: actions/upload-artifact@v7
         with:
@@ -244,7 +244,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v7
-      - name: Test against published Tower 0.10.0
+      - name: Test against published Tower 0.11.0
         run: >-
           uv run --extra dev --with 'agenticops-control-tower[api]==0.11.0'
           python -m pytest tests/test_tower_contract_integration.py --no-cov
