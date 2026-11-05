@@ -532,7 +532,7 @@ def _base_tools() -> list[dict[str, Any]]:
         {
             "name": "spec.validate_artifact",
             "title": "Validate AI Operations Artifact",
-            "description": "Validate a workflow or run artifact against the schema set its "
+            "description": "Validate an AIOS artifact against the schema set its "
             "`spec_version` names (v0.5 compatibility rules), returning a conformance report "
             "that cites AI Operations rule IDs separately from server presentation.",
             "input_schema": {

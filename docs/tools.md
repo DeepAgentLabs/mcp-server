@@ -1102,7 +1102,7 @@ Input schema:
 
 ### `spec.validate_artifact` — Validate AI Operations Artifact
 
-Validate a workflow or run artifact against the schema set its `spec_version` names (v0.5 compatibility rules), returning a conformance report that cites AI Operations rule IDs separately from server presentation.
+Validate an AIOS artifact against the schema set its `spec_version` names (v0.5 compatibility rules), returning a conformance report that cites AI Operations rule IDs separately from server presentation.
 
 | | |
 | --- | --- |

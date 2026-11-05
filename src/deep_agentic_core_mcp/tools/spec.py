@@ -17,7 +17,7 @@ def capabilities() -> dict[str, list[str]]:
 
 
 def validate_artifact(arguments: dict[str, Any] | None) -> dict[str, Any]:
-    """Validate a workflow or run artifact against the v0.4 draft."""
+    """Validate a supported AIOS artifact against its declared draft marker."""
     if not arguments or "artifact" not in arguments:
         return {"ok": False, "error": "Missing required 'artifact' argument"}
     try:
