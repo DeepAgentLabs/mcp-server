@@ -1,5 +1,5 @@
 {
-  "baseline_id": "mcp-0.8",
+  "baseline_id": "ecosystem-1.0.0",
   "maturity": "candidate",
   "python": [
     "3.10",
@@ -9,18 +9,18 @@
   ],
   "packages": {
     "mcp": "2.0.0",
-    "agenticlens": "0.14.0",
-    "agentic-chaos": "0.11.0",
-    "agentic-evals": "0.12.0",
-    "agentic-sidecar": "0.11.0"
+    "agenticlens": "1.0.0",
+    "agentic-chaos": "1.0.0",
+    "agentic-evals": "1.0.0",
+    "agentic-sidecar": "1.0.0"
   },
   "tower": {
-    "version": "0.11.0",
+    "version": "1.0.0",
     "contract": "tower.capabilities.v1",
     "transport": "authenticated-http"
   },
   "aios": {
-    "repository_version": "0.8.1",
+    "repository_version": "1.0.0",
     "run_workflow_marker": "0.4-draft",
     "provenance_marker": "0.6-draft",
     "acceptance_commit": "78f1fb682125afc30a3c12003e9beb3c577f793f",
