@@ -247,7 +247,9 @@ jobs:
       - name: Test against published Tower 1.0.0
         run: |
           uv sync --frozen --extra dev --python 3.12
-          uv pip install --no-cache 'agenticops-control-tower[api]==1.0.0'
+          # Use the checksum-pinned published wheel while simple-index edges converge.
+          uv pip install --no-cache 'agenticops-control-tower[api]==1.0.0' \
+            'agenticops-control-tower @ https://files.pythonhosted.org/packages/29/f7/6cd98ae2546c70c6fdc595518408453a363577c5506c599ea0a58f1b383b/agenticops_control_tower-1.0.0-py3-none-any.whl#sha256=e466118a9a8c79e53bd2ed1abe51605dee62eafcfb87698c291a2b918239840c'
           uv run --no-sync python -m pytest tests/test_tower_contract_integration.py --no-cov
 
   docs:
