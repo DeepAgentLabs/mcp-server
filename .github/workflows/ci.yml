@@ -54,7 +54,7 @@ jobs:
         working-directory: mcp-server
         run: |
           uv sync --frozen --extra dev --extra http --python ${{ matrix.python-version }}
-          uv pip install -e ../agenticlens -e ../agentic-chaos agentic-sidecar==1.0.0
+          uv pip install --refresh-package agentic-sidecar -e ../agenticlens -e ../agentic-chaos agentic-sidecar==1.0.0
 
       - name: Lint (ruff check)
         working-directory: mcp-server
@@ -173,7 +173,7 @@ jobs:
         working-directory: mcp-server
         run: |
           uv sync --frozen --extra dev --extra http --python 3.12
-          uv pip install -e ../agenticlens -e ../agentic-chaos agentic-sidecar==1.0.0
+          uv pip install --refresh-package agentic-sidecar -e ../agenticlens -e ../agentic-chaos agentic-sidecar==1.0.0
 
       - name: Check generated tool docs and offline compatibility example
         working-directory: mcp-server
@@ -246,7 +246,7 @@ jobs:
       - uses: astral-sh/setup-uv@v7
       - name: Test against published Tower 1.0.0
         run: >-
-          uv run --extra dev --with 'agenticops-control-tower[api]==1.0.0'
+          uv run --refresh-package agenticops-control-tower --extra dev --with 'agenticops-control-tower[api]==1.0.0'
           python -m pytest tests/test_tower_contract_integration.py --no-cov
 
   docs:
