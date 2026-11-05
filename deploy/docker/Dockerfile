@@ -9,9 +9,14 @@ COPY agenticlens/src /opt/workspace/agenticlens/src
 COPY agenticlens/schemas /opt/workspace/agenticlens/schemas
 COPY agentic-chaos/pyproject.toml agentic-chaos/README.md agentic-chaos/LICENSE /opt/workspace/agentic-chaos/
 COPY agentic-chaos/src /opt/workspace/agentic-chaos/src
+COPY ai-operations-spec/LICENSE /opt/workspace/ai-operations-spec/LICENSE
 COPY ai-operations-spec/specification/v0.4/schemas /opt/workspace/ai-operations-spec/specification/v0.4/schemas
 COPY ai-operations-spec/specification/v0.4/conformance-rules.json /opt/workspace/ai-operations-spec/specification/v0.4/
 COPY ai-operations-spec/specification/v0.5/compatibility.json /opt/workspace/ai-operations-spec/specification/v0.5/
+COPY ai-operations-spec/specification/v0.6/schemas /opt/workspace/ai-operations-spec/specification/v0.6/schemas
+COPY ai-operations-spec/specification/v0.6/provenance-rules.json /opt/workspace/ai-operations-spec/specification/v0.6/
+COPY ai-operations-spec/specification/v0.8/schemas /opt/workspace/ai-operations-spec/specification/v0.8/schemas
+COPY ai-operations-spec/specification/v0.8/operational-rules.json /opt/workspace/ai-operations-spec/specification/v0.8/
 RUN pip install --no-cache-dir ".[http]" /opt/workspace/agenticlens /opt/workspace/agentic-chaos
 RUN useradd --create-home --uid 10001 mcp
 USER mcp

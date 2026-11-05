@@ -6,6 +6,18 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-04
+
+### Added
+
+- Validate all pinned AIOS 0.4/0.6/0.8 draft families and resolve provenance against explicitly supplied bytes.
+- Bundle schemas/catalogs for standalone offline wheel validation and update checksum-pinned image assets to AIOS 0.8.0.
+- Export native access observations as privacy-preserving AIOS audit events while retaining actual dispatch/denial/completion meaning.
+- Update the candidate ecosystem acceptance baseline; cross-artifact and process rules remain unevaluated unless checked.
+
+Independent review, live/deployment acceptance and the coordinated v1.0 freeze remain open.
+
+
 ## 0.7.0 - 2026-11-04
 
 ### Added

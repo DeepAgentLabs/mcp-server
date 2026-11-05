@@ -16,7 +16,7 @@ def test_missing_and_different_versions_are_explicit(monkeypatch):
     monkeypatch.setattr(compatibility.metadata, "version", version)
     report = compatibility.compatibility_report()
     assert report["local_distributions"]["agenticlens"] == {
-        "baseline_version": "0.13.0",
+        "baseline_version": "0.14.0",
         "installed_distribution_version": None,
         "status": "not_installed",
     }

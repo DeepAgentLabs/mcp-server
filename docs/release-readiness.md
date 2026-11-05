@@ -1,6 +1,6 @@
-# MCP 0.7 integration and release readiness
+# MCP 0.8 integration and release readiness
 
-MCP 0.7.0 completes the local integration-readiness milestone over Phase 6.
+MCP 0.8.0 completes the local integration-readiness milestone over Phase 6.
 Contracts remain candidates. Coordinated ecosystem v1.0 still requires each
 project's acceptance gates, independent AIOS review and operator deployment acceptance.
 
@@ -8,14 +8,14 @@ project's acceptance gates, independent AIOS review and operator deployment acce
 
 | Component | Acceptance baseline | Boundary |
 | --- | --- | --- |
-| MCP server | 0.7.0 | Python 3.10–3.13, stdio and authenticated HTTP |
+| MCP server | 0.8.0 | Python 3.10–3.13, stdio and authenticated HTTP |
 | MCP Python SDK | 2.0.0 | Locked development/protocol acceptance; package range remains >=2,<3 |
-| AgenticLens | 0.13.0 | Native analysis and authenticated snapshot verification |
+| AgenticLens | 0.14.0 | Native analysis and authenticated snapshot verification |
 | Agentic Chaos | 0.11.0 | Fault catalog, AIOS export and containment assertions; execution local only |
 | Agentic Evals | 0.12.0 | Native report/gate schema 1.0 and containment scoring |
-| Agentic Sidecar | 0.10.1 | Explicit host-bound task controls; independent operator authority |
-| Control Tower | 0.10.0 | Authenticated HTTP candidate discovery; optional remote service |
-| AIOS repository | 0.7.0 | Run/Workflow 0.4-draft, provenance 0.6-draft; exploratory access extension |
+| Agentic Sidecar | 0.11.0 | Explicit host-bound task controls; independent operator authority |
+| Control Tower | 0.11.0 | Authenticated HTTP candidate discovery; optional remote service |
+| AIOS repository | 0.8.1 | Run/Workflow 0.4-draft, provenance 0.6-draft, operational companions 0.8-draft |
 
 The installed package includes `resources/compatibility.json`. Call
 `core.compatibility {}` to read this baseline and local distribution observations:
@@ -27,21 +27,20 @@ network calls, package installs or credential inspection occur in this tool.
 Use `core.verify` for adapter probes and `tower.capability_contract` for remote
 contract discovery. Hosted policy controls this diagnostic like every other tool.
 
-The CI AIOS checkout is pinned to `ebec965feab2c58f7b32a29000e21c34f6e01006`.
-Standalone images retain the checksum-verified v0.6.1 schema/catalog assets at
-`12897eebe91a5cddeb678d995f1b95e16a2d8030`; these are sufficient for the
-existing validator and do not bundle every v0.7 repository document.
+The CI AIOS checkout is pinned to `78f1fb682125afc30a3c12003e9beb3c577f793f`.
+Standalone images retain the checksum-verified v0.8.1 licensed schema/catalog assets at
+`78f1fb682125afc30a3c12003e9beb3c577f793f`; all checked schema families are also bundled in the wheel for offline use.
 
 ## Reproduce acceptance
 
 ```bash
 make install
-uv pip install agenticlens==0.13.0 agentic-chaos==0.11.0 agentic-sidecar==0.10.1
+uv pip install agenticlens==0.14.0 agentic-chaos==0.11.0 agentic-sidecar==0.11.0
 make check
 make docs-check
 uv run python examples/compatibility_check.py
 uv build --wheel
-uv run --isolated --no-project --with ./dist/deep_agentic_core_mcp-0.7.0-py3-none-any.whl python -I scripts/smoke_protocol.py
+uv run --isolated --no-project --with ./dist/deep_agentic_core_mcp-0.8.0-py3-none-any.whl python -I scripts/smoke_protocol.py
 ```
 
 `make check` uses local sibling checkouts when present. CI separately installs
@@ -58,7 +57,7 @@ are allowed in the paired containment job.
 
 1. Record the current package version, `core.compatibility`, effective access
    policies and configured runtime bindings. Keep credentials out of reports.
-2. For stdio, pin `deep-agentic-core-mcp==0.7.0` in a fresh environment, retain
+2. For stdio, pin `deep-agentic-core-mcp==0.8.0` in a fresh environment, retain
    the selected sibling pins, and restart the client/server. Validate with
    `core.version`, `core.verify` and your saved workflow fixtures.
 3. For hosted operation, build and record an immutable image digest. Deploy

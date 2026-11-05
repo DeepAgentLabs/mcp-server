@@ -1,33 +1,25 @@
-# AIOS 0.8.0 operational-artifact compatibility
+# AIOS operational-artifact compatibility
 
-AIOS repository v0.8.0 adds exploratory verification_signal, audit_event and
-investigation_report companion artifacts under **0.8-draft**, with incident
-context and operator summaries. Earlier Run/Workflow remain 0.4-draft and
-provenance remains 0.6-draft. Independent review and coordinated v1.0 gates
-remain open.
+AIOS repository v0.8.1 distributes the v0.8.0 schema snapshot under MIT.
+Run/Workflow remain **0.4-draft**, provenance **0.6-draft**, and operational
+companions **0.8-draft**. Independent acceptance and coordinated v1.0 gates remain open.
 
 ## Hosted access observations
 
-mcp.access-decision.v1 event, recorded_at, subject, tool and correlation_id inform audit_event. dispatch maps to started, denial and revocation_acknowledged to denied for the attempted dispatch. Completion maps to success/failure only with a supporting native outcome; otherwise unknown. Revocation acknowledgements do not stop already running calls. The producer access event id is retained in source, separately from the target tool reference. Existing AIOS validation remains marker-routed and does not gain 0.8-draft support in this documentation change; reject unsupported families without fallback.
+MCP 0.8.0 ships marker-routed schema and semantic validation for 0.4-draft, 0.6-draft and 0.8-draft artifacts, held-byte provenance resolution and bundled offline schemas. `services.access_evidence.export_audit_event` projects native access events: dispatch maps to started, denial/revocation acknowledgement to denied, and completion to the supplied success/failure or unknown. Native event identity is required; private subject/tool/reason text is withheld. Revocation does not stop an already running call.
 
-## Optional adoption
+## Adoption and validation
 
-The [AIOS 0.8.0 compatibility matrix](https://github.com/DeepAgentLabs/ai-operations-spec/blob/v0.8.0/docs/v0.8.0-ecosystem.md)
-and [schemas, examples and rules](https://github.com/DeepAgentLabs/ai-operations-spec/tree/v0.8.0/specification/v0.8)
-define the projection contract. The examples are synthetic projections of
-inspected sibling shapes, not output from shipped sibling adapters.
+See [coordinated readiness and examples](coordinated-v1-readiness.md) for the
+public API and migration path. The [canonical schemas and rules](https://github.com/DeepAgentLabs/ai-operations-spec/tree/v0.8.1/specification/v0.8)
+define the projection contract. Source and citation presence do not authenticate
+a producer or verify its conclusion. Reference URIs are not instructions to
+fetch or execute anything. Use Lens or MCP for optional schema and semantic
+checks; source/native identity and unavailable/unknown states remain explicit.
 
-A future adapter needs schema and semantic checks, source/native identity,
-explicit unavailable/unknown states, redaction and unknown-extension
-preservation. Register schemas by full $id, route by the document's own marker
-and reject unsupported marker/type pairs. Source/citation presence does not
-authenticate a producer or verify its conclusion; reference URIs are not
-instructions to fetch or execute anything.
+## Dependencies and rollback
 
-## Dependencies and release
-
-This is documentation alignment only. Existing runtime and native contracts
-are unchanged. No AIOS Python runtime dependency, optional dependency floor
-increase or package patch release is needed. New artifact adoption requires an
-explicit implementation and release in the owning package. Roll back optional
-companion emission without relabeling it as an older artifact family.
+The implementation is released in the owning package's minor version, with no
+AIOS Python runtime dependency. Native contracts retain their own versions.
+Disable optional companion emission or pin the preceding package version to
+roll back; do not relabel a companion as an older artifact family.

@@ -22,12 +22,22 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 _SCRIPT = textwrap.dedent(
     """
     import asyncio
+    import importlib.abc
     import json
     import sys
     import tempfile
     from pathlib import Path
 
     sys.path.insert(0, "src")
+    class MissingOptionalRuntimes(importlib.abc.MetaPathFinder):
+        def find_spec(self, fullname, path=None, target=None):
+            if fullname.split(".")[0] in {"agenticlens", "agentic_chaos", "agentic_sidecar"}:
+                raise ModuleNotFoundError(fullname)
+            return None
+
+    # Editable or installed packages can exist even without source checkouts.
+    # Model an actually unavailable optional runtime in either environment.
+    sys.meta_path.insert(0, MissingOptionalRuntimes())
     import deep_agentic_core_mcp.adapters as adapters_pkg
 
     adapters_pkg.workspace_root = lambda: Path(tempfile.mkdtemp())
@@ -80,7 +90,7 @@ def test_server_boots_and_degrades_when_sibling_repos_are_missing() -> None:
 
     output = json.loads(result.stdout.strip().splitlines()[-1])
     assert output["verify"]["ok"] is False
-    assert output["verify"]["adapters"]["ai_operations_spec"]["available"] is False
+    assert output["verify"]["adapters"]["ai_operations_spec"]["available"] is True
     assert output["health_status"] == "degraded"
 
     # The crash this test guards against: server.py used to index
@@ -90,12 +100,9 @@ def test_server_boots_and_degrades_when_sibling_repos_are_missing() -> None:
     # run. Reaching this point at all is most of what this test proves;
     # these assertions confirm the *degraded* behavior is also correct.
     assert output["validate"]["ok"] is False
-    assert "unavailable" in output["validate"]["error"]
-    assert output["schema_resource_uris"] == []
-    # Without the spec checkout an export (if agentic-chaos is installed at all) cannot be
-    # validated, so it is never reported as aligned - and nothing crashes.
-    assert output["export"]["ok"] is False
-    assert (
-        output["export"]["aios_run"] is None
-        or output["export"]["aios_export"]["validated"] is False
-    )
+    assert output["validate"]["errors"]  # malformed input, not missing schemas
+    assert "resource://schemas/aiops/v0.8/audit_event" in output["schema_resource_uris"]
+    assert "resource://schemas/aiops/v0.6/provenance" in output["schema_resource_uris"]
+    # Bundled schemas do not make optional producer runtimes available.
+    if output["export"].get("aios_run") is not None:
+        assert "aios_export" in output["export"]

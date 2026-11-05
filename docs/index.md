@@ -2,7 +2,7 @@
 
 ## Unified MCP interface for agentic workflows
 
-**Version:** 0.7.0
+**Version:** 0.8.0
 **Maturity:** Alpha
 
 `deep-agentic-core-mcp` is the shared MCP server layer for the DeepAgentLabs ecosystem. It provides one MCP interface for workflow analysis, resilience testing, server diagnostics, and supervision-readiness discovery.
@@ -90,3 +90,5 @@ graph TD
 ## AIOS 0.8 operational artifacts
 
 See [optional operational artifact adoption](aios-0.8-operational-artifacts.md) for verification signals, audit events and investigation reports. Native contracts and supported markers remain unchanged.
+
+See [coordinated v1.0 engineering readiness](coordinated-v1-readiness.md) for candidate scope, migration and remaining acceptance gates.

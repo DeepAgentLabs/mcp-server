@@ -13,8 +13,8 @@ python3 scripts/build_container.py --target workspace --tag deep-agentic-core-mc
 
 `workspace` is the default and needs sibling `agenticlens`, `agentic-chaos`
 and `ai-operations-spec` checkouts. AWS and Render builds use this repository's
-source, published `agenticlens==0.13.0` and `agentic-chaos==0.11.0`, and
-checksum-verified `ai-operations-spec` v0.6.1 assets (schemas plus the
+source, published `agenticlens==0.14.0` and `agentic-chaos==0.11.0`, and
+checksum-verified `ai-operations-spec` v0.8.1 licensed assets (all checked schemas plus the
 conformance and compatibility catalogs) fetched by `scripts/fetch_schema_assets.py`.
 Agentic Chaos is present only for its AIOS exporter and fault catalog; the HTTP
 server never runs `chaos.run_experiment`.
@@ -36,6 +36,8 @@ Tag releases validate, publish PyPI/GitHub Release and publish the MCP Registry.
 Automatic AWS deployment is removed from GitHub Actions. Existing AWS build and
 operator deployment scripts remain available for an explicit manual deployment;
 publishing a package does not update the running AWS service. Standalone image
-recipes include Sidecar 0.10.1, Lens 0.13.0, Chaos 0.11.0 and Evals 0.12.0.
+recipes include Sidecar 0.11.0, Lens 0.14.0, Chaos 0.11.0 and Evals 0.12.0.
 Live Sidecar controls require explicit host runtime bindings and independent
 operator authorization. See [the current matrix and rollback guide](../../docs/release-readiness.md).
+
+AIOS schema bundles and image assets retain their MIT notice. MCP 0.8.0 also carries schemas/catalogs inside the wheel for standalone offline validation; see [coordinated readiness](../../docs/coordinated-v1-readiness.md).

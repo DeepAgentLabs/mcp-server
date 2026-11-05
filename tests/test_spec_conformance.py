@@ -122,7 +122,7 @@ async def test_unsupported_markers_are_rejected_not_revalidated(marker: str, rul
     assert payload["ok"] is False
     assert payload["compatibility"]["decision"] == "reject"
     assert payload["compatibility"]["rule_id"] == rule_id
-    assert payload["compatibility"]["supported_versions"] == ["0.4-draft"]
+    assert payload["compatibility"]["supported_versions"] == ["0.4-draft", "0.6-draft", "0.8-draft"]
     assert "conformance" not in payload
 
 
@@ -188,7 +188,7 @@ async def test_verify_reports_supported_versions_and_catalogs() -> None:
     verify = json.loads((await handle_call_tool("core.verify", {}))[0].text)
 
     spec = verify["adapters"]["ai_operations_spec"]
-    assert spec["supported_versions"] == ["0.4-draft"]
+    assert spec["supported_versions"] == ["0.4-draft", "0.6-draft", "0.8-draft"]
     assert spec["conformance_catalog"] is True
     assert spec["compatibility_catalog"] is True
 
@@ -196,8 +196,8 @@ async def test_verify_reports_supported_versions_and_catalogs() -> None:
 async def test_published_markers_without_a_checker_are_rejected(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr(spec_adapter, "UNCHECKED_MARKERS", ["0.6-draft"])
-    artifact = {**_load(EXAMPLES / "valid" / "run.json"), "spec_version": "0.6-draft"}
+    monkeypatch.setattr(spec_adapter, "UNCHECKED_MARKERS", ["0.9-draft"])
+    artifact = {**_load(EXAMPLES / "valid" / "run.json"), "spec_version": "0.9-draft"}
 
     payload = await _validate(artifact)
 
