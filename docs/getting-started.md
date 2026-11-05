@@ -4,7 +4,7 @@ Use Python 3.10–3.13 and an MCP-compatible client. The base package supports
 local stdio without installing optional ecosystem producers.
 
 ```bash
-python -m pip install deep-agentic-core-mcp==0.7.0
+python -m pip install deep-agentic-core-mcp==0.8.0
 ```
 
 Add this server to your client's MCP configuration (merge it with any existing
@@ -30,7 +30,7 @@ path if the client does not inherit your Python environment's `PATH`.
 For a first analysis, install the tested Lens producer in the same environment:
 
 ```bash
-python -m pip install agenticlens==0.13.0
+python -m pip install agenticlens==0.14.0
 ```
 
 Restart the server, read `resource://examples/sample_workflow`, then call
