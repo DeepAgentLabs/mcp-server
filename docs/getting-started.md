@@ -30,7 +30,7 @@ path if the client does not inherit your Python environment's `PATH`.
 For a first analysis, install the tested Lens producer in the same environment:
 
 ```bash
-python -m pip install agenticlens==0.13.0
+python -m pip install agenticlens==0.14.0
 ```
 
 Restart the server, read `resource://examples/sample_workflow`, then call
