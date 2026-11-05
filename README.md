@@ -59,7 +59,7 @@ libraries:
 - `agenticlens` remains the core profiling and analysis engine
 - `agentic-chaos` remains the core chaos and resilience engine
 - `agentic-sidecar` remains the core decision-supervision and governance engine
-- `agenticops-control-tower` 0.7.0 provides the operator-facing control plane
+- `agenticops-control-tower` 0.11.0 provides the operator-facing control plane
 - the `AI Operations Workflow Specification` remains the shared data contract
 - `deep-agentic-core-mcp` becomes the MCP-native interface that hosts can call
 
