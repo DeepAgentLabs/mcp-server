@@ -20,11 +20,15 @@ from typing import Any
 from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 
-from deep_agentic_core_mcp.adapters import AdapterUnavailableError, ensure_repo_on_path
+from deep_agentic_core_mcp.adapters import (
+    AdapterUnavailableError,
+    aios_companions,
+    ensure_repo_on_path,
+)
 
 # Date this server's checks were last compared against the specification; cited
 # in draft-alignment claims as the v0.4 conformance document requires (K01).
-OBSERVED_ON = "2026-10-13"
+OBSERVED_ON = "2026-11-04"
 
 # The v0.5 grammar, used only when the sibling checkout predates compatibility.json.
 _FALLBACK_VERSION_PATTERN = r"^(0\.[1-9][0-9]*|[1-9][0-9]*\.(0|[1-9][0-9]*))(-draft)?$"
@@ -61,11 +65,9 @@ class SchemaSet:
         return "v" + self.marker.removesuffix("-draft")
 
 
-# Markers whose conformance rules this module implements (`_schema_issues` and
-# `semantic_issues_for` emit AIOS-0.4-* rules for the v0.4 artifact shape). A
-# schema set the specification publishes for any other marker is not loaded:
-# accepting it would mislabel issues or report its rules as passing unchecked.
-CHECKED_MARKERS = frozenset({"0.4-draft"})
+# Only load markers whose schema and semantic rules this package implements.
+# Future published families remain unsupported until their own checker ships.
+CHECKED_MARKERS = frozenset({"0.4-draft", "0.6-draft", "0.8-draft"})
 
 _IMPORT_ERROR: Exception | None = None
 SCHEMA_SETS: dict[str, SchemaSet] = {}
@@ -86,7 +88,17 @@ def _load_schema_set(repo: Path, marker: str, entry: dict[str, Any]) -> SchemaSe
     if not documents:
         return None
     registry = Registry().with_resources(
-        (schema["$id"], Resource.from_contents(schema)) for schema in documents.values()
+        (schema["$id"], Resource.from_contents(schema))
+        for schema in [
+            *documents.values(),
+            *(
+                _load_json(path)
+                for dependency in entry.get("depends_on", [])
+                for path in (
+                    repo / COMPATIBILITY["published_schema_sets"][dependency]["schema_directory"]
+                ).glob("*.schema.json")
+            ),
+        ]
     )
     schema_set = SchemaSet(
         marker=marker, frozen=bool(entry.get("frozen")), documents=documents, registry=registry
@@ -103,6 +115,8 @@ def _load_schema_set(repo: Path, marker: str, entry: dict[str, Any]) -> SchemaSe
 
 try:
     SPEC_REPO = ensure_repo_on_path("ai-operations-spec", src=False)
+    if not (SPEC_REPO / "specification/v0.5/compatibility.json").is_file():
+        SPEC_REPO = Path(__file__).resolve().parents[1] / "resources/aios"
     compatibility_path = SPEC_REPO / "specification" / "v0.5" / "compatibility.json"
     if compatibility_path.is_file():
         COMPATIBILITY = _load_json(compatibility_path)
@@ -321,7 +335,12 @@ def validate_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
     schema_set = SCHEMA_SETS.get(str(artifact.get("spec_version")))
     claim = claim_for(schema_set.marker if schema_set else "0.4-draft")
 
-    if artifact_type not in {"workflow", "run"}:
+    if (
+        not isinstance(artifact_type, str)
+        or schema_set is None
+        or f"{artifact_type}.schema.json" not in schema_set.documents
+        or artifact_type == "common"
+    ):
         if compatibility["decision"] != "reject":
             # The marker is supported, but its schema set publishes no schema for
             # this artifact type; never fall back to another marker's (AIOS-0.5-V03).
@@ -337,7 +356,7 @@ def validate_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
             "ok": False,
             "claim": claim,
             "compatibility": compatibility,
-            "errors": ["artifact_type must be either 'workflow' or 'run'"],
+            "errors": ["artifact_type has no schema under the declared spec_version"],
         }
     if compatibility["decision"] == "reject" or schema_set is None:
         return {
@@ -349,12 +368,38 @@ def validate_artifact(artifact: dict[str, Any]) -> dict[str, Any]:
             "errors": [compatibility["reason"]],
         }
 
+    try:
+        json.dumps(artifact, allow_nan=False)
+    except (TypeError, ValueError):
+        rule = {"0.6-draft": "AIOS-0.6-R01", "0.8-draft": "AIOS-0.8-R01"}.get(
+            schema_set.marker, "AIOS-0.4-P01"
+        )
+        message = "Artifact is not a finite JSON value"
+        return {
+            "ok": False,
+            "claim": claim,
+            "artifact_type": artifact_type,
+            "spec_version": schema_set.marker,
+            "compatibility": compatibility,
+            "schema_errors": [{"path": "$", "message": message}],
+            "semantic_errors": [],
+            "semantic_checked": False,
+            "conformance": _conformance_report(
+                schema_set, artifact_type, [(rule, message)], [], False
+            ),
+            "server": {"note": PRESENTATION_NOTE},
+        }
     schema = schema_set.documents[f"{artifact_type}.schema.json"]
     validator = Draft202012Validator(
         schema, registry=schema_set.registry, format_checker=FormatChecker()
     )
     schema_errors = sorted(validator.iter_errors(artifact), key=lambda err: list(err.path))
-    schema_issues = [issue for error in schema_errors for issue in _schema_issues(error)]
+    schema_rule = {"0.6-draft": "AIOS-0.6-R01", "0.8-draft": "AIOS-0.8-R01"}.get(schema_set.marker)
+    schema_issues = (
+        [(schema_rule, str(error.message)) for error in schema_errors]
+        if schema_rule
+        else [issue for error in schema_errors for issue in _schema_issues(error)]
+    )
     # Semantic checks assume a structurally valid artifact; skip them otherwise
     # rather than crash on a missing field the schema already reported.
     semantic_issues: list[Issue] = [] if schema_errors else semantic_issues_for(artifact)
@@ -407,7 +452,9 @@ def _conformance_report(
     for rule in schema_set.rules:
         if artifact_type not in rule.get("applies_to", []):
             status = "not_applicable"
-        elif rule["check"] == "process" or (rule["check"] == "semantic" and not semantic_checked):
+        elif rule["check"] in {"process", "cross_artifact"} or (
+            rule["check"] == "semantic" and not semantic_checked
+        ):
             status = "not_evaluated"
         else:
             status = "fail" if rule["id"] in failing else "pass"
@@ -449,6 +496,8 @@ def semantic_validate_run(artifact: dict[str, Any]) -> list[str]:
 
 def semantic_issues_for(artifact: dict[str, Any]) -> list[Issue]:
     """Run the v0.4 semantic checks, labeling each issue with its conformance rule."""
+    if artifact.get("spec_version") in {"0.6-draft", "0.8-draft"}:
+        return aios_companions.issues(artifact)
     if artifact.get("artifact_type") == "workflow":
         return _workflow_reference_issues(artifact)
     if artifact.get("artifact_type") != "run":
@@ -482,14 +531,14 @@ def semantic_issues_for(artifact: dict[str, Any]) -> list[Issue]:
         issues.append(("AIOS-0.4-P03", "event identities must be unique"))
 
     if artifact.get("ended_at"):
-        started = datetime.fromisoformat(artifact["started_at"].replace("Z", "+00:00"))
-        ended = datetime.fromisoformat(artifact["ended_at"].replace("Z", "+00:00"))
+        started = datetime.fromisoformat(artifact["started_at"].upper().replace("Z", "+00:00"))
+        ended = datetime.fromisoformat(artifact["ended_at"].upper().replace("Z", "+00:00"))
         if ended < started:
             issues.append(("AIOS-0.4-P04", "ended_at must not precede started_at"))
     for step in artifact.get("steps", []):
         if step.get("started_at") and step.get("ended_at"):
-            step_started = datetime.fromisoformat(step["started_at"].replace("Z", "+00:00"))
-            step_ended = datetime.fromisoformat(step["ended_at"].replace("Z", "+00:00"))
+            step_started = datetime.fromisoformat(step["started_at"].upper().replace("Z", "+00:00"))
+            step_ended = datetime.fromisoformat(step["ended_at"].upper().replace("Z", "+00:00"))
             if step_ended < step_started:
                 issues.append(
                     ("AIOS-0.4-P04", f"Step {step['id']} ended_at must not precede started_at")
@@ -676,21 +725,9 @@ def _count_edges(
 
 
 def _has_cycle(graph: dict[str, set[str]]) -> bool:
-    visiting: set[str] = set()
-    visited: set[str] = set()
-
-    def visit(node: str) -> bool:
-        if node in visiting:
-            return True
-        if node in visited:
-            return False
-        visiting.add(node)
-        cycle = any(visit(target) for target in graph.get(node, set()))
-        visiting.remove(node)
-        visited.add(node)
-        return cycle
-
-    return any(visit(node) for node in list(graph))
+    return aios_companions.cyclic(
+        [(source, target) for source, targets in graph.items() for target in targets]
+    )
 
 
 def _format_schema_error(error: Any) -> dict[str, Any]:
@@ -699,3 +736,12 @@ def _format_schema_error(error: Any) -> dict[str, Any]:
         suffix = ".".join(str(part) for part in error.path)
         location = f"$.{suffix}"
     return {"path": location, "message": error.message}
+
+
+def resolve_provenance(record: dict[str, Any], subjects: dict[str, bytes]) -> dict[str, Any]:
+    """Resolve a valid provenance record using held bytes; never fetch references."""
+    if record.get("artifact_type") != "provenance" or not validate_artifact(record)["ok"]:
+        raise ValueError("A valid provenance record is required")
+    return aios_companions.resolve(
+        record, subjects, lambda document: bool(validate_artifact(document)["ok"])
+    )
