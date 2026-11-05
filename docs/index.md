@@ -86,3 +86,7 @@ graph TD
     B --> E[Agentic Sidecar]
     B --> F[AI Operations Spec]
 ```
+
+## AIOS 0.8 operational artifacts
+
+See [optional operational artifact adoption](aios-0.8-operational-artifacts.md) for verification signals, audit events and investigation reports. Native contracts and supported markers remain unchanged.
