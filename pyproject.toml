@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "deep-agentic-core-mcp"
-version = "0.7.0"
+version = "0.8.0"
 description = "Unified MCP server for AgenticLens and Agentic Chaos workflows."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -23,7 +23,7 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-  "jsonschema>=4.23,<5",
+  "jsonschema[format]>=4.23,<5",
   "mcp>=2.0.0,<3",
   "pydantic>=2.0,<3",
   "referencing>=0.35,<1",
