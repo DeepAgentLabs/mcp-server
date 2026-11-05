@@ -22,12 +22,22 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 _SCRIPT = textwrap.dedent(
     """
     import asyncio
+    import importlib.abc
     import json
     import sys
     import tempfile
     from pathlib import Path
 
     sys.path.insert(0, "src")
+    class MissingOptionalRuntimes(importlib.abc.MetaPathFinder):
+        def find_spec(self, fullname, path=None, target=None):
+            if fullname.split(".")[0] in {"agenticlens", "agentic_chaos", "agentic_sidecar"}:
+                raise ModuleNotFoundError(fullname)
+            return None
+
+    # Editable or installed packages can exist even without source checkouts.
+    # Model an actually unavailable optional runtime in either environment.
+    sys.meta_path.insert(0, MissingOptionalRuntimes())
     import deep_agentic_core_mcp.adapters as adapters_pkg
 
     adapters_pkg.workspace_root = lambda: Path(tempfile.mkdtemp())
