@@ -90,3 +90,5 @@ graph TD
 ## AIOS 0.8 operational artifacts
 
 See [optional operational artifact adoption](aios-0.8-operational-artifacts.md) for verification signals, audit events and investigation reports. Native contracts and supported markers remain unchanged.
+
+See [coordinated v1.0 engineering readiness](coordinated-v1-readiness.md) for candidate scope, migration and remaining acceptance gates.
