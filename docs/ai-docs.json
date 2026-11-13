@@ -1,0 +1,35 @@
+{
+  "name": "MCP Server",
+  "scope": "Expose supported product capabilities through MCP. Local and hosted transports have different execution and authorization boundaries. Producer integrations require their own configured dependencies.",
+  "references": [
+    {
+      "title": "Setup and task workflows",
+      "path": "docs/developer-guide.md"
+    },
+    {
+      "title": "Tools",
+      "path": "docs/tools.md"
+    },
+    {
+      "title": "Configuration",
+      "path": "docs/configuration.md"
+    },
+    {
+      "title": "Access Control",
+      "path": "docs/access-control.md"
+    },
+    {
+      "title": "User Guide",
+      "path": "docs/user-guide.md"
+    },
+    {
+      "title": "Limitations",
+      "path": "docs/limitations.md"
+    }
+  ],
+  "contracts": [
+    "src/deep_agentic_core_mcp/config.py",
+    "src/deep_agentic_core_mcp/server.py"
+  ],
+  "schemas": []
+}
