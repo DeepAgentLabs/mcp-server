@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "deep-agentic-core": {
+      "command": "deep-agentic-core-mcp",
+      "args": []
+    }
+  }
+}
+
