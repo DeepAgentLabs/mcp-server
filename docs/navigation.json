@@ -1,0 +1,32 @@
+[
+  {
+    "Overview": "index.md"
+  },
+  {
+    "Developer guide": "developer-guide.md"
+  },
+  {
+    "Quickstart": "guide/quickstart.md"
+  },
+  {
+    "Capabilities": "guide/capabilities.md"
+  },
+  {
+    "Core concepts": "guide/concepts.md"
+  },
+  {
+    "Recommended workflow": "guide/workflow.md"
+  },
+  {
+    "Combine release evidence": "guide/release-checks.md"
+  },
+  {
+    "Tool reference": "guide/tool-reference.md"
+  },
+  {
+    "Troubleshooting": "guide/troubleshooting.md"
+  },
+  {
+    "API and CLI reference": "guide/reference.md"
+  }
+]

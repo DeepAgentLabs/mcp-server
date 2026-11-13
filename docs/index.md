@@ -1,94 +1,84 @@
-# DeepAgentLabs MCP Server
+# MCP Server
 
-## Unified MCP interface for agentic workflows
+## MCP Server overview
 
-**Version:** 0.8.0
-**Maturity:** Alpha
+How can an MCP client access supported DeepAgentLabs capabilities?
 
-`deep-agentic-core-mcp` is the shared MCP server layer for the DeepAgentLabs ecosystem. It provides one MCP interface for workflow analysis, resilience testing, server diagnostics, and supervision-readiness discovery.
+MCP requests, supplied artifacts, configured producers, and server settings. Tool results, diagnostics, session context, and supported combined evidence workflows.
 
-## Integration readiness
+**When to start here**
 
-Call `core.compatibility` for the packaged candidate baseline and local
-installed distribution versions. See [release readiness](release-readiness.md)
-for the tested matrix, support policy, upgrades and manual operator rollback.
-Runtime readiness and hosted deployment health require separate checks.
+Connect locally and inspect core.version, core.compatibility, and core.verify.
 
-## What it does
+## Inputs and outputs
 
-The MCP server brings multiple agentic capabilities together behind a single MCP interface:
+| You provide | You receive |
+| --- | --- |
+| MCP requests, supplied artifacts, configured producers, and server settings. | Tool results, diagnostics, session context, and supported combined evidence workflows. |
 
-- **AgenticLens** — workflow inspection, profiling, analysis, and reporting
-- **Agentic Chaos** — controlled fault-injection and resilience experiments
-- **Agentic Sidecar** — supervision-readiness and module discovery
-- **Core diagnostics** — health, version, verification, and session information
+## Execution boundary
 
-## Unified workflows (0.4.0)
+Installed versions, adapter readiness, and runtime health are separate checks. Optional producer capabilities depend on the environment.
 
-Use the core tools to combine existing evidence into a fail-closed release
-decision:
+[Start the MCP Server quickstart →](guide/quickstart.md)
 
-```text
-core.compare_runs        chaos.run_experiment (local)     Evals report
-        \                        |                         /
-         +------------> core.release_check <--------------+
-                                 |
-               core.incident_summary -> core.export_report
+## Capabilities
+
+Use these capabilities to address connect tasks in your application.
+
+| Capability | What it provides |
+| --- | --- |
+| Client connection | Expose supported capabilities through local stdio or configured hosted access. |
+| Diagnostics and discovery | Inspect server health, compatibility, installed producers, and session state. |
+| Workflow analysis | Invoke Lens-backed analysis, reports, comparisons, and other supported operations. |
+| Release workflows | Combine explicit comparison, evaluation, and chaos evidence under a release policy. |
+| Artifact validation | Validate native Evals or shared-spec artifacts with the matching tool. |
+| Operational tools | Use supported Tower integrations and inspect available Sidecar or Chaos capabilities. |
+
+## Supported scope
+
+Installed versions, adapter readiness, and runtime health are separate checks. Optional producer capabilities depend on the environment.
+
+## Core concepts
+
+| Concept | Meaning |
+| --- | --- |
+| Server vs producer | The MCP server provides access; individual capability implementations may require producer packages. |
+| Tool vs resource | Tools perform supported operations; resources expose reusable examples or workflow context. |
+| Session | A session ID lets related calls reuse explicitly stored artifacts and results. |
+| Local vs hosted | Execution permissions and available tools differ; hosted access is not identical to local execution. |
+| Required evidence | A release check needs the selected evidence types; missing or invalid data blocks acceptance. |
+
+## Recommended workflow
+
+## Connect and discover
+
+After configuring the client, inspect server diagnostics and optional producers. Tool calls shown here are MCP requests, not shell commands.
+
+```
+core.health {}
+core.compatibility {}
+core.verify {}
 ```
 
-See [Unified workflows](unified-workflows.md).
+## Analyze a supplied artifact
 
-## Key capabilities
+Read the sample workflow resource, pass the JSON to `lens.analyze_workflow`, and assign a session ID. Use the same session for report summaries and subsequent supported operations.
 
-### Workflow analysis
+## Assemble a release check
 
-Analyze agentic workflow artifacts and inspect metrics such as:
+Supply a native evaluation report explicitly. Add a valid comparison and chaos result when your release policy requires them. `core.release_check` reports passed, failed, invalid, or missing evidence. A release is ready only when every applicable gate passes.
 
-- workflow steps
-- token usage
-- latency
-- cost
-- chaos events
-- recommendations
+## Investigate and export
 
-### Workflow reports
+Use `core.incident_summary` to collect observed failure signals and `core.export_report` to retain the session evidence. The exported MCP envelope is not automatically an AIOS artifact.
 
-Generate Markdown summaries of workflow execution, including step-level metrics and overall usage.
+## Respect hosting boundaries
 
-### Chaos experiments
+The documented hosted flow rejects local chaos execution. Supply a locally produced chaos report or choose a policy that does not require that evidence. Permissions and producer availability still apply.
 
-Run controlled experiments against a target script using supported fault types such as:
+## Next steps
 
-- tool failure
-- token timeout
-- rate-limit storm
-- infinite loop
-- memory corruption
-- silent degradation
-- handoff corruption
+Connect locally and inspect core.version, core.compatibility, and core.verify.
 
-### Server diagnostics
-
-Inspect the MCP server's health, version, integration availability, and readiness.
-
-### Sidecar discovery
-
-Inspect the available Agentic Sidecar package, its status, modules, and framework adapters.
-
-## Architecture
-
-```mermaid
-graph TD
-    A[MCP Client / Host] -->|MCP requests| B[DeepAgentLabs MCP Server]
-
-    B --> C[AgenticLens]
-    B --> D[Agentic Chaos]
-    B --> E[Agentic Sidecar]
-    B --> F[AI Operations Spec]
-```
-
-## AIOS 0.8 operational artifacts
-
-See [optional operational artifact adoption](aios-0.8-operational-artifacts.md) for verification signals, audit events and investigation reports. Native contracts and supported markers remain unchanged.
-
-See [coordinated v1.0 engineering readiness](coordinated-v1-readiness.md) for candidate scope, migration and remaining acceptance gates.
+[Open the developer quickstart →](guide/quickstart.md)
