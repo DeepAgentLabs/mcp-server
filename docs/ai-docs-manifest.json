@@ -1,0 +1,67 @@
+{
+  "product": "MCP Server",
+  "repository": "mcp-server",
+  "distribution": "deep-agentic-core-mcp",
+  "document": "llms-full.txt",
+  "content_type": "text/markdown; charset=utf-8",
+  "sha256": "909c8bd0bb80180068273c124a079cd6c53079101236c57dbc8f675a6a75af12",
+  "source_hash_normalization": "UTF-8 text with LF newlines",
+  "human_guide": "developer-guide.md",
+  "sources": [
+    {
+      "path": "pyproject.toml",
+      "kind": "package-metadata",
+      "sha256": "0f162e340388e18afe1841c22cd70f77d20d3c3af8d721d111ab09d945afe0ee"
+    },
+    {
+      "path": "docs/ai-docs.json",
+      "kind": "source-selection",
+      "sha256": "36662c6018c1f53bbf5f24e857c3c8b5e45540cddc9deb9e7de888859d3d6e36"
+    },
+    {
+      "path": "docs/developer-guide.md",
+      "kind": "reference",
+      "sha256": "5a61bcb5d0186bb4cf50a2232db6d18024c6de868e80d6d211665ed6a324e623"
+    },
+    {
+      "path": "docs/tools.md",
+      "kind": "reference",
+      "sha256": "6af6bacd4eb78e236c819cc8a6f803120b9ecdea5129a0dbd6b74bdb3159d21a"
+    },
+    {
+      "path": "docs/configuration.md",
+      "kind": "reference",
+      "sha256": "08175b68602f9db1522681a9192680868509876c7bd8f9298baddd1a72d919ea"
+    },
+    {
+      "path": "docs/access-control.md",
+      "kind": "reference",
+      "sha256": "816e962f0f62504ab4d949854627c81ae67a1b8ff132c5cfa067e382a42dda76"
+    },
+    {
+      "path": "docs/user-guide.md",
+      "kind": "reference",
+      "sha256": "e85a8d87275f7b14870756ea54b35ec63a77d4b0e72f31983d2e3190fe54424d"
+    },
+    {
+      "path": "docs/limitations.md",
+      "kind": "reference",
+      "sha256": "c9da86c9c649c8b4515a55ad5e53c9d3ff2fa834a29110844eacc8c6c7a6855d"
+    },
+    {
+      "path": "src/deep_agentic_core_mcp/config.py",
+      "kind": "source-contract",
+      "sha256": "ab135751eaa90e16facbba46c231e380cf8baa8c252014d983fd9b0852660e5c"
+    },
+    {
+      "path": "src/deep_agentic_core_mcp/server.py",
+      "kind": "source-contract",
+      "sha256": "f8d322452cb5152a129838f7bacd0827c8514292f224945f8ca83c1ebf00ecd3"
+    },
+    {
+      "path": "docs/guide/examples/mcp-client.json",
+      "kind": "example",
+      "sha256": "e813c230078b63196be35cb02c42f82ee3562cc67e01d926114960dd85ac718f"
+    }
+  ]
+}
