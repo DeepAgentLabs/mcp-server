@@ -2,7 +2,7 @@
   "product": "MCP Server",
   "repository": "mcp-server",
   "distribution": "deep-agentic-core-mcp",
-  "document": "llms-full.txt",
+  "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
   "sha256": "909c8bd0bb80180068273c124a079cd6c53079101236c57dbc8f675a6a75af12",
   "source_hash_normalization": "UTF-8 text with LF newlines",
@@ -11,7 +11,7 @@
     {
       "path": "pyproject.toml",
       "kind": "package-metadata",
-      "sha256": "0f162e340388e18afe1841c22cd70f77d20d3c3af8d721d111ab09d945afe0ee"
+      "sha256": "72396c490dd17cf506f8636d907e201ea4f75fb98e03025ce1c471d125604811"
     },
     {
       "path": "docs/ai-docs.json",
