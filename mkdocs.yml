@@ -40,6 +40,10 @@ theme:
     repo: fontawesome/brands/github
 
 nav:
+  - Developer Guide (simple): developer-guide.md
+  - AI Reference capability index: ai-reference-index.md
+  - Resources and prompts: resources-and-prompts.md
+  - Entry points and administrator CLI: cli-reference.md
   - Coordinated v1 readiness: coordinated-v1-readiness.md
   - MCP 0.7 release readiness: release-readiness.md
   - Chaos 0.11 ChaosHub: chaos-0.11-chaoshub.md
