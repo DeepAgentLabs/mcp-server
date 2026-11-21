@@ -8,8 +8,9 @@ This index opens the generated [AI Reference (robust)](https://deepagentlabs.io/
 | --- | --- | --- |
 | Local stdio connection | Connect an MCP host to the local server and verify the protocol boundary. | <a href="#getting-started">Full reference</a> · [Source](getting-started.md) |
 | Diagnostics and compatibility | Inspect version, health, adapter availability and the packaged candidate matrix. | <a href="#compatibility-and-release-readiness">Full reference</a> · [Source](release-readiness.md) |
-| Tool catalog and discovery | Discover all 53 tool interfaces, prerequisites, session effects and schemas. | <a href="#generated-tool-catalog">Full reference</a> · [Source](tools.md) |
-| Resources and prompt templates | Read reference/schema/session resources and retrieve five reusable prompts. | <a href="#resources-and-prompt-templates">Full reference</a> · [Source](resources-and-prompts.md) |
+| Tool catalog and discovery | Discover all 56 tool interfaces, prerequisites, session effects and schemas. | <a href="#generated-tool-catalog">Full reference</a> · [Source](tools.md) |
+| Seven-product AI documentation | Discover, search and read all seven robust references before building integrations. | <a href="#build-with-the-seven-product-ai-reference">Full reference</a> · [Source](ecosystem-ai-reference.md) |
+| Resources and prompt templates | Read reference/schema/session resources and retrieve six reusable prompts. | <a href="#resources-and-prompt-templates">Full reference</a> · [Source](resources-and-prompts.md) |
 | Lens analysis and diagnosis | Analyze workflows, diagnose failures, compare runs and inspect scores/SLOs. | <a href="#generated-tool-catalog">Full reference</a> · [Source](tools.md) |
 | Suite, ModelFit, routing and optimization | Compose recorded Lens suite/model/routing/optimization evidence without invoking models. | <a href="#producer-integrations">Full reference</a> · [Source](integrations.md) |
 | Native Evals validation | Validate native report/gate artifacts against packaged schema 1.0. | <a href="#native-evals-report-contracts">Full reference</a> · [Source](evals-report-contract.md) |
