@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from deep_agentic_core_mcp.tools.documentation import tool_definitions as documentation_tools
 from deep_agentic_core_mcp.tools.intelligence import tool_definitions as intelligence_tools
 from deep_agentic_core_mcp.tools.tower import tool_definitions
 
@@ -656,4 +657,4 @@ def _base_tools() -> list[dict[str, Any]]:
 
 def list_tools() -> list[dict[str, Any]]:
     """Return tool metadata including operational intelligence composition tools."""
-    return _base_tools() + intelligence_tools()
+    return _base_tools() + intelligence_tools() + documentation_tools()

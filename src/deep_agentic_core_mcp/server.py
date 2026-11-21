@@ -35,13 +35,14 @@ from deep_agentic_core_mcp.config import SERVER_NAME
 from deep_agentic_core_mcp.prompts.registry import list_prompts as _registry_prompts
 from deep_agentic_core_mcp.prompts.registry import render_prompt
 from deep_agentic_core_mcp.resources.catalog import list_resources as _catalog_resources
-from deep_agentic_core_mcp.services import access_evidence
+from deep_agentic_core_mcp.services import access_evidence, documentation
 from deep_agentic_core_mcp.services.access_policy import Principal
 from deep_agentic_core_mcp.services.remote_sessions import SessionStore, dispatch_transaction
 from deep_agentic_core_mcp.services.tower_credentials import for_user
 from deep_agentic_core_mcp.tools import access
 from deep_agentic_core_mcp.tools.chaos import export_aios_run, list_faults, run_experiment
 from deep_agentic_core_mcp.tools.core import compatibility, health, session_state, verify, version
+from deep_agentic_core_mcp.tools.documentation import docs_catalog, docs_read, docs_search
 from deep_agentic_core_mcp.tools.evals import validate_artifact as validate_evals_artifact
 from deep_agentic_core_mcp.tools.intelligence import onboard, report_recall
 from deep_agentic_core_mcp.tools.lens import (
@@ -86,6 +87,9 @@ server = Server(SERVER_NAME, version=config.VERSION)
 _TOOL_DISPATCH: dict[str, Callable[[dict[str, Any] | None], dict[str, Any]]] = {
     "evals.validate_artifact": validate_evals_artifact,
     "core.health": health,
+    "core.docs_catalog": docs_catalog,
+    "core.docs_read": docs_read,
+    "core.docs_search": docs_search,
     "core.onboard": onboard,
     "core.report_recall": report_recall,
     "core.version": version,
@@ -176,7 +180,7 @@ def _build_resources() -> list[Resource]:
         Resource(
             uri=entry["uri"],
             name=entry["name"],
-            mime_type="application/json",
+            mime_type=entry.get("mime_type", "application/json"),
         )
         for entry in _catalog_resources()
     ]
@@ -447,6 +451,11 @@ async def handle_list_resources() -> list[Resource]:
 
 async def handle_read_resource(uri: str) -> list[TextResourceContents]:
     """Return resource contents for known MCP resources."""
+    if uri.startswith(documentation.PREFIX):
+        content = documentation.resource_content(uri)
+        if content is not None:
+            mime, text = content
+            return [TextResourceContents(uri=uri, mime_type=mime, text=text)]
     payload: dict[str, Any] | None
     if uri.startswith("resource://sessions/"):
         payload = report_recall({"session_id": unquote(uri.removeprefix("resource://sessions/"))})
