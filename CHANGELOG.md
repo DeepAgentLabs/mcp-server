@@ -6,6 +6,20 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 1.1.0 - 2026-11-20
+
+### Added
+
+- Bundle the robust AI references, capability indexes, checksum manifests and license notices for all seven DeepAgentLabs products.
+- Add `core.docs_catalog`, `core.docs_search` and `core.docs_read` for offline discovery, bounded reads and search with commit-pinned source citations.
+- Expose documentation resources and the `core.build_with_ecosystem` prompt to connected copilots without requiring optional producer packages.
+- Verify snapshots from committed product sources and test retrieval through installed-wheel stdio and authenticated HTTP.
+
+### Compatibility
+
+- Existing runtime tools, artifact schemas, draft maturity and hosted authorization boundaries remain unchanged. Documentation snapshot versions are reported separately from installed producers.
+- Hosted rollout is an operator deployment; publishing this package does not deploy AWS.
+
 ## 1.0.4 - 2026-11-20
 
 ### Changed

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "deep-agentic-core-mcp"
-version = "1.0.4"
+version = "1.1.0"
 description = "Unified MCP server for AgenticLens and Agentic Chaos workflows."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -70,7 +70,7 @@ packages = ["src/deep_agentic_core_mcp"]
 
 [tool.ruff]
 # Generated reference preserves source declarations verbatim.
-extend-exclude = ["docs/llms-full.md"]
+extend-exclude = ["docs/llms-full.md", "src/deep_agentic_core_mcp/resources/documentation/**"]
 line-length = 100
 target-version = "py310"
 src = ["src", "tests"]
