@@ -65,8 +65,7 @@ With BuildKit, a direct workspace build also supports `deploy/docker/Dockerfile.
 schema files. Chaos and Sidecar integrations are optional and are not included
 in this analysis/validation image; their diagnostic tools can report unavailable.
 
-Inject credentials and the Redis URL at runtime. Without either setting the
-service refuses to start. `/healthz` returns 200 while Redis is available and
+Inject credentials and the Redis URL at runtime. The service requires both an authentication backend and shared sessions (Redis or PostgreSQL). `/healthz` returns 200 while the configured session store is available and
 503 on storage failure; it checks storage readiness, not every optional adapter.
 Use `core.verify` to inspect integration availability.
 
