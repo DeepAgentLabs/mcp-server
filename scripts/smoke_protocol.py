@@ -50,6 +50,31 @@ async def main() -> None:
             assert "wheel-smoke" in prompt.messages[0].content.text
             resources = await client.list_resources()
             assert resources.resources
+            catalog = json.loads((await client.call_tool("core.docs_catalog", {})).content[0].text)
+            assert len(catalog["products"]) == 7
+            for product in catalog["products"]:
+                reference = await client.read_resource(product["resources"]["reference"])
+                import hashlib
+
+                assert reference.contents[0].mime_type == "text/markdown"
+                assert (
+                    hashlib.sha256(reference.contents[0].text.encode()).hexdigest()
+                    == product["sha256"]
+                )
+                page = await client.call_tool(
+                    "core.docs_read", {"product": product["product"], "limit": 100}
+                )
+                assert (
+                    json.loads(page.content[0].text)["content"] == reference.contents[0].text[:100]
+                )
+            matches = await client.call_tool(
+                "core.docs_search", {"query": "evaluate_suite", "product": "agentic-evals"}
+            )
+            assert json.loads(matches.content[0].text)["results"]
+            prompt = await client.get_prompt(
+                "core.build_with_ecosystem", {"task": "Build a support agent"}
+            )
+            assert "core.docs_read" in prompt.messages[0].content.text
             await client.read_resource("resource://examples/sample_workflow")
     print(
         "Installed wheel: initialize, tools, compatibility, degraded boot, prompts and resources OK"
