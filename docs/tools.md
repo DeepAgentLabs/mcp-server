@@ -3,7 +3,7 @@
 
 # Tool Reference
 
-53 tools, generated from `tools/registry.py` - the same data MCP
+56 tools, generated from `tools/registry.py` - the same data MCP
 clients see via `tools/list`. See [README.md](../README.md) for a one-line-per-tool
 overview and [ROADMAP.md](../ROADMAP.md) for what's shipped per phase.
 
@@ -89,6 +89,141 @@ Input schema:
   "type": "object",
   "properties": {},
   "additionalProperties": false
+}
+```
+
+### `core.docs_catalog` — Ecosystem documentation catalog
+
+Discover all seven DeepAgentLabs products, bundled documentation versions, commit-pinned sources and resource URIs. Supply product to list its sections before writing integration code. Works without sibling packages or network access.
+
+| | |
+| --- | --- |
+| Category | `core` |
+| Prerequisites | none |
+| Expected duration | fast |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "product": {
+      "type": "string",
+      "enum": [
+        "agenticlens",
+        "agentic-evals",
+        "agentic-chaos",
+        "agentic-sidecar",
+        "agenticops-control-tower",
+        "ai-operations-spec",
+        "mcp-server"
+      ]
+    }
+  }
+}
+```
+
+### `core.docs_read` — Ecosystem documentation read
+
+Read the robust AI reference for a product or cited section: APIs, CLI, configuration, schemas and complete examples. Bounded Unicode character pages; continue with next_offset. Cite the source_commit and citation; documentation versions may differ from installed packages.
+
+| | |
+| --- | --- |
+| Category | `core` |
+| Prerequisites | none |
+| Expected duration | fast |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "product": {
+      "type": "string",
+      "enum": [
+        "agenticlens",
+        "agentic-evals",
+        "agentic-chaos",
+        "agentic-sidecar",
+        "agenticops-control-tower",
+        "ai-operations-spec",
+        "mcp-server"
+      ]
+    },
+    "section": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "offset": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 32000,
+      "default": 12000
+    }
+  },
+  "required": [
+    "product"
+  ]
+}
+```
+
+### `core.docs_search` — Ecosystem documentation search
+
+Search robust AI references across all seven products, optionally filtered by product. Literal case-insensitive AND-term search returns ranked section snippets, commit-pinned citations and offsets. Read matched sections with core.docs_read before generating code.
+
+| | |
+| --- | --- |
+| Category | `core` |
+| Prerequisites | none |
+| Expected duration | fast |
+| Mutates session | no |
+
+Input schema:
+
+```json
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "query": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "product": {
+      "type": "string",
+      "enum": [
+        "agenticlens",
+        "agentic-evals",
+        "agentic-chaos",
+        "agentic-sidecar",
+        "agenticops-control-tower",
+        "ai-operations-spec",
+        "mcp-server"
+      ]
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20,
+      "default": 10
+    }
+  },
+  "required": [
+    "query"
+  ]
 }
 ```
 
