@@ -20,4 +20,6 @@ Connect locally and inspect core.version, core.compatibility, and core.verify.
 
 Installed versions, adapter readiness, and runtime health are separate checks. Optional producer capabilities depend on the environment.
 
-[Read the detailed developer guide](developer-guide.md).
+[Developer Guide (simple)](developer-guide.md#capability-index) · [AI Reference (robust)](https://deepagentlabs.io/mcp/docs/llms-full.md)
+
+Both include a capability index. The simple guide offers short workflows; the robust reference includes the full tool catalog, resources/prompts, operator guides, package declarations and bundled schemas.

@@ -2,6 +2,8 @@
 
 The DeepAgentLabs MCP Server provides a unified MCP interface over several existing DeepAgentLabs capabilities.
 
+See the [complete capability index](developer-guide.md#capability-index), [generated tool catalog](tools.md) and [resource/prompt inventory](resources-and-prompts.md) for the full current surface.
+
 ## Capability status
 
 | Capability | Status |
@@ -11,7 +13,7 @@ The DeepAgentLabs MCP Server provides a unified MCP interface over several exist
 | AgenticLens reporting | Implemented |
 | Agentic Chaos fault injection | Implemented |
 | Agentic Sidecar discovery and explicit operator bridge | Implemented (0.6.0) |
-| AI Operations Spec validation | Implemented; draft schemas require configured assets |
+| AI Operations Spec validation | Implemented; bundled offline 0.4/0.6/0.8 draft schema families; workspace catalogs may override |
 | Unified release check and incident workflows | Implemented (0.4.0) |
 
 ---

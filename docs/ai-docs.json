@@ -3,33 +3,182 @@
   "scope": "Expose supported product capabilities through MCP. Local and hosted transports have different execution and authorization boundaries. Producer integrations require their own configured dependencies.",
   "references": [
     {
+      "title": "AI Reference capability index",
+      "path": "docs/ai-reference-index.md"
+    },
+    {
       "title": "Setup and task workflows",
       "path": "docs/developer-guide.md"
     },
     {
-      "title": "Tools",
+      "title": "Generated tool catalog",
       "path": "docs/tools.md"
+    },
+    {
+      "title": "Resources and prompt templates",
+      "path": "docs/resources-and-prompts.md"
+    },
+    {
+      "title": "Entry points and administrator CLI",
+      "path": "docs/cli-reference.md"
     },
     {
       "title": "Configuration",
       "path": "docs/configuration.md"
     },
     {
-      "title": "Access Control",
+      "title": "Authenticated multi-user hosting",
+      "path": "docs/remote-hosting.md"
+    },
+    {
+      "title": "Hosted access control",
       "path": "docs/access-control.md"
     },
     {
-      "title": "User Guide",
+      "title": "Hosted bindings and containment",
+      "path": "docs/phase6-containment.md"
+    },
+    {
+      "title": "Lens execution verification",
+      "path": "docs/lens-execution-evidence.md"
+    },
+    {
+      "title": "Unified release and incident workflows",
+      "path": "docs/unified-workflows.md"
+    },
+    {
+      "title": "Producer integrations",
+      "path": "docs/integrations.md"
+    },
+    {
+      "title": "Native Evals report contracts",
+      "path": "docs/evals-report-contract.md"
+    },
+    {
+      "title": "Sidecar integration contracts",
+      "path": "docs/sidecar-0.10.md"
+    },
+    {
+      "title": "Tower runbook workflows",
+      "path": "docs/tower-0.9-runbooks.md"
+    },
+    {
+      "title": "Current AIOS and coordinated readiness",
+      "path": "docs/coordinated-v1-readiness.md"
+    },
+    {
+      "title": "Operational AIOS audit projections",
+      "path": "docs/aios-0.8-operational-artifacts.md"
+    },
+    {
+      "title": "Compatibility and release readiness",
+      "path": "docs/release-readiness.md"
+    },
+    {
+      "title": "Client and key lifecycle guide",
       "path": "docs/user-guide.md"
+    },
+    {
+      "title": "Getting started",
+      "path": "docs/getting-started.md"
+    },
+    {
+      "title": "Architecture",
+      "path": "docs/architecture.md"
+    },
+    {
+      "title": "Features",
+      "path": "docs/features.md"
+    },
+    {
+      "title": "Examples",
+      "path": "docs/examples.md"
+    },
+    {
+      "title": "Troubleshooting",
+      "path": "docs/troubleshooting.md"
     },
     {
       "title": "Limitations",
       "path": "docs/limitations.md"
+    },
+    {
+      "title": "Historical integration note: AIOS v0.6.1 compatibility",
+      "path": "docs/aios-0.6.1.md"
+    },
+    {
+      "title": "Historical integration note: AIOS repository v0.7.0 compatibility",
+      "path": "docs/aios-0.7.0.md"
+    },
+    {
+      "title": "Historical integration note: AIOS v0.6 compatibility",
+      "path": "docs/aios-v0.6.md"
+    },
+    {
+      "title": "Historical integration note: Chaos 0.11 ChaosHub compatibility",
+      "path": "docs/chaos-0.11-chaoshub.md"
+    },
+    {
+      "title": "Historical integration note: Chaos 0.7 compatibility",
+      "path": "docs/chaos-0.7.md"
+    },
+    {
+      "title": "Historical integration note: Chaos 0.8 compatibility",
+      "path": "docs/chaos-0.8.md"
+    },
+    {
+      "title": "Historical integration note: Chaos 0.9 compatibility",
+      "path": "docs/chaos-0.9.md"
+    },
+    {
+      "title": "Historical integration note: Evals 0.10.0 evaluation evidence (MCP 0.4.2)",
+      "path": "docs/evals-0.10-aios-evidence.md"
+    },
+    {
+      "title": "Historical integration note: Evals 0.11 containment compatibility",
+      "path": "docs/evals-0.11-containment.md"
+    },
+    {
+      "title": "Historical integration note: Evals 0.12 API and report readiness",
+      "path": "docs/evals-0.12.md"
+    },
+    {
+      "title": "Historical integration note: Evals 0.8.0 CLI interoperability",
+      "path": "docs/evals-0.8-cli.md"
+    },
+    {
+      "title": "Historical integration note: Evals 0.9.0 judge reliability and live resilience (MCP 0.3.14)",
+      "path": "docs/evals-0.9-judge-reliability.md"
+    },
+    {
+      "title": "Historical integration note: Lens 0.13 readiness compatibility",
+      "path": "docs/lens-0.13.md"
+    },
+    {
+      "title": "Historical integration note: Sidecar 0.9.0 compatibility",
+      "path": "docs/sidecar-0.9.md"
+    },
+    {
+      "title": "Historical integration note: Sidecar 0.8 integration boundary",
+      "path": "docs/sidecar-v0.8.md"
+    },
+    {
+      "title": "Historical integration note: Tower 0.10 capability contract compatibility",
+      "path": "docs/tower-0.10-compatibility.md"
+    },
+    {
+      "title": "Historical integration note: Tower 0.7.0 integration compatibility",
+      "path": "docs/tower-0.7-fleet-operations.md"
+    },
+    {
+      "title": "Historical integration note: Control Tower 0.8.0 live operations compatibility",
+      "path": "docs/tower-0.8-live-operations.md"
     }
   ],
   "contracts": [
-    "src/deep_agentic_core_mcp/config.py",
-    "src/deep_agentic_core_mcp/server.py"
+    "src/deep_agentic_core_mcp/**/*.py"
   ],
-  "schemas": []
+  "schemas": [
+    "src/deep_agentic_core_mcp/**/*.schema.json"
+  ]
 }
