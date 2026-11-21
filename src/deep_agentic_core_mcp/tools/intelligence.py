@@ -18,6 +18,10 @@ def onboard(_: dict[str, Any] | None = None) -> dict[str, Any]:
         "readiness": readiness,
         "steps": [
             {"tool": "core.verify", "purpose": "Check optional sibling availability"},
+            {
+                "tool": "core.docs_catalog",
+                "purpose": "Discover seven-product AI references before building",
+            },
             {"tool": "core.access_status", "purpose": "Inspect hosted permissions and task scope"},
             {"tool": "lens.analyze_workflow", "purpose": "Supply a workflow and a session_id"},
             {"tool": "core.session_state", "purpose": "Inspect stored evidence and recent history"},
