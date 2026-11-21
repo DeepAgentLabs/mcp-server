@@ -1,0 +1,1192 @@
+{
+  "product": "AI Operations Specification",
+  "repository": "ai-operations-spec",
+  "distribution": "ai-operations-spec",
+  "document": "llms-full.md",
+  "content_type": "text/markdown; charset=utf-8",
+  "sha256": "d0a580b10a2424c4d43207d1125cd93df3565ece84c51dc13eb2e282db199061",
+  "source_hash_normalization": "UTF-8 text with LF newlines",
+  "human_guide": "developer-guide.md",
+  "sources": [
+    {
+      "path": "pyproject.toml",
+      "kind": "package-metadata",
+      "sha256": "25446ede553f5e5dc850fc737446a640810be935d0a23ff184e859309dd08d97"
+    },
+    {
+      "path": "docs/ai-docs.json",
+      "kind": "source-selection",
+      "sha256": "d850e48e1fc828b81e45c8d3c438554dbff130dd883f54aba2b84c5f6566442f"
+    },
+    {
+      "path": "docs/ai-reference-index.md",
+      "kind": "reference",
+      "sha256": "b50839d2cca474a15fb3733848e62af6f2a509ebec74f7c29e7e4543a980953d"
+    },
+    {
+      "path": "docs/developer-guide.md",
+      "kind": "reference",
+      "sha256": "3cd416044678e48b57fd5fc84dc11189612810451d92e9c187e8b7823085257c"
+    },
+    {
+      "path": "README.md",
+      "kind": "reference",
+      "sha256": "1981431c1bac85ebd4373bb1e5042457ecac8c3eeb6f25bb1a8e27c1f671df6f"
+    },
+    {
+      "path": "SPECIFICATION.md",
+      "kind": "reference",
+      "sha256": "cbe6d1b8c25e304e1fb410fd7bd43e1d96c759ae610e05f2a0a2216dbc3c6d38"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "kind": "reference",
+      "sha256": "1cfea35e093b0ce2e80e4cb1c94f3f6ab0595f802201ae94e87854313cc10bae"
+    },
+    {
+      "path": "ROADMAP.md",
+      "kind": "reference",
+      "sha256": "f4a6675c6d1a198769c0283ef15fc29dfd6c7179f46981a3abc68744d78ad345"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "kind": "reference",
+      "sha256": "146bd7cc8a20014fc117fe591c45dca1b2f13a273f8573831eb8932f0e46a459"
+    },
+    {
+      "path": "CI.md",
+      "kind": "reference",
+      "sha256": "e91e52560f2fecc605fcc4eaa763dd6bae05e58fa0077266fde1f61646d27feb"
+    },
+    {
+      "path": "MILESTONE_CLOSEOUT_PLAN.md",
+      "kind": "reference",
+      "sha256": "71b866e9c139be3fe826eb0ec65e7eec7c86488569ab3efb332e1cc17c793293"
+    },
+    {
+      "path": "ROADMAP_AUDIT.md",
+      "kind": "reference",
+      "sha256": "9daf02a6afb30139a3cc3db691e7f84faf0607c6c19630e84d25199648944574"
+    },
+    {
+      "path": "specification/v0.1/README.md",
+      "kind": "reference",
+      "sha256": "264bb8a09428e210519675313938a7d602fbc5cd37b2386a9c7435e9499be084"
+    },
+    {
+      "path": "specification/v0.1/acceptance-criteria.md",
+      "kind": "reference",
+      "sha256": "6cc7fcc7c3eae55fadc3b67bf02f3dc269384db2760d6cda6f1e3e7dcb1b972f"
+    },
+    {
+      "path": "specification/v0.1/core-concepts.md",
+      "kind": "reference",
+      "sha256": "062061f263e98a5e892b53357c28f1ef217f34b19096244de36fb11429476e3f"
+    },
+    {
+      "path": "specification/v0.1/decisions.md",
+      "kind": "reference",
+      "sha256": "35b95589681a84c5d02fe797d2db7be32e981051c64dbbef97afb57e2cc5638b"
+    },
+    {
+      "path": "specification/v0.1/examples.md",
+      "kind": "reference",
+      "sha256": "9a6ebaaa433dd0ff73f996238099fcbd86697520806766085c72e3fc65076c8c"
+    },
+    {
+      "path": "specification/v0.1/terminology.md",
+      "kind": "reference",
+      "sha256": "6f5da11aa38924f05a430948c0379624b332ed1326138534d020ebf09f6604c1"
+    },
+    {
+      "path": "specification/v0.2/README.md",
+      "kind": "reference",
+      "sha256": "dcc494f002e3f5cd202b5730093d1b51bc2ff35d88be4e1b2b51d57065a2ab36"
+    },
+    {
+      "path": "specification/v0.2/acceptance-criteria.md",
+      "kind": "reference",
+      "sha256": "64966201fbe754c864f447fd859b1a73f2760052256fac54f86da4ee81c1d1e4"
+    },
+    {
+      "path": "specification/v0.2/examples.md",
+      "kind": "reference",
+      "sha256": "0f7cdfacb0ecd05f51d929f65fca9610fef2929b846037c28423d6b9db348148"
+    },
+    {
+      "path": "specification/v0.2/relationships.md",
+      "kind": "reference",
+      "sha256": "61c316203cff69070232ce88ee34e45bca090baab3070c5dbbb6cdcb236e13a7"
+    },
+    {
+      "path": "specification/v0.3/README.md",
+      "kind": "reference",
+      "sha256": "8cf85081181136535a32c2a1fafa016350569ea5dcb63ec68a41507df5384a20"
+    },
+    {
+      "path": "specification/v0.3/acceptance-criteria.md",
+      "kind": "reference",
+      "sha256": "1c50a8184871e27b67bd935db346b736532c9f980819c417cc6b1da6f812e127"
+    },
+    {
+      "path": "specification/v0.3/examples.md",
+      "kind": "reference",
+      "sha256": "68be2887105c89ea080b85b4031811deb6376014a217564a883ff938b2ce65ca"
+    },
+    {
+      "path": "specification/v0.3/semantic-conventions.md",
+      "kind": "reference",
+      "sha256": "332fba85b0c404d58d7ecf6197f52c7a3678d116daaffedb6e9f1c1b5a61135c"
+    },
+    {
+      "path": "specification/v0.4/README.md",
+      "kind": "reference",
+      "sha256": "ce4d0fe604cb69723f52291b9225425c672a562857c64399f55403ac4fdb3613"
+    },
+    {
+      "path": "specification/v0.4/acceptance-criteria.md",
+      "kind": "reference",
+      "sha256": "41e97ae0d94c66a038ff467a0f530565b0e53ce33e62809beefb2868d6e69b6e"
+    },
+    {
+      "path": "specification/v0.4/conformance.md",
+      "kind": "reference",
+      "sha256": "cbae5dd0f14fb31d2cc36917e74197d43720ec680e523da83c67ad947a693fac"
+    },
+    {
+      "path": "specification/v0.4/examples.md",
+      "kind": "reference",
+      "sha256": "c2395a957d8746c908db82bc8e0b5f2d0999b3e7d374ecda73cbc8e475063af0"
+    },
+    {
+      "path": "specification/v0.5/README.md",
+      "kind": "reference",
+      "sha256": "07c190704abcceed61ff0a8c11fba0aa67ef69159dcdb9ac97a803754b997454"
+    },
+    {
+      "path": "specification/v0.5/acceptance-criteria.md",
+      "kind": "reference",
+      "sha256": "f45b86e69a30747419465d1780d16887162e652697dc00d6d172b9c2d518fce4"
+    },
+    {
+      "path": "specification/v0.5/examples.md",
+      "kind": "reference",
+      "sha256": "48c8938b0cd2013ac093d4c471ba05fc337986bbe32608f0f203b88de8aae5f6"
+    },
+    {
+      "path": "specification/v0.5/versioning.md",
+      "kind": "reference",
+      "sha256": "499428b6722766280f1e1883c21abfa82630336b79bfbf88914f372ca675bd4b"
+    },
+    {
+      "path": "specification/v0.6/README.md",
+      "kind": "reference",
+      "sha256": "261f33f2040c8fff27d41d2fa871c52a7f67cab66d58a483ac87f288c8842fef"
+    },
+    {
+      "path": "specification/v0.6/acceptance-criteria.md",
+      "kind": "reference",
+      "sha256": "edaa57c211c16f0cfc322325f4ded0021285916f20d42224142d5e1a270441c1"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/README.md",
+      "kind": "reference",
+      "sha256": "17fcc63df6321ec6bd055f09a5931ec74af720474dabd2851e616c5de024bf45"
+    },
+    {
+      "path": "specification/v0.6/examples.md",
+      "kind": "reference",
+      "sha256": "78ea64ef7b9d1af6741962343a3c6496cb3779cf77d159f73858f2355d19012b"
+    },
+    {
+      "path": "specification/v0.6/extension-model.md",
+      "kind": "reference",
+      "sha256": "c120dfccca4a97c66eed6ae6441a86d075e15dfae55a7f957bea1cec9d7b4d34"
+    },
+    {
+      "path": "specification/v0.6/migration-guide.md",
+      "kind": "reference",
+      "sha256": "d21918fcc8499a3caba4593cf460d1bbc73897192da9c342b0345a048440caee"
+    },
+    {
+      "path": "specification/v0.6/naming-conventions.md",
+      "kind": "reference",
+      "sha256": "8a18fc360bd00b99bc552059f75c8ada6e43ed7bf6579b8b9b746907c3ed5bd0"
+    },
+    {
+      "path": "specification/v0.6/otel-binding.md",
+      "kind": "reference",
+      "sha256": "0267ff2d6b04c1c769f5edb56696470e70177220a56be73baae87137f6fed81e"
+    },
+    {
+      "path": "specification/v0.6/provenance.md",
+      "kind": "reference",
+      "sha256": "dcf5aa314880e62202b824971d3bfdbc291ae4ad2ff13171da92d3cf49cc56e5"
+    },
+    {
+      "path": "specification/v0.8/README.md",
+      "kind": "reference",
+      "sha256": "931299016853cc7c05fb8e49b1a44550eff5162da72fb8513f54b953dc4fc2d8"
+    },
+    {
+      "path": "specification/v0.8/acceptance-criteria.md",
+      "kind": "reference",
+      "sha256": "53c0eb62008b0cbf534128673e09e78d122091d729004eb17d5731575bbf1a8f"
+    },
+    {
+      "path": "specification/v0.8/audit-events.md",
+      "kind": "reference",
+      "sha256": "9a463783a2524d5df7151be41cc0652959c186b547ee1b0e21ad997a7b7fe980"
+    },
+    {
+      "path": "specification/v0.8/conformance.md",
+      "kind": "reference",
+      "sha256": "70c97d8169236858e18339b5ba9482c9616451086c654f9421a688b570ea4129"
+    },
+    {
+      "path": "specification/v0.8/examples.md",
+      "kind": "reference",
+      "sha256": "f8c35bdc04e91926228423fb0a27af31d9fd58fc9169747b1105d3977ff99220"
+    },
+    {
+      "path": "specification/v0.8/investigation-reports.md",
+      "kind": "reference",
+      "sha256": "2bcb0225bc0bfaafd6b730df55849970caed9634add45c60ed550c1eeecf4374"
+    },
+    {
+      "path": "specification/v0.8/verification-signals.md",
+      "kind": "reference",
+      "sha256": "0c335a9011e48df8b8d3751a5e1a6dbc27e3def9f78348af75d5fc9f3b349d1e"
+    },
+    {
+      "path": "docs/chaos-0.11-chaoshub.md",
+      "kind": "reference",
+      "sha256": "988f07499dc5f45607fbcd65987b90549708ef6fcc87f2f09ad6e80a70197712"
+    },
+    {
+      "path": "docs/chaos-0.7.md",
+      "kind": "reference",
+      "sha256": "4e7f3ef4993b5604d62e6cec02b56b541a7c6c273faf57af7584b7fe4e600be5"
+    },
+    {
+      "path": "docs/chaos-0.8.md",
+      "kind": "reference",
+      "sha256": "36574e172a859517f814def04dd34c28e7ee64189969cc798a2316ce760a4d7c"
+    },
+    {
+      "path": "docs/chaos-0.9.md",
+      "kind": "reference",
+      "sha256": "7434ba1503f887fac31994e60b63b689899557b44bd1f93fb2de9952812cb2d0"
+    },
+    {
+      "path": "docs/control-tower-0.6.md",
+      "kind": "reference",
+      "sha256": "88200ef65bc9b3e79be3d8bd37fabdac31f1a39e933bcafc99cbb8c1d6bcddd7"
+    },
+    {
+      "path": "docs/coordinated-v1-readiness.md",
+      "kind": "reference",
+      "sha256": "9823180c25df64cc7d1802f72b6c944ba919246f16ad1808f10088ad3799f744"
+    },
+    {
+      "path": "docs/documentation-site.md",
+      "kind": "reference",
+      "sha256": "a6b75223423e21c1d12012e7e2c5213880496c7a86d3985845f4415d87f8d048"
+    },
+    {
+      "path": "docs/evals-0.10-aios-evidence.md",
+      "kind": "reference",
+      "sha256": "afe72143679b986185edea4defcac13b1fa82483794ff062e82de043a434dc77"
+    },
+    {
+      "path": "docs/evals-0.11-containment.md",
+      "kind": "reference",
+      "sha256": "6744b3dc1e3759773fd561d0b5c11e30cb2907f287983ff82494ab050c00eb0f"
+    },
+    {
+      "path": "docs/evals-0.12.md",
+      "kind": "reference",
+      "sha256": "eacd15140a928a6273fc9808c04991b64e0f6201d6dcbb4c9ea2176472e449a2"
+    },
+    {
+      "path": "docs/evals-0.8-cli.md",
+      "kind": "reference",
+      "sha256": "84c22f81f02cfd88aaf734cab59e57be0b7049fc81a410fd08a4025f9e70c66b"
+    },
+    {
+      "path": "docs/evals-0.9-judge-reliability.md",
+      "kind": "reference",
+      "sha256": "ce74e74b4ce652d04abf4c62b4fec0a82b4e7ee2d5b8e492590324caaab24e2b"
+    },
+    {
+      "path": "docs/evals-report-contract.md",
+      "kind": "reference",
+      "sha256": "e27706efa46b49b5b839bad33aafcf2b3e975c48cc57d78ab6db980db11c7aac"
+    },
+    {
+      "path": "docs/lens-0.10-routing.md",
+      "kind": "reference",
+      "sha256": "4560bb9a7c61913b85b818f61876dec0721dd0a398751f47fb7c9a81083b0064"
+    },
+    {
+      "path": "docs/lens-0.11-optimization.md",
+      "kind": "reference",
+      "sha256": "6f88909f24ccd76d83641b824d7001163817d697bd6af1e53b043405e2425190"
+    },
+    {
+      "path": "docs/lens-0.13.md",
+      "kind": "reference",
+      "sha256": "8f8a933f725dfde715bd58dc0b02b191f24294687e83e38d3eb25f3e416d2de6"
+    },
+    {
+      "path": "docs/mcp-0.4-unified-workflows.md",
+      "kind": "reference",
+      "sha256": "5d5d7464bfc7c37243c6237dc111fa52adb25cf0b1e5a76c58824f49fb8a6dd3"
+    },
+    {
+      "path": "docs/mcp-0.5-access-control.md",
+      "kind": "reference",
+      "sha256": "538a93d18d9068ee809d26e4749f639194a0bd0340c4cf105a87fcc13b5f18d3"
+    },
+    {
+      "path": "docs/mcp-0.7-readiness.md",
+      "kind": "reference",
+      "sha256": "deebd4757cbab8966f92f41be16a6d3412fbd33726b1028cb7638c8673be6904"
+    },
+    {
+      "path": "docs/phase6-containment.md",
+      "kind": "reference",
+      "sha256": "b791596c23910a4bd215573d3416e62b6c75b12a70fdaf0fe84e52a61ab6df43"
+    },
+    {
+      "path": "docs/sidecar-0.9.md",
+      "kind": "reference",
+      "sha256": "9be2dbe09bb56eb2097820eb0df001aeedae70d34ecbd2628c577d3f1956db30"
+    },
+    {
+      "path": "docs/sidecar-v0.8.md",
+      "kind": "reference",
+      "sha256": "c276825a6b6f2ec454d55404808dde9e6271e8797a78b2a7cf98f2471c6bb4ec"
+    },
+    {
+      "path": "docs/tower-0.10-compatibility.md",
+      "kind": "reference",
+      "sha256": "554cc340e8c1bd760d1b44d081f3ae33e3d82b61df8df1616520254af139b708"
+    },
+    {
+      "path": "docs/tower-0.7-fleet-operations.md",
+      "kind": "reference",
+      "sha256": "4370becaa6bed99c99901cb9dbfbccdd887bbad8d0f29ec1884fefdc7b6f5156"
+    },
+    {
+      "path": "docs/tower-0.8-live-operations.md",
+      "kind": "reference",
+      "sha256": "7b7f2ea3fe5d1f43893f686eda61c1e984754fc47fa54fc524a648f9a1cbb75c"
+    },
+    {
+      "path": "docs/tower-0.9-runbooks.md",
+      "kind": "reference",
+      "sha256": "6578e08c7701275b61c0f4d20a62a434290972f367260d7d275fe069452ddf70"
+    },
+    {
+      "path": "docs/v0.6-ecosystem.md",
+      "kind": "reference",
+      "sha256": "502f123eb2bdaeda8466e0983759f7a23e778ef773627729ae39c49d32d613f0"
+    },
+    {
+      "path": "docs/v0.6.1-ecosystem.md",
+      "kind": "reference",
+      "sha256": "2c96159d96188e629a238b3cec150279f352aa622de0fde3e925aaee4b407aa6"
+    },
+    {
+      "path": "docs/v0.7.0-ecosystem.md",
+      "kind": "reference",
+      "sha256": "dc42ac9336c3eb33a6b4fcd8b7b461b207e2943d744ff7c9e6dc71d07842a0c0"
+    },
+    {
+      "path": "docs/v0.8.0-ecosystem.md",
+      "kind": "reference",
+      "sha256": "71d8706367c02a1fea77349cbaf7cb249a9b5f36af6e31a24eb2bfe75eb83ea1"
+    },
+    {
+      "path": "reviews/EXTERNAL_REVIEW_INVITE.md",
+      "kind": "reference",
+      "sha256": "9fc8124211290b4e5a523c4cc5921d837288952f23906e28eb2cf721dee9ee2a"
+    },
+    {
+      "path": "reviews/EXTERNAL_REVIEW_TASKS.md",
+      "kind": "reference",
+      "sha256": "a7334284b5d549f123705695a1d7a30ea83dc95b3f1528764c03216e07797b5c"
+    },
+    {
+      "path": "reviews/README.md",
+      "kind": "reference",
+      "sha256": "ac4680dac01d9f731055e1e26a3598be26dd74503c00d536e6c0e02c6617e1bc"
+    },
+    {
+      "path": "reviews/artifacts/README.md",
+      "kind": "reference",
+      "sha256": "3c1aa103506b2249ed1b72a2c0e67b2feb06b4d110f17a2d91b3e8ff9a7bc48a"
+    },
+    {
+      "path": "reviews/decision-log.md",
+      "kind": "reference",
+      "sha256": "0a65d84648acfdae35903acdca4fb9d3fcd0c9f7ba632082167a0c52d086c826"
+    },
+    {
+      "path": "reviews/evidence-matrix.md",
+      "kind": "reference",
+      "sha256": "fc962a9ba4a603ba7d3b1bc22630a00411a4e93163935577499b746423c2841b"
+    },
+    {
+      "path": "reviews/framework-mappings/README.md",
+      "kind": "reference",
+      "sha256": "2b5fce59e7b6175057a35741c5839a4eced9c171fc88f30daca27a7da8b92bc0"
+    },
+    {
+      "path": "reviews/framework-mappings/agentic-chaos-template.md",
+      "kind": "reference",
+      "sha256": "f2b2e5809e5d59a18a543cbc1a2b118ed97b6cd781ad6dd6e3f04b6cd7967e64"
+    },
+    {
+      "path": "reviews/framework-mappings/agentic-chaos.md",
+      "kind": "reference",
+      "sha256": "c370769da37681aa2fb2f7e606d481a36a5bfbd88f2e65ba4144e66eb72529ff"
+    },
+    {
+      "path": "reviews/framework-mappings/agenticlens-template.md",
+      "kind": "reference",
+      "sha256": "893a450ba0b464cf3d151dce5a63648ad7b5aa74726abcedc6f66b625d4cd2ce"
+    },
+    {
+      "path": "reviews/framework-mappings/agenticlens.md",
+      "kind": "reference",
+      "sha256": "c714030284a1fe31bb34ed06875028c7de6d1ead1807593e2d172cb4e1541316"
+    },
+    {
+      "path": "reviews/framework-mappings/external-reviewer-template.md",
+      "kind": "reference",
+      "sha256": "555380d59533539204c84bbd314c012aa09745ab9f346a5cf8b91780fb4938c5"
+    },
+    {
+      "path": "reviews/operational-artifact-mappings.md",
+      "kind": "reference",
+      "sha256": "5b6f771aaa365bb786b103a97ec6ac44f8fd0f6a446a310ff288ad6e6bf82571"
+    },
+    {
+      "path": "reviews/scenarios/README.md",
+      "kind": "reference",
+      "sha256": "7e27ec030090388c339e9b86c87852e4c97027e014987e3901134a44368f32ba"
+    },
+    {
+      "path": "reviews/scenarios/scenario-01-customer-support.md",
+      "kind": "reference",
+      "sha256": "b64a48241bfab025667cb0b7f6d813ffefefda4dd1d0203ca3798a38cf98f775"
+    },
+    {
+      "path": "reviews/scenarios/scenario-02-retry-and-recovery.md",
+      "kind": "reference",
+      "sha256": "d60079e916f5048cf542c2008b7bc63df421b5b3e20503f5438990dffc28f055"
+    },
+    {
+      "path": "reviews/scenarios/scenario-03-safety-and-incident.md",
+      "kind": "reference",
+      "sha256": "6406629110ecb4ed55c9a6c76dbff38558cd459c24567b25e8d27b0a1608c886"
+    },
+    {
+      "path": "drafts/access-evidence-v1/README.md",
+      "kind": "reference",
+      "sha256": "1b73702cd5635cbc53b9115d80af157bae56163de8de3411358555cfc2bf12e9"
+    },
+    {
+      "path": "drafts/sidecar-contracts-v1/README.md",
+      "kind": "reference",
+      "sha256": "ed0ca9cc9dd3a9f49f0ea95cfd5b0e330ef430e0cc07b6af2d00821b4a507e0b"
+    },
+    {
+      "path": "drafts/sidecar-correlation-v1/README.md",
+      "kind": "reference",
+      "sha256": "3ef547be16dbe25145c48c8fad00d5ede553c4fe2994c7ea6994f16eed65bb10"
+    },
+    {
+      "path": "drafts/v0.4/README.md",
+      "kind": "reference",
+      "sha256": "3a8f8df2c6fee9ac07974f77940b5539c4cfd59d73ee67b085513bb17a85934c"
+    },
+    {
+      "path": "specification/v0.4/schemas/common.schema.json",
+      "kind": "json-schema",
+      "sha256": "d0236f74f78ab1545c4b332b0f8789f88a2638621d94a10d2a8e14f449f99ab0"
+    },
+    {
+      "path": "specification/v0.4/schemas/run.schema.json",
+      "kind": "json-schema",
+      "sha256": "a282ec1aefd882a24f9cebc3602e1a48c885e0ce4b5dc4c1a19c9432305d2518"
+    },
+    {
+      "path": "specification/v0.4/schemas/workflow.schema.json",
+      "kind": "json-schema",
+      "sha256": "9c69c1282710cab1f0e2f8febd084204fadbcb7cd2089f125e5933508286030b"
+    },
+    {
+      "path": "specification/v0.6/schemas/provenance.schema.json",
+      "kind": "json-schema",
+      "sha256": "6991d4b9ae4cab69628180f8a343c1ceabb3ee5bec5020c8760264f18675f4f1"
+    },
+    {
+      "path": "specification/v0.8/schemas/audit_event.schema.json",
+      "kind": "json-schema",
+      "sha256": "c8665c969b5a940029c6f58134d7f2fadf97dc21902c12f0ef470ef8bae006b7"
+    },
+    {
+      "path": "specification/v0.8/schemas/common.schema.json",
+      "kind": "json-schema",
+      "sha256": "0a24fc3dde4f0406e37fa873ef4af3a63e059fcd64e7c6d8fcc2f4c4ceb83b92"
+    },
+    {
+      "path": "specification/v0.8/schemas/investigation_report.schema.json",
+      "kind": "json-schema",
+      "sha256": "7eccf1cac2e5c084cd3c8321d0df80e73c7d530a92ba6f26b44cf03936321e5a"
+    },
+    {
+      "path": "specification/v0.8/schemas/verification_signal.schema.json",
+      "kind": "json-schema",
+      "sha256": "287a00802a760e17137ab7115e985169468b59532f883abb5be6e65af038ea96"
+    },
+    {
+      "path": "drafts/access-evidence-v1/access.schema.json",
+      "kind": "json-schema",
+      "sha256": "11e585741ca5d10c9882355888cf122bf33489f494aaf7cf6a082470fa73f2fa"
+    },
+    {
+      "path": "drafts/sidecar-correlation-v1/schema.json",
+      "kind": "json-schema",
+      "sha256": "0df138b82016d0ab006dc32c38a13fe50df9c1a92168d20484e91983ac674567"
+    },
+    {
+      "path": "drafts/sidecar-contracts-v1/audit.schema.json",
+      "kind": "json-schema",
+      "sha256": "891da766e5d0847d25ab26776c464550a552bbe47e4fb70e846854e646d1fadc"
+    },
+    {
+      "path": "drafts/sidecar-contracts-v1/decision.schema.json",
+      "kind": "json-schema",
+      "sha256": "0967741b0eefce4e3187436a5475945b338c0785b51dd0dcacdedcd31ca70703"
+    },
+    {
+      "path": "drafts/sidecar-contracts-v1/intent.schema.json",
+      "kind": "json-schema",
+      "sha256": "684b091db5573908dcadc9512b9693c016859c8e3c873720711312f7b0be463a"
+    },
+    {
+      "path": "drafts/sidecar-contracts-v1/scope.schema.json",
+      "kind": "json-schema",
+      "sha256": "6d404ba540f6516a9639321e59b77f9d3dad19e59e9351955b3d7f69a8939bc2"
+    },
+    {
+      "path": "drafts/sidecar-contracts-v1/transfer.schema.json",
+      "kind": "json-schema",
+      "sha256": "baf9fd5fbf5c092ed3d14a64f5153129f0930793b2ada27e2a8692408e95d822"
+    },
+    {
+      "path": "drafts/v0.4/schemas/workflow.schema.json",
+      "kind": "json-schema",
+      "sha256": "b2822ed2c0d92e393cc781446a5f66d38e7f927d5e77e0821c8e4aaa3342578d"
+    },
+    {
+      "path": "specification/v0.4/conformance-rules.json",
+      "kind": "reference-data",
+      "sha256": "bfdd6f011d15f185548c7ddb3deca7cb214b199fd97034f2ff7da31d949c9faf"
+    },
+    {
+      "path": "specification/v0.4/examples/invalid/run-invalid-event.json",
+      "kind": "reference-data",
+      "sha256": "899d4af7b5d910a451a19812e5a381eadcad30c7b49a76ab5a15afe22fa4855b"
+    },
+    {
+      "path": "specification/v0.4/examples/invalid/run-namespace-collision.json",
+      "kind": "reference-data",
+      "sha256": "bf75592e0c20b2d7afe5df1b2bb8dd2d9ee7707245e2da4a9043833934276ddf"
+    },
+    {
+      "path": "specification/v0.4/examples/invalid/run-unknown-object-type.json",
+      "kind": "reference-data",
+      "sha256": "895de4983d6d0e6bdea1cc177cbedf0a9d0acda233b135ccc172585fc18b92b2"
+    },
+    {
+      "path": "specification/v0.4/examples/invalid/run-unknown-relationship-type.json",
+      "kind": "reference-data",
+      "sha256": "54e06e324c481a7d4ec50a40e12f64212ec2070226715915d63790ec156e6baa"
+    },
+    {
+      "path": "specification/v0.4/examples/invalid/workflow-missing-name.json",
+      "kind": "reference-data",
+      "sha256": "04093091ba07b06f9b3dd5348dd5e119f03723c6f51902bf840bd9ebef491866"
+    },
+    {
+      "path": "specification/v0.4/examples/semantic-invalid/dangling-reference.json",
+      "kind": "reference-data",
+      "sha256": "d06d20740f94fd35f6ff4736dfaf5b9cb3fa378adb80faeaea618c7627307630"
+    },
+    {
+      "path": "specification/v0.4/examples/semantic-invalid/run-retry-merged-attempts.json",
+      "kind": "reference-data",
+      "sha256": "68fec59c4a84a8a447b2c1a99596c773341389df5226f6372e6022cad2df4b19"
+    },
+    {
+      "path": "specification/v0.4/examples/valid/run-extension-event.json",
+      "kind": "reference-data",
+      "sha256": "5774041dca93f5cdb8f29bc623e16566c4400a5e36811ffab37f2346e2c8ed02"
+    },
+    {
+      "path": "specification/v0.4/examples/valid/run-namespaced-extensions.json",
+      "kind": "reference-data",
+      "sha256": "77c9d2fbbc4cf535b558116c88ddebd6e67973206ab76de05e8d2bb6988b7e18"
+    },
+    {
+      "path": "specification/v0.4/examples/valid/run.json",
+      "kind": "reference-data",
+      "sha256": "41a626b249269a50edfd09f131d729d0a130100a2043be3fdd542bd0f23ca175"
+    },
+    {
+      "path": "specification/v0.4/examples/valid/workflow.json",
+      "kind": "reference-data",
+      "sha256": "8c2ea00552c0ab0793a8cb746e18281bca80055112506ed4e942e397fdc524b5"
+    },
+    {
+      "path": "specification/v0.5/compatibility.json",
+      "kind": "reference-data",
+      "sha256": "58ea94808c18120b82d76ba2e850fd61d30ce500c76a7cb43f471b665a6fe209"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-audit-future-occurrence.json",
+      "kind": "reference-data",
+      "sha256": "017b516907b9bcbf4664f71a4dd002a328803a5f2461ca977196593d6550a243"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-audit-missing-actor-id.json",
+      "kind": "reference-data",
+      "sha256": "56ad0c695e8fdf64f2c457219de7f2cefb10c3a7668ad237e129a5e1625d0636"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-audit-naive-time.json",
+      "kind": "reference-data",
+      "sha256": "268243973a5883cbadf4c0fe2d92235543e14ec584c8d95e2cf3dfe729b48b3d"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-audit-raw-arguments.json",
+      "kind": "reference-data",
+      "sha256": "380f103cd0a2c4d44b7c8ff9cc0ba04a2e96b43ff6d2344351a0d9482b8dcf36"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-audit-self-causation.json",
+      "kind": "reference-data",
+      "sha256": "8178a664381a2653b031436a66056ce08eb5bc8ce076164c745dca6bcfacf594"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-report-duplicate-entry.json",
+      "kind": "reference-data",
+      "sha256": "17cdddf9d11e356b88ac3d13082a062f936032314aa005a825a88a4aec604461"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-report-future-detection.json",
+      "kind": "reference-data",
+      "sha256": "9389d66cefb07fd7609f0a1a50be3b32faf71d3c0fe7e39ae3b1b6b0ad2de1f4"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-report-future-timeline.json",
+      "kind": "reference-data",
+      "sha256": "fa353c5c0b60cb7205eedd0883539c68fd3f0c399daecc1b5d2d3c7e65ea73d6"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-report-observed-without-evidence.json",
+      "kind": "reference-data",
+      "sha256": "896fa9bc240dd1469d47eb1cd87ee753eab4213ed051b38017aedf30c11233b6"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-report-undeclared-citation.json",
+      "kind": "reference-data",
+      "sha256": "898728e62dff2e9d82141ac6b697590508c8dcdc97755b3fea31ef9b03d8d76a"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-report-verified-undeclared-evidence.json",
+      "kind": "reference-data",
+      "sha256": "81f2632063e3155d178dad06faf863434e8391d13e5c7c3e3cc5bf1d90cde9df"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-report-verified-without-evidence.json",
+      "kind": "reference-data",
+      "sha256": "79d12dd16564b9a39818a3f2074c2cb9471f3f02fe195d4626472137204c478e"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-signal-confidence-range.json",
+      "kind": "reference-data",
+      "sha256": "182f4372654d68c808341cc60b3b8353c77bd8ace07333c655c196aab71e15bb"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-signal-duplicate-evidence.json",
+      "kind": "reference-data",
+      "sha256": "5fbebf4ae55a76c2d5c109168b22a9d8273129a3ac55ad8ead4b42a440dbc1f8"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-signal-grounding-without-evidence.json",
+      "kind": "reference-data",
+      "sha256": "834eb757f717e4a88305cda134098844a6651b5c762a869fe66af28c811f7d43"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-signal-missing-native.json",
+      "kind": "reference-data",
+      "sha256": "147c418281251c24bee181034954b1985896e4024fe2f01255e093eb49c3e75a"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-signal-unassessed-safety-concern.json",
+      "kind": "reference-data",
+      "sha256": "6f38bf02b7a45f8754d3241548eeac80c363cd389912443a4d04eb42f420ee84"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-signal-unavailable-verdict.json",
+      "kind": "reference-data",
+      "sha256": "e70a3fc73fc275f8827b2031fd64a4de293f6e8256f60fdf3a9039e4501cbf7a"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-unsupported-old-marker.json",
+      "kind": "reference-data",
+      "sha256": "0a998e281db2d12b11b98b36f5327d57cf1560b418c8ef931dfb5bb0fda03bd8"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-unsupported-run.json",
+      "kind": "reference-data",
+      "sha256": "8fbec611f81d1594205dd6cc00e037f7ef13e7247d667eeae584b0df56847a8c"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-valid-audit.json",
+      "kind": "reference-data",
+      "sha256": "4dc9e08faee5519d3bcac4958a02609feb89690ec59e6309e3366a35e85fe30d"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-valid-investigation.json",
+      "kind": "reference-data",
+      "sha256": "aa69a97bcfa30aa6a7d4cd4448b752ff2fc32436bffd88312d5bc3f5b8490ca6"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-valid-lowercase-time.json",
+      "kind": "reference-data",
+      "sha256": "1a9515d0d375bf2d66e1bfae2623b53b2d0b8e2260e58c38b37d3e00b52c5134"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-valid-signal.json",
+      "kind": "reference-data",
+      "sha256": "e25a0a31acb3801fe9a4e9943457af9b6bfe74b7e64989075a2a710a97b182a6"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/operational-valid-unavailable.json",
+      "kind": "reference-data",
+      "sha256": "e269dd8f125ac5516b7dc875a67983d324d0969ca2b22f8822d5c68748856a2a"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-r01-aios-object-without-object.json",
+      "kind": "reference-data",
+      "sha256": "6f24e7e5da8656256c6166e40a0c2358650fdedef06cd2ac9c6282c73c7dd94f"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-r01-external-finding-target.json",
+      "kind": "reference-data",
+      "sha256": "ef2e6d3f16366e38e299ad0f226937b7a45ca27d6a9a42d1d4918fbd69e99a84"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-r01-external-object-reference.json",
+      "kind": "reference-data",
+      "sha256": "766f4c1c786b1aa7ae1795bcbff0becc7991c247b9f9e55457a5d421e01d0b32"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-r01-short-digest.json",
+      "kind": "reference-data",
+      "sha256": "5b907c4b1ae7cb2467e61fbb568702d018686d1e82424231426ee9c9243d3131"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-r01-unknown-source-kind.json",
+      "kind": "reference-data",
+      "sha256": "3a50c9c4093ff0bcdde5808c3c7c51626896824f94d75858da43f998608c5186"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-r02-duplicate-identity.json",
+      "kind": "reference-data",
+      "sha256": "8a7caa7960689b84dc4efe6245a20d9528b179e040f2f2d2d67eb3205b3897e4"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-r03-undeclared-subject.json",
+      "kind": "reference-data",
+      "sha256": "edb9340edd1cac8426629158e158b6651c2e782403d6475a2819117b9cbf168a"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-r04-source-cannot-be-supported.json",
+      "kind": "reference-data",
+      "sha256": "26cf60dc3d3f5dc0048d1fdf6336d734752774b5d3329de4f04349e37e08f67e"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-r05-finding-without-lineage.json",
+      "kind": "reference-data",
+      "sha256": "85d19f50f06173ef32fc5d09701f3a2e916e2b65c7ba3aab75ef5ef47c1549da"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-r06-derivation-cycle.json",
+      "kind": "reference-data",
+      "sha256": "5464530c5049b9ae29f28d24bb0a0c56c88a41d9e6d56eab1ec2a29dd0b9cccb"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-r07-captured-after-record.json",
+      "kind": "reference-data",
+      "sha256": "f3afa9eecbce242d8f3f290afa47c95608b06c22283a73d2215e77fd96272562"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-valid-no-findings.json",
+      "kind": "reference-data",
+      "sha256": "a42f5c6a4b57feef8a7da6e14d24eb18205a35fe2444b971695aa1d6485ba382"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-valid-supersedes.json",
+      "kind": "reference-data",
+      "sha256": "fd3f28d0fecb4ecd05e4b94cd7507eca364f60b91b6938cbb917db3c1f560fea"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-valid-support-finding.json",
+      "kind": "reference-data",
+      "sha256": "557bb94ca70d506613c7038b4bdfcedc9ae28e1a26532bd55468f58e2418336a"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/provenance-valid-unresolvable-references.json",
+      "kind": "reference-data",
+      "sha256": "09dd1ae289131ceca3d0382976dc3e479d8a768c059b619dfd4e9a6decdc7785"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-e01-reserved-extension.json",
+      "kind": "reference-data",
+      "sha256": "625cd0841e3e8acf940c487cfb3fb99e64d7380c18cf85722dbb7225cdba39ee"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p01-missing-status.json",
+      "kind": "reference-data",
+      "sha256": "0d3699950b1bc06213b86fd90bab2fb62f84e0229d0f1f0a752690f34ca1c765"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p01-unknown-top-level-field.json",
+      "kind": "reference-data",
+      "sha256": "796289d241eda8ec815c7a2323134f891fc6debbbc07d1bbc4890480dbb02643"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p02-duplicate-object-id.json",
+      "kind": "reference-data",
+      "sha256": "c4aa346652ad8e473ac89cd16db87feb76eb8e4e14f584bea5a699a04fa2010e"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p03-duplicate-event-id.json",
+      "kind": "reference-data",
+      "sha256": "181590e87f26bb1f83f0d1ec2c01e83294a52b2a2d66183f0f9340fe28202f89"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p04-run-ends-before-start.json",
+      "kind": "reference-data",
+      "sha256": "3cbc18034469473c94bfafa9c25f3eade3166af7a3541ab7d3f1df0ff04168ec"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p04-step-ends-before-start.json",
+      "kind": "reference-data",
+      "sha256": "ea1491fdebc8fee2ac7ec1c763ddbb01b1737e086b70e858d39d58f876cc0e35"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p05-wrong-endpoint-type.json",
+      "kind": "reference-data",
+      "sha256": "8dd4edb40c2ba56543b9f8f35dd8afd0c731bcbd9ba6314eb12a0f91b76f55d6"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p05-x01-missing-endpoint.json",
+      "kind": "reference-data",
+      "sha256": "046d21db485e2272d78564ec9bd5ad58bb3ecca286360c31344e2789e42f5772"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p06-uncontained-step.json",
+      "kind": "reference-data",
+      "sha256": "ad2ffa1f7c6e621a6777a521b3c27bddbe73a5bccef0c1e70e93ad40e1db8881"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p07-unobserved-occurrence.json",
+      "kind": "reference-data",
+      "sha256": "d7b7e2b7ac334d625b86828068d3c9010cf4bb0f4010ba5ec8e6b2f4d11de07b"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p08-untargeted-evaluation.json",
+      "kind": "reference-data",
+      "sha256": "9587bec4be9298316fcdeedd584b2ff371b544cebd3f67dac277a53b98311d72"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p09-unsupported-workflow-id.json",
+      "kind": "reference-data",
+      "sha256": "0739b816407c77f37774941b2481d69ab8a92f78fba4d16a6c696f81a7d77a89"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p10-mistyped-event-target.json",
+      "kind": "reference-data",
+      "sha256": "903df0f5a40de57d06d80bc1d8341728ed3db06c616b7d0c957cf71093dcceaa"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p11-dependency-cycle.json",
+      "kind": "reference-data",
+      "sha256": "94621a34a0ba92f98e998a2f6302e027f8319bd2034ab43be27ed9bd9d7933f4"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-p12-unlinked-retry.json",
+      "kind": "reference-data",
+      "sha256": "85625efa1acf4eef89ced8d0e5d2f7bb3b9de20d2b60facc38bfb8eae71d9bda"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-u02-unknown-relationship-type.json",
+      "kind": "reference-data",
+      "sha256": "9ac41224d3dac9ffa1b0245d1ad290b166fc669f9c7230625c888e2f445ef142"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-valid-advanced.json",
+      "kind": "reference-data",
+      "sha256": "c3806834fa3c00bb0ba4d138de5e77a7cbc78d91b1d05215d8a7cfb6a5d01780"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/run-valid-retry.json",
+      "kind": "reference-data",
+      "sha256": "c39c3257b309d070365c2ef9c9832f92c1bffd6189ef8893ddc13b505267339d"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/unsupported-marker-artifact-mismatch.json",
+      "kind": "reference-data",
+      "sha256": "432473324374f4f160eb966055426f7aa25ee44679ab4c73c0817173ff816875"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/unsupported-provenance-under-0.4-draft.json",
+      "kind": "reference-data",
+      "sha256": "e38c116626995a3c3f9a3162685275fb49eef478eebb58e68885c50485807378"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/unsupported-unpublished-marker.json",
+      "kind": "reference-data",
+      "sha256": "b1392fb576bd7558fb351e5bd18dd999db8f848add14f9962238c25c211ca85b"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/workflow-p01-missing-name.json",
+      "kind": "reference-data",
+      "sha256": "6f24762fbf71b6d193c82530ceca05a2ff8a51d064e70d4fce9c2f1ebb3acb37"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/workflow-valid-external-reference.json",
+      "kind": "reference-data",
+      "sha256": "b7775d2f64a21a52a9c710ad7c6eca7f80daa3b4caf99c59d21f6b109d5fe47e"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/workflow-valid-minimal.json",
+      "kind": "reference-data",
+      "sha256": "8c2ea00552c0ab0793a8cb746e18281bca80055112506ed4e942e397fdc524b5"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/cases/workflow-x01-unmarked-reference.json",
+      "kind": "reference-data",
+      "sha256": "956de6451170134401f403f59715aea19b99ad902630f1508e54ce3850bd174e"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/subjects/advanced-support-run.json",
+      "kind": "reference-data",
+      "sha256": "c3806834fa3c00bb0ba4d138de5e77a7cbc78d91b1d05215d8a7cfb6a5d01780"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/subjects/advanced-support-run.reformatted.json",
+      "kind": "reference-data",
+      "sha256": "83102a89cbd544c65ce540f940af50a46d5d180d0abfd7dfb3950b01e184a6fa"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/subjects/other-run.json",
+      "kind": "reference-data",
+      "sha256": "6cb270dc07bad57ed0b6995e081094f7a7d885f57839ee4ee3a4968d8e68a306"
+    },
+    {
+      "path": "specification/v0.6/conformance-suite/suite.json",
+      "kind": "reference-data",
+      "sha256": "2e78b41becbd629e059b9e1d81456b5aa12359a103877ecee17ad85e21c12762"
+    },
+    {
+      "path": "specification/v0.6/examples/advanced-support-run.json",
+      "kind": "reference-data",
+      "sha256": "c3806834fa3c00bb0ba4d138de5e77a7cbc78d91b1d05215d8a7cfb6a5d01780"
+    },
+    {
+      "path": "specification/v0.6/examples/invalid-core-type.json",
+      "kind": "reference-data",
+      "sha256": "134ca21543cb37870cec852ab3daf654032c77ef2ee40861f62fdbbe608201ad"
+    },
+    {
+      "path": "specification/v0.6/examples/invalid-missing-step.json",
+      "kind": "reference-data",
+      "sha256": "0b1c0912370225757e8e58d17f31c842e74a84339a649582ed64bd4b3f3b8833"
+    },
+    {
+      "path": "specification/v0.6/examples/invalid-reserved-namespace.json",
+      "kind": "reference-data",
+      "sha256": "2bfa8e0cbdc83efef5b4fa5dacb98c49e4052233db317a1c976d9aa40356f292"
+    },
+    {
+      "path": "specification/v0.6/examples/manifest.json",
+      "kind": "reference-data",
+      "sha256": "abb488e0b71621c7f3cc3a64f8aab6670bd276b9428f1e39e4ab06d033f5fe8d"
+    },
+    {
+      "path": "specification/v0.6/examples/minimal-run.json",
+      "kind": "reference-data",
+      "sha256": "b9fa9eccce0c27f236d7c52c7e879c6a3e2aec3eef2cf4417a13e93ed016dd1c"
+    },
+    {
+      "path": "specification/v0.6/examples/minimal-workflow.json",
+      "kind": "reference-data",
+      "sha256": "8c2ea00552c0ab0793a8cb746e18281bca80055112506ed4e942e397fdc524b5"
+    },
+    {
+      "path": "specification/v0.6/examples/provenance/support-finding.provenance.json",
+      "kind": "reference-data",
+      "sha256": "a75306995133bbc22f8ca17f918650c8fb02c3fa054a29737f1993eac0fb5d75"
+    },
+    {
+      "path": "specification/v0.6/examples/retry-run.json",
+      "kind": "reference-data",
+      "sha256": "c39c3257b309d070365c2ef9c9832f92c1bffd6189ef8893ddc13b505267339d"
+    },
+    {
+      "path": "specification/v0.6/otel/example.json",
+      "kind": "reference-data",
+      "sha256": "97bb96e6b13819a6a6f7a310676bb7f6508dd2d3564b02b0f4c9f36409d5c996"
+    },
+    {
+      "path": "specification/v0.6/otel/mapping.json",
+      "kind": "reference-data",
+      "sha256": "6c197ab855851f4be52a413a05417f034998892c5673b717369f8765397e9d45"
+    },
+    {
+      "path": "specification/v0.6/provenance-rules.json",
+      "kind": "reference-data",
+      "sha256": "3d6108cdccd3eb0a08d2e1eaa67e20e405625a0543d1f47620de642750a03a4c"
+    },
+    {
+      "path": "specification/v0.8/examples/audit_event.json",
+      "kind": "reference-data",
+      "sha256": "4dc9e08faee5519d3bcac4958a02609feb89690ec59e6309e3366a35e85fe30d"
+    },
+    {
+      "path": "specification/v0.8/examples/investigation_report.json",
+      "kind": "reference-data",
+      "sha256": "aa69a97bcfa30aa6a7d4cd4448b752ff2fc32436bffd88312d5bc3f5b8490ca6"
+    },
+    {
+      "path": "specification/v0.8/examples/verification_signal.json",
+      "kind": "reference-data",
+      "sha256": "e25a0a31acb3801fe9a4e9943457af9b6bfe74b7e64989075a2a710a97b182a6"
+    },
+    {
+      "path": "specification/v0.8/examples/verification_unavailable.json",
+      "kind": "reference-data",
+      "sha256": "e269dd8f125ac5516b7dc875a67983d324d0969ca2b22f8822d5c68748856a2a"
+    },
+    {
+      "path": "specification/v0.8/operational-rules.json",
+      "kind": "reference-data",
+      "sha256": "4910c67173f72511e2dd4e2415369feb38ce04fb71e6146130c3b36dabc9b2a6"
+    },
+    {
+      "path": "drafts/access-evidence-v1/example.json",
+      "kind": "reference-data",
+      "sha256": "956feb17b19b931db2e7dab896416100af7c5e1de84e42acd9e14b028d5900fb"
+    },
+    {
+      "path": "drafts/access-evidence-v1/run-example.json",
+      "kind": "reference-data",
+      "sha256": "e4ec2678909e176283075967fff04979ec5c5df215979507da296805e9805a0f"
+    },
+    {
+      "path": "drafts/sidecar-contracts-v1/audit.example.json",
+      "kind": "reference-data",
+      "sha256": "ae96b8b148a500187a1c772dde80cc61d52247d52db3319767810bc512cc6e43"
+    },
+    {
+      "path": "drafts/sidecar-contracts-v1/decision.example.json",
+      "kind": "reference-data",
+      "sha256": "1ccc42fb0d80f0184baf7416269e935792feee1ab63fb5cb5769fcd0182ad308"
+    },
+    {
+      "path": "drafts/sidecar-contracts-v1/intent.example.json",
+      "kind": "reference-data",
+      "sha256": "aae634b796cd67932e06726baf6427b331381da700cee2b16c2889b83bba6454"
+    },
+    {
+      "path": "drafts/sidecar-contracts-v1/scope.example.json",
+      "kind": "reference-data",
+      "sha256": "d81704b84b97f5ce8ea930e2df76afdfce453ffca6b237f20bdb2508e33a15c8"
+    },
+    {
+      "path": "drafts/sidecar-contracts-v1/transfer.example.json",
+      "kind": "reference-data",
+      "sha256": "9cf7730d3082dde29be4caadf1f7852e95f517bc8e07ba671f12f401798d38db"
+    },
+    {
+      "path": "drafts/sidecar-correlation-v1/example.json",
+      "kind": "reference-data",
+      "sha256": "52a6d8a74073480c93a7adc3f766b0f08f57d0638cbe93fe992fe1580a3b1a33"
+    },
+    {
+      "path": "drafts/v0.4/examples/invalid/missing-version.json",
+      "kind": "reference-data",
+      "sha256": "d75767f47b126364bcafc43f030a0ee1bf3956d6b77edb61d55400be53535653"
+    },
+    {
+      "path": "drafts/v0.4/examples/invalid/negative-metrics.json",
+      "kind": "reference-data",
+      "sha256": "c8277aa9ab3e97dcf100a2c5248908e5abfbec8ae01b1ab3bf59ede748d77be3"
+    },
+    {
+      "path": "drafts/v0.4/examples/valid/customer-support.json",
+      "kind": "reference-data",
+      "sha256": "0d012e42c06faa8dc85b124bbade7c841fca95755d719edaf507ae67864ef4f0"
+    },
+    {
+      "path": "drafts/v0.4/examples/valid/minimal.json",
+      "kind": "reference-data",
+      "sha256": "bb9e0206963265275e8053fe32d913a688705469c3811b287aeeac51fce9e967"
+    },
+    {
+      "path": "reviews/artifacts/agentic-chaos-customer-support.aios.json",
+      "kind": "reference-data",
+      "sha256": "2d0b1cb4ebdf5ed33a48c129ccdc8adc735068ca13c9c36c87fbccc202156df2"
+    },
+    {
+      "path": "reviews/artifacts/agentic-chaos-customer-support.conformance.json",
+      "kind": "reference-data",
+      "sha256": "5f8a08ef4ff2216c763d7c71844c6825befce39c1eb4f26be12b531163ce771d"
+    },
+    {
+      "path": "reviews/artifacts/agentic-evals-support-run.aios.json",
+      "kind": "reference-data",
+      "sha256": "fa861a7344dc9e618ed6aff5e5e1caaea96421275c46f3d33a142ed911a22fa9"
+    },
+    {
+      "path": "reviews/artifacts/agentic-evals-support-run.conformance.json",
+      "kind": "reference-data",
+      "sha256": "ad99f504cd30024fd67270dc21c7053e4ac3c36dfe2711afa9824a85ffe17b6c"
+    },
+    {
+      "path": "reviews/artifacts/agenticlens-support-run.aios.json",
+      "kind": "reference-data",
+      "sha256": "96cec58e628d451a2f7543f8dd8b83d4503addda4d821a5618e48039a28f6872"
+    },
+    {
+      "path": "reviews/artifacts/agenticlens-support-run.conformance.json",
+      "kind": "reference-data",
+      "sha256": "31d22c88b9f613d3ff7656baf4d23eb2c3323b3f7ac54e7a26e107b3f5b2acfc"
+    },
+    {
+      "path": "docs/guide/examples/validate_structure.py",
+      "kind": "example",
+      "sha256": "49c615dd540e9a2d1405cedbbab13ab4191d3f39843ed0087c967b8c4d29e700"
+    }
+  ]
+}
