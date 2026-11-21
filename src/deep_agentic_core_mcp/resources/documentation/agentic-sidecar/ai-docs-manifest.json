@@ -1,0 +1,552 @@
+{
+  "product": "Agentic Sidecar",
+  "repository": "agentic-sidecar",
+  "distribution": "agentic-sidecar",
+  "document": "llms-full.md",
+  "content_type": "text/markdown; charset=utf-8",
+  "sha256": "fc7ec6a7a8ad6dafcb6e02990152ca3b6152b0cef81e5f7ea5c67d446b914a6d",
+  "source_hash_normalization": "UTF-8 text with LF newlines",
+  "human_guide": "developer-guide.md",
+  "sources": [
+    {
+      "path": "pyproject.toml",
+      "kind": "package-metadata",
+      "sha256": "ca10f51cc4df5bb88f1fcdf98bb2d3ceb8ce183a6ac72e9c2719a9a078ffc888"
+    },
+    {
+      "path": "website/docs/ai-docs.json",
+      "kind": "source-selection",
+      "sha256": "358f08977c9c91433748beca5f756cc8954d6daa92cc8c5c1f69c3136d14be96"
+    },
+    {
+      "path": "website/docs/ai-reference-index.md",
+      "kind": "reference",
+      "sha256": "abf218702a32d7a9d0292559034b303eec78532d1132cd06fd2da54e1b5efd2e"
+    },
+    {
+      "path": "website/docs/developer-guide.md",
+      "kind": "reference",
+      "sha256": "0cc98982680dbf8b8d9ba561c77498d8d8b6fe3b2687cd62dc8f4ca943279f32"
+    },
+    {
+      "path": "website/docs/features.md",
+      "kind": "reference",
+      "sha256": "1298166dd27857cb65891b6c53c9a376310a02d4274a660aae7e7176d3eed9da"
+    },
+    {
+      "path": "website/docs/architecture.md",
+      "kind": "reference",
+      "sha256": "021c881d4247af18db3acb4d27b72621b229ffb51cfa7143a7a58befb369739d"
+    },
+    {
+      "path": "website/docs/api-reference.md",
+      "kind": "reference",
+      "sha256": "5da77d9793ff6431f245e2a746a2c9a1cceb5783fea2074ebd53337a7abef7d3"
+    },
+    {
+      "path": "website/docs/cli-reference.md",
+      "kind": "reference",
+      "sha256": "3a4f4b68ddc7d3a9b4fb99d158c21df0bf00792c588ac163965f0aea9dbf08e8"
+    },
+    {
+      "path": "website/docs/configuration.md",
+      "kind": "reference",
+      "sha256": "9e3f4138b23feef5d958f1e7b7416f3f5c1f4dca0fc45e521cb8627b77da937f"
+    },
+    {
+      "path": "website/docs/governance.md",
+      "kind": "reference",
+      "sha256": "9bc1c50027308a283bd87e0be2656f4b1a386f2a970e3467b279da1c67418939"
+    },
+    {
+      "path": "website/docs/scoped-supervision.md",
+      "kind": "reference",
+      "sha256": "148dceac54b50a7c5d2937db137054eda348f235526f84f8d3066c726e8ba2c8"
+    },
+    {
+      "path": "website/docs/live-operations.md",
+      "kind": "reference",
+      "sha256": "a13ef36e0db2140f9e44242a656774feba2a4542760bf5221e408e633dfe0606"
+    },
+    {
+      "path": "website/docs/v0.9.md",
+      "kind": "reference",
+      "sha256": "5adb1c1db71507d910a20d168a90ab9849e08f668b71ac5b989225e293da4137"
+    },
+    {
+      "path": "website/docs/v0.10.md",
+      "kind": "reference",
+      "sha256": "d7c0156d1fab6b74a1ca802cda7def9726e77e41ec94ef529716820575c9f7a3"
+    },
+    {
+      "path": "website/docs/integrations.md",
+      "kind": "reference",
+      "sha256": "2d6e287d7291bc2fc5a777ef177a7860e089637b0a163577e2606e9d41278300"
+    },
+    {
+      "path": "website/docs/aios-0.8-operational-artifacts.md",
+      "kind": "reference",
+      "sha256": "ce3278aa01207acc05a77555dd7cb295495d99ca89e09494643b055589dfde65"
+    },
+    {
+      "path": "website/docs/coordinated-v1-readiness.md",
+      "kind": "reference",
+      "sha256": "97be23dfc213367963951b6d64d167c8e39079d4e0e684d390fa0e5f0b3d97be"
+    },
+    {
+      "path": "website/docs/examples.md",
+      "kind": "reference",
+      "sha256": "5ae71d308e7b16e8349ec91717a05fda38a2fa2ef267c11ed3963219d99992ff"
+    },
+    {
+      "path": "website/docs/troubleshooting.md",
+      "kind": "reference",
+      "sha256": "a2a373a43b76fe9d0c335a3361c73bc8414dd325bccf4cdc1b908b813ee12dff"
+    },
+    {
+      "path": "website/docs/limitations.md",
+      "kind": "reference",
+      "sha256": "ddcdae86d85ac287f7abeec69bfb5f92eec3c0f253661210c413d7c4d9a530df"
+    },
+    {
+      "path": "website/docs/aios-0.6.1.md",
+      "kind": "reference",
+      "sha256": "8d153e8f26d080e2cdc8ec8d8dc7ebc7ebf9cce7ce7cc537d286ce41bea0957f"
+    },
+    {
+      "path": "website/docs/aios-0.7.0.md",
+      "kind": "reference",
+      "sha256": "5c1fff373687291e96824c3454c48330c8372b8997cc983f4e693f3fe320fc95"
+    },
+    {
+      "path": "website/docs/chaos-0.11-chaoshub.md",
+      "kind": "reference",
+      "sha256": "27e3e92a52aa9386b58add829732a96c27ae20ea5c11d1f990fafc480b3dc2d7"
+    },
+    {
+      "path": "website/docs/chaos-0.7.md",
+      "kind": "reference",
+      "sha256": "183a2fd6e65690d3ca861692758dc8b96c13f75f5821604f1627dfa002f1ee08"
+    },
+    {
+      "path": "website/docs/chaos-0.8.md",
+      "kind": "reference",
+      "sha256": "688f5d8375e1e778c01666fd5a39f036a3aea0f9d7f73f83e71995f8f05f0c8d"
+    },
+    {
+      "path": "website/docs/chaos-0.9.md",
+      "kind": "reference",
+      "sha256": "982f4617a95aa1b042d5e4675d8d0300bd75c133e835b97ac31840b81ae829b7"
+    },
+    {
+      "path": "website/docs/control-tower-0.6.md",
+      "kind": "reference",
+      "sha256": "86419d944484250ce53cb2dd6388353611c677f2b905397aeeff045c94b53501"
+    },
+    {
+      "path": "website/docs/evals-0.11-containment.md",
+      "kind": "reference",
+      "sha256": "d6ffe0b9164291acccd976d64c0937f6a44a05f5ac8221e8be4eacc55e574d44"
+    },
+    {
+      "path": "website/docs/evals-0.12.md",
+      "kind": "reference",
+      "sha256": "eacd15140a928a6273fc9808c04991b64e0f6201d6dcbb4c9ea2176472e449a2"
+    },
+    {
+      "path": "website/docs/lens-0.13.md",
+      "kind": "reference",
+      "sha256": "74b3b38d47693e0ff4a7326f0df259a3d9148e908ad90844dee1e68fb18c091c"
+    },
+    {
+      "path": "website/docs/phase6-containment.md",
+      "kind": "reference",
+      "sha256": "a811767734cb32b2d544ec146db31ccfa2683686b52edac9ed9c5e9135a43027"
+    },
+    {
+      "path": "website/docs/tower-0.10-compatibility.md",
+      "kind": "reference",
+      "sha256": "30e45c6fb8766e2009ffb50cc68a79fa2d279870dddb58e43a50352aa809eff5"
+    },
+    {
+      "path": "docs/aios-v0.6.md",
+      "kind": "reference",
+      "sha256": "da084ece98c4e1a4c3000b1b98ce75dfb31b8cdae551a7da8f38a9e4f4437ad4"
+    },
+    {
+      "path": "docs/evals-0.10-aios-evidence.md",
+      "kind": "reference",
+      "sha256": "4ec2bf8d36cd7bf43a25c84171206f7e4d22749c737688bde194be36ae62f222"
+    },
+    {
+      "path": "docs/evals-0.8-cli.md",
+      "kind": "reference",
+      "sha256": "7d031fbc80abdc0e1a9fe040e696beaa13a7870d748ec00c6a5039aa6a328113"
+    },
+    {
+      "path": "docs/evals-0.9-judge-reliability.md",
+      "kind": "reference",
+      "sha256": "5ebbc8a56f217b9a602e70ec42e8d06164ff02058bc222451d8eaa6e95854106"
+    },
+    {
+      "path": "docs/evals-report-contract.md",
+      "kind": "reference",
+      "sha256": "c56b2a29250d3cbcd5c0d8bf2cfbb5e5af1caa45c684d68e525839f0b7010852"
+    },
+    {
+      "path": "docs/lens-0.10-routing.md",
+      "kind": "reference",
+      "sha256": "890d7057c973a4e3b7bbbfbea541ba1ad381716b902945043982858d5eaea8e9"
+    },
+    {
+      "path": "docs/lens-0.11-optimization.md",
+      "kind": "reference",
+      "sha256": "bfc6d53c9b2ac98a5c4476a66dfde90f5bddd017225686712357e4071f91357e"
+    },
+    {
+      "path": "docs/mcp-0.4-unified-workflows.md",
+      "kind": "reference",
+      "sha256": "ac82141fff532b2af4efaeb18d359684f40862c8f50c8d76aece448bd46e1593"
+    },
+    {
+      "path": "docs/mcp-0.5-access-control.md",
+      "kind": "reference",
+      "sha256": "64bb5e50a92aa113d460692bfc3333c1dfa9771239043dd62ca578854fe7b4c9"
+    },
+    {
+      "path": "docs/mcp-0.7-readiness.md",
+      "kind": "reference",
+      "sha256": "9c553dca1abe0823f3070b789107f2fb8cc849c238c166fc4225713698f30908"
+    },
+    {
+      "path": "docs/tower-0.7-fleet-operations.md",
+      "kind": "reference",
+      "sha256": "6eba6fce8b19c2f27731cf48d939d6088c8d0bfdf9061a257609ea1acde6fd01"
+    },
+    {
+      "path": "docs/tower-0.8-live-operations.md",
+      "kind": "reference",
+      "sha256": "de3fd5610955e4952c0ad5331216bdbd446888ae2344371db0f65f52c8131248"
+    },
+    {
+      "path": "docs/tower-0.9-runbooks.md",
+      "kind": "reference",
+      "sha256": "2e3eaf441608ff27893af5174de57c220c783eb062284e71586d65e0b1bc043d"
+    },
+    {
+      "path": "docs/v0.10-contracts.md",
+      "kind": "reference",
+      "sha256": "d1c95dcdb20a8f64312b102b8ac32772cf901376fd685dac738aa2103cdfb3ac"
+    },
+    {
+      "path": "src/agentic_sidecar/__init__.py",
+      "kind": "source-contract",
+      "sha256": "2de5fe6f4ede640088ce93cd5624b790184210b544a7812f3f48b25c65cad872"
+    },
+    {
+      "path": "src/agentic_sidecar/adapters/__init__.py",
+      "kind": "source-contract",
+      "sha256": "7fe76b500850e0ef7884f184c8aa2e938d43ee30818d82039017c8ddd039ea79"
+    },
+    {
+      "path": "src/agentic_sidecar/adapters/autogen.py",
+      "kind": "source-contract",
+      "sha256": "17b7aa74e97c8fc7f9746875e2031bcb0172ec2e12f2aa04467933044dfcc372"
+    },
+    {
+      "path": "src/agentic_sidecar/adapters/callable.py",
+      "kind": "source-contract",
+      "sha256": "c9754ab48e2fd7785ef50700960c9ae4b6bcbffb46869e95cb47e402bebe255f"
+    },
+    {
+      "path": "src/agentic_sidecar/adapters/crewai.py",
+      "kind": "source-contract",
+      "sha256": "d2a305cb1be5382f6f4401f754ce975fbd7332a2b020312d596dfa8866174545"
+    },
+    {
+      "path": "src/agentic_sidecar/adapters/google_adk.py",
+      "kind": "source-contract",
+      "sha256": "7e329ffbd70195b6df27e406ba00eeed0838f63837c063d29bc1897291017b8a"
+    },
+    {
+      "path": "src/agentic_sidecar/adapters/langgraph.py",
+      "kind": "source-contract",
+      "sha256": "0de2e548a7fb7a1459b047c3df3a2b12de4571f5457404d4609880c1d0954c67"
+    },
+    {
+      "path": "src/agentic_sidecar/adapters/mcp.py",
+      "kind": "source-contract",
+      "sha256": "f1247e535d84ecaf02096a60cf116699574f9f542d0c675f0e827d9c20e1b746"
+    },
+    {
+      "path": "src/agentic_sidecar/adapters/openai_agents.py",
+      "kind": "source-contract",
+      "sha256": "7bcca68aaf0a9ed9eb13e56310ab8a55501b56f83df8ddbcf530504411309c1e"
+    },
+    {
+      "path": "src/agentic_sidecar/cli/__init__.py",
+      "kind": "source-contract",
+      "sha256": "8b321d302cd8d940d6902772b08211f7e5622f67b8ebdbfeb7590f53a9dea856"
+    },
+    {
+      "path": "src/agentic_sidecar/cli/approval.py",
+      "kind": "source-contract",
+      "sha256": "c364188416c30972731e0ef5dec9f148b2692cdf539f26cbcedb49b4430f45da"
+    },
+    {
+      "path": "src/agentic_sidecar/cli/main.py",
+      "kind": "source-contract",
+      "sha256": "f2e80e1c9609760e97ea4bccdbace74f6c8e11061235480c417b192bf42a31e4"
+    },
+    {
+      "path": "src/agentic_sidecar/contracts.py",
+      "kind": "source-contract",
+      "sha256": "23496e8f7c27a6e851839f668c87a49537b673021db7d3d153902d05af98eaeb"
+    },
+    {
+      "path": "src/agentic_sidecar/core/__init__.py",
+      "kind": "source-contract",
+      "sha256": "0cdfcad323419f6441f2b534e020c834f017e7ca1949d4b7a63f69af3f1b03bf"
+    },
+    {
+      "path": "src/agentic_sidecar/core/context.py",
+      "kind": "source-contract",
+      "sha256": "57eb92fa22e059f825465ebf76e3925144944d813b418a573ca269df1536c4ee"
+    },
+    {
+      "path": "src/agentic_sidecar/core/decision.py",
+      "kind": "source-contract",
+      "sha256": "151c8b7978943dc9bb690fb17e7d488a1bed57a27a12509b04facff3372d3265"
+    },
+    {
+      "path": "src/agentic_sidecar/core/exceptions.py",
+      "kind": "source-contract",
+      "sha256": "14e8d42b9132942ba7efe73a4e5050a03dc86c83f6f47da800f7513549b22de6"
+    },
+    {
+      "path": "src/agentic_sidecar/core/operators.py",
+      "kind": "source-contract",
+      "sha256": "1249d33cf0ea5a15e684a79842b14212681e919e51733f5fdefa16205cec5fd3"
+    },
+    {
+      "path": "src/agentic_sidecar/core/provenance.py",
+      "kind": "source-contract",
+      "sha256": "e72e34c76c6d47b0c9eda35495b8fa9df8c36875b7fb8aa2d4f1e670ae86657b"
+    },
+    {
+      "path": "src/agentic_sidecar/core/sidecar.py",
+      "kind": "source-contract",
+      "sha256": "6ffeebb196f31d8ecf3bbc1a0a0b83aadedb2c5bf11036ce2a2ce89d1582df62"
+    },
+    {
+      "path": "src/agentic_sidecar/evaluators/__init__.py",
+      "kind": "source-contract",
+      "sha256": "7de2cfcdafa16b9f1c3d9b948e09473467a68ea5109049a4a309fc85f3c44deb"
+    },
+    {
+      "path": "src/agentic_sidecar/evaluators/base.py",
+      "kind": "source-contract",
+      "sha256": "737080bd3a32d0f1b211e6fab5933d4078dbca6623f1c8394da76303a14eb66c"
+    },
+    {
+      "path": "src/agentic_sidecar/evaluators/critic.py",
+      "kind": "source-contract",
+      "sha256": "8802df5704b1ed0f2b90854f6d9f65a18cd3050295c48ef57eeb037781c90143"
+    },
+    {
+      "path": "src/agentic_sidecar/evaluators/judge.py",
+      "kind": "source-contract",
+      "sha256": "9931523778272bb4c5e741fa74e2bdb72a96d44bc184f61da8023e822fac0d1f"
+    },
+    {
+      "path": "src/agentic_sidecar/evaluators/planner.py",
+      "kind": "source-contract",
+      "sha256": "c0a1979c6bc4b696b0c598e0161868392374ede7c2b32323a5f30178d8757a08"
+    },
+    {
+      "path": "src/agentic_sidecar/evaluators/providers/__init__.py",
+      "kind": "source-contract",
+      "sha256": "8a5d76fb721099ae6fb3c4b04ffd4355459cd8b484b2306cb155ce27288b37cd"
+    },
+    {
+      "path": "src/agentic_sidecar/evaluators/providers/anthropic.py",
+      "kind": "source-contract",
+      "sha256": "40527301b5b2cb817334ea599f4c874ade0833e3cf3b902e46476a46f2f22a7d"
+    },
+    {
+      "path": "src/agentic_sidecar/evaluators/providers/common.py",
+      "kind": "source-contract",
+      "sha256": "8c684629eceace1b40bd095ba8c80ec7320f02b5aae6466301894e430c1efe54"
+    },
+    {
+      "path": "src/agentic_sidecar/evaluators/providers/mock.py",
+      "kind": "source-contract",
+      "sha256": "524b7471f54ab98e08e770cbd677ed63c244564341984c915c255275d33be20a"
+    },
+    {
+      "path": "src/agentic_sidecar/evaluators/providers/openai.py",
+      "kind": "source-contract",
+      "sha256": "04952f2afbb544e587869cdebf289435833575863a8332563a507f73ee92bffb"
+    },
+    {
+      "path": "src/agentic_sidecar/gate/__init__.py",
+      "kind": "source-contract",
+      "sha256": "e14076479b5112c891fa17f6f54c6f278a4044a756a450ec0c4740a649fb3483"
+    },
+    {
+      "path": "src/agentic_sidecar/gate/budget.py",
+      "kind": "source-contract",
+      "sha256": "154496797901fc59dc03329af3398a9e5f78a77a3caf4955e2cb6c364965ba3b"
+    },
+    {
+      "path": "src/agentic_sidecar/gate/escalation.py",
+      "kind": "source-contract",
+      "sha256": "4bfccdace7a61b37170fa0d60df9ab5e28e4f7024b113e7770689229ce67a4cc"
+    },
+    {
+      "path": "src/agentic_sidecar/gate/policy.py",
+      "kind": "source-contract",
+      "sha256": "998bab2794dc8cdae4abddb380881e4b7bb171cbbeea5689ca976bc9f5e77434"
+    },
+    {
+      "path": "src/agentic_sidecar/gate/risk.py",
+      "kind": "source-contract",
+      "sha256": "56c2d9994e980563884860525d1ce3ac4510a57fbcabf10f85e05b3f58dd81e4"
+    },
+    {
+      "path": "src/agentic_sidecar/integrations/__init__.py",
+      "kind": "source-contract",
+      "sha256": "9e80403eaa319e9e924a90597ce87ef6a1e971c9b323282e8143992c154f2ea6"
+    },
+    {
+      "path": "src/agentic_sidecar/integrations/_aios.py",
+      "kind": "source-contract",
+      "sha256": "43afc067f5cedd696acef8da79759635053297b00e9e953dabb345281fce0f90"
+    },
+    {
+      "path": "src/agentic_sidecar/integrations/agentic_chaos.py",
+      "kind": "source-contract",
+      "sha256": "ecad7f7befcfb91ca53257ee5b7d3bd4f4d1c63ce0946ca929c02ac8d66d790e"
+    },
+    {
+      "path": "src/agentic_sidecar/integrations/agenticlens.py",
+      "kind": "source-contract",
+      "sha256": "6687c508db1db700db7f82239b76a81717e039938ce44e793758f9696970e8fc"
+    },
+    {
+      "path": "src/agentic_sidecar/integrations/aios.py",
+      "kind": "source-contract",
+      "sha256": "44cb9f9450204b5db21f84490917baf1a77bd2b71d9483707419f1094024b6ea"
+    },
+    {
+      "path": "src/agentic_sidecar/integrations/correlation.py",
+      "kind": "source-contract",
+      "sha256": "0306807375274c11b72b083ea9f91aae29978cc9550dd3d0e03af26f5a1b3d4c"
+    },
+    {
+      "path": "src/agentic_sidecar/integrations/semantica.py",
+      "kind": "source-contract",
+      "sha256": "ed90d752e4f25ff724b713d7a65a09efb2b18437f344f2a7ecc2cbc6c9100cab"
+    },
+    {
+      "path": "src/agentic_sidecar/intent/__init__.py",
+      "kind": "source-contract",
+      "sha256": "554848b6b491c63483468d30b64ca5f248beee06df9911561ae40ad91ce289a3"
+    },
+    {
+      "path": "src/agentic_sidecar/intent/alignment.py",
+      "kind": "source-contract",
+      "sha256": "93f51e3fe0bcb10a79893db0fa109c99014b3dc28869681e391cebf90f3edac6"
+    },
+    {
+      "path": "src/agentic_sidecar/intent/authority.py",
+      "kind": "source-contract",
+      "sha256": "c169cecc1cc7dcb23826a622baee6b17b3250a0d65c96f085a115855bb05884a"
+    },
+    {
+      "path": "src/agentic_sidecar/intent/envelope.py",
+      "kind": "source-contract",
+      "sha256": "a302dd0bfb1424c36a7c7a689a1dfe467464a9bd95bae9c8c23514416b3c4ddb"
+    },
+    {
+      "path": "src/agentic_sidecar/operations/__init__.py",
+      "kind": "source-contract",
+      "sha256": "cd3fa77d1f183b8f6f41b42ec3a0fe0ce01141952564ab3055c96225278ffc1a"
+    },
+    {
+      "path": "src/agentic_sidecar/operations/client.py",
+      "kind": "source-contract",
+      "sha256": "11ddba35e00012b75f7b09acae70df39bef9cf081c1656ad4fb1ec41ebb8d65a"
+    },
+    {
+      "path": "src/agentic_sidecar/operations/events.py",
+      "kind": "source-contract",
+      "sha256": "e98d349b0261548e9be6af9a8d08c1cf689dad6f1fb1310aa8a944a40453aaa1"
+    },
+    {
+      "path": "src/agentic_sidecar/operations/runtime.py",
+      "kind": "source-contract",
+      "sha256": "e4c67b2956dd8ba4be76a42f7827c617d75d304bce05a8b2ef299ca4e0d301a0"
+    },
+    {
+      "path": "src/agentic_sidecar/operations/server.py",
+      "kind": "source-contract",
+      "sha256": "0c637b9c48bcf4034059879aae5d94d547fe82483353ba13f2c74f3939a15914"
+    },
+    {
+      "path": "src/agentic_sidecar/scopes/__init__.py",
+      "kind": "source-contract",
+      "sha256": "3a05bd179ac2e235c918aff6e805abbde33f1c508b5d381f621af1d49296e613"
+    },
+    {
+      "path": "src/agentic_sidecar/scopes/privacy.py",
+      "kind": "source-contract",
+      "sha256": "b1e24a5641ed7a24b8ce27b448dad40b16b54fdd3454845d693d20db4c613f04"
+    },
+    {
+      "path": "src/agentic_sidecar/status/__init__.py",
+      "kind": "source-contract",
+      "sha256": "43a5a16f2334cade4c93dbd540e57cd3e4dacffc7768f442af8d8a98ceb05260"
+    },
+    {
+      "path": "src/agentic_sidecar/status/live.py",
+      "kind": "source-contract",
+      "sha256": "2ffaad9d527cfc21ed57bce4670efbba4c2a686e4feb5d89e976927da5e144c9"
+    },
+    {
+      "path": "src/agentic_sidecar/status/narrate.py",
+      "kind": "source-contract",
+      "sha256": "9d8eb005fa88ac2897b6f16a0f34ecef9baa968721e48f60ed122e1d34e386f4"
+    },
+    {
+      "path": "schemas/v1/audit.schema.json",
+      "kind": "json-schema",
+      "sha256": "891da766e5d0847d25ab26776c464550a552bbe47e4fb70e846854e646d1fadc"
+    },
+    {
+      "path": "schemas/v1/decision.schema.json",
+      "kind": "json-schema",
+      "sha256": "0967741b0eefce4e3187436a5475945b338c0785b51dd0dcacdedcd31ca70703"
+    },
+    {
+      "path": "schemas/v1/intent.schema.json",
+      "kind": "json-schema",
+      "sha256": "684b091db5573908dcadc9512b9693c016859c8e3c873720711312f7b0be463a"
+    },
+    {
+      "path": "schemas/v1/scope.schema.json",
+      "kind": "json-schema",
+      "sha256": "6d404ba540f6516a9639321e59b77f9d3dad19e59e9351955b3d7f69a8939bc2"
+    },
+    {
+      "path": "schemas/v1/transfer.schema.json",
+      "kind": "json-schema",
+      "sha256": "baf9fd5fbf5c092ed3d14a64f5153129f0930793b2ada27e2a8692408e95d822"
+    },
+    {
+      "path": "website/docs/guide/examples/sidecar_quickstart.py",
+      "kind": "example",
+      "sha256": "d991884ab60bc7f709cbdfb34f1d0a07bbe7e22bfa2421bc2c322d21b882794f"
+    }
+  ]
+}
