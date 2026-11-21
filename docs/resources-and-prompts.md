@@ -40,12 +40,22 @@ An initialized-client resource-read request is:
 
 The result contains a JSON text resource. To analyze the sample, parse that resource content and supply its object as `artifact` to `lens.analyze_workflow`; the URI alone is not the artifact. `resource://workflows/release-check` supplies ordered workflow guidance, not an automatic executor.
 
+## Seven-product documentation resources
+
+`resource://docs/catalog` discovers the seven bundled robust AI references.
+For each product, `resource://docs/{product}/reference` and `/index` return raw
+Markdown, `/manifest` returns JSON, and `/license` returns plain text. Unlike
+artifact resources, references are not JSON-wrapped. Use `core.docs_catalog`,
+`core.docs_search` and `core.docs_read` for discovery and bounded retrieval when
+the full resource is too large. See [versions, citations and maintenance](ecosystem-ai-reference.md).
+
 ## Prompt inventory
 
-`prompts/list` returns five reusable prompt definitions and their string arguments. Retrieve one with `prompts/get`:
+`prompts/list` returns six reusable prompt definitions and their string arguments. Retrieve one with `prompts/get`:
 
 | Prompt name | Arguments | Purpose |
 | --- | --- | --- |
+| `core.build_with_ecosystem` | `task` (required), `products` (optional) | Build from versioned product references using discovery, search and complete reads. |
 | `tower.investigation` | `incident_id` (required) | Investigate an incident using authorized Tower evidence tools. |
 | `lens.workflow_summary` | `workflow_name` (required), `recommendation_count` (optional), `estimated_savings_pct` (optional) | Summarize an analyzed workflow for a human operator. |
 | `lens.compare_summary` | `baseline_label` (optional), `candidate_label` (optional) | Summarize a baseline-vs-candidate run comparison for a release decision. |

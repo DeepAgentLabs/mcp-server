@@ -182,6 +182,10 @@ jobs:
           git diff --exit-code docs/tools.md
           uv run --no-sync python examples/compatibility_check.py
 
+      - name: Verify bundled seven-product references
+        working-directory: mcp-server
+        run: uv run --no-sync python scripts/sync_ai_references.py --check
+
       - name: Build distributions
         working-directory: mcp-server
         run: |

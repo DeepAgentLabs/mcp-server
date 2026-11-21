@@ -12,8 +12,9 @@ Each row links to a short workflow below, with detailed references for configura
 | --- | --- |
 | [Local stdio connection](#stdio) | Connect an MCP host to the local server and verify the protocol boundary. |
 | [Diagnostics and compatibility](#diagnostics) | Inspect version, health, adapter availability and the packaged candidate matrix. |
-| [Tool catalog and discovery](#tools) | Discover all 53 tool interfaces, prerequisites, session effects and schemas. |
-| [Resources and prompt templates](#resources) | Read reference/schema/session resources and retrieve five reusable prompts. |
+| [Tool catalog and discovery](#tools) | Discover all 56 tool interfaces, prerequisites, session effects and schemas. |
+| [Seven-product AI documentation](#ecosystem-docs) | Discover, search and read all seven robust references before building integrations. |
+| [Resources and prompt templates](#resources) | Read reference/schema/session resources and retrieve six reusable prompts. |
 | [Lens analysis and diagnosis](#lens) | Analyze workflows, diagnose failures, compare runs and inspect scores/SLOs. |
 | [Suite, ModelFit, routing and optimization](#intelligence) | Compose recorded Lens suite/model/routing/optimization evidence without invoking models. |
 | [Native Evals validation](#evals) | Validate native report/gate artifacts against packaged schema 1.0. |
@@ -72,6 +73,17 @@ Expect diagnostics with explicit optional-adapter availability. Missing producer
 ## Usage
 
 Repository examples require a source checkout. Tool-call fragments run in an initialized MCP client; file paths, credentials, endpoints, runtime bindings and native artifacts must be supplied by the host. Optional producers run in the server environment, not automatically in the client environment.
+
+<span id="ecosystem-docs"></span>
+
+### Seven-product AI documentation
+
+Use `core.docs_catalog {}` to discover all seven products and pinned documentation
+versions, then `core.docs_search` to find an API or example. Pass a returned product
+and section ID to `core.docs_read`; follow `next_offset` for complete source. The
+base package works offline without optional producer installs. Native documentation
+resources and `core.build_with_ecosystem` provide the same workflow to supporting
+hosts. See [the complete workflow and resources](ecosystem-ai-reference.md).
 
 <span id="stdio"></span>
 

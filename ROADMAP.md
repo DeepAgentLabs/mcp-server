@@ -1135,3 +1135,14 @@ See [the implementation and migration guide](docs/coordinated-v1-readiness.md)
 for the current candidate scope, interoperability evidence and remaining gates.
 Current version: 1.0.0. Internal tests do not close independent review,
 live-provider/deployment acceptance or the coordinated stable freeze.
+
+## Seven-product copilot documentation — MCP 1.1.0
+
+Implemented bundled robust AI references, capability indexes and source/license
+manifests for all seven products. Read-only `core.docs_catalog`, `core.docs_search`
+and `core.docs_read` provide discovery, deterministic search, complete bounded
+reads and commit-pinned citations. MCP resources and `core.build_with_ecosystem`
+make the same material available through native reference/prompt discovery.
+Installed-wheel protocol checks cover offline operation without producer installs.
+Snapshots describe their pinned versions; live hosted rollout remains operator-owned.
+See [the reference workflow](docs/ecosystem-ai-reference.md).

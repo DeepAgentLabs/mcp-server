@@ -1,6 +1,6 @@
 # deep-agentic-core-mcp
 
-## Current release: 1.0.0
+## Current release: 1.1.0
 
 The local integration candidate adds offline validation for AIOS 0.4/0.6/0.8
 draft families, held-byte provenance resolution and native access audit exports.
@@ -14,6 +14,25 @@ uv run python examples/compatibility_check.py
 `core.compatibility {}` reports installed distribution observations;
 `core.verify {}` separately probes adapters. Neither certifies a production
 deployment. Package publication does not deploy the hosted AWS service.
+
+## Build with all seven products from your copilot
+
+The base MCP package bundles the robust AI references for all seven products.
+Ask your connected copilot to build an application: `core.docs_catalog` discovers
+products and documentation versions, `core.docs_search` finds relevant APIs and
+examples, and `core.docs_read` retrieves complete sections with source citations.
+All references work offline without optional sibling packages. The
+`core.build_with_ecosystem` prompt guides the workflow.
+
+```text
+core.docs_catalog {}
+core.docs_search {"query":"evaluate_suite","product":"agentic-evals"}
+core.docs_read {"product":"agentic-evals","limit":12000}
+```
+
+See [the seven-product reference guide](docs/ecosystem-ai-reference.md) for resource
+URIs, pagination, source pins, version boundaries and a copilot build example.
+Hosted users receive these capabilities when the operator deploys this MCP version.
 
 ## Coordinated 1.0.0 milestone
 

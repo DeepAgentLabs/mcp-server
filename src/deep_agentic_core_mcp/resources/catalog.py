@@ -1,6 +1,7 @@
 """Resource catalog for MCP-exposed reference assets."""
 
 from deep_agentic_core_mcp.adapters.ai_operations_spec import list_schema_resources
+from deep_agentic_core_mcp.services.documentation import resource_inventory
 
 
 def list_resources() -> list[dict[str, str]]:
@@ -23,4 +24,5 @@ def list_resources() -> list[dict[str, str]]:
         },
     ]
     resources.extend(list_schema_resources())
+    resources.extend(resource_inventory())
     return resources

@@ -4,39 +4,44 @@
   "distribution": "deep-agentic-core-mcp",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "4cab1b93211090756af058b7c5d52175d0a3be26083143e64eeff0ec5b36a1c4",
+  "sha256": "a9dec3d87c74653fd66d90fb3a20408496f56577df962cb58c3f84feab30a2bb",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
     {
       "path": "pyproject.toml",
       "kind": "package-metadata",
-      "sha256": "1ea751dc5aeed1160c95adb3429fc91d86532bd6ab75e785f4c02a30624bf3e3"
+      "sha256": "f330b1691b774ef2f4a7b6b35c8da9da3f0072fe7f26574427943785a9076ffc"
     },
     {
       "path": "docs/ai-docs.json",
       "kind": "source-selection",
-      "sha256": "e4f267c6d0f9f41861561e848b2674fca0a33b408cc37725202e9746cb2be2c6"
+      "sha256": "8173d332daf497d189b7c633919ac103cf88c274d5eed2d2116e0788479c8f29"
     },
     {
       "path": "docs/ai-reference-index.md",
       "kind": "reference",
-      "sha256": "1161fb1c7b003ccbb4676e75a663cce24ddd8fe29fe4c307daf1c34f648e1cd0"
+      "sha256": "0cdfe8840c515d6e29a447ebc425befd5b60b18ec7c71f218dc0ff0f5be1021d"
     },
     {
       "path": "docs/developer-guide.md",
       "kind": "reference",
-      "sha256": "487568ecf0fd102a9c936c6feac3595ef15da177077d062a995edc7385da9ff7"
+      "sha256": "a9305b0578c7b5c1758c3cf6f42c2a0215c3189a60b507917d0522a4edb417aa"
+    },
+    {
+      "path": "docs/ecosystem-ai-reference.md",
+      "kind": "reference",
+      "sha256": "5eb0f9594e1dfabaf9100539b80fb269d0498fd0543e26c536d7c5de08375df1"
     },
     {
       "path": "docs/tools.md",
       "kind": "reference",
-      "sha256": "6af6bacd4eb78e236c819cc8a6f803120b9ecdea5129a0dbd6b74bdb3159d21a"
+      "sha256": "ab8842b5db25b10f670f90cd990daf0b0ddb078806c8f733755563fa61f68fad"
     },
     {
       "path": "docs/resources-and-prompts.md",
       "kind": "reference",
-      "sha256": "3db63e8c54d9252cbedca9c6de90de6b446aa70f22a16f3b39d21cefafd5b622"
+      "sha256": "ed6b49751366703ad06e6c61ea9ce4bf7127bbda8c9247d2a77761ca235ee2c8"
     },
     {
       "path": "docs/cli-reference.md",
@@ -236,7 +241,7 @@
     {
       "path": "src/deep_agentic_core_mcp/__init__.py",
       "kind": "source-contract",
-      "sha256": "8d9a5f018aace1e2a2b26bd83aadbd5d7fa2a556a791e003357c06cf97c2a1f4"
+      "sha256": "5b8e3a7206dee35d78f71c515d094021621f4ddcbeb90309c301669fb75c536b"
     },
     {
       "path": "src/deep_agentic_core_mcp/adapters/__init__.py",
@@ -286,7 +291,7 @@
     {
       "path": "src/deep_agentic_core_mcp/prompts/registry.py",
       "kind": "source-contract",
-      "sha256": "b7d6a97b4dfcc24d83861432a2009b7ab74e8919d53587282a8d6e91a89303ad"
+      "sha256": "481be142dfe46722074c815113890939ea830f16a93c18a74b66757c201d1cc3"
     },
     {
       "path": "src/deep_agentic_core_mcp/resources/__init__.py",
@@ -296,7 +301,7 @@
     {
       "path": "src/deep_agentic_core_mcp/resources/catalog.py",
       "kind": "source-contract",
-      "sha256": "33f49762e338ed7cca6d6f8c6a76acf8e541021acec14c4d2c0d24bc28668acb"
+      "sha256": "f65cc205019093f606331d952705b9b6c2bfb0a71a5a99afe026cf1805013990"
     },
     {
       "path": "src/deep_agentic_core_mcp/schemas/__init__.py",
@@ -311,7 +316,7 @@
     {
       "path": "src/deep_agentic_core_mcp/server.py",
       "kind": "source-contract",
-      "sha256": "f8d322452cb5152a129838f7bacd0827c8514292f224945f8ca83c1ebf00ecd3"
+      "sha256": "f3a0174e6f4bcdd9f265ed73fb6befe91ce0d74a58a464f0739f17315ebec6d0"
     },
     {
       "path": "src/deep_agentic_core_mcp/services/__init__.py",
@@ -347,6 +352,11 @@
       "path": "src/deep_agentic_core_mcp/services/containment.py",
       "kind": "source-contract",
       "sha256": "1c40fcb96c6f07edfd8d7475d023aa6692b381a019b14fad4158abe3657bb78f"
+    },
+    {
+      "path": "src/deep_agentic_core_mcp/services/documentation.py",
+      "kind": "source-contract",
+      "sha256": "b2ad5afd0d82d48d6b5ecce114d7d7a5bd892e072832252ca7a89ecf030c07df"
     },
     {
       "path": "src/deep_agentic_core_mcp/services/evals_contract.py",
@@ -404,6 +414,11 @@
       "sha256": "158d6feb506dcbc58adf0c11975d84509e7b42331f9e60c66280265f831a40c8"
     },
     {
+      "path": "src/deep_agentic_core_mcp/tools/documentation.py",
+      "kind": "source-contract",
+      "sha256": "00263368b217d5e74ad4367bebba44b7c5bd494af271bb6b91fcc61b8d90f37c"
+    },
+    {
       "path": "src/deep_agentic_core_mcp/tools/evals.py",
       "kind": "source-contract",
       "sha256": "4367039f6199af44b6e9f0d6c64b182a460609cf24d7c29aa60bb0815a0b90fe"
@@ -411,7 +426,7 @@
     {
       "path": "src/deep_agentic_core_mcp/tools/intelligence.py",
       "kind": "source-contract",
-      "sha256": "920ac6ab134aca15670243e227eaa7cb18a2c959e88dffb4adf072313775a3e2"
+      "sha256": "dfaebc73070ffeddca3d3293b768aa90b80d74ba2371a928c5d5504fbb2e6e16"
     },
     {
       "path": "src/deep_agentic_core_mcp/tools/lens.py",
@@ -426,7 +441,7 @@
     {
       "path": "src/deep_agentic_core_mcp/tools/registry.py",
       "kind": "source-contract",
-      "sha256": "19fc5c8073b759f17a9431b388b98a82ce9aca7888c8963787854212281dc999"
+      "sha256": "15122b44c7640fb4d84d6cb51553fe7a01c960ec80952a85c47fc4c7514adcde"
     },
     {
       "path": "src/deep_agentic_core_mcp/tools/sidecar.py",

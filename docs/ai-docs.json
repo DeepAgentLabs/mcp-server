@@ -11,6 +11,10 @@
       "path": "docs/developer-guide.md"
     },
     {
+      "title": "Build with the seven-product AI reference",
+      "path": "docs/ecosystem-ai-reference.md"
+    },
+    {
       "title": "Generated tool catalog",
       "path": "docs/tools.md"
     },
