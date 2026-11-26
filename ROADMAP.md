@@ -20,7 +20,9 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `0.8.0` (2026-11-04) — see [CHANGELOG.md](CHANGELOG.md).
+Release version: `1.2.0` (2026-11-26) — see [CHANGELOG.md](CHANGELOG.md).
+The 1.2.0 documentation release adopts the AgenticLens documentation layout
+(capability overview, API reference, AI-readable reference) on top of 1.1.0.
 The v0.8 companion-adoption increment adds offline validation and native access
 audit exports over the completed v0.7 local readiness milestone: packaged candidate matrix,
 `core.compatibility`, installed-wheel MCP protocol acceptance, aligned released
@@ -1146,3 +1148,12 @@ make the same material available through native reference/prompt discovery.
 Installed-wheel protocol checks cover offline operation without producer installs.
 Snapshots describe their pinned versions; live hosted rollout remains operator-owned.
 See [the reference workflow](docs/ecosystem-ai-reference.md).
+
+## Documentation layout — MCP 1.2.0
+
+Implemented the AgenticLens documentation layout: a grouped capability overview,
+an API reference covering every tool, resource, prompt, HTTP route and entry point,
+and sidebar entries for the API reference and AI-readable documentation. Corrected
+tool and prompt counts, refreshed the limitations page and the bundled MCP Server
+AI reference. Tests keep the overview and API reference in step with the registry.
+Runtime behavior is unchanged.
