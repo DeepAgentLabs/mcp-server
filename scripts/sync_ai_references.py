@@ -47,7 +47,13 @@ def sync(sources: Path) -> None:
         revision = subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=repo, text=True
         ).strip()
-        docs = "website/docs" if product == "agentic-sidecar" else "docs"
+        # Sidecar kept its docs under website/docs before 1.1.0.
+        legacy = subprocess.run(
+            ["git", "cat-file", "-e", f"{revision}:website/docs/ai-docs-manifest.json"],
+            cwd=repo,
+            capture_output=True,
+        )
+        docs = "website/docs" if legacy.returncode == 0 else "docs"
         manifest = json.loads(committed(repo, revision, f"{docs}/ai-docs-manifest.json"))
         # Verify upstream source claims against Git objects, never an uncommitted workspace.
         for source in manifest["sources"]:
