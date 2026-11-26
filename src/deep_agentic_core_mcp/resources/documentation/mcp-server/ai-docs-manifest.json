@@ -4,14 +4,14 @@
   "distribution": "deep-agentic-core-mcp",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "aa7c924c187cee45f20961a8a7847db71ea3378bbf263112391446dae265bec2",
+  "sha256": "e6a4900b2b6fe45bb83eeeab4a6e26afdbbabf0780be10bd020cd52713283695",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
     {
       "path": "pyproject.toml",
       "kind": "package-metadata",
-      "sha256": "78b0ed1bccce798917c09b07ad3e43dee76b483c694a1f063c3ca20fecddab9b"
+      "sha256": "6ed455712904cbe6d12b86475426ce94be51ff3167f8ddab9928bc4cb31ae9cb"
     },
     {
       "path": "docs/ai-docs.json",
@@ -36,7 +36,7 @@
     {
       "path": "docs/api-reference.md",
       "kind": "reference",
-      "sha256": "4442035fdb36293ddf0c50280ba39580455beb13fd3a584da5e079ae3f2939c1"
+      "sha256": "d8f4caad89f8168cd588d53529b2431cd4857a174a1a460e26b6187acae62534"
     },
     {
       "path": "docs/ecosystem-ai-reference.md",
@@ -251,7 +251,7 @@
     {
       "path": "src/deep_agentic_core_mcp/__init__.py",
       "kind": "source-contract",
-      "sha256": "15e8278354748051560b9e26121704674bf43e8fa4c927ad7abe106c4229a6ce"
+      "sha256": "32dd7f31fd84e1d31f644442c1c01361040fe45fad662d402d1f37558985ce6d"
     },
     {
       "path": "src/deep_agentic_core_mcp/adapters/__init__.py",
