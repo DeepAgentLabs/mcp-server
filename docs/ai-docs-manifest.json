@@ -4,14 +4,14 @@
   "distribution": "deep-agentic-core-mcp",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "69d0c5c3dd63068eddb1ca918136231197f2642b8fe72b5c5440be4ff04dc7bd",
+  "sha256": "aa7c924c187cee45f20961a8a7847db71ea3378bbf263112391446dae265bec2",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
     {
       "path": "pyproject.toml",
       "kind": "package-metadata",
-      "sha256": "f330b1691b774ef2f4a7b6b35c8da9da3f0072fe7f26574427943785a9076ffc"
+      "sha256": "78b0ed1bccce798917c09b07ad3e43dee76b483c694a1f063c3ca20fecddab9b"
     },
     {
       "path": "docs/ai-docs.json",
@@ -36,7 +36,7 @@
     {
       "path": "docs/api-reference.md",
       "kind": "reference",
-      "sha256": "e05aa942683d9e3e38401cfd6c8775ad937a68dcd5bf1848d60ba30c7ebdbf9b"
+      "sha256": "4442035fdb36293ddf0c50280ba39580455beb13fd3a584da5e079ae3f2939c1"
     },
     {
       "path": "docs/ecosystem-ai-reference.md",
@@ -156,7 +156,7 @@
     {
       "path": "docs/limitations.md",
       "kind": "reference",
-      "sha256": "c9da86c9c649c8b4515a55ad5e53c9d3ff2fa834a29110844eacc8c6c7a6855d"
+      "sha256": "88aad001a94534568fd2cf865fe6b791ef95cdaad06bb251d6e1cd1577095ab8"
     },
     {
       "path": "docs/aios-0.6.1.md",
@@ -251,7 +251,7 @@
     {
       "path": "src/deep_agentic_core_mcp/__init__.py",
       "kind": "source-contract",
-      "sha256": "5b8e3a7206dee35d78f71c515d094021621f4ddcbeb90309c301669fb75c536b"
+      "sha256": "15e8278354748051560b9e26121704674bf43e8fa4c927ad7abe106c4229a6ce"
     },
     {
       "path": "src/deep_agentic_core_mcp/adapters/__init__.py",
