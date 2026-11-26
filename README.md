@@ -1,6 +1,12 @@
 # deep-agentic-core-mcp
 
-## Current release: 1.1.0
+## Current release: 1.2.0
+
+The 1.2.0 documentation release rewrites the overview as a grouped capability
+list, adds an API reference for every tool, resource, prompt, route and entry
+point, and refreshes the bundled AI-readable reference coding agents read through
+`core.docs_*`. Runtime behavior is unchanged from 1.1.0.
+
 
 The local integration candidate adds offline validation for AIOS 0.4/0.6/0.8
 draft families, held-byte provenance resolution and native access audit exports.
@@ -256,12 +262,16 @@ revocation adapter is unchanged and now also stops queued calls. See
 [hosted access control](docs/access-control.md) and
 [`examples/hosted_access_status.py`](examples/hosted_access_status.py).
 
-## MCP Surface (current, `0.8.0`)
+## MCP Surface (current, `1.2.0`)
 
 - `core.compatibility` — candidate baseline and installed distribution observations
 - `core.health` — rich diagnostics: adapter availability/version, loaded
   tool/resource/prompt counts, workspace root, recent successful calls
 - `core.version` — server package version
+- `core.onboard` — read-only setup steps with sibling readiness
+- `core.report_recall` — saved reports and history with cited notes
+- `core.docs_catalog`, `core.docs_search`, `core.docs_read` — discover, search and
+  read the bundled AI-readable documentation for all seven products
 - `core.verify` — checks agenticlens/agentic-chaos/agentic-sidecar/ai-operations-spec
   connectivity and reports readiness
 - `core.session_state` — inspect what the active session has accumulated
@@ -291,6 +301,7 @@ revocation adapter is unchanged and now also stops queued calls. See
   evaluator disagreement for an evaluation report (`agenticlens>=0.7.0`)
 - `lens.suite_from_traces` — draft regression-suite cases from successful
   trace runs, PII masked (`agenticlens>=0.8.0`)
+- `lens.execution_verify` — verify a Lens execution bundle with host-held trust keys
 - `lens.suite_check` — suite summary, duplicates, unmasked PII and approval
   readiness (`agenticlens>=0.8.0`)
 - `lens.modelfit_recommend` — per-task-category model recommendations from
