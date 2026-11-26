@@ -8,16 +8,17 @@ This index opens the [AI Reference (robust)](https://deepagentlabs.io/agentic-si
 | --- | --- | --- |
 | Decision Gate and enforcement | Evaluate seven outcomes, then enforce through governed dispatch. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](governance.md) |
 | Policy and risk rules | Apply ordered allow/deny policies and tool/argument risk classifications. | <a href="#configuration">Full reference</a> · [Source](configuration.md) |
-| Intent constraints | Bind user constraints to tool arguments and retain intent identity and expiry. | <a href="#core-supervision-features">Full reference</a> · [Source](features.md) |
+| Intent constraints | Bind user constraints to tool arguments, catch intent drift and retain intent identity and expiry. | <a href="#core-supervision-features">Full reference</a> · [Source](features.md) |
 | Budget accounting | Track explicit cost/tokens and pause at configured ceilings. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](governance.md) |
 | Plan review and Critic | Review supplied plans, unnecessary steps, contradictions and unsupported assumptions. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](governance.md) |
 | Offline and live judges | Use MockJudge or optional OpenAI/Anthropic providers with limits and usage accounting. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](governance.md) |
-| Approvals and escalation | Approve once, reject, modify intent, replan or stop a suspended proposal. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](governance.md) |
+| Human in the loop: approvals and escalation | Approve once, reject, modify intent, replan or stop a suspended proposal. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](governance.md) |
 | Custom hooks and failure policies | Extend decision evaluation while preserving mandatory checks and explicit failure behavior. | <a href="#core-supervision-features">Full reference</a> · [Source](features.md) |
 | Framework and MCP adapters | Govern sync/async tools in LangGraph, AutoGen, CrewAI, OpenAI Agents, Google ADK and MCP. | <a href="#framework-and-ecosystem-integrations">Full reference</a> · [Source](integrations.md) |
 | Task runtime and execution lifecycle | Track proposals, decisions, dispatch reservations, completion and failure. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](live-operations.md) |
-| Operator server and Control Room | Connect authenticated local status, task controls and remote approval handling. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](live-operations.md) |
-| Stop, cancellation and revocation callbacks | Latch local dispatch stop, invalidate old decisions and request host-owned access revocation. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](live-operations.md) |
+| Operator server and Control Room | Watch a task live and pause, resume, replan, stop or restart it, with remote approvals. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](live-operations.md) |
+| Emergency stop, cancellation and revocation | Latch dispatch stop, invalidate old decisions, cancel owned async calls and revoke host-owned access. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](live-operations.md) |
+| Control Tower fleet operations | Join Sidecar evidence to fleet incidents and stop many deployments through one approved bulk action. | <a href="#control-tower-integration-and-emergency-stop">Full reference</a> · [Source](control-tower-integration.md) |
 | Audit journal and restoration | Persist immutable hash-chained events, verify snapshots and restore stopped state. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](live-operations.md) |
 | Shared/exclusive supervision | Compose agent-specific context and mandatory guardrails without weakening shared rules. | <a href="#shared-and-exclusive-supervision">Full reference</a> · [Source](scoped-supervision.md) |
 | Context privacy and lifecycle | Authorize readers, deliver defensive copies, update, expire and revoke context. | <a href="#authority-privacy-and-validation-evidence">Full reference</a> · [Source](v0.9.md) |
@@ -43,7 +44,7 @@ This index opens the [AI Reference (robust)](https://deepagentlabs.io/agentic-si
 
 ## Maintaining coverage
 
-`website/docs/ai-docs.json` selects detailed topic/integration guides, every package Python module and all five native schemas. Keep both indexes and the CLI inventory aligned with new user-facing capabilities. From the repository root, regenerate using the shared sibling documentation checkout and Python 3.11 or newer:
+`docs/ai-docs.json` selects detailed topic/integration guides, every package Python module and all five native schemas. Keep both indexes and the CLI inventory aligned with new user-facing capabilities. From the repository root, regenerate using the shared sibling documentation checkout and Python 3.11 or newer:
 
 ```bash
 python3 ../deepagentlabs.github.io/scripts/build_ai_docs.py --sources .. --project agentic-sidecar

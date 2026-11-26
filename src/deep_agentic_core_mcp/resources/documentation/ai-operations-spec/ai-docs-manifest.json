@@ -4,34 +4,49 @@
   "distribution": "ai-operations-spec",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "d0a580b10a2424c4d43207d1125cd93df3565ece84c51dc13eb2e282db199061",
+  "sha256": "9bbec39e078ff1d900d052699d2bb3b20a877159098eaf5e0210ccf91c50b743",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
     {
       "path": "pyproject.toml",
       "kind": "package-metadata",
-      "sha256": "25446ede553f5e5dc850fc737446a640810be935d0a23ff184e859309dd08d97"
+      "sha256": "0d67e38f2fd98c72452bd047a46d9e0b71cb3a2f2e7216eb3297e4e0a687fbfb"
     },
     {
       "path": "docs/ai-docs.json",
       "kind": "source-selection",
-      "sha256": "d850e48e1fc828b81e45c8d3c438554dbff130dd883f54aba2b84c5f6566442f"
+      "sha256": "89b9a5eb6c7153f02fba026b82393557bb0aed75fc262158b0d0ccc49d56a283"
+    },
+    {
+      "path": "docs/index.md",
+      "kind": "reference",
+      "sha256": "9b43bffcb36e9c11c57ea7ea222821516251e9dbecc214309027e735ab3deb71"
     },
     {
       "path": "docs/ai-reference-index.md",
       "kind": "reference",
-      "sha256": "b50839d2cca474a15fb3733848e62af6f2a509ebec74f7c29e7e4543a980953d"
+      "sha256": "ddda8d2cd93f984a91d2279e8c1744b261d5188a5623d9faa2e26318a754263c"
     },
     {
       "path": "docs/developer-guide.md",
       "kind": "reference",
-      "sha256": "3cd416044678e48b57fd5fc84dc11189612810451d92e9c187e8b7823085257c"
+      "sha256": "f6c678479bdc60e029dec7a1ef769e1cdac7ab94f11f895c02f5e2d0f6cc64d6"
+    },
+    {
+      "path": "docs/api-reference.md",
+      "kind": "reference",
+      "sha256": "fbc419a78b7f9ed72d552cc3d36e865aabc413b78a380d20980eb4457f56b054"
+    },
+    {
+      "path": "docs/limitations.md",
+      "kind": "reference",
+      "sha256": "6094e898bba8b05ddaa62844165ee527a218e140ff507cdd0150216ad6b3fb95"
     },
     {
       "path": "README.md",
       "kind": "reference",
-      "sha256": "1981431c1bac85ebd4373bb1e5042457ecac8c3eeb6f25bb1a8e27c1f671df6f"
+      "sha256": "205e2a9b61cc9874db74bbf2c21111e14219ac27d0bcbd8e53fe99a8ba392aeb"
     },
     {
       "path": "SPECIFICATION.md",
@@ -51,7 +66,7 @@
     {
       "path": "CHANGELOG.md",
       "kind": "reference",
-      "sha256": "146bd7cc8a20014fc117fe591c45dca1b2f13a273f8573831eb8932f0e46a459"
+      "sha256": "aae80f7db567bc25967ef39b764b9fed56d8134957a16bfa011543142cf8ce31"
     },
     {
       "path": "CI.md",
@@ -291,7 +306,7 @@
     {
       "path": "docs/documentation-site.md",
       "kind": "reference",
-      "sha256": "a6b75223423e21c1d12012e7e2c5213880496c7a86d3985845f4415d87f8d048"
+      "sha256": "6fcf0590cb4366d4c55cd1f325aefaff931e31aceeb0360fd4b9e60274fc7b75"
     },
     {
       "path": "docs/evals-0.10-aios-evidence.md",
@@ -1006,7 +1021,7 @@
     {
       "path": "specification/v0.6/conformance-suite/suite.json",
       "kind": "reference-data",
-      "sha256": "2e78b41becbd629e059b9e1d81456b5aa12359a103877ecee17ad85e21c12762"
+      "sha256": "6ade374fa92f3ec4462d30266783dfb97153001929de3509a3e1bea5d39bdd1d"
     },
     {
       "path": "specification/v0.6/examples/advanced-support-run.json",

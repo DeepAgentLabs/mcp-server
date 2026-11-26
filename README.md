@@ -1,11 +1,11 @@
 # deep-agentic-core-mcp
 
-## Current release: 1.1.1
+## Current release: 1.1.2
 
-The 1.1.1 documentation patch rewrites the overview as a grouped capability
-list, adds an API reference for every tool, resource, prompt, route and entry
-point, and refreshes the bundled AI-readable reference coding agents read through
-`core.docs_*`. Runtime behavior is unchanged from 1.1.0.
+The 1.1.2 documentation patch refreshes the bundled AI-readable references for
+all seven products to their 1.1.0 documentation (MCP Server: 1.1.2), so coding
+agents reading through `core.docs_*` see current docs. Runtime behavior is
+unchanged from 1.1.0.
 
 
 The local integration candidate adds offline validation for AIOS 0.4/0.6/0.8
@@ -262,7 +262,7 @@ revocation adapter is unchanged and now also stops queued calls. See
 [hosted access control](docs/access-control.md) and
 [`examples/hosted_access_status.py`](examples/hosted_access_status.py).
 
-## MCP Surface (current, `1.1.1`)
+## MCP Surface (current, `1.1.2`)
 
 - `core.compatibility` — candidate baseline and installed distribution observations
 - `core.health` — rich diagnostics: adapter availability/version, loaded

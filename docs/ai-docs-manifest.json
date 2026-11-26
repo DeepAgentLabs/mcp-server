@@ -4,14 +4,14 @@
   "distribution": "deep-agentic-core-mcp",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "c244fb1d1fcfac07ffd007ef3db2995ebe36b79fece084b146d89becf8886bdf",
+  "sha256": "f493404244d24cf1fd39aff469ba51f0f6d38e3c73d7eb5abc49722fc3585e95",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
     {
       "path": "pyproject.toml",
       "kind": "package-metadata",
-      "sha256": "6ed455712904cbe6d12b86475426ce94be51ff3167f8ddab9928bc4cb31ae9cb"
+      "sha256": "2e6d77b7cc5dec727ddb674175c1e88f4473e6b1ba95a5ff951855bd89319fd4"
     },
     {
       "path": "docs/ai-docs.json",
@@ -36,7 +36,7 @@
     {
       "path": "docs/api-reference.md",
       "kind": "reference",
-      "sha256": "d8f4caad89f8168cd588d53529b2431cd4857a174a1a460e26b6187acae62534"
+      "sha256": "153be873423c016d61db56e7474c4c1f6f577ee39c1cbc289165052b2592eb3e"
     },
     {
       "path": "docs/ecosystem-ai-reference.md",
@@ -101,7 +101,7 @@
     {
       "path": "docs/sidecar-0.10.md",
       "kind": "reference",
-      "sha256": "92b2614bb99edf7f115cba5475f94a0ce7d92afe97f580512d68840e2dadf99f"
+      "sha256": "d9162f7cc64718a8d06ac2e2da924a7458a55d0ef6f7e38e6a3a1ade7b07d32e"
     },
     {
       "path": "docs/tower-0.9-runbooks.md",
@@ -251,7 +251,7 @@
     {
       "path": "src/deep_agentic_core_mcp/__init__.py",
       "kind": "source-contract",
-      "sha256": "32dd7f31fd84e1d31f644442c1c01361040fe45fad662d402d1f37558985ce6d"
+      "sha256": "899a56152dee55ab0781278dda2e950f68e8eb7f969eccebc4e5cb5c2dcee481"
     },
     {
       "path": "src/deep_agentic_core_mcp/adapters/__init__.py",

@@ -6,6 +6,18 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 1.1.2 - 2026-11-26
+
+### Documentation
+
+- Refresh the bundled AI references, capability indexes and manifests for all seven products from their current `main` commits: AgenticLens, Agentic Evals, Agentic Chaos, Agentic Sidecar and Control Tower 1.1.0, AI Operations Specification 1.1.0 and MCP Server 1.1.2. The previous bundle carried 1.0.x snapshots.
+- Read Sidecar's AI reference from `docs/`, its location since Sidecar 1.1.0, in `scripts/sync_ai_references.py`.
+- Point the Sidecar 0.10 migration link at Sidecar's `docs/` folder.
+
+### Compatibility
+
+- No runtime, tool, schema or authorization changes from 1.1.1.
+
 ## 1.1.1 - 2026-11-26
 
 ### Documentation

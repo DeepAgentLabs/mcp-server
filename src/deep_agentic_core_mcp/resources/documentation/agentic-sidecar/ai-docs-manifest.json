@@ -4,167 +4,177 @@
   "distribution": "agentic-sidecar",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "fc7ec6a7a8ad6dafcb6e02990152ca3b6152b0cef81e5f7ea5c67d446b914a6d",
+  "sha256": "b0a6554c66b334a3efcb54addf5954509820f16c17146a72b827c17436a444b7",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
     {
       "path": "pyproject.toml",
       "kind": "package-metadata",
-      "sha256": "ca10f51cc4df5bb88f1fcdf98bb2d3ceb8ce183a6ac72e9c2719a9a078ffc888"
+      "sha256": "89939b86a12f2773bd3ba5f1529c119108323ba9e7253c16527adef5acb362db"
     },
     {
-      "path": "website/docs/ai-docs.json",
+      "path": "docs/ai-docs.json",
       "kind": "source-selection",
-      "sha256": "358f08977c9c91433748beca5f756cc8954d6daa92cc8c5c1f69c3136d14be96"
+      "sha256": "9cff4947cbfc0ed8a0071524f90ab9071483c7306f6377d7ba37d7e963d0bf5b"
     },
     {
-      "path": "website/docs/ai-reference-index.md",
+      "path": "docs/ai-reference-index.md",
       "kind": "reference",
-      "sha256": "abf218702a32d7a9d0292559034b303eec78532d1132cd06fd2da54e1b5efd2e"
+      "sha256": "42e9dfa4db27dcc69cd01b1797cc6fd4511e6164553c0fae9c973effd56aeb20"
     },
     {
-      "path": "website/docs/developer-guide.md",
+      "path": "docs/index.md",
       "kind": "reference",
-      "sha256": "0cc98982680dbf8b8d9ba561c77498d8d8b6fe3b2687cd62dc8f4ca943279f32"
+      "sha256": "5ea4a02a0e1d2c08b4a0623761a2a968165b0c984099437a8eb3bef9ee55a15d"
     },
     {
-      "path": "website/docs/features.md",
+      "path": "docs/developer-guide.md",
+      "kind": "reference",
+      "sha256": "383fe3d926326510737402d1eb967b570032a49c0098ea35c34e7d5b858c0a7e"
+    },
+    {
+      "path": "docs/features.md",
       "kind": "reference",
       "sha256": "1298166dd27857cb65891b6c53c9a376310a02d4274a660aae7e7176d3eed9da"
     },
     {
-      "path": "website/docs/architecture.md",
+      "path": "docs/architecture.md",
       "kind": "reference",
       "sha256": "021c881d4247af18db3acb4d27b72621b229ffb51cfa7143a7a58befb369739d"
     },
     {
-      "path": "website/docs/api-reference.md",
+      "path": "docs/api-reference.md",
       "kind": "reference",
-      "sha256": "5da77d9793ff6431f245e2a746a2c9a1cceb5783fea2074ebd53337a7abef7d3"
+      "sha256": "92161c6cb119f2e5066dcd46deae14b0e9bdbeb8374e981822ba4c0ad70d3fee"
     },
     {
-      "path": "website/docs/cli-reference.md",
+      "path": "docs/cli-reference.md",
       "kind": "reference",
       "sha256": "3a4f4b68ddc7d3a9b4fb99d158c21df0bf00792c588ac163965f0aea9dbf08e8"
     },
     {
-      "path": "website/docs/configuration.md",
+      "path": "docs/configuration.md",
       "kind": "reference",
       "sha256": "9e3f4138b23feef5d958f1e7b7416f3f5c1f4dca0fc45e521cb8627b77da937f"
     },
     {
-      "path": "website/docs/governance.md",
+      "path": "docs/governance.md",
       "kind": "reference",
       "sha256": "9bc1c50027308a283bd87e0be2656f4b1a386f2a970e3467b279da1c67418939"
     },
     {
-      "path": "website/docs/scoped-supervision.md",
+      "path": "docs/scoped-supervision.md",
       "kind": "reference",
       "sha256": "148dceac54b50a7c5d2937db137054eda348f235526f84f8d3066c726e8ba2c8"
     },
     {
-      "path": "website/docs/live-operations.md",
+      "path": "docs/live-operations.md",
       "kind": "reference",
-      "sha256": "a13ef36e0db2140f9e44242a656774feba2a4542760bf5221e408e633dfe0606"
+      "sha256": "964bdb88e8254ed0c62e1e017dabe4d3bd017a25197ef1f2fe0a04a4f490f5b6"
     },
     {
-      "path": "website/docs/v0.9.md",
+      "path": "docs/control-tower-integration.md",
+      "kind": "reference",
+      "sha256": "64fecdfac5e4c89a7026e4ab9f3d380ae16151de524426f6251644acb8e15f8b"
+    },
+    {
+      "path": "docs/v0.9.md",
       "kind": "reference",
       "sha256": "5adb1c1db71507d910a20d168a90ab9849e08f668b71ac5b989225e293da4137"
     },
     {
-      "path": "website/docs/v0.10.md",
+      "path": "docs/v0.10.md",
       "kind": "reference",
       "sha256": "d7c0156d1fab6b74a1ca802cda7def9726e77e41ec94ef529716820575c9f7a3"
     },
     {
-      "path": "website/docs/integrations.md",
+      "path": "docs/integrations.md",
       "kind": "reference",
       "sha256": "2d6e287d7291bc2fc5a777ef177a7860e089637b0a163577e2606e9d41278300"
     },
     {
-      "path": "website/docs/aios-0.8-operational-artifacts.md",
+      "path": "docs/aios-0.8-operational-artifacts.md",
       "kind": "reference",
       "sha256": "ce3278aa01207acc05a77555dd7cb295495d99ca89e09494643b055589dfde65"
     },
     {
-      "path": "website/docs/coordinated-v1-readiness.md",
+      "path": "docs/coordinated-v1-readiness.md",
       "kind": "reference",
       "sha256": "97be23dfc213367963951b6d64d167c8e39079d4e0e684d390fa0e5f0b3d97be"
     },
     {
-      "path": "website/docs/examples.md",
+      "path": "docs/examples.md",
       "kind": "reference",
       "sha256": "5ae71d308e7b16e8349ec91717a05fda38a2fa2ef267c11ed3963219d99992ff"
     },
     {
-      "path": "website/docs/troubleshooting.md",
+      "path": "docs/troubleshooting.md",
       "kind": "reference",
-      "sha256": "a2a373a43b76fe9d0c335a3361c73bc8414dd325bccf4cdc1b908b813ee12dff"
+      "sha256": "e66b7e286af55fc66e433991b9eecbd631e74723efb4cfd39b33d2a52ae5c3f0"
     },
     {
-      "path": "website/docs/limitations.md",
+      "path": "docs/limitations.md",
       "kind": "reference",
-      "sha256": "ddcdae86d85ac287f7abeec69bfb5f92eec3c0f253661210c413d7c4d9a530df"
+      "sha256": "a9a8d2e4c6f2b120e3552b042d794bf5b2d6163c21fa8fffde09f2d251f8bd67"
     },
     {
-      "path": "website/docs/aios-0.6.1.md",
+      "path": "docs/aios-0.6.1.md",
       "kind": "reference",
       "sha256": "8d153e8f26d080e2cdc8ec8d8dc7ebc7ebf9cce7ce7cc537d286ce41bea0957f"
     },
     {
-      "path": "website/docs/aios-0.7.0.md",
+      "path": "docs/aios-0.7.0.md",
       "kind": "reference",
       "sha256": "5c1fff373687291e96824c3454c48330c8372b8997cc983f4e693f3fe320fc95"
     },
     {
-      "path": "website/docs/chaos-0.11-chaoshub.md",
+      "path": "docs/chaos-0.11-chaoshub.md",
       "kind": "reference",
       "sha256": "27e3e92a52aa9386b58add829732a96c27ae20ea5c11d1f990fafc480b3dc2d7"
     },
     {
-      "path": "website/docs/chaos-0.7.md",
+      "path": "docs/chaos-0.7.md",
       "kind": "reference",
       "sha256": "183a2fd6e65690d3ca861692758dc8b96c13f75f5821604f1627dfa002f1ee08"
     },
     {
-      "path": "website/docs/chaos-0.8.md",
+      "path": "docs/chaos-0.8.md",
       "kind": "reference",
       "sha256": "688f5d8375e1e778c01666fd5a39f036a3aea0f9d7f73f83e71995f8f05f0c8d"
     },
     {
-      "path": "website/docs/chaos-0.9.md",
+      "path": "docs/chaos-0.9.md",
       "kind": "reference",
       "sha256": "982f4617a95aa1b042d5e4675d8d0300bd75c133e835b97ac31840b81ae829b7"
     },
     {
-      "path": "website/docs/control-tower-0.6.md",
+      "path": "docs/control-tower-0.6.md",
       "kind": "reference",
       "sha256": "86419d944484250ce53cb2dd6388353611c677f2b905397aeeff045c94b53501"
     },
     {
-      "path": "website/docs/evals-0.11-containment.md",
+      "path": "docs/evals-0.11-containment.md",
       "kind": "reference",
       "sha256": "d6ffe0b9164291acccd976d64c0937f6a44a05f5ac8221e8be4eacc55e574d44"
     },
     {
-      "path": "website/docs/evals-0.12.md",
+      "path": "docs/evals-0.12.md",
       "kind": "reference",
       "sha256": "eacd15140a928a6273fc9808c04991b64e0f6201d6dcbb4c9ea2176472e449a2"
     },
     {
-      "path": "website/docs/lens-0.13.md",
+      "path": "docs/lens-0.13.md",
       "kind": "reference",
       "sha256": "74b3b38d47693e0ff4a7326f0df259a3d9148e908ad90844dee1e68fb18c091c"
     },
     {
-      "path": "website/docs/phase6-containment.md",
+      "path": "docs/phase6-containment.md",
       "kind": "reference",
-      "sha256": "a811767734cb32b2d544ec146db31ccfa2683686b52edac9ed9c5e9135a43027"
+      "sha256": "59a5fc506c80a36cad141e8e83458aaf4c2c40ad1a2d5c7388f882bfcef6645a"
     },
     {
-      "path": "website/docs/tower-0.10-compatibility.md",
+      "path": "docs/tower-0.10-compatibility.md",
       "kind": "reference",
       "sha256": "30e45c6fb8766e2009ffb50cc68a79fa2d279870dddb58e43a50352aa809eff5"
     },
@@ -236,12 +246,12 @@
     {
       "path": "docs/v0.10-contracts.md",
       "kind": "reference",
-      "sha256": "d1c95dcdb20a8f64312b102b8ac32772cf901376fd685dac738aa2103cdfb3ac"
+      "sha256": "23c525d41b1cd9f1a9487861a49d67bb10853c19069ce923a44d2ab3c8b5bd06"
     },
     {
       "path": "src/agentic_sidecar/__init__.py",
       "kind": "source-contract",
-      "sha256": "2de5fe6f4ede640088ce93cd5624b790184210b544a7812f3f48b25c65cad872"
+      "sha256": "5a76853f416468dfe0c557950e3c5a2ca6c0e3d6cf907038c35dbc968e786b9a"
     },
     {
       "path": "src/agentic_sidecar/adapters/__init__.py",
@@ -544,7 +554,7 @@
       "sha256": "baf9fd5fbf5c092ed3d14a64f5153129f0930793b2ada27e2a8692408e95d822"
     },
     {
-      "path": "website/docs/guide/examples/sidecar_quickstart.py",
+      "path": "docs/guide/examples/sidecar_quickstart.py",
       "kind": "example",
       "sha256": "d991884ab60bc7f709cbdfb34f1d0a07bbe7e22bfa2421bc2c322d21b882794f"
     }
