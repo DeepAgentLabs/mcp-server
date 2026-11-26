@@ -41,6 +41,7 @@ theme:
 
 nav:
   - Developer Guide (simple): developer-guide.md
+  - API Reference (detailed): api-reference.md
   - AI Reference capability index: ai-reference-index.md
   - Resources and prompts: resources-and-prompts.md
   - Entry points and administrator CLI: cli-reference.md
