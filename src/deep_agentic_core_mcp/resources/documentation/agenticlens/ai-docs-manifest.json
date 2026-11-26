@@ -4,29 +4,34 @@
   "distribution": "agenticlens",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "99576eef4017810ae0e7037da92208ffbfe30c185382a3953f541bbde8d7c0af",
+  "sha256": "75518756a662744f9a3e98a31e519420ce37e891a3a57f834a875bcc9cc995cd",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
     {
       "path": "pyproject.toml",
       "kind": "package-metadata",
-      "sha256": "6b3a563de7ad65a94af912a642196bf9648e5ddea16129855919d54688cae197"
+      "sha256": "04119f019230fad0f25a050758df93a21832cf6e3fba119953de7184ba38bade"
     },
     {
       "path": "docs/ai-docs.json",
       "kind": "source-selection",
-      "sha256": "7b4dc0e9f4b8a947fecdda4388929f102fc4fcf191f5bfdd7283903c402421a6"
+      "sha256": "f3490566d2a3c6548b940cfa9ad7a85776d3c0ad5ed2af6caac09690d9474b2f"
     },
     {
       "path": "docs/ai-reference-index.md",
       "kind": "reference",
-      "sha256": "157ccaeba1afdf3b9710e3161f9877bb1297e251666a2e24e0a2d5bc63a53c81"
+      "sha256": "a752a9cd4bd584402b9c7760ab436785a10b654017ad159813d7b364d8c91653"
     },
     {
       "path": "docs/developer-guide.md",
       "kind": "reference",
-      "sha256": "9cb3b3ae815d78214c59b837f1dea29fd9801fe069e1a1efcbfb6b9d8a13a6f3"
+      "sha256": "d5dc8998a3bb7b53c10d54a82de0f992d50f177f35f6f79a14319796aa93b9a1"
+    },
+    {
+      "path": "docs/index.md",
+      "kind": "reference",
+      "sha256": "5e8d7b7b38b7cf9d43990b5b13a8c7dcc55e24f4ae093e9bbe9e6576138e70d6"
     },
     {
       "path": "docs/features.md",
@@ -41,7 +46,7 @@
     {
       "path": "docs/api-reference.md",
       "kind": "reference",
-      "sha256": "ad956a54ce65dfbcbe21fd330233a73bc867c2b788ca03b56b708a91cf18c6bb"
+      "sha256": "b5a471070137f0ff69161003edd25c7072de73e9a9d3bc618101f5252a7caa10"
     },
     {
       "path": "docs/cli-reference.md",
@@ -161,7 +166,7 @@
     {
       "path": "docs/limitations.md",
       "kind": "reference",
-      "sha256": "b71d78a78602d708546c714213cd33eb04b76e86048dfcb3e1784ac935db4f3b"
+      "sha256": "74f87a9e967f0814d037bd255aca846af36e24bae5a59557fda17b61354c07cb"
     },
     {
       "path": "docs/aios-0.6.1.md",
@@ -296,7 +301,7 @@
     {
       "path": "src/agenticlens/__init__.py",
       "kind": "source-contract",
-      "sha256": "03f9bf1ec6b7a4398decd8540a8673fba51db1197debf20e5a25ae128e19ed46"
+      "sha256": "91e3b0d8e1bf14512d1aac220d13b3bb55a66eef8914187b30fc577cec078db7"
     },
     {
       "path": "src/agenticlens/adapters/__init__.py",

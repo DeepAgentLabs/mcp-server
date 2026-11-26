@@ -73,39 +73,40 @@ Evaluate proposed actions and enforce decisions through configured adapters. Obs
 
 ## AI Reference capability index
 
-Source: [website/docs/ai-reference-index.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/ai-reference-index.md)
+Source: [docs/ai-reference-index.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/ai-reference-index.md)
 
-This index opens the [AI Reference (robust)](https://deepagentlabs.io/agentic-sidecar/docs/llms-full.md). In that generated raw Markdown file, **Full reference** identifies an included topic section; **Source** links to its maintained document. Use the [Developer Guide (simple)](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#capability-index) for short workflows.
+This index opens the [AI Reference (robust)](https://deepagentlabs.io/agentic-sidecar/docs/llms-full.md). In that generated raw Markdown file, **Full reference** identifies an included topic section; **Source** links to its maintained document. Use the [Developer Guide (simple)](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#capability-index) for short workflows.
 
 ## Capability index
 
 | Capability | Included scope | Detailed reference |
 | --- | --- | --- |
-| Decision Gate and enforcement | Evaluate seven outcomes, then enforce through governed dispatch. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md) |
-| Policy and risk rules | Apply ordered allow/deny policies and tool/argument risk classifications. | <a href="#configuration">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/configuration.md) |
-| Intent constraints | Bind user constraints to tool arguments and retain intent identity and expiry. | <a href="#core-supervision-features">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/features.md) |
-| Budget accounting | Track explicit cost/tokens and pause at configured ceilings. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md) |
-| Plan review and Critic | Review supplied plans, unnecessary steps, contradictions and unsupported assumptions. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md) |
-| Offline and live judges | Use MockJudge or optional OpenAI/Anthropic providers with limits and usage accounting. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md) |
-| Approvals and escalation | Approve once, reject, modify intent, replan or stop a suspended proposal. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md) |
-| Custom hooks and failure policies | Extend decision evaluation while preserving mandatory checks and explicit failure behavior. | <a href="#core-supervision-features">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/features.md) |
-| Framework and MCP adapters | Govern sync/async tools in LangGraph, AutoGen, CrewAI, OpenAI Agents, Google ADK and MCP. | <a href="#framework-and-ecosystem-integrations">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md) |
-| Task runtime and execution lifecycle | Track proposals, decisions, dispatch reservations, completion and failure. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md) |
-| Operator server and Control Room | Connect authenticated local status, task controls and remote approval handling. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md) |
-| Stop, cancellation and revocation callbacks | Latch local dispatch stop, invalidate old decisions and request host-owned access revocation. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md) |
-| Audit journal and restoration | Persist immutable hash-chained events, verify snapshots and restore stopped state. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md) |
-| Shared/exclusive supervision | Compose agent-specific context and mandatory guardrails without weakening shared rules. | <a href="#shared-and-exclusive-supervision">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/scoped-supervision.md) |
-| Context privacy and lifecycle | Authorize readers, deliver defensive copies, update, expire and revoke context. | <a href="#authority-privacy-and-validation-evidence">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md) |
-| Redacted evidence and operator readers | Expose allowlisted summaries separately from privileged native artifacts. | <a href="#authority-privacy-and-validation-evidence">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md) |
-| Task authority and delegation | Require grants, narrow child permissions and enforce ancestor expiry/revocation at dispatch. | <a href="#authority-privacy-and-validation-evidence">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md) |
-| Native interchange contracts | Validate intent, decision, audit, scope and transfer wrappers against five candidate schemas. | <a href="#native-contracts-and-intent-transfer">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.10.md) |
-| Cross-agent intent transfer | Serialize narrowed proposals and receive them against a trusted live parent registry. | <a href="#native-contracts-and-intent-transfer">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.10.md) |
-| Native correlation and Lens | Export correlated decisions and attach them to exact Lens run/trace/span identities. | <a href="#framework-and-ecosystem-integrations">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md) |
-| Chaos recovery supervision | Evaluate recovery proposals linked to native fault events without executing the tool. | <a href="#framework-and-ecosystem-integrations">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md) |
-| AIOS audit projections | Project public native audit identifiers and outcomes into a draft operational artifact. | <a href="#aios-operational-audit-exports">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/aios-0.8-operational-artifacts.md) |
-| Narration and CLI | Display standalone or measured runtime status and use six CLI commands. | <a href="#cli-reference">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/cli-reference.md) |
-| Supervision benchmarks and acceptance | Reproduce synthetic paired dispatch measurements with explicit validation limits. | <a href="#authority-privacy-and-validation-evidence">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md) |
-| Configuration and limitations | Configure roles, optional integrations and trusted-host boundaries. | <a href="#limitations">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/limitations.md) |
+| Decision Gate and enforcement | Evaluate seven outcomes, then enforce through governed dispatch. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) |
+| Policy and risk rules | Apply ordered allow/deny policies and tool/argument risk classifications. | <a href="#configuration">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/configuration.md) |
+| Intent constraints | Bind user constraints to tool arguments, catch intent drift and retain intent identity and expiry. | <a href="#core-supervision-features">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/features.md) |
+| Budget accounting | Track explicit cost/tokens and pause at configured ceilings. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) |
+| Plan review and Critic | Review supplied plans, unnecessary steps, contradictions and unsupported assumptions. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) |
+| Offline and live judges | Use MockJudge or optional OpenAI/Anthropic providers with limits and usage accounting. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) |
+| Human in the loop: approvals and escalation | Approve once, reject, modify intent, replan or stop a suspended proposal. | <a href="#governance-and-evaluator-behavior">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) |
+| Custom hooks and failure policies | Extend decision evaluation while preserving mandatory checks and explicit failure behavior. | <a href="#core-supervision-features">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/features.md) |
+| Framework and MCP adapters | Govern sync/async tools in LangGraph, AutoGen, CrewAI, OpenAI Agents, Google ADK and MCP. | <a href="#framework-and-ecosystem-integrations">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md) |
+| Task runtime and execution lifecycle | Track proposals, decisions, dispatch reservations, completion and failure. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md) |
+| Operator server and Control Room | Watch a task live and pause, resume, replan, stop or restart it, with remote approvals. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md) |
+| Emergency stop, cancellation and revocation | Latch dispatch stop, invalidate old decisions, cancel owned async calls and revoke host-owned access. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md) |
+| Control Tower fleet operations | Join Sidecar evidence to fleet incidents and stop many deployments through one approved bulk action. | <a href="#control-tower-integration-and-emergency-stop">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/control-tower-integration.md) |
+| Audit journal and restoration | Persist immutable hash-chained events, verify snapshots and restore stopped state. | <a href="#live-runtime-and-operator-controls">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md) |
+| Shared/exclusive supervision | Compose agent-specific context and mandatory guardrails without weakening shared rules. | <a href="#shared-and-exclusive-supervision">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/scoped-supervision.md) |
+| Context privacy and lifecycle | Authorize readers, deliver defensive copies, update, expire and revoke context. | <a href="#authority-privacy-and-validation-evidence">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md) |
+| Redacted evidence and operator readers | Expose allowlisted summaries separately from privileged native artifacts. | <a href="#authority-privacy-and-validation-evidence">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md) |
+| Task authority and delegation | Require grants, narrow child permissions and enforce ancestor expiry/revocation at dispatch. | <a href="#authority-privacy-and-validation-evidence">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md) |
+| Native interchange contracts | Validate intent, decision, audit, scope and transfer wrappers against five candidate schemas. | <a href="#native-contracts-and-intent-transfer">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md) |
+| Cross-agent intent transfer | Serialize narrowed proposals and receive them against a trusted live parent registry. | <a href="#native-contracts-and-intent-transfer">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md) |
+| Native correlation and Lens | Export correlated decisions and attach them to exact Lens run/trace/span identities. | <a href="#framework-and-ecosystem-integrations">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md) |
+| Chaos recovery supervision | Evaluate recovery proposals linked to native fault events without executing the tool. | <a href="#framework-and-ecosystem-integrations">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md) |
+| AIOS audit projections | Project public native audit identifiers and outcomes into a draft operational artifact. | <a href="#aios-operational-audit-exports">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/aios-0.8-operational-artifacts.md) |
+| Narration and CLI | Display standalone or measured runtime status and use six CLI commands. | <a href="#cli-reference">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/cli-reference.md) |
+| Supervision benchmarks and acceptance | Reproduce synthetic paired dispatch measurements with explicit validation limits. | <a href="#authority-privacy-and-validation-evidence">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md) |
+| Configuration and limitations | Configure roles, optional integrations and trusted-host boundaries. | <a href="#limitations">Full reference</a> · [Source](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md) |
 
 ## How to use the robust reference
 
@@ -118,7 +119,7 @@ This index opens the [AI Reference (robust)](https://deepagentlabs.io/agentic-si
 
 ## Maintaining coverage
 
-`website/docs/ai-docs.json` selects detailed topic/integration guides, every package Python module and all five native schemas. Keep both indexes and the CLI inventory aligned with new user-facing capabilities. From the repository root, regenerate using the shared sibling documentation checkout and Python 3.11 or newer:
+`docs/ai-docs.json` selects detailed topic/integration guides, every package Python module and all five native schemas. Keep both indexes and the CLI inventory aligned with new user-facing capabilities. From the repository root, regenerate using the shared sibling documentation checkout and Python 3.11 or newer:
 
 ```bash
 python3 ../deepagentlabs.github.io/scripts/build_ai_docs.py --sources .. --project agentic-sidecar
@@ -129,13 +130,238 @@ The shared site build publishes the robust pack verbatim as a raw Markdown downl
 
 ---
 
+## Capability overview
+
+Source: [docs/index.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/index.md)
+
+Should this proposed action proceed right now, given what the user actually asked for?
+
+The Main Agent acts. The Sidecar observes, evaluates, advises and governs each
+proposed tool call or plan step before it executes.
+
+## What it does
+
+Pre-action supervision for autonomous agents, grouped by area below. Each area
+links to its detailed guide; for runnable code, see the
+[developer guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md).
+
+### 1. Intent and context
+
+- **Intent Envelope**
+    - Goal, requester and constraints for the task (for example `maximum_refund: 500`)
+    - Optional timezone-aware expiry: an expired envelope produces WARN, or BLOCK when it carries authority
+- **Constraint bindings**
+    - Bind each constraint to a tool argument (`amount <= maximum_refund` on `issue_refund`)
+    - Operators: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`, `in`, `contains`
+- **Intent Guardian**
+    - Checks every step against the bound constraints
+    - Catches intent drift: a permitted tool used beyond what the user authorized
+- **Changing intent**
+    - Replace the active intent with `set_intent()`
+    - Modify intent during an approval; earlier verdicts are invalidated
+- **Task history**
+    - Intent and history are injected into each decision, across the whole task
+
+Guides: [Features](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/features.md) · [Configuration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/configuration.md)
+
+### 2. Shared and exclusive scopes
+
+- **Shared scope (generic)**
+    - Context and guardrails that apply to every agent in the system
+- **Exclusive scope (specific)**
+    - Context and guardrails for one agent; exclusive allows cannot weaken shared denies
+- **Context**
+    - `ContextSpec`: goal and values the agent can see
+    - Explicit delivery with `context()` / `deliver()`
+- **Guardrails**
+    - `GuardrailSpec`: policies and constraint bindings enforced separately from context
+    - Every applicable layer must pass; deny wins
+    - Mandatory checks run before custom hooks and cannot be bypassed by tool arguments
+- **Privacy and lifecycle**
+    - Authorized readers, defensive copies, update, expiry and revocation
+    - Redacted evidence summaries that exclude private arguments, goals and plans
+
+Guides: [Scoped supervision](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/scoped-supervision.md) ·
+[Authority and privacy](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md#context-privacy-and-readers)
+
+### 3. Guardrails (Decision Gate checks)
+
+- **Policy Advisor**
+    - Ordered allow/deny rules on tool-name globs, from YAML or Python
+    - Deterministic, zero LLM calls; runs first
+- **Risk Evaluator**
+    - LOW / MEDIUM / HIGH classification from tool and argument rules
+    - `risk_block_threshold` sets when the gate intervenes
+- **Budget Guardian**
+    - Cost and token ceilings per task
+    - Manual usage records plus automatic Judge usage; reaching a ceiling pauses
+- **Task authority**
+    - Explicit tool grants through `AuthorityBinding`
+    - Delegation that can only narrow permissions
+    - Ancestor revocation and expiry checked at dispatch time
+- **Failure policy**
+    - `on_sidecar_failure` is required: `fail_closed` or `fail_open`
+
+Guides: [Configuration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/configuration.md) · [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) ·
+[Task authority](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md#task-authority-and-delegation)
+
+### 4. Evaluators (optional)
+
+- **Planner**
+    - Reviews a full supplied plan before execution; can return REPLAN
+- **Critic**
+    - Challenges unsafe actions, contradictions and unsupported assumptions
+- **Judge**
+    - Independent model evaluation: `MockJudge` offline, OpenAI or Anthropic live
+    - Validated verdicts, timeouts, cost limits and usage accounting
+- **Custom hooks**
+    - `before_tool_call` replaces the optional pipeline; mandatory checks still apply
+
+Guides: [Governance and evaluators](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) · [Features](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/features.md)
+
+### 5. Decisions and operating modes
+
+- **Seven outcomes**
+    - ALLOW, WARN, CHALLENGE, REPLAN, PAUSE, BLOCK, ESCALATE
+- **Observe mode**
+    - Computes and records verdicts; wrapped calls still execute
+- **Govern mode**
+    - ALLOW/WARN execute; BLOCK raises `SidecarBlockedError`
+    - PAUSE/ESCALATE request approval; CHALLENGE/REPLAN raise `SidecarSuspendedError`
+- **Dry run**
+    - `evaluate()` and `evaluate_plan()` return a verdict without dispatching a tool
+
+Guides: [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) · [API reference](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#sidecar)
+
+### 6. Human in the loop
+
+- **Approval requests**
+    - PAUSE and ESCALATE wait for a human decision
+- **Where to approve**
+    - Terminal (`CLIApprovalHandler`), Control Room, HTTP or `agentic-sidecar approve`
+- **Approval actions**
+    - Approve once, reject, modify intent, ask the agent to replan, stop the agent
+    - BLOCK is never offered for approval
+- **Safety**
+    - Approval binds to the decision ID and one unchanged invocation
+    - Replayed or duplicate answers are rejected; waiting times out into REPLAN
+- **Notifications**
+    - `on_escalation_required` callbacks
+
+Guides: [Approvals](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/guide/approvals.md) · [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md#local-approval-flow)
+
+### 7. Live view and control
+
+- **Control Room**
+    - Authenticated local web page: objective, plan, intent findings, risk, budget,
+      action lifecycle, pending approvals and audit events
+- **Task controls**
+    - Pause, resume, replan, stop and restart
+    - Available from the Control Room, the CLI, HTTP and `runtime.control()`
+- **CLI**
+    - `status --follow`, `control`, `approve`, `demo`, `approval-demo`, `version`
+- **Narration**
+    - Raw tool and MCP traces translated into human-readable status
+
+Guides: [Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md) · [CLI reference](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/cli-reference.md)
+
+### 8. Emergency stop
+
+- **Latches first**
+    - Takes effect before audit writes or callbacks, in Observe and Govern, regardless of failure policy
+- **Halts dispatch**
+    - Queued proposals and approval retries cannot dispatch; earlier ALLOWs are invalidated
+- **Cancels and revokes**
+    - Cancellation requests for owned async calls
+    - Task authority revoked and configured revokers called (for example MCP access)
+- **Robust**
+    - A broken audit sink cannot prevent revocation
+    - A restored runtime comes back stopped and needs an explicit restart
+
+Guides: [Emergency stop](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/control-tower-integration.md#emergency-stop) ·
+[Stop and revocation](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md#stop-cancellation-and-access-revocation)
+
+### 9. Audit and provenance
+
+- **Decision records**
+    - Trigger, rationale and causal links for every decision
+- **Event journal**
+    - Hash-chained events with optional durable JSONL; `verify_events()` checks the chain
+- **Restoration**
+    - Reopen a journal to restore a task in a stopped state
+- **Exports**
+    - Five native contracts: intent, decision, audit, scope and transfer
+    - Correlated decision projections and AIOS operational audit artifacts
+
+Guides: [Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md#audit-snapshots-and-restoration) ·
+[Contracts](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md) · [AIOS export](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/aios-0.8-operational-artifacts.md)
+
+### 10. Framework adapters
+
+- **Frameworks**
+    - LangGraph, AutoGen, CrewAI, OpenAI Agents and Google ADK
+- **Tools**
+    - MCP tools on an initialized client session
+    - Plain sync/async Python callables
+- **Boundary**
+    - Pass only the returned governed tools to the agent
+
+Guides: [Integrations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md#framework-adapters) ·
+[API reference](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#other-framework-adapters)
+
+### 11. Ecosystem interoperability
+
+- **Control Tower**
+    - Fleet view: inventory, alerts and incident console with joined Sidecar evidence
+    - Fleet-wide stop through `SidecarContainmentAdapter` with separate human approval
+    - Runbooks still use the Sidecar for emergency stop and restart
+- **AgenticLens**
+    - Attach correlated decisions to exact Lens run, trace and span IDs
+- **Agentic Chaos**
+    - Evaluate recovery proposals linked to injected fault events
+- **Agentic Evals**
+    - Score supervision evidence from offline benchmark fixtures
+- **AIOS**
+    - Project native audit records into draft operational artifacts
+
+Guides: [Control Tower integration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/control-tower-integration.md) ·
+[Integrations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md)
+
+## What you need
+
+Proposed tool actions, policy rules, intent constraints and, optionally,
+recorded budgets and an approval handler.
+
+## Start here
+
+Compute a deny verdict, then demonstrate governed execution:
+[follow the quickstart](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#quickstart).
+
+## Limits
+
+- `evaluate()` produces a verdict; enforcement needs Govern mode and the returned governed tools.
+- Observe mode never blocks execution.
+- Stop cannot undo side effects of calls that were already dispatched.
+- Wrappers do not sandbox hostile code or govern unwrapped functions, prompts or nested calls.
+- The operator server is loopback-only; there is no TLS or public deployment.
+
+See [Limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md).
+
+## Documentation
+
+- [Developer Guide (simple)](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md): short task workflows and a capability index
+- [API Reference (detailed)](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md): exact Python classes, parameters and return values
+- [AI Readable Documentation](https://deepagentlabs.io/agentic-sidecar/docs/llms-full.md): the full reference as one file for AI tools, with source declarations and schemas
+
+---
+
 ## Setup and task workflows
 
-Source: [website/docs/developer-guide.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md)
+Source: [docs/developer-guide.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md)
 
 Use this simple guide to choose a capability and connect it to an explicit tool boundary. The [AI Reference (robust)](https://deepagentlabs.io/agentic-sidecar/docs/llms-full.md) includes detailed topic guides, current package/CLI declarations and all five native schemas. Observe mode records decisions; Govern enforces them through the returned tools.
 
-[Capability index](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#capability-index) · [Quickstart](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#quickstart) · [Configuration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#settings) · [Troubleshooting](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#troubleshooting) · [Reference](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#reference)
+[Capability index](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#capability-index) · [Quickstart](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#quickstart) · [Configuration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#settings) · [Troubleshooting](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#troubleshooting) · [Reference](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#reference)
 
 ## Capability index
 
@@ -143,31 +369,32 @@ Every row links to a short workflow below. Detailed references explain configura
 
 | Capability | What you can do |
 | --- | --- |
-| [Decision Gate and enforcement](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#gate) | Evaluate seven outcomes, then enforce through governed dispatch. |
-| [Policy and risk rules](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#policy-risk) | Apply ordered allow/deny policies and tool/argument risk classifications. |
-| [Intent constraints](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#intent) | Bind user constraints to tool arguments and retain intent identity and expiry. |
-| [Budget accounting](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#budget) | Track explicit cost/tokens and pause at configured ceilings. |
-| [Plan review and Critic](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#plan-review) | Review supplied plans, unnecessary steps, contradictions and unsupported assumptions. |
-| [Offline and live judges](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#judges) | Use MockJudge or optional OpenAI/Anthropic providers with limits and usage accounting. |
-| [Approvals and escalation](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#approvals) | Approve once, reject, modify intent, replan or stop a suspended proposal. |
-| [Custom hooks and failure policies](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#hooks) | Extend decision evaluation while preserving mandatory checks and explicit failure behavior. |
-| [Framework and MCP adapters](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#adapters) | Govern sync/async tools in LangGraph, AutoGen, CrewAI, OpenAI Agents, Google ADK and MCP. |
-| [Task runtime and execution lifecycle](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#runtime) | Track proposals, decisions, dispatch reservations, completion and failure. |
-| [Operator server and Control Room](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#operators) | Connect authenticated local status, task controls and remote approval handling. |
-| [Stop, cancellation and revocation callbacks](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#stop) | Latch local dispatch stop, invalidate old decisions and request host-owned access revocation. |
-| [Audit journal and restoration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#audit) | Persist immutable hash-chained events, verify snapshots and restore stopped state. |
-| [Shared/exclusive supervision](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#scopes) | Compose agent-specific context and mandatory guardrails without weakening shared rules. |
-| [Context privacy and lifecycle](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#privacy) | Authorize readers, deliver defensive copies, update, expire and revoke context. |
-| [Redacted evidence and operator readers](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#evidence) | Expose allowlisted summaries separately from privileged native artifacts. |
-| [Task authority and delegation](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#authority) | Require grants, narrow child permissions and enforce ancestor expiry/revocation at dispatch. |
-| [Native interchange contracts](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#contracts) | Validate intent, decision, audit, scope and transfer wrappers against five candidate schemas. |
-| [Cross-agent intent transfer](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#transfer) | Serialize narrowed proposals and receive them against a trusted live parent registry. |
-| [Native correlation and Lens](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#lens) | Export correlated decisions and attach them to exact Lens run/trace/span identities. |
-| [Chaos recovery supervision](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#chaos) | Evaluate recovery proposals linked to native fault events without executing the tool. |
-| [AIOS audit projections](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#aios) | Project public native audit identifiers and outcomes into a draft operational artifact. |
-| [Narration and CLI](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#narration) | Display standalone or measured runtime status and use six CLI commands. |
-| [Supervision benchmarks and acceptance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#validation) | Reproduce synthetic paired dispatch measurements with explicit validation limits. |
-| [Configuration and limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/developer-guide.md#settings) | Configure roles, optional integrations and trusted-host boundaries. |
+| [Decision Gate and enforcement](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#gate) | Evaluate seven outcomes, then enforce through governed dispatch. |
+| [Policy and risk rules](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#policy-risk) | Apply ordered allow/deny policies and tool/argument risk classifications. |
+| [Intent constraints](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#intent) | Bind user constraints to tool arguments, catch intent drift and retain intent identity and expiry. |
+| [Budget accounting](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#budget) | Track explicit cost/tokens and pause at configured ceilings. |
+| [Plan review and Critic](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#plan-review) | Review supplied plans, unnecessary steps, contradictions and unsupported assumptions. |
+| [Offline and live judges](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#judges) | Use MockJudge or optional OpenAI/Anthropic providers with limits and usage accounting. |
+| [Human in the loop: approvals and escalation](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#approvals) | Approve once, reject, modify intent, replan or stop a suspended proposal. |
+| [Custom hooks and failure policies](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#hooks) | Extend decision evaluation while preserving mandatory checks and explicit failure behavior. |
+| [Framework and MCP adapters](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#adapters) | Govern sync/async tools in LangGraph, AutoGen, CrewAI, OpenAI Agents, Google ADK and MCP. |
+| [Task runtime and execution lifecycle](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#runtime) | Track proposals, decisions, dispatch reservations, completion and failure. |
+| [Operator server and Control Room](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#operators) | Watch a task live and pause, resume, replan, stop or restart it, with remote approvals. |
+| [Emergency stop, cancellation and revocation](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#stop) | Latch dispatch stop, invalidate old decisions, cancel owned async calls and revoke host-owned access. |
+| [Control Tower fleet operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#control-tower) | Join Sidecar evidence to fleet incidents and stop many deployments through one approved bulk action. |
+| [Audit journal and restoration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#audit) | Persist immutable hash-chained events, verify snapshots and restore stopped state. |
+| [Shared/exclusive supervision](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#scopes) | Compose agent-specific context and mandatory guardrails without weakening shared rules. |
+| [Context privacy and lifecycle](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#privacy) | Authorize readers, deliver defensive copies, update, expire and revoke context. |
+| [Redacted evidence and operator readers](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#evidence) | Expose allowlisted summaries separately from privileged native artifacts. |
+| [Task authority and delegation](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#authority) | Require grants, narrow child permissions and enforce ancestor expiry/revocation at dispatch. |
+| [Native interchange contracts](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#contracts) | Validate intent, decision, audit, scope and transfer wrappers against five candidate schemas. |
+| [Cross-agent intent transfer](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#transfer) | Serialize narrowed proposals and receive them against a trusted live parent registry. |
+| [Native correlation and Lens](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#lens) | Export correlated decisions and attach them to exact Lens run/trace/span identities. |
+| [Chaos recovery supervision](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#chaos) | Evaluate recovery proposals linked to native fault events without executing the tool. |
+| [AIOS audit projections](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#aios) | Project public native audit identifiers and outcomes into a draft operational artifact. |
+| [Narration and CLI](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#narration) | Display standalone or measured runtime status and use six CLI commands. |
+| [Supervision benchmarks and acceptance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#validation) | Reproduce synthetic paired dispatch measurements with explicit validation limits. |
+| [Configuration and limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/developer-guide.md#settings) | Configure roles, optional integrations and trusted-host boundaries. |
 
 ## Quickstart
 
@@ -204,7 +431,7 @@ assert not calls, "The synthetic delete function must not execute."
 print("Function calls:", len(calls))
 ```
 
-[Download sidecar_quickstart.py](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/guide/examples/sidecar_quickstart.py)
+[Download sidecar_quickstart.py](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/guide/examples/sidecar_quickstart.py)
 
 ```bash
 python sidecar_quickstart.py
@@ -222,19 +449,19 @@ Examples under `examples/` or `scripts/` assume a source checkout and run from i
 
 Sidecar supports `ALLOW`, `WARN`, `BLOCK`, `CHALLENGE`, `REPLAN`, `PAUSE` and `ESCALATE`. `evaluate()` returns a decision; it does not execute a tool. Governed adapters dispatch ALLOW/WARN, block BLOCK, return replanning/challenge outcomes to the loop, and resolve or suspend approval outcomes. Observe evaluates but calls through.
 
-Custom loops must evaluate, enforce, reserve dispatch with `runtime.dispatch(...)`, execute only after admission, and call `runtime.complete(...)` on success or failure. Prefer a supported adapter for this lifecycle. See [outcome and approval semantics](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md) and [dispatch freshness](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md#task-authority-and-delegation).
+Custom loops must evaluate, enforce, reserve dispatch with `runtime.dispatch(...)`, execute only after admission, and call `runtime.complete(...)` on success or failure. Prefer a supported adapter for this lifecycle. See [outcome and approval semantics](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) and [dispatch freshness](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md#task-authority-and-delegation).
 
 <span id="policy-risk"></span>
 
 ### Policy and risk rules
 
-`PolicyAdvisor` evaluates ordered tool-name globs; first match wins, with an allow default unless configured otherwise. `RiskEvaluator` classifies tool/argument rules as LOW/MEDIUM/HIGH, and `risk_block_threshold` determines intervention. Load YAML or mapping definitions, or construct `PolicyRule`/`RiskRule` objects. The quickstart demonstrates a deny rule. See [rule fields, comparison operators and configuration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/configuration.md).
+`PolicyAdvisor` evaluates ordered tool-name globs; first match wins, with an allow default unless configured otherwise. `RiskEvaluator` classifies tool/argument rules as LOW/MEDIUM/HIGH, and `risk_block_threshold` determines intervention. Load YAML or mapping definitions, or construct `PolicyRule`/`RiskRule` objects. The quickstart demonstrates a deny rule. See [rule fields, comparison operators and configuration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/configuration.md).
 
 <span id="intent"></span>
 
 ### Intent constraints
 
-Create an `IntentEnvelope` containing the goal, requester, constraints and optional expiry. `ConstraintBinding` maps each enforced constraint to a tool argument; `IntentGuardian` checks the bound values. Supply it as `intent=` and enable the `intent_guardian` role. Goals alone are not deterministic constraints, and an authority dictionary requires explicit authority bindings to enforce grants. See [constraint setup](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/configuration.md) and [authority semantics](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md).
+Create an `IntentEnvelope` containing the goal, requester, constraints and optional expiry. `ConstraintBinding` maps each enforced constraint to a tool argument; `IntentGuardian` checks the bound values. Supply it as `intent=` and enable the `intent_guardian` role. A step that breaks a bound constraint (intent drift, such as a refund above the authorized amount) is blocked even when the tool itself is permitted. Goals alone are not deterministic constraints, and an authority dictionary requires explicit authority bindings to enforce grants. See [constraint setup](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/configuration.md) and [authority semantics](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md).
 
 <span id="budget"></span>
 
@@ -249,7 +476,7 @@ budget.record_invocation(cost=5.0, tokens=1200)
 assert sidecar.evaluate(DecisionContext(tool_name="read_order")).status == "PAUSE"
 ```
 
-Record actual external usage explicitly, and call `reset()` for the next task. Judge usage reaches a configured task budget once; other framework/tool usage is not inferred. Govern pauses dispatch until resolved. See [budget and Judge accounting](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md).
+Record actual external usage explicitly, and call `reset()` for the next task. Judge usage reaches a configured task budget once; other framework/tool usage is not inferred. Govern pauses dispatch until resolved. See [budget and Judge accounting](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md).
 
 <span id="plan-review"></span>
 
@@ -266,7 +493,7 @@ decision = sidecar.evaluate_plan(
 assert decision.status == "REPLAN"
 ```
 
-Full-plan review runs enabled deterministic gates on each supplied step. `CriticEvaluator` challenges selected unsafe actions and assumptions; verification metadata must be step-scoped. These are scoped heuristics, not general semantic reasoning. See [plan review](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md#full-plan-review), [Critic behavior](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/features.md) and [migration details](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md#review-fixes-and-migration).
+Full-plan review runs enabled deterministic gates on each supplied step. `CriticEvaluator` challenges selected unsafe actions and assumptions; verification metadata must be step-scoped. These are scoped heuristics, not general semantic reasoning. See [plan review](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md#full-plan-review), [Critic behavior](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/features.md) and [migration details](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md#review-fixes-and-migration).
 
 <span id="judges"></span>
 
@@ -274,11 +501,11 @@ Full-plan review runs enabled deterministic gates on each supplied step. `Critic
 
 Configure `JudgeEvaluator(MockJudge(...))` for explicit offline responses. `OpenAIJudge` and `AnthropicJudge` use optional provider SDKs and never silently substitute mocks. Install `[openai]` or `[anthropic]`, supply credentials/model, and enable the `judge` role.
 
-Configure timeout, cost limit and caller-supplied token rates when accounting is required. Provider errors follow the explicit Sidecar failure policy; limits are not a hard cancellation mechanism for arbitrary blocking code. See [provider setup and smoke commands](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md#optional-live-judge-providers) and [Judge limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/limitations.md).
+Configure timeout, cost limit and caller-supplied token rates when accounting is required. Provider errors follow the explicit Sidecar failure policy; limits are not a hard cancellation mechanism for arbitrary blocking code. See [provider setup and smoke commands](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md#optional-live-judge-providers) and [Judge limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md).
 
 <span id="approvals"></span>
 
-### Approvals and escalation
+### Human in the loop: approvals and escalation
 
 ```python
 from agentic_sidecar import Sidecar
@@ -290,13 +517,13 @@ sidecar = Sidecar(
 )
 ```
 
-Use returned governed tools. PAUSE/ESCALATE can request `approve_once`, `reject`, `modify_intent`, `ask_agent_to_replan` or `stop_agent`. BLOCK is never offered for approval. Responses bind to the decision ID; approval authorizes one unchanged invocation. Missing handlers suspend. `TaskRuntime` supports connected operator approvals; `on_escalation_required` supports notification callbacks. See [approval transitions and malformed-response handling](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md#local-approval-flow).
+Use returned governed tools. PAUSE/ESCALATE can request `approve_once`, `reject`, `modify_intent`, `ask_agent_to_replan` or `stop_agent`. BLOCK is never offered for approval. Responses bind to the decision ID; approval authorizes one unchanged invocation. Missing handlers suspend. `TaskRuntime` supports connected operator approvals; `on_escalation_required` supports notification callbacks. See [approval transitions and malformed-response handling](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md#local-approval-flow).
 
 <span id="hooks"></span>
 
 ### Custom hooks and failure policies
 
-`before_tool_call` installs a custom decision hook; `on_sidecar_failure` must explicitly be `fail_open` or `fail_closed`. Govern/fail_closed blocks when evaluation fails; fail_open can permit that failure path. Hooks receive copied proposals and cannot rewrite the enforced tool/arguments. Mandatory scope and authority checks still apply before optional evaluation. See [hook API](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/api-reference.md), [mandatory guardrails](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/scoped-supervision.md) and [failure limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/limitations.md).
+`before_tool_call` installs a custom decision hook; `on_sidecar_failure` must explicitly be `fail_open` or `fail_closed`. Govern/fail_closed blocks when evaluation fails; fail_open can permit that failure path. Hooks receive copied proposals and cannot rewrite the enforced tool/arguments. Mandatory scope and authority checks still apply before optional evaluation. See [hook API](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md), [mandatory guardrails](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/scoped-supervision.md) and [failure limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md).
 
 <span id="adapters"></span>
 
@@ -313,13 +540,13 @@ Start with `adapters.callable.attach()` or `adapters.langgraph.attach()` for pla
 | `adapters.google_adk` | `[google-adk]`; ADK FunctionTool |
 | `adapters.mcp` | `[mcp]`; async wrappers for allowlisted tools on an initialized ClientSession |
 
-Most adapters use `attach(sidecar, tools)`; MCP uses `attach(sidecar, session, tool_names)`. Pass only the returned objects to the agent. Prebuilt SDK tools, automatic handoffs and arbitrary nested/raw calls are not automatically protected. See [SDK versions, Python requirements and examples](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md#framework-adapters) and [MCP gateway boundaries](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md#mcp).
+Most adapters use `attach(sidecar, tools)`; MCP uses `attach(sidecar, session, tool_names)`. Pass only the returned objects to the agent. Prebuilt SDK tools, automatic handoffs and arbitrary nested/raw calls are not automatically protected. See [SDK versions, Python requirements and examples](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md#framework-adapters) and [MCP gateway boundaries](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md#mcp).
 
 <span id="runtime"></span>
 
 ### Task runtime and execution lifecycle
 
-`TaskRuntime` records proposed, evaluated, dispatched, completed and failed actions. Supply `runtime=` to Sidecar and use that runtime as `escalation_handler` for connected approvals. Inspect `runtime.snapshot()` and `runtime.journal.export(after=0)`. The guarded quickstart creates runtime evidence automatically. Evaluating a proposal alone is not evidence that it executed. See [runtime construction and lifecycle](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md).
+`TaskRuntime` records proposed, evaluated, dispatched, completed and failed actions. Supply `runtime=` to Sidecar and use that runtime as `escalation_handler` for connected approvals. Inspect `runtime.snapshot()` and `runtime.journal.export(after=0)`. The guarded quickstart creates runtime evidence automatically. Evaluating a proposal alone is not evidence that it executed. See [runtime construction and lifecycle](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md).
 
 <span id="operators"></span>
 
@@ -335,17 +562,23 @@ agentic-sidecar control pause
 agentic-sidecar control resume
 ```
 
-Replace PORT/TASK_ID with the running server's values. Status/events/control/approval/intent API routes require the operator token. See [complete server setup, protocol and Control Room](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md#connect-a-real-task).
+The Control Room and `POST /control` accept `pause`, `resume`, `replan`, `stop` and `restart`. Pause and replan hold new dispatches until resume; restart is allowed only after a clean stop. Replace PORT/TASK_ID with the running server's values. Status/events/control/approval/intent API routes require the operator token. See [complete server setup, protocol and Control Room](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md#connect-a-real-task).
 
 <span id="stop"></span>
 
-### Stop, cancellation and revocation callbacks
+### Emergency stop, cancellation and revocation
 
 ```bash
 agentic-sidecar control stop
 ```
 
-Stop latches independently of evaluation mode and failure policy, blocks queued dispatch and invalidates old decisions. Already-dispatched sync work may finish; owned async tools receive cooperative cancellation requests. Configure named `TaskRuntime(revokers=...)` callbacks for host-owned credentials and delegated access; acknowledgement requires each issuer to return exactly `True` after revocation. Restart does not renew credentials or task authority. See [stop receipts, partial failures and restart rules](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md#stop-cancellation-and-access-revocation).
+Stop is the emergency stop. It latches before audit writes or callbacks, independently of evaluation mode and failure policy, blocks queued dispatch and invalidates old decisions. Already-dispatched sync work may finish; owned async tools receive cooperative cancellation requests. Configure named `TaskRuntime(revokers=...)` callbacks for host-owned credentials and delegated access; acknowledgement requires each issuer to return exactly `True` after revocation. A broken audit sink cannot prevent revocation, and a restored runtime comes back stopped. Restart does not renew credentials or task authority. See [stop receipts, partial failures and restart rules](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md#stop-cancellation-and-access-revocation) and the [emergency stop guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/control-tower-integration.md#emergency-stop).
+
+<span id="control-tower"></span>
+
+### Control Tower fleet operations
+
+AgenticOps Control Tower reads explicitly linked Sidecar decisions into its inventory, alerts and incident console. For a fleet-wide stop, the trusted host installs a `SidecarContainmentAdapter(runtime)` per deployment; a writer previews a `runtime.stop` bulk action, a separate approver approves it, and each target reports acknowledged, incomplete, failed, unsupported or timed_out. The runtime needs an issuer-backed `mcp` revoker. Sidecar keeps dispatch blocking and pre-action decisions; Tower coordinates targeting, approvals, runbooks and incidents. See [Control Tower integration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/control-tower-integration.md).
 
 <span id="audit"></span>
 
@@ -353,7 +586,7 @@ Stop latches independently of evaluation mode and failure policy, blocks queued 
 
 `EventJournal(task_id, path)` can persist JSONL events with sequence, event identity, timestamp, previous hash and digest. `verify_events(events, task_id=...)` checks a complete native chain before replay/export. Reopen `EventJournal(task_id, path)` and pass it to `TaskRuntime` to restore supported snapshots in a stopped state; approvals are not silently reauthorized. This is distinct from serializing a caller-managed `AuditRecord`.
 
-Protect native records because they may contain arguments and reasons. Hash chaining detects alteration relative to the supplied chain; an external trusted anchor is needed to resist a full malicious rewrite. See [journal formats, restoration and replay](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md#audit-snapshots-and-restoration).
+Protect native records because they may contain arguments and reasons. Hash chaining detects alteration relative to the supplied chain; an external trusted anchor is needed to resist a full malicious rewrite. See [journal formats, restoration and replay](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md#audit-snapshots-and-restoration).
 
 <span id="scopes"></span>
 
@@ -361,7 +594,7 @@ Protect native records because they may contain arguments and reasons. Hash chai
 
 Configure `ScopedSystem` with declared agents, a shared `ScopeLayer`, and optional exclusive layers. `ContextSpec` carries goal/values, while `GuardrailSpec` carries explicit policies/constraint bindings. `bind(agent_id, on_sidecar_failure=...)` creates a separate supervised agent boundary.
 
-Shared and exclusive context conflicts fail validation; every applicable guardrail must pass. Exclusive allows cannot weaken shared denies. Context delivery is explicit through `context()`/`deliver()`, and private text is not automatically enforcement policy or evaluator input. See [composition, mandatory checks and trusted identities](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/scoped-supervision.md).
+Shared and exclusive context conflicts fail validation; every applicable guardrail must pass. Exclusive allows cannot weaken shared denies. Context delivery is explicit through `context()`/`deliver()`, and private text is not automatically enforcement policy or evaluator input. See [composition, mandatory checks and trusted identities](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/scoped-supervision.md).
 
 <span id="privacy"></span>
 
@@ -382,13 +615,13 @@ refund.update_context({"reference": "demo-2"}, actor="refund")
 refund.revoke_context(actor="refund")
 ```
 
-Readers/actors come from the authenticated host. Owners update/revoke context; expiry/revocation blocks future reads but cannot retract delivered copies. Combined layers intersect extra readers and use the earliest expiry. See [reader authorization, delivery and lifecycle](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md#context-privacy-and-readers).
+Readers/actors come from the authenticated host. Owners update/revoke context; expiry/revocation blocks future reads but cannot retract delivered copies. Combined layers intersect extra readers and use the earliest expiry. See [reader authorization, delivery and lifecycle](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md#context-privacy-and-readers).
 
 <span id="evidence"></span>
 
 ### Redacted evidence and operator readers
 
-`BoundAgent.evidence()` returns an allowlisted summary of identity, verdict/risk, counts and lifecycle state, excluding private arguments, goals, reasons, plans and pending approvals. `OperatorServer(reader_tokens={secret: "auditor"})` permits redacted GET `/status` only; those tokens cannot control, approve or read raw events. A summary cannot replace a native decision or verifiable journal. See [reader token and evidence contracts](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md#context-privacy-and-readers).
+`BoundAgent.evidence()` returns an allowlisted summary of identity, verdict/risk, counts and lifecycle state, excluding private arguments, goals, reasons, plans and pending approvals. `OperatorServer(reader_tokens={secret: "auditor"})` permits redacted GET `/status` only; those tokens cannot control, approve or read raw events. A summary cannot replace a native decision or verifiable journal. See [reader token and evidence contracts](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md#context-privacy-and-readers).
 
 <span id="authority"></span>
 
@@ -402,7 +635,7 @@ Run the offline synthetic-tool example from the checkout:
 uv run python examples/v0_9_authority_delegation.py
 ```
 
-The parent registry and raw tools stay host-owned. Revocation does not undo already reserved execution. Observe records authority decisions without enforcing them; use the governed dispatch boundary. See [grants, narrowing, revocation and restart](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md#task-authority-and-delegation).
+The parent registry and raw tools stay host-owned. Revocation does not undo already reserved execution. Observe records authority decisions without enforcing them; use the governed dispatch boundary. See [grants, narrowing, revocation and restart](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md#task-authority-and-delegation).
 
 <span id="contracts"></span>
 
@@ -419,7 +652,7 @@ assert restored.decision.decision_id == native.decision_id
 assert contract_schema("decision")["properties"]["schema_version"]["const"] == "sidecar.decision/1"
 ```
 
-The five families are intent, decision, audit, scope and transfer. Top-level wrappers require exact markers and reject unknown fields. `ScopeContract.build()` validates composition; `export_audit()` validates a native record including timezone-aware timestamps. Native contracts are candidate surfaces, independent of package and AIOS versions. See [schema policy and migration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.10.md#schema-and-migration-policy).
+The five families are intent, decision, audit, scope and transfer. Top-level wrappers require exact markers and reject unknown fields. `ScopeContract.build()` validates composition; `export_audit()` validates a native record including timezone-aware timestamps. Native contracts are candidate surfaces, independent of package and AIOS versions. See [schema policy and migration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md#schema-and-migration-policy).
 
 <span id="transfer"></span>
 
@@ -431,7 +664,7 @@ The five families are intent, decision, audit, scope and transfer. Top-level wra
 uv run python examples/v0_10_contracts.py
 ```
 
-A proposal is not a signed credential, approval or resumable task. Disconnected registry replication and one-time replay prevention are host responsibilities. See [cross-instance receive checks and limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.10.md#cross-instance-and-cross-agent-propagation).
+A proposal is not a signed credential, approval or resumable task. Disconnected registry replication and one-time replay prevention are host responsibilities. See [cross-instance receive checks and limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md#cross-instance-and-cross-agent-propagation).
 
 <span id="lens"></span>
 
@@ -439,19 +672,19 @@ A proposal is not a signed credential, approval or resumable task. Disconnected 
 
 `Correlation(run_id=..., trace_id=..., span_id=...)` and `export_decisions()` emit `sidecar.correlation/1` projections after verifying the native journal. The host supplies exact IDs. Install `[agenticlens]` to use `integrations.agenticlens.attach_decisions(sidecar, run, span_id=...)` for Lens readback.
 
-BLOCK/ESCALATE remain supervision outcomes rather than failed deployments. Projections may retain sensitive reasons and are not independent execution evidence. See [correlation fields, Lens identity checks and access boundaries](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md#versioned-native-decision-evidence).
+BLOCK/ESCALATE remain supervision outcomes rather than failed deployments. Projections may retain sensitive reasons and are not independent execution evidence. See [correlation fields, Lens identity checks and access boundaries](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md#versioned-native-decision-evidence).
 
 <span id="chaos"></span>
 
 ### Chaos recovery supervision
 
-Install `[agentic-chaos]` for optional resilience experiments. `integrations.agentic_chaos.evaluate_recovery(sidecar, event, tool_name=..., arguments=...)` evaluates/enforces a recovery proposal linked to a native Chaos event ID; it does not execute the tool. Actual execution still passes through a supervised adapter. See [Chaos/Evals ownership and examples](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md#agentic-chaos-and-evals).
+Install `[agentic-chaos]` for optional resilience experiments. `integrations.agentic_chaos.evaluate_recovery(sidecar, event, tool_name=..., arguments=...)` evaluates/enforces a recovery proposal linked to a native Chaos event ID; it does not execute the tool. Actual execution still passes through a supervised adapter. See [Chaos/Evals ownership and examples](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md#agentic-chaos-and-evals).
 
 <span id="aios"></span>
 
 ### AIOS audit projections
 
-`integrations.aios.export_audit_event(record, target=..., created_at=...)` projects a native `AuditRecord` into a `0.8-draft` operational audit artifact. The host supplies public target references and an aware recording timestamp. The projection withholds rationale/context, marks the actor unknown, and maps BLOCK to denied while other outcomes remain requested. Permission to proceed is not proof of execution. See [AIOS operational projection](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/aios-0.8-operational-artifacts.md) and [export API](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/api-reference.md#aios-operational-audit-export).
+`integrations.aios.export_audit_event(record, target=..., created_at=...)` projects a native `AuditRecord` into a `0.8-draft` operational audit artifact. The host supplies public target references and an aware recording timestamp. The projection withholds rationale/context, marks the actor unknown, and maps BLOCK to denied while other outcomes remain requested. Permission to proceed is not proof of execution. See [AIOS operational projection](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/aios-0.8-operational-artifacts.md) and [export API](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#aios-operational-audit-export).
 
 <span id="narration"></span>
 
@@ -464,7 +697,7 @@ agentic-sidecar version
 agentic-sidecar status --json
 ```
 
-`demo` illustrates simulated narrator calls; `approval-demo` prompts without executing tools. `status --endpoint` reads measured task events; `--follow --json` is formatted display, not JSONL. `control` and `approve` operate on authenticated live tasks. See the [complete six-command inventory and flags](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/cli-reference.md).
+`demo` illustrates simulated narrator calls; `approval-demo` prompts without executing tools. `status --endpoint` reads measured task events; `--follow --json` is formatted display, not JSONL. `control` and `approve` operate on authenticated live tasks. See the [complete six-command inventory and flags](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/cli-reference.md).
 
 <span id="validation"></span>
 
@@ -474,35 +707,35 @@ agentic-sidecar status --json
 uv run python scripts/supervision_benchmark.py --output /tmp/sidecar-evidence.json
 ```
 
-The fixed 24-run synthetic benchmark compares actual wrapped dispatches with and without supervision across unsafe and clean controls. Outage controls expose fail_closed availability costs. Optional `--ecosystem` validation uses Chaos and Evals through the `[validation]` extra. Synthetic zero token/cost values do not establish live-provider benefit, statistical confidence or economic savings. See [reproducible evidence and recorded limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md#reproducible-evidence) and [coordinated acceptance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/coordinated-v1-readiness.md).
+The fixed 24-run synthetic benchmark compares actual wrapped dispatches with and without supervision across unsafe and clean controls. Outage controls expose fail_closed availability costs. Optional `--ecosystem` validation uses Chaos and Evals through the `[validation]` extra. Synthetic zero token/cost values do not establish live-provider benefit, statistical confidence or economic savings. See [reproducible evidence and recorded limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md#reproducible-evidence) and [coordinated acceptance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/coordinated-v1-readiness.md).
 
 <span id="settings"></span>
 
 ## Configuration and limitations
 
-Choose `on_sidecar_failure` explicitly, choose Observe/Govern, supply modules and enable their roles. Defaults enable policy/risk; an empty policy allows actions. Supported optional roles include intent_guardian, budget, planner, critic and judge. Mandatory scope/authority checks retain their own semantics. See [constructor arguments, rules, bindings and module setup](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/configuration.md).
+Choose `on_sidecar_failure` explicitly, choose Observe/Govern, supply modules and enable their roles. Defaults enable policy/risk; an empty policy allows actions. Supported optional roles include intent_guardian, budget, planner, critic and judge. Mandatory scope/authority checks retain their own semantics. See [constructor arguments, rules, bindings and module setup](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/configuration.md).
 
-Core installation has no sibling dependency. Framework/provider integrations use their corresponding extras; `[agenticlens]`, `[agentic-chaos]` and `[validation]` add ecosystem dependencies. Semantica is reserved and has no implemented export. Protect raw tools, credentials, identity and runtime configuration at the host boundary. Wrappers do not sandbox hostile Python or automatically govern arbitrary memory, prompts, outputs or nested calls. See [limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/limitations.md), [scoped boundaries](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/scoped-supervision.md) and [contract maturity](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.10.md).
+Core installation has no sibling dependency. Framework/provider integrations use their corresponding extras; `[agenticlens]`, `[agentic-chaos]` and `[validation]` add ecosystem dependencies. Semantica is reserved and has no implemented export. Protect raw tools, credentials, identity and runtime configuration at the host boundary. Wrappers do not sandbox hostile Python or automatically govern arbitrary memory, prompts, outputs or nested calls. See [limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md), [scoped boundaries](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/scoped-supervision.md) and [contract maturity](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md).
 
 ## Troubleshooting
 
-If a denied tool still runs, check Observe/Govern, the returned tool object and actual dispatch evidence. If approval stalls, inspect the pending decision ID and handler/runtime. If an old ALLOW stops working, check intent epochs, consumed approvals, stop state and authority expiry/revocation. See [troubleshooting](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/troubleshooting.md).
+If a denied tool still runs, check Observe/Govern, the returned tool object and actual dispatch evidence. If approval stalls, inspect the pending decision ID and handler/runtime. If an old ALLOW stops working, check intent epochs, consumed approvals, stop state and authority expiry/revocation. See [troubleshooting](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/troubleshooting.md).
 
 ## Reference
 
-- [API reference](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/api-reference.md) and [CLI reference](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/cli-reference.md).
-- [AI Reference (robust)](https://deepagentlabs.io/agentic-sidecar/docs/llms-full.md) and [capability/source index](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/ai-reference-index.md).
-- [Source manifest and checksums](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/ai-docs-manifest.json).
+- [API reference](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md) and [CLI reference](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/cli-reference.md).
+- [AI Reference (robust)](https://deepagentlabs.io/agentic-sidecar/docs/llms-full.md) and [capability/source index](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/ai-reference-index.md).
+- [Source manifest and checksums](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/ai-docs-manifest.json).
 
 ---
 
 ## Core supervision features
 
-Source: [website/docs/features.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/features.md)
+Source: [docs/features.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/features.md)
 
-Core capabilities and their supported usage, with authority/privacy and native-contract extensions described in [v0.9](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md) and [v0.10](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.10.md). Upcoming extensions
-are described in [Roadmap](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/roadmap.md); execution boundaries are summarized in
-[Limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/limitations.md).
+Core capabilities and their supported usage, with authority/privacy and native-contract extensions described in [v0.9](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md) and [v0.10](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md). Upcoming extensions
+are described in [Roadmap](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/roadmap.md); execution boundaries are summarized in
+[Limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md).
 
 ## Policy Advisor
 
@@ -540,8 +773,8 @@ print(risk.evaluate(DecisionContext(tool_name="issue_refund", tool_args={"amount
 IntentEnvelope carries goal, requester, constraints, authority, expiry, and
 metadata. ConstraintBinding connects a declared constraint to a tool argument.
 Numeric/enum/allow-list checks produce WARN or BLOCK. Constraint-only expiry produces WARN; authority-bearing envelopes expire with BLOCK.
-[Authority bindings, narrowed delegation and ancestor revocation](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md) are implemented. See the runnable [Getting Started](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/getting-started.md)
-example and [Configuration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/configuration.md).
+[Authority bindings, narrowed delegation and ancestor revocation](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md) are implemented. See the runnable [Getting Started](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/getting-started.md)
+example and [Configuration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/configuration.md).
 
 ## Budget Guardian
 
@@ -594,7 +827,7 @@ print(sidecar.evaluate(DecisionContext(tool_name="delete_records")).status)  # C
 ```
 
 Govern suspends CHALLENGE. Critic also checks selected opposing previously
-permitted actions and caller-supplied evidence flags; see [Limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/limitations.md).
+permitted actions and caller-supplied evidence flags; see [Limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md).
 
 ## Judge Evaluator
 
@@ -614,7 +847,7 @@ print(result.status)  # ALLOW (scripted response)
 
 Judge validates verdicts/usage, bounds waiting, accounts sync/async usage and
 applies per-call cost ceilings after a response. Provider errors follow Sidecar
-failure policy. See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md) for live provider configuration.
+failure policy. See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) for live provider configuration.
 
 ## Status Narrator
 
@@ -637,14 +870,14 @@ print(narrator.get_status(current_budget_remaining=4.50).tool_calls_made)  # 1
 Narration matches common tool-name patterns. `pause()` / `resume()` report
 state; application code controls execution. CLI status with --endpoint reads the
 runtime journal and distinguishes proposed, blocked, paused, executed and completed
-actions. See [Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md) for the Control Room and controls.
+actions. See [Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md) for the Control Room and controls.
 
 ## Human Escalation
 
 ApprovalAction, EscalationRequest, ApprovalResponse, and EscalationHandler define
 the request/response contract. Govern invokes a registered handler for
 PAUSE/ESCALATE and validates response IDs/actions. CLIApprovalHandler provides
-a local prompt. See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md) for all five approval actions.
+a local prompt. See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) for all five approval actions.
 
 ## Custom Decision Hook
 
@@ -667,7 +900,7 @@ print(sidecar.evaluate(DecisionContext(tool_name="delete_customer")).status)  # 
 ```
 
 Use the standard pipeline when you want configured modules to run together.
-Provenance export types are documented in [API reference](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/api-reference.md).
+Provenance export types are documented in [API reference](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md).
 
 ## Shared & Exclusive supervision
 
@@ -675,22 +908,22 @@ Provenance export types are documented in [API reference](https://github.com/Dee
 Choose context only, guardrails only or both. Context delivery to the host is
 explicit; shared denials remain mandatory alongside exclusive restrictions.
 Each bound agent has a separate history and copied payload. See
-[scoped supervision](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/scoped-supervision.md) for privacy and deployment limits.
+[scoped supervision](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/scoped-supervision.md) for privacy and deployment limits.
 
 ## Native adapters and evidence
 
 v0.8 provides AutoGen, CrewAI, OpenAI Agents, Google ADK and MCP boundaries in
 addition to LangGraph. Native SDK conformance covers all seven decisions and
 both modes. Verified correlated decisions reach Lens 0.7.1 incident timelines;
-Chaos recovery proposals retain native event IDs. See [integrations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md).
+Chaos recovery proposals retain native event IDs. See [integrations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md).
 
-See [v0.9 authority, privacy and migration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md) for the current lifecycle APIs.
+See [v0.9 authority, privacy and migration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md) for the current lifecycle APIs.
 
 ---
 
 ## Architecture
 
-Source: [website/docs/architecture.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/architecture.md)
+Source: [docs/architecture.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/architecture.md)
 
 **The Main Agent acts. The Sidecar observes, thinks, advises, and governs.**
 Sidecar evaluates proposed actions; the agent runtime and adapter own execution.
@@ -716,7 +949,7 @@ checks. A custom `before_tool_call` hook replaces the built-in pipeline.
 Use `Sidecar.evaluate_plan()` for full-plan review before dispatch. Evaluators
 receive goal, constraints, intent, decision history, plan and metadata. Planner
 and Critic are deterministic heuristics; Judge uses an explicit MockJudge or
-optional live provider. See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md).
+optional live provider. See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md).
 
 ## Operating modes
 
@@ -738,7 +971,7 @@ of that verdict. Configure `fail_closed` for governed boundaries.
 Injection, evaluation/provider calls, verdict validation and recording share
 the failure boundary. Approval errors follow the same policy. Judge errors
 propagate to that boundary. Recording failures cannot guarantee a log entry;
-see [supported scope](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/limitations.md) for timeout and accounting details.
+see [supported scope](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md) for timeout and accounting details.
 
 ## Package boundaries
 
@@ -770,16 +1003,27 @@ snapshots and optional durable JSONL execution evidence.
 `StatusNarrator` records application-supplied call/decision metadata. Its pause
 state is reporting state. CLI status with --endpoint connects to actual runtime
 events. TaskRuntime and OperatorServer provide task-scoped operator controls;
-see [Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md).
+see [Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md).
 
 ---
 
 ## API reference
 
-Source: [website/docs/api-reference.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/api-reference.md)
+Source: [docs/api-reference.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md)
 
-Python API for `agentic-sidecar` **0.9.0** (unchanged from 0.8.0). Imports below identify the supported
+Python API for `agentic-sidecar` **1.x** (current release 1.1.0). Imports below identify the supported
 module for each symbol; intent and policy/risk types live in their subpackages.
+Native contract schemas keep their own candidate versions, independent of the package version.
+
+| Area | Symbols |
+| --- | --- |
+| Decisions | [`Sidecar`](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#sidecar), [`Decision`](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#decision), [`DecisionContext`](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#decisioncontext), [`SidecarBlockedError`](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#sidecarblockederror) |
+| Guardrails | [`PolicyAdvisor`](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#policyadvisor), [`RiskEvaluator`](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#riskevaluator), [`BudgetGuardian`](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#budgetguardian), [`IntentGuardian`](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#intentguardian-intentenvelope-constraintbinding) |
+| Human in the loop | [`EscalationHandler`, `ApprovalAction`](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#escalationhandler-escalationrequest-approvalresponse-approvalaction), [`CLIApprovalHandler`](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#cliapprovalhandler) |
+| Live control and emergency stop | [`TaskRuntime`, `OperatorServer`, `EventJournal`](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#runtime-operations) |
+| Adapters | [LangGraph](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#attach-langgraph-adapter), [other frameworks and MCP](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#other-framework-adapters) |
+| Scopes, authority, contracts | [Scoped supervision](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#scoped-supervision-and-native-export-08), [authority and privacy](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#authority-privacy-and-transfer-lifecycle) |
+| Ecosystem | [Lens, Chaos and Control Tower](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#ecosystem-integrations), [AIOS export](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#aios-operational-audit-export) |
 
 ```python
 import agentic_sidecar
@@ -797,7 +1041,22 @@ The central class. Owns the Decision Gate and all evaluation module configuratio
 
 ### `__init__`
 
-See [Configuration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/configuration.md) for the full parameter reference.
+All arguments are keyword-only. See [Configuration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/configuration.md) for rule formats and examples.
+
+| Parameter | Default | Purpose |
+| --- | --- | --- |
+| `on_sidecar_failure` | required | `"fail_open"` or `"fail_closed"` when evaluation itself fails |
+| `mode` | `"observe"` | `"observe"` records verdicts; `"govern"` enforces them |
+| `policy` / `risk` | `None` | `PolicyAdvisor` / `RiskEvaluator` rule sets |
+| `intent` | `None` | `IntentGuardian` with the task's `IntentEnvelope` and bindings |
+| `budget` | `None` | `BudgetGuardian` cost/token ceilings |
+| `planner` / `critic` / `judge` | `None` | Optional evaluators |
+| `roles` | policy, risk | Which modules run, e.g. `["policy", "risk", "intent_guardian", "budget"]` |
+| `risk_block_threshold` | `"HIGH"` | Risk level at which the gate intervenes |
+| `escalation_handler` | `None` | Resolves PAUSE/ESCALATE (human in the loop); missing handlers suspend |
+| `runtime` | `None` | `TaskRuntime` for live status, controls, emergency stop and audit |
+| `mandatory_checks` | `()` | Trusted host checks that run before custom hooks |
+| `context_metadata` / `mandatory_configuration` | `None` | Trusted metadata and configuration recorded in audit fingerprints |
 
 ### `evaluate(context: DecisionContext) -> Decision`
 
@@ -805,7 +1064,7 @@ Evaluate one proposed tool call. Injects intent/history into the caller's contex
 computes a verdict, and stores a deep context copy in `sidecar.decisions`. Errors
 from injection, dispatch, validation or recording resolve via `on_sidecar_failure`. This method does
 not dispatch tools or raise merely because a verdict is BLOCK. See
-[Failure handling](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/architecture.md#failure-configuration) for scope.
+[Failure handling](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/architecture.md#failure-configuration) for scope.
 
 ```python
 from agentic_sidecar import DecisionContext
@@ -833,7 +1092,7 @@ def my_hook(context: DecisionContext) -> Decision:
 
 Decorator. Register an approval hook invoked by `enforce()` or the Govern
 adapter for PAUSE/ESCALATE. Responses must match the decision ID and use an
-ApprovalAction. See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md) for resolution semantics.
+ApprovalAction. See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) for resolution semantics.
 
 ```python
 @sidecar.on_escalation_required
@@ -925,7 +1184,7 @@ except SidecarBlockedError as exc:
 from agentic_sidecar.gate.policy import PolicyAdvisor, PolicyRule, PolicyResult
 ```
 
-See [Configuration — PolicyAdvisor](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/configuration.md#policyadvisor-configuration) for full details.
+See [Configuration — PolicyAdvisor](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/configuration.md#policyadvisor-configuration) for full details.
 
 ### `PolicyAdvisor.evaluate(context: DecisionContext) -> PolicyResult`
 
@@ -981,7 +1240,7 @@ from agentic_sidecar.intent import (
 )
 ```
 
-See [Configuration — IntentEnvelope and IntentGuardian](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/configuration.md#intentenvelope-and-intentguardian-configuration).
+See [Configuration — IntentEnvelope and IntentGuardian](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/configuration.md#intentenvelope-and-intentguardian-configuration).
 
 ### `IntentEnvelope.is_expired(now=None) -> bool`
 
@@ -1002,6 +1261,8 @@ from agentic_sidecar.gate import (
 ```
 
 **`ApprovalAction` values:** `APPROVE_ONCE`, `REJECT`, `MODIFY_INTENT`, `ASK_AGENT_TO_REPLAN`, `STOP_AGENT`
+
+This is the human-in-the-loop surface. In Govern mode, PAUSE and ESCALATE call the configured handler (a `CLIApprovalHandler`, a connected `TaskRuntime`, or your own `EscalationHandler`). The response binds to the decision ID; `APPROVE_ONCE` authorizes one unchanged invocation, `MODIFY_INTENT` reevaluates against a complete new envelope, and `STOP_AGENT` stops the whole task. BLOCK is never offered for approval. See [approval flow](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md#local-approval-flow).
 
 ---
 
@@ -1049,6 +1310,21 @@ tools = attach(sidecar, [read_order, issue_refund, delete_customer])
 agent = create_react_agent(model, tools=tools)
 ```
 
+## Other framework adapters
+
+Each adapter runs the same Decision Gate and runtime lifecycle and returns the SDK's own tool type. Pass only the returned objects to the agent.
+
+| Import | Signature | Returns | Extra |
+| --- | --- | --- | --- |
+| `agentic_sidecar.adapters.callable` | `attach(sidecar, tools)` | Wrapped sync/async callables | none |
+| `agentic_sidecar.adapters.autogen` | `attach(sidecar, tools)` | AutoGen Core `FunctionTool` | `[autogen]` |
+| `agentic_sidecar.adapters.crewai` | `attach(sidecar, tools)` | CrewAI tools | `[crewai]` |
+| `agentic_sidecar.adapters.openai_agents` | `attach(sidecar, tools)` | OpenAI Agents `FunctionTool` | `[openai-agents]` |
+| `agentic_sidecar.adapters.google_adk` | `attach(sidecar, tools)` | Google ADK `FunctionTool` | `[google-adk]` |
+| `agentic_sidecar.adapters.mcp` | `attach(sidecar, session, tool_names)` | Async wrappers for allowlisted tools on an initialized `ClientSession` | `[mcp]` |
+
+Prebuilt SDK tools, automatic handoffs and raw nested calls are not protected automatically. See [integrations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md#framework-adapters).
+
 ---
 
 ## Evaluators
@@ -1078,7 +1354,7 @@ Sync/async return validated EvaluatorResult with usage, provider, confidence and
 latency. Errors propagate to Sidecar's failure policy. Returned usage is charged
 once, including valid usage attached to an invalid verdict. cost_limit is a
 post-response ceiling; exceeding it returns PAUSE. get_cost/reset_cost manage
-tracked cost. See [Limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/limitations.md) for late sync responses and async
+tracked cost. See [Limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md) for late sync responses and async
 cancellation. Choose MockJudge for offline examples; live OpenAIJudge and
 AnthropicJudge require an explicit model, optional SDK and credentials.
 
@@ -1119,64 +1395,107 @@ Construct a caller-managed `AuditRecord` with decision ID, timestamp, outcome,
 trigger, rationale, and optional causal/execution context. `to_dict()` serializes
 the record, including ISO timestamp and structured causal links. TaskRuntime
 automatically generates immutable event snapshots; EventJournal supplies
-optional durable JSONL persistence. See [Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md).
+optional durable JSONL persistence. See [Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md).
 
 ## Top-level `__version__`
 
 ```python
 from agentic_sidecar import __version__
-print(__version__)  # "1.0.3" in this checkout; use the installed value
+print(__version__)  # the installed package version, e.g. "1.1.0"
 ```
 
 ## Runtime operations
 
-Public exports: `TaskRuntime`, `RuntimeEvent`, `EventJournal`, `OperatorServer`.
+Public exports: `TaskRuntime`, `RuntimeEvent`, `EventJournal`, `OperatorServer`
+(`verify_events` is imported from `agentic_sidecar.operations.events`).
 Supply `runtime=TaskRuntime(...)` to Sidecar and `escalation_handler=runtime`
-for remote approvals. Inspect `sidecar.runtime.snapshot()` and
+for remote approvals.
+
+```python
+from agentic_sidecar import EventJournal, OperatorServer, TaskRuntime
+```
+
+| Symbol | Signature | Purpose |
+| --- | --- | --- |
+| `TaskRuntime` | `TaskRuntime(task_id=None, *, journal=None, approval_timeout=300, revokers=None)` | Task lifecycle, approvals, controls and stop latch |
+| `TaskRuntime.control` | `control(action, actor) -> dict` | `action` is `pause`, `resume`, `replan`, `stop` or `restart`; returns a receipt |
+| `TaskRuntime.approve` | `approve(response, actor) -> None` | Resolve a pending human approval |
+| `TaskRuntime.modify_intent` | `modify_intent(envelope, actor) -> None` | Replace the task intent and invalidate earlier verdicts |
+| `TaskRuntime.snapshot` | `snapshot() -> dict` | Objective, plan, findings, budget, actions, pending approvals, running calls |
+| `TaskRuntime.stopped` / `epoch` | properties | Stop latch state and current decision epoch |
+| `TaskRuntime.dispatch` / `complete` | `dispatch(context, decision, *, cancel=None) -> str`, `complete(invocation_id, error=None)` | Custom-loop admission and completion |
+| `OperatorServer` | `OperatorServer(runtime, *, token, actor, port=0, reader_tokens=None)` | Loopback HTTP API and Control Room; use as a context manager, read `.url` |
+| `EventJournal` | `EventJournal(task_id, path=None)` | Hash-chained events, optional durable JSONL; `export(after=0)` |
+| `operations.events.verify_events` | `verify_events(events, task_id=...)` | Check a complete native chain before replay/export |
+
+**Emergency stop.** `runtime.control("stop", actor)` latches before writing the
+stop event or calling revokers, blocks all further dispatch, invalidates earlier
+decisions, requests cancellation of owned async calls and calls each named
+revoker (`revokers={"mcp": callback}`; each must return exactly `True` after
+revocation). The receipt contains `action`, `actor`, `epoch`, `effective_at`,
+`running`, `cancellations`, `revocations` and `access_revocation`
+(`acknowledged`, `partial_failure` or `not_configured`), plus `audit_error` if
+the stop event could not be persisted. `restart` requires a stopped, idle task
+with successful revocations. See [emergency stop](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/control-tower-integration.md#emergency-stop).
+ Inspect `sidecar.runtime.snapshot()` and
 `sidecar.runtime.journal.export(after=0)`. DecisionContext accepts
 `parent_decision_id` and `parent_plan_step` for supplied plan causality.
-See [Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md) for the full lifecycle and HTTP surface.
+See [Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md) for the full lifecycle and HTTP surface.
 
 ## Scoped supervision and native export (0.8)
 
 Public exports: `ScopedSystem`, `ScopeLayer`, `ContextSpec`, `GuardrailSpec`,
 `BoundAgent`. `ScopedSystem.bind(agent_id, on_sidecar_failure=..., mode=...)`
 returns a separate Sidecar and explicit `context()` / `deliver(receiver)` payload.
-See [scoped supervision](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/scoped-supervision.md) for configuration and limits.
+See [scoped supervision](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/scoped-supervision.md) for configuration and limits.
 `Sidecar` also accepts trusted `mandatory_checks`, `mandatory_configuration` and
 `context_metadata`; checks run before custom hooks and the configuration is
 included in audit policy fingerprints.
 
 `integrations.correlation.Correlation` and `export_decisions()` provide native
-versioned projections. See [integration contracts](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md).
+versioned projections. See [integration contracts](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md).
 
-See [v0.9 authority, privacy and migration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md) for the current lifecycle APIs.
+See [v0.9 authority, privacy and migration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md) for the current lifecycle APIs.
 
 
 ## Capability modules
 
 | Module | Workflow and detailed contract |
 | --- | --- |
-| `agentic_sidecar.core`, `gate`, `intent` | [Decision outcomes, policy, risk, budgets, intent constraints and failure policy](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/configuration.md) |
-| `agentic_sidecar.evaluators` | [Plan/Critic review, Judge providers, time/cost accounting and approval flows](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md) |
-| `agentic_sidecar.adapters` | [Sync/async callable, LangGraph, AutoGen, CrewAI, OpenAI Agents, Google ADK and MCP boundaries](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md) |
-| `agentic_sidecar.operations` | [TaskRuntime, EventJournal, OperatorServer, dispatch, controls and native events](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md) |
-| `agentic_sidecar.scopes` | [Shared/exclusive composition and mandatory checks](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/scoped-supervision.md) |
-| `agentic_sidecar.scopes.privacy` | [Reader authorization, context update/expiry/revocation and redacted summaries](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md#context-privacy-and-readers) |
-| `agentic_sidecar.intent.authority` | [AuthorityBinding/AuthorityRegistry, narrowed delegation and live ancestor revocation](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md#task-authority-and-delegation) |
-| `agentic_sidecar.contracts` | [Five native wrappers, schema accessors, scope import and validated intent transfer](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.10.md) |
-| `agentic_sidecar.integrations.correlation`, `integrations.agenticlens` | [Native projections and exact Lens run/trace/span readback](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md) |
-| `agentic_sidecar.integrations.agentic_chaos` | [Evaluate/enforce a fault-correlated recovery proposal without executing it](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md#agentic-chaos-and-evals) |
-| `agentic_sidecar.integrations.aios` | [AIOS operational audit projection](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/aios-0.8-operational-artifacts.md) |
-| `agentic_sidecar.status`, `cli` | [Standalone/measured narration and six CLI commands](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/cli-reference.md) |
+| `agentic_sidecar.core`, `gate`, `intent` | [Decision outcomes, policy, risk, budgets, intent constraints and failure policy](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/configuration.md) |
+| `agentic_sidecar.evaluators` | [Plan/Critic review, Judge providers, time/cost accounting and approval flows](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) |
+| `agentic_sidecar.adapters` | [Sync/async callable, LangGraph, AutoGen, CrewAI, OpenAI Agents, Google ADK and MCP boundaries](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md) |
+| `agentic_sidecar.operations` | [TaskRuntime, EventJournal, OperatorServer, dispatch, controls and native events](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md) |
+| `agentic_sidecar.scopes` | [Shared/exclusive composition and mandatory checks](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/scoped-supervision.md) |
+| `agentic_sidecar.scopes.privacy` | [Reader authorization, context update/expiry/revocation and redacted summaries](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md#context-privacy-and-readers) |
+| `agentic_sidecar.intent.authority` | [AuthorityBinding/AuthorityRegistry, narrowed delegation and live ancestor revocation](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md#task-authority-and-delegation) |
+| `agentic_sidecar.contracts` | [Five native wrappers, schema accessors, scope import and validated intent transfer](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md) |
+| `agentic_sidecar.integrations.correlation`, `integrations.agenticlens` | [Native projections and exact Lens run/trace/span readback](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md) |
+| `agentic_sidecar.integrations.agentic_chaos` | [Evaluate/enforce a fault-correlated recovery proposal without executing it](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md#agentic-chaos-and-evals) |
+| `agentic_sidecar.integrations.aios` | [AIOS operational audit projection](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/aios-0.8-operational-artifacts.md) |
+| `agentic_sidecar.status`, `cli` | [Standalone/measured narration and six CLI commands](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/cli-reference.md) |
 
-The [AI Reference (robust)](https://deepagentlabs.io/agentic-sidecar/docs/llms-full.md) includes declarations from every package module and all five native JSON Schemas. Consult the [capability index](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/ai-reference-index.md) before selecting a workflow. Internal helpers stay internal; extraction does not promote them to public APIs.
+The [AI Reference (robust)](https://deepagentlabs.io/agentic-sidecar/docs/llms-full.md) includes declarations from every package module and all five native JSON Schemas. Consult the [capability index](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/ai-reference-index.md) before selecting a workflow. Internal helpers stay internal; extraction does not promote them to public APIs.
 
 ## Authority, privacy and transfer lifecycle
 
-`IntentGuardian.delegate(...)` narrows authority using its live `AuthorityRegistry`, and `revoke()` invalidates descendants for future dispatch reservations. `IntentTransfer.propose(...)` serializes a narrowed proposal; `IntentTransfer.receive(parent, *, agent_id)` validates it against the trusted live parent. Receive requires the host-authenticated agent identity and the same live registry, not an imported self-asserted grant. See [propagation and replay limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.10.md#cross-instance-and-cross-agent-propagation).
+`IntentGuardian.delegate(...)` narrows authority using its live `AuthorityRegistry`, and `revoke()` invalidates descendants for future dispatch reservations. `IntentTransfer.propose(...)` serializes a narrowed proposal; `IntentTransfer.receive(parent, *, agent_id)` validates it against the trusted live parent. Receive requires the host-authenticated agent identity and the same live registry, not an imported self-asserted grant. See [propagation and replay limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md#cross-instance-and-cross-agent-propagation).
 
-`BoundAgent.context(reader=...)` returns an authorized defensive copy; `update_context(values, *, actor)` and `revoke_context(*, actor)` require the owner. `evidence()` returns an allowlisted summary, not a native Decision or journal. `OperatorServer(reader_tokens=...)` binds reader credentials to redacted status only. See [privacy lifecycle](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md#context-privacy-and-readers).
+`BoundAgent.context(reader=...)` returns an authorized defensive copy; `update_context(values, *, actor)` and `revoke_context(*, actor)` require the owner. `evidence()` returns an allowlisted summary, not a native Decision or journal. `OperatorServer(reader_tokens=...)` binds reader credentials to redacted status only. See [privacy lifecycle](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md#context-privacy-and-readers).
+
+## Ecosystem integrations
+
+| Import | Signature | Purpose | Extra |
+| --- | --- | --- | --- |
+| `agentic_sidecar.integrations.correlation` | `export_decisions(sidecar, correlation) -> list[DecisionEvidence]` | Verify the journal and project decisions with host-supplied `Correlation(run_id, trace_id, span_id)` | none |
+| `agentic_sidecar.integrations.agenticlens` | `attach_decisions(sidecar, run, *, span_id) -> None` | Attach correlated decisions to an exact Lens run | `[agenticlens]` |
+| `agentic_sidecar.integrations.agentic_chaos` | `evaluate_recovery(sidecar, event, *, tool_name, arguments) -> Decision` | Evaluate/enforce a recovery proposal linked to a Chaos fault event, without executing it | `[agentic-chaos]` |
+| `agentic_sidecar.integrations.aios` | `export_audit_event(record, *, target, created_at) -> dict` | Project an `AuditRecord` into a draft AIOS operational artifact | none |
+
+**Control Tower.** Tower's `SidecarContainmentAdapter(runtime)` wraps a
+`TaskRuntime` and calls `runtime.control(...)` for fleet-wide stop and restart;
+it ships in `agenticops-control-tower`, not in this package. See
+[Control Tower integration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/control-tower-integration.md).
 
 ## AIOS operational audit export
 
@@ -1200,13 +1519,13 @@ assert artifact["spec_version"] == "0.8-draft"
 assert artifact["outcome"] == "denied"
 ```
 
-The host supplies a public native target and an aware recording time not earlier than the observation. The exporter withholds rationale/context, records an unknown actor rather than guessing identity, and preserves native outcomes/causal IDs. BLOCK maps to denied; other decisions are requested, never evidence of completed execution. It rejects malformed identity/target/timestamp inputs and self-causality. Native contract schema access does not validate this separate AIOS projection; use the specification-owned draft contract and the optional ecosystem validators. See [AIOS operational audit exports](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/aios-0.8-operational-artifacts.md).
+The host supplies a public native target and an aware recording time not earlier than the observation. The exporter withholds rationale/context, records an unknown actor rather than guessing identity, and preserves native outcomes/causal IDs. BLOCK maps to denied; other decisions are requested, never evidence of completed execution. It rejects malformed identity/target/timestamp inputs and self-causality. Native contract schema access does not validate this separate AIOS projection; use the specification-owned draft contract and the optional ecosystem validators. See [AIOS operational audit exports](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/aios-0.8-operational-artifacts.md).
 
 ---
 
 ## CLI reference
 
-Source: [website/docs/cli-reference.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/cli-reference.md)
+Source: [docs/cli-reference.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/cli-reference.md)
 
 Agentic Sidecar ships a command-line interface accessible as `agentic-sidecar`.
 
@@ -1353,7 +1672,7 @@ agentic-sidecar approval-demo
 Responses include approve_once, reject (default), modify_intent,
 ask_agent_to_replan and stop_agent. For actual governed calls, pass
 CLIApprovalHandler from agentic_sidecar.cli.approval as escalation_handler.
-See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md).
+See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md).
 
 ## Runtime connection and controls
 
@@ -1362,7 +1681,7 @@ TaskRuntime/OperatorServer. Set `SIDECAR_OPERATOR_TOKEN` in the operator termina
 `control ACTION` supports pause, resume, stop, restart and replan.
 `approve DECISION_ID ACTION` resolves a pending request; `--intent-file FILE`
 supplies a complete JSON envelope for modify_intent. See
-[Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md) for setup, protocol and access scope.
+[Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md) for setup, protocol and access scope.
 
 
 ## `control` and `approve`
@@ -1375,7 +1694,7 @@ agentic-sidecar approve DECISION_ID ACTION --endpoint http://127.0.0.1:PORT/task
 
 Replace the endpoint and decision ID with values from the running task. Both commands require an endpoint, supplied explicitly or through `SIDECAR_ENDPOINT`, and use `SIDECAR_OPERATOR_TOKEN` for bearer authentication. Control actions are `pause`, `resume`, `stop`, `restart` and `replan`. Approval actions are `approve_once`, `reject`, `modify_intent`, `ask_agent_to_replan` and `stop_agent`.
 
-`--intent-file` supplies a complete envelope for modify_intent. Pending approval IDs and proposal fingerprints must match the running task; replayed/consumed answers cannot authorize a dispatch. Reader tokens only expose redacted status and cannot use controls, approvals or events. See [operator protocol, identity, stop/restart and approval semantics](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md) and [reader-token access](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md#context-privacy-and-readers).
+`--intent-file` supplies a complete envelope for modify_intent. Pending approval IDs and proposal fingerprints must match the running task; replayed/consumed answers cannot authorize a dispatch. Reader tokens only expose redacted status and cannot use controls, approvals or events. See [operator protocol, identity, stop/restart and approval semantics](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md) and [reader-token access](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md#context-privacy-and-readers).
 
 No CLI command starts a provider judge or a framework agent automatically. Host the runtime/server in your application, then use these commands to connect. `status` with no endpoint remains the standalone narrator view.
 
@@ -1383,7 +1702,7 @@ No CLI command starts a provider judge or a framework agent automatically. Host 
 
 ## Configuration
 
-Source: [website/docs/configuration.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/configuration.md)
+Source: [docs/configuration.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/configuration.md)
 
 This page covers all configuration options for the `Sidecar` constructor and its module dependencies.
 
@@ -1402,7 +1721,7 @@ sidecar = Sidecar(
 ```
 
 The following table lists constructor arguments. Configure each optional module
-and include its role to enable it. See [Features](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/features.md) for evaluator
+and include its role to enable it. See [Features](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/features.md) for evaluator
 and narrator examples.
 
 ### Parameters
@@ -1579,7 +1898,7 @@ guardian = IntentGuardian(envelope, bindings)
 Budget counters are shared with the object passed to Sidecar. Record actual
 usage explicitly for external calls; Judge usage reaches this budget once.
 PAUSE suspends Govern dispatch or invokes the configured approval handler.
-See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md) for provider rates and limit configuration.
+See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) for provider rates and limit configuration.
 
 ## Updating intent at runtime
 
@@ -1602,16 +1921,16 @@ sidecar.set_intent(None)
 
 > **Note:** `set_intent()` raises `ValueError` if you pass an `IntentGuardian` but `"intent_guardian"` is not in `sidecar.roles`.
 
-See [v0.9 authority, privacy and migration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md) for the current lifecycle APIs.
+See [v0.9 authority, privacy and migration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md) for the current lifecycle APIs.
 
 ---
 
 ## Governance and evaluator behavior
 
-Source: [website/docs/governance.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md)
+Source: [docs/governance.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md)
 
 These governance enhancements originated in **0.6.1** and remain part of **0.8.0**.
-See [Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md) for the connected runtime and operator interface.
+See [Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md) for the connected runtime and operator interface.
 Govern permits ALLOW/WARN. BLOCK stops. CHALLENGE/REPLAN return control to the
 agent loop. PAUSE/ESCALATE invoke a registered handler or suspend when unresolved.
 Observe remains advisory.
@@ -1669,7 +1988,7 @@ assert decision.status == "REPLAN"
 An active envelope supplies the goal/constraints. Enabled deterministic gates
 check every plan step; evaluators receive goal, constraints, history, intent,
 plan, bindings and metadata. This boundary reviews a supplied plan without
-executing it. Planner/Critic remain scoped heuristics; see [Limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/limitations.md).
+executing it. Planner/Critic remain scoped heuristics; see [Limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md).
 
 ## Optional live Judge providers
 
@@ -1700,7 +2019,7 @@ Judge validates all seven statuses, reasoning, confidence and usage; errors
 propagate to Sidecar failure policy. Sync/async share limits, usage and latency
 accounting. Configuring Judge and Budget on Sidecar connects returned usage
 once; external tool/framework usage still needs record_invocation(). Cost limits
-apply after a response. See [timeout/accounting limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/limitations.md).
+apply after a response. See [timeout/accounting limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md).
 
 Run live smoke tests explicitly after configuring credentials and models:
 
@@ -1750,19 +2069,19 @@ uv run python scripts/intent_benchmark.py
 Release automation validates tag/source/changelog before building and validates
 wheel/sdist metadata before publication. CI runs examples, compiles Python doc
 fences, checks local file links and builds docs strictly on pull requests.
-Pages deployment is limited to main. [Roadmap](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/roadmap.md) tracks remaining work.
+Pages deployment is limited to main. [Roadmap](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/roadmap.md) tracks remaining work.
 
 ## v0.9 lifecycle and evidence
 
 Task authority, reader access, redacted summaries and paired supervision measurements
-are available. See [the v0.9 guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md) for dispatch-time enforcement, migration
+are available. See [the v0.9 guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md) for dispatch-time enforcement, migration
 and explicitly synthetic benchmark limits. Plan Critic evidence must be step-scoped.
 
 ---
 
 ## Shared and exclusive supervision
 
-Source: [website/docs/scoped-supervision.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/scoped-supervision.md)
+Source: [docs/scoped-supervision.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/scoped-supervision.md)
 
 Added in **0.8.0**. Configure context/intent only, guardrails only, or both.
 Shared layers apply to a declared system/task; Exclusive layers apply to named
@@ -1820,21 +2139,21 @@ permit calls after evaluation failures. Use Govern/fail_closed for containment.
 The configuration object and Sidecar belong to the trusted host. In-process Python
 wrappers are not process isolation. Run protected tools and credentials in an
 enforcing service under a separate identity; restrict agent access to that service.
-The [MCP gateway example](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/examples.md) demonstrates a separate-process boundary,
+The [MCP gateway example](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/examples.md) demonstrates a separate-process boundary,
 server-side checks and an unavailable raw tool; it does not sandbox a hostile OS
 user who can inspect gateway memory/files or change its launch environment.
 
 Only assigned exclusive context is returned through explicit host delivery. In 0.9,
 private goals/values are not evaluator/audit metadata. Reader access, context
 updates/expiry/revocation, redacted evidence and operator readers are documented in
-[v0.9](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md). Framework memory, prompt, result and output transport remain host
+[v0.9](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md). Framework memory, prompt, result and output transport remain host
 responsibilities; there is no process isolation or automatic secret scrubbing.
 
 ---
 
 ## Live runtime and operator controls
 
-Source: [website/docs/live-operations.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md)
+Source: [docs/live-operations.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md)
 
 Sidecar now owns a task-local runtime event journal. The LangGraph adapter records
 proposals, decisions, actual dispatch reservations, completions and failures.
@@ -1929,6 +2248,11 @@ into REPLAN, including with fail_open. The harness handles replanning and retrie
 the operator replan control pauses further dispatch until explicit resume.
 
 ## Stop, cancellation and access revocation
+
+Stop is the task's emergency stop: use it when an agent must halt now, from the
+Control Room, `agentic-sidecar control stop`, `POST /control` or
+`runtime.control("stop", actor)`. For fleet-wide stop through Control Tower, see
+[Control Tower integration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/control-tower-integration.md#fleet-wide-stop-from-control-tower).
 
 Pause/stop share a lock with dispatch reservations. Stop latches before writing
 the stop event or invoking external callbacks, independently of evaluation,
@@ -2042,9 +2366,160 @@ this limitation is independent of the local operator acceptance evidence.
 
 ---
 
+## Control Tower integration and emergency stop
+
+Source: [docs/control-tower-integration.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/control-tower-integration.md)
+
+Agentic Sidecar supervises one task at its tool boundary. AgenticOps Control
+Tower coordinates many deployments: inventory, heartbeats, alerts, incidents,
+fleet-wide stop and approved runbooks. This page explains how the two fit
+together for live visibility, pause/stop and emergency stop.
+
+| Need | Single task (Sidecar) | Fleet (Control Tower) |
+| --- | --- | --- |
+| See what an agent is doing now | Control Room, `agentic-sidecar status --follow` | Inventory, alerts and incident console with joined Sidecar evidence |
+| Pause / resume | `control pause` / `control resume` | Not offered; use the task's Sidecar controls |
+| Stop (emergency stop) | `control stop` latches the task | Bulk `runtime.stop` across selected deployments |
+| Restart | `control restart` after a clean stop | Adapter acknowledges restart; no bulk restart endpoint |
+| Human approval | Per-decision approvals (human in the loop) | Separate approver for bulk actions and runbooks |
+| Revoke MCP access | `TaskRuntime(revokers=...)` callbacks | Requires an issuer-backed `mcp` revoker on each runtime |
+
+Ownership stays separate. Sidecar owns dispatch blocking, pre-action decisions,
+scoped/private context and runtime approval authority. Tower owns fleet
+targeting, approvals of bulk actions, runbooks and incident coordination. Tower
+inventory does not confer task authority or prove containment, and a Sidecar
+BLOCK is a supervision outcome, not an unhealthy deployment.
+
+## Live view of a running task
+
+Each supervised task can run an authenticated loopback `OperatorServer`. The
+Control Room page shows the objective, plan, intent findings, risk, budget,
+action lifecycle, pending approvals and audit events. The same data is available
+from the CLI:
+
+```bash
+export SIDECAR_ENDPOINT=http://127.0.0.1:PORT/tasks/TASK_ID
+# Set SIDECAR_OPERATOR_TOKEN securely in this terminal as well.
+agentic-sidecar status --follow
+agentic-sidecar control pause
+agentic-sidecar control resume
+agentic-sidecar control replan
+```
+
+Pause stops new dispatches until resume. Replan pauses dispatch and returns
+control to the harness. See [live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md#connect-a-real-task)
+for server setup and the HTTP protocol.
+
+Control Tower 0.8+ gives the fleet view: periodic detection over pushed
+telemetry, durable alerts and acknowledgements, and a read-only incident console
+that joins inventory, evidence (including explicit same-run Sidecar decisions),
+approvals, commands and recovery checks. See
+[Control Tower 0.8 live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/tower-0.8-live-operations.md).
+
+## Emergency stop
+
+The Sidecar **stop** control is the emergency stop. It is designed to take
+effect even when other parts of the system are failing:
+
+- **Latches first.** Stop is set before the stop event is written and before
+  any external callback runs, independently of Observe/Govern mode, approval
+  state and `on_sidecar_failure`.
+- **Blocks all future dispatch.** Queued proposals, approval retries and
+  concurrently evaluated verdicts cannot dispatch. Decision epochs invalidate
+  every pre-stop ALLOW.
+- **Requests cancellation.** Owned async tools receive cooperative cancellation
+  requests; already-dispatched synchronous work may finish and keep its effects.
+- **Revokes access.** The task's authority grant is revoked and each configured
+  revoker (for example an MCP issuer) is called. A broken audit sink cannot
+  prevent revocation; the receipt reports `audit_error` instead.
+- **Survives restoration.** A runtime restored from its journal comes back
+  stopped and needs an explicit restart.
+
+Trigger it from the Control Room, the CLI (`agentic-sidecar control stop`),
+HTTP (`POST /tasks/TASK_ID/control` with `{"action": "stop"}`) or Python:
+
+```python
+from agentic_sidecar import Sidecar, TaskRuntime
+
+
+def revoke_mcp_access(task_id: str) -> bool:
+    """Revoke the task's issuer credential; return True only once confirmed."""
+    return True
+
+
+runtime = TaskRuntime("order-task", revokers={"mcp": revoke_mcp_access})
+sidecar = Sidecar(
+    on_sidecar_failure="fail_closed", mode="govern", runtime=runtime,
+    escalation_handler=runtime,
+)
+receipt = runtime.control("stop", "on-call-operator")
+assert receipt["action"] == "stop"
+assert receipt["access_revocation"] == "acknowledged"
+assert runtime.stopped
+```
+
+The receipt records `effective_at`, already-running invocation IDs, per-issuer
+revocation results and `access_revocation` (`acknowledged`, `partial_failure`
+or `not_configured`). `not_configured` confirms only the local dispatch stop.
+Restart requires a stopped, idle task with successful revocations, and it does
+not renew credentials. See
+[stop, cancellation and access revocation](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/live-operations.md#stop-cancellation-and-access-revocation).
+
+## Fleet-wide stop from Control Tower
+
+Control Tower 0.7+ can stop many deployments in one approved bulk action. The
+trusted host installs one `SidecarContainmentAdapter` per deployment, wrapping
+that deployment's `TaskRuntime`:
+
+```text
+api.bulk.install(agent_id, SidecarContainmentAdapter(runtime))
+```
+
+The runtime must have an issuer-backed `mcp` revoker. A writer previews a bulk
+request with `operation: runtime.stop`, a separate approver approves it, and the
+writer executes it:
+
+```bash
+agenticops-control-tower --token "$WRITER_TOKEN" bulk preview fleet-stop.json
+agenticops-control-tower --token "$APPROVER_TOKEN" bulk approve BULK_ID
+agenticops-control-tower --token "$WRITER_TOKEN" bulk execute BULK_ID
+agenticops-control-tower --token "$READER_TOKEN" bulk get BULK_ID
+```
+
+The adapter calls `runtime.control("stop", actor)` and maps the Sidecar receipt
+to a per-target outcome: `acknowledged`, `incomplete` (calls still in flight),
+`failed`, `unsupported` (no `mcp` revoker) or, from Tower, `timed_out`. Each
+result reports dispatch blocking, MCP revocation, in-flight calls and
+downstream credentials separately. There is no fleet atomicity, automatic
+rollback or automatic restart; reconcile timed-out or requested stops before
+approving a new action. See [Tower 0.7 fleet operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/tower-0.7-fleet-operations.md)
+and Tower's
+[fleet operations guide](https://github.com/DeepAgentLabs/agenticops-control-tower/blob/main/docs/fleet-operations.md).
+
+## Runbooks and recovery
+
+Control Tower 0.9+ runs versioned recovery runbooks with an exact-digest human
+approval. Runbook steps go to host-installed runbook connectors, not to Sidecar.
+Emergency stop and restart still go through the Sidecar containment adapter, and
+Sidecar keeps dispatch blocking and pre-action decisions. See
+[Control Tower 0.9 runbooks](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/tower-0.9-runbooks.md).
+
+## Limits
+
+- The operator server binds to `127.0.0.1` only; there is no TLS or public
+  deployment. Remote fleet access goes through Tower and host adapters.
+- Wrapped tools are the boundary. Unwrapped functions, independently created
+  runtimes and downstream credentials are outside it.
+- A boundary acknowledgement does not prove end-to-end containment or verified
+  incident recovery.
+
+See [limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md) for the full list.
+
+---
+
 ## Authority, privacy and validation evidence
 
-Source: [website/docs/v0.9.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md)
+Source: [docs/v0.9.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md)
 
 Released as **0.9.0**. These APIs are native Sidecar contracts; AIOS schema
 stability remains v1.0 work. Core installation still needs no sibling packages.
@@ -2182,7 +2657,7 @@ Runnable examples: `examples/v0_9_authority_delegation.py` and
 
 ## Native contracts and intent transfer
 
-Source: [website/docs/v0.10.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.10.md)
+Source: [docs/v0.10.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md)
 
 Sidecar 0.10.0 delivers candidate native interchange contracts, not a stable
 AIOS layer or the coordinated ecosystem v1.0 release. The opt-in module
@@ -2292,7 +2767,7 @@ image pins, if advanced, require a patch release of that sibling.
 
 ## Framework and ecosystem integrations
 
-Source: [website/docs/integrations.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md)
+Source: [docs/integrations.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md)
 
 ## Framework adapters
 
@@ -2339,7 +2814,7 @@ Supported inputs are plain typed callables, not prebuilt SDK tools, injected SDK
 context parameters, hosted tools, automatic handoffs or agent-as-tool recursion.
 Protect every nested boundary explicitly. Original functions and raw sessions
 remain accessible to a trusted host: wrappers are not a sandbox. Use
-[scoped supervision](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/scoped-supervision.md) for shared/exclusive composition.
+[scoped supervision](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/scoped-supervision.md) for shared/exclusive composition.
 
 ## MCP
 
@@ -2348,7 +2823,7 @@ callables for allowlisted tools on an initialized MCP 2.3.0 `ClientSession`.
 The MCP SDK owns transport/discovery. Client-side checks alone cannot contain an
 agent holding the raw session. The gateway example also gates the server's tool,
 keeps credentials server-side, rejects raw tool names and records actual execution.
-See [examples](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/examples.md); production requires a separately secured service identity.
+See [examples](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/examples.md); production requires a separately secured service identity.
 
 ## Versioned native decision evidence
 
@@ -2401,7 +2876,7 @@ it; actual dispatch still uses a supervised adapter. Tested against Chaos 0.5.3 
 Chaos 0.6.0 event IDs and shape are unchanged; its contracts and pytest plugin stay in Chaos.
 Gate failure tests cover explicit fail_open/fail_closed; Chaos retains fault injection.
 Evals 0.7.2 retains scoring/report ownership; comparative supervision evidence and
-delegated authority are described in the [v0.9 guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md). No core sibling dependency is introduced.
+delegated authority are described in the [v0.9 guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.9.md). No core sibling dependency is introduced.
 
 ## Tower, AIOS and Semantica
 
@@ -2423,17 +2898,17 @@ Existing dependency ranges remain sufficient; importing the new accessors
 directly requires `agentic-evals>=0.7.2`.
 
 For Chaos 0.7 cascades and synthetic poisoning, install Sidecar 0.8.3 or later.
-See [compatibility and containment limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/chaos-0.7.md).
+See [compatibility and containment limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/chaos-0.7.md).
 
 For Chaos 0.8 workflows and experiments, install Sidecar 0.8.5 or later. The
-optional extra then admits `>=0.5.3,<0.9`. See [workflow evidence and limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/chaos-0.8.md).
+optional extra then admits `>=0.5.3,<0.9`. See [workflow evidence and limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/chaos-0.8.md).
 
 
 ## Current native contracts and operational export
 
 The current checkout keeps optional Lens/Chaos dependencies within `<2`; SDK extras and Python markers are declared in `pyproject.toml`. Release-labelled compatibility sections above record the originally tested releases, not an independent certification of every newer installation.
 
-`agentic_sidecar.contracts` provides five candidate native wrapper families plus `contract_schema()` and validated `IntentTransfer` propagation. See [migration and receiving-host checks](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.10.md). `agentic_sidecar.integrations.aios.export_audit_event()` separately projects public native audit identifiers/outcomes into an AIOS `0.8-draft` audit event, withholding rationale and context. See [operational projection details](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/aios-0.8-operational-artifacts.md) and the [export API](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/api-reference.md#aios-operational-audit-export). Native wrappers, `sidecar.correlation/1`, the hash-chained runtime journal and AIOS projections are distinct artifacts.
+`agentic_sidecar.contracts` provides five candidate native wrapper families plus `contract_schema()` and validated `IntentTransfer` propagation. See [migration and receiving-host checks](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md). `agentic_sidecar.integrations.aios.export_audit_event()` separately projects public native audit identifiers/outcomes into an AIOS `0.8-draft` audit event, withholding rationale and context. See [operational projection details](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/aios-0.8-operational-artifacts.md) and the [export API](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/api-reference.md#aios-operational-audit-export). Native wrappers, `sidecar.correlation/1`, the hash-chained runtime journal and AIOS projections are distinct artifacts.
 
 Authority registries, task identity and raw tools stay owned by the trusted host. Historical references to authority as future work predate the implemented v0.9 lifecycle; shared contract maturity and independent acceptance remain separate release-policy gates. Semantica is reserved and remains unimplemented.
 
@@ -2441,7 +2916,7 @@ Authority registries, task identity and raw tools stay owned by the trusted host
 
 ## AIOS operational audit exports
 
-Source: [website/docs/aios-0.8-operational-artifacts.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/aios-0.8-operational-artifacts.md)
+Source: [docs/aios-0.8-operational-artifacts.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/aios-0.8-operational-artifacts.md)
 
 AIOS repository v0.8.1 distributes the v0.8.0 schema snapshot under MIT.
 Run/Workflow remain **0.4-draft**, provenance **0.6-draft**, and operational
@@ -2453,7 +2928,7 @@ Sidecar 0.11.0 ships `integrations.aios.export_audit_event` for native AuditReco
 
 ## Adoption and validation
 
-See [coordinated readiness and examples](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/coordinated-v1-readiness.md) for the
+See [coordinated readiness and examples](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/coordinated-v1-readiness.md) for the
 public API and migration path. The [canonical schemas and rules](https://github.com/DeepAgentLabs/ai-operations-spec/tree/v0.8.1/specification/v0.8)
 define the projection contract. Source and citation presence do not authenticate
 a producer or verify its conclusion. Reference URIs are not instructions to
@@ -2471,7 +2946,7 @@ roll back; do not relabel a companion as an older artifact family.
 
 ## Coordinated readiness
 
-Source: [website/docs/coordinated-v1-readiness.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/coordinated-v1-readiness.md)
+Source: [docs/coordinated-v1-readiness.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/coordinated-v1-readiness.md)
 
 Sidecar 0.11.0 adds the optional
 `agentic_sidecar.integrations.aios.export_audit_event(record, target=..., created_at=...)`
@@ -2515,7 +2990,7 @@ See the [ecosystem release policy](https://github.com/DeepAgentLabs/.github/blob
 
 ## Examples
 
-Source: [website/docs/examples.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/examples.md)
+Source: [docs/examples.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/examples.md)
 
 The examples target the **0.8.0** API. Historical version labels in filenames
 identify their introduction. Run them from the repository root:
@@ -2560,8 +3035,8 @@ The governance example demonstrates runtime approval and suspension before
 dispatch, plus full-plan review and automatic Judge accounting. The v0.7 Control
 Room example uses a real local HTTP interface, records approval and rejection,
 and counts actual tool effects. Standalone narrator methods update reported state. Provider mock costs are illustrative
-values, not measured inference costs. See [supported scope](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/limitations.md)
-and the [roadmap](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/roadmap.md).
+values, not measured inference costs. See [supported scope](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md)
+and the [roadmap](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/roadmap.md).
 
 For the notebook, install Jupyter separately and run:
 
@@ -2594,7 +3069,7 @@ Framework conformance runs through real native SDK dispatch without model calls.
 
 ## Troubleshooting
 
-Source: [website/docs/troubleshooting.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/troubleshooting.md)
+Source: [docs/troubleshooting.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/troubleshooting.md)
 
 Use the returned verdict, enabled roles, and configured bindings to inspect
 behavior before attaching real tools. These notes describe the **0.8.0** API.
@@ -2659,7 +3134,7 @@ Use MockJudge for offline scripted examples. OpenAIJudge/AnthropicJudge make
 live API calls and require their optional SDK, credentials and an explicit model.
 Supply both token rates before enabling cost ceilings or a task budget.
 Provider errors and timeouts follow on_sidecar_failure; direct Judge calls raise.
-See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md) for setup and [Limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/limitations.md) for
+See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/governance.md) for setup and [Limitations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md) for
 post-response cost ceilings and cancellation boundaries.
 
 ## Local CLI status
@@ -2696,117 +3171,241 @@ uv run mkdocs build --strict
 ```
 
 For a docs build failure, inspect the first error, verify local links/anchors,
-and include new pages in `website/mkdocs.yml` navigation.
+and include new pages in `mkdocs.yml` navigation.
 
 ---
 
 ## Limitations
 
-Source: [website/docs/limitations.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/limitations.md)
+Source: [docs/limitations.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/limitations.md)
 
-Supported scope for the **0.9.0** API. See [Governance](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md) for usage
-and validation evidence, and [Roadmap](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/roadmap.md) for future priorities.
+This page lists what the current Agentic Sidecar release (1.x) does not do,
+so you can plan around it. The package is early-stage (PyPI classifier:
+Pre-Alpha), and native contract schemas remain candidates. Planned improvements
+appear in [Roadmap](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/roadmap.md). Topic guides list further limits for their own
+features.
 
-## Governance boundary
+---
 
-Observe records verdicts and executes tools. Govern executes ALLOW/WARN only;
-BLOCK raises SidecarBlockedError. PAUSE/ESCALATE invoke a registered handler or
-raise SidecarSuspendedError when unresolved. CHALLENGE/REPLAN always return
-control through SidecarSuspendedError. These exceptions prevent the tool call;
-they do not checkpoint, resume, or replan an entire agent workflow.
+## Enforcement boundary
 
-Approval is local or supplied through the authenticated runtime HTTP interface. Async tools run
-evaluation/approval in a worker thread to avoid blocking their event loop.
-Cancelling the waiting coroutine cannot cancel a running sync evaluator/prompt.
-Use one Sidecar/Judge/Budget per task. Runtime approvals support concurrent
-proposals; evaluators and manual budget accounting are not a task transaction.
+### Observe mode does not block
 
-APPROVE_ONCE authorizes the current invocation only. BLOCK cannot be approved.
-MODIFY_INTENT requires a full constraint-only envelope, preserves bindings and reevaluates once;
-authority-bearing intents require explicit harness re-delegation;
-another intervention returns control without an automatic prompt loop.
-STOP_AGENT latches the task; explicit runtime restart is required to run again. REJECT blocks that proposal. REPLAN returns control to the agent loop.
+Observe computes and records verdicts, then executes the wrapped call anyway.
+Only Govern mode enforces: ALLOW/WARN execute, BLOCK raises
+`SidecarBlockedError`, and PAUSE/ESCALATE/CHALLENGE/REPLAN raise
+`SidecarSuspendedError` when unresolved. `evaluate()` alone never stops a call.
 
-## Deterministic intent and heuristic evaluators
+### Only returned tools are governed
 
-Policy/Risk use ordered tool patterns and argument comparisons. Intent requires
-explicit bindings; absent constraints/arguments are skipped. Expiry produces
-WARN for constraint-only guardians. Opt-in authority bindings enforce granted/denied
-authority and ancestor expiry/revocation at dispatch; see [v0.9](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.9.md).
+Adapters protect the tool objects they return. Prebuilt SDK tools, automatic
+handoffs, raw functions the agent can still reach, nested calls, prompts,
+memory and outputs are not intercepted automatically. Pass only the returned
+tools to the agent and keep raw tools in the trusted host.
 
-`evaluate_plan()` checks explicit step dictionaries; it does not discover or
-execute the agent's plan. Planner uses selected tool/goal patterns, contradictory
-tool pairs and supplied constraint bindings. Critic uses selected risky tool
-patterns, previously permitted opposing actions and explicit metadata evidence
-flags (`authorized`, `eligibility_verified`, `backup_verified`). These flags are
-caller-supplied assertions, not independently verified authorization. History
-records verdicts, not successful executions. Heuristics do not establish general
-semantic intent or proof of correctness; confidence thresholds filter fixed
-heuristic scores. Full-plan Critic review conservatively checks each step.
+### Not a sandbox
 
-## Live providers and usage accounting
+In-process Python wrappers are not process isolation. They cannot contain
+hostile code running in the same process. For containment, run protected tools
+and credentials in an enforcing service under a separate identity; the
+[MCP gateway example](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/examples.md) shows a separate-process boundary.
 
-OpenAIJudge and AnthropicJudge make real optional SDK calls. MockJudge is an
-explicit offline fixture. Models and current USD token rates are configured by
-the caller. Supply both rates for cost ceilings/task budget accounting; without
-rates, use cost_limit=None and no BudgetGuardian. Known returned usage is recorded
-once; framework/tool usage outside Judge still needs record_invocation().
+### Suspension is not workflow control
 
-Judge cost limits apply after a response and cannot reserve future spend.
-Provider-native timeouts disable SDK retries. Judge timeout bounds waiting;
-an arbitrary sync call cannot be cancelled and may finish after timeout. Late
-sync responses still account usage, and another invocation is refused while
-one is outstanding. Native async calls are cancelled at timeout; provider spend
-without returned usage cannot be recovered from that cancellation. Malformed
-outputs with valid usage still account completed inference before verdict
-validation. Unknown or invalid usage never creates invented cost measurements.
+The suspension exceptions prevent one tool call. They do not checkpoint,
+resume or replan the whole agent workflow; your harness owns retries and
+replanning.
 
-Live API smoke results require credentials and an explicit model. Normal CI
-uses deterministic SDK contract fixtures. See [acceptance evidence](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/governance.md)
-for the recorded live-smoke status.
+---
 
-## Runtime, records and integrations
+## Failure policy
 
-Failure policy covers injection, evaluator/provider errors, malformed verdicts,
-logging/recording and approvals. A failed recorder returns the configured
-fallback but cannot guarantee an audit entry -- the already-computed verdict
-is discarded, so with `fail_open` a recorder failure after a genuine BLOCK
-resolves to ALLOW; `fail_closed` resolves the same failure to BLOCK instead.
-A custom before_tool_call hook replaces all built-in stages, including plan
-checks, budget and evaluators.
+### `fail_open` can permit failed evaluations
 
-Decision IDs and approval causal links are available. In-memory contexts are
-deep-copied at recording time; the public list, its contexts and nested decision
-dictionaries remain mutable. The immutable runtime journal records durable execution lifecycle; see
-[Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md). AuditRecord remains a caller-created export type.
+`on_sidecar_failure` has no default. With `fail_open`, an evaluator, provider,
+validation or recording failure resolves to ALLOW. A recorder failure after a
+genuine BLOCK therefore resolves to ALLOW under `fail_open` and to BLOCK under
+`fail_closed`, and the audit entry may be missing. Use Govern with
+`fail_closed` for containment.
 
-LangGraph sync/async plain callables are supported. Framework-native tool objects,
-additional adapters and optional ecosystem exports target 0.8.
+### Custom hooks replace the built-in stages
 
-## Narration and CLI
+A `before_tool_call` hook replaces the optional pipeline, including policy,
+risk, intent, plan checks, budget and evaluators. Authority checks, the stop
+latch and mandatory scoped checks still run, and hooks cannot rewrite the
+proposed action.
 
-The standalone StatusNarrator remains manually populated. Connected CLI status
-reads actual runtime events and execution state; `--follow --json` prints
-formatted snapshots, not JSONL. The Control Room uses the same authenticated
-HTTP interface. See [Live operations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/live-operations.md) for task isolation,
-stop/cancellation/revocation boundaries and restore behavior.
+---
 
-The package remains Pre-Alpha; stable API/schema guarantees target 1.0.
+## Intent and evaluators
 
-## Scoped delivery and adapters
+### Intent checks are explicit, not semantic
 
-v0.8 provides explicit host context delivery and mandatory guardrail composition.
-Wrappers cover returned tools only. Private-context isolation across external
-memories, outputs and telemetry remains v0.9 validation work; keep journals and
-configuration in the trusted host. Semantica export remains conditional. See
-[scoped limits](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/scoped-supervision.md#limits-and-responsibilities) and
-[validated framework versions](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/integrations.md).
+The Intent Guardian checks constraints bound to tool arguments. A goal string
+alone is not enforced, and absent constraints or arguments are skipped. Intent
+drift is caught only where a constraint is bound. Expiry produces WARN for
+constraint-only envelopes; authority-bearing envelopes expire with BLOCK.
+
+### Planner and Critic are heuristics
+
+`evaluate_plan()` checks the step dictionaries you supply; it does not discover
+or execute the agent's plan. Planner and Critic use selected tool and goal
+patterns, contradictory tool pairs and caller-supplied evidence flags
+(`authorized`, `eligibility_verified`, `backup_verified`). These flags are
+assertions, not verified authorization, and the heuristics are not a proof of
+correctness.
+
+### Risk classification is rule-based
+
+The Risk Evaluator classifies tool and argument patterns. It is not a learned
+risk model and only knows the rules you configure.
+
+---
+
+## Judges and budgets
+
+### Live judges need your credentials and rates
+
+`OpenAIJudge` and `AnthropicJudge` make real SDK calls with a model and token
+rates you configure. `MockJudge` is an offline fixture and is never substituted
+silently. Authenticated live-provider smoke results remain pending credentials.
+
+### Cost limits apply after a response
+
+Judge cost limits cannot reserve future spend. A synchronous provider call
+cannot be cancelled at timeout and may still finish and account usage. Unknown
+usage is never invented as a cost.
+
+### Budgets count only what is recorded
+
+Judge usage reaches the task budget automatically. Other framework or tool usage
+must be recorded with `record_invocation()`; it is not inferred.
+
+---
+
+## Human in the loop
+
+### One approval, one invocation
+
+APPROVE_ONCE authorizes the current unchanged invocation only. BLOCK is never
+offered for approval. MODIFY_INTENT needs a complete constraint-only envelope;
+authority-bearing intents require explicit re-delegation by the harness.
+Waiting for an approval times out into REPLAN.
+
+### Async waiting runs in a worker thread
+
+Async tools run evaluation and approval in a worker thread so the event loop
+is not blocked. Cancelling the waiting coroutine cannot cancel a running
+synchronous evaluator or prompt.
+
+---
+
+## Live operations and emergency stop
+
+### Stop cannot undo dispatched work
+
+Stop blocks all future dispatch, but already-dispatched synchronous calls may
+finish and keep their side effects. Async cancellation is cooperative; a tool
+can suppress it.
+
+### Revocation is host-owned
+
+Credential, MCP, session and delegation access belong to their issuer.
+Revocation happens only through the `TaskRuntime(revokers=...)` callbacks you
+supply. `access_revocation: not_configured` confirms only the local dispatch
+stop. Restart does not renew credentials or task authority.
+
+### Operator server is local only
+
+`OperatorServer` binds to `127.0.0.1` with one task, one token and one actor.
+There is no TLS, public deployment, CORS access or multi-tenant isolation.
+`status --follow --json` prints formatted snapshots, not JSONL.
+
+### Control Tower acknowledgements are bounded
+
+A fleet-wide stop acknowledgement through Control Tower confirms the Sidecar
+boundary, not end-to-end containment. In-flight calls and downstream
+credentials are reported separately, and there is no fleet atomicity,
+automatic rollback or automatic restart. See
+[Control Tower integration](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/control-tower-integration.md#limits).
+
+---
+
+## Audit and records
+
+### Hash chains need an external anchor
+
+The event journal detects alteration relative to the supplied chain. Resisting a
+full malicious rewrite requires an external trusted anchor.
+
+### Records can contain sensitive data
+
+Journals, decision records and correlation projections can contain tool
+arguments, intent context and reasons. Protect their storage. Redacted summaries
+cannot replace native decisions or a verifiable journal.
+
+### In-memory decisions are mutable
+
+`sidecar.decisions` holds deep copies made at recording time, but the list and
+its nested dictionaries remain mutable. Use the runtime journal for durable,
+immutable lifecycle evidence. `AuditRecord` is a caller-created export type.
+
+---
+
+## Scopes, authority and contracts
+
+### Context delivery is explicit
+
+Scoped context is delivered only through `context()` / `deliver()`. Private text
+is not automatically enforcement policy or evaluator input. Expiry and
+revocation block future reads but cannot retract copies already delivered.
+
+### Identity comes from the host
+
+Agent IDs, readers, actors, grants and the authority registry must be supplied
+by the authenticated host. Revocation does not undo execution already reserved.
+
+### Contracts and transfers grant nothing on their own
+
+The five native schemas are candidates, not frozen. An `IntentTransfer`
+proposal is not a signed credential, approval or resumable task; replay
+prevention and registry replication across instances are host responsibilities.
+Semantica export is reserved and not implemented.
+
+---
+
+## Evidence and benchmarks
+
+### Benchmarks are synthetic
+
+The 24-run supervision benchmark uses synthetic tools with zero token and cost
+values. It does not establish live-provider benefit, statistical confidence or
+economic savings.
+
+---
+
+## AIOS conformance
+
+### Draft specification
+
+The AI Operations Specification is a draft. AIOS audit projections are draft
+operational artifacts, and package versions do not certify AIOS conformance or
+production deployment readiness.
+
+---
+
+## Platform
+
+### Python 3.10+ required
+
+Agentic Sidecar supports Python 3.10 to 3.13. Optional framework and provider
+adapters follow the SDK versions listed in [Integrations](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/integrations.md).
 
 ---
 
 ## Historical integration note: AIOS v0.6.1 compatibility
 
-Source: [website/docs/aios-0.6.1.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/aios-0.6.1.md)
+Source: [docs/aios-0.6.1.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/aios-0.6.1.md)
 
 AI Operations Specification repository v0.6.1 adds the first v0.6.x drafts:
 
@@ -2841,7 +3440,7 @@ does not show that any artifact or finding is true. See the
 
 ## Historical integration note: AIOS repository v0.7.0 compatibility
 
-Source: [website/docs/aios-0.7.0.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/aios-0.7.0.md)
+Source: [docs/aios-0.7.0.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/aios-0.7.0.md)
 
 AIOS v0.7.0 adds non-normative migration guidance, an OpenTelemetry companion
 profile pinned to upstream semantic conventions 1.37.0, tested retry examples,
@@ -2870,7 +3469,7 @@ v0.6.2 publication and tag have been removed. Artifact markers and independent-r
 
 ## Historical integration note: Chaos 0.11 ChaosHub compatibility
 
-Source: [website/docs/chaos-0.11-chaoshub.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/chaos-0.11-chaoshub.md)
+Source: [docs/chaos-0.11-chaoshub.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/chaos-0.11-chaoshub.md)
 
 Sidecar 0.10.1 widens both optional Chaos ranges to `<0.12` so the 0.11 wheel can be installed. Governance decisions and the live stop/revoke bridge keep their native meaning; recipe execution is caller-owned and does not prove containment.
 
@@ -2905,7 +3504,7 @@ Coordinated ecosystem v1.0 acceptance remains open.
 
 ## Historical integration note: Chaos 0.7 compatibility
 
-Source: [website/docs/chaos-0.7.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/chaos-0.7.md)
+Source: [docs/chaos-0.7.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/chaos-0.7.md)
 
 ## Chaos 0.7.0 interoperability
 
@@ -2928,7 +3527,7 @@ Sidecar 0.8.3 widens its optional agentic-chaos extra to >=0.5.3,<0.8. Recovery 
 
 ## Historical integration note: Chaos 0.8 compatibility
 
-Source: [website/docs/chaos-0.8.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/chaos-0.8.md)
+Source: [docs/chaos-0.8.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/chaos-0.8.md)
 
 ## Chaos 0.8.0 interoperability
 
@@ -2964,7 +3563,7 @@ Injecting into Sidecar gate and approval paths remains v0.9 validation.
 
 ## Historical integration note: Chaos 0.9 compatibility
 
-Source: [website/docs/chaos-0.9.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/chaos-0.9.md)
+Source: [docs/chaos-0.9.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/chaos-0.9.md)
 
 ## Chaos 0.9.0 interoperability
 
@@ -3005,7 +3604,7 @@ Sidecar 0.9.1 widens its optional `agentic-chaos` extra to `>=0.5.3,<0.10` and i
 
 ## Historical integration note: Control Tower 0.6.0 compatibility
 
-Source: [website/docs/control-tower-0.6.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/control-tower-0.6.md)
+Source: [docs/control-tower-0.6.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/control-tower-0.6.md)
 
 Tower combines Phase 6 (local MCP connector and investigation) and Phase 6A
 (approved staging incident-to-recovery) in a single **0.6.0** release, paired with
@@ -3057,7 +3656,7 @@ for API requests, credentials, supported scope and recovery limits.
 
 ## Historical integration note: Evals 0.11 containment compatibility
 
-Source: [website/docs/evals-0.11-containment.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/evals-0.11-containment.md)
+Source: [docs/evals-0.11-containment.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/evals-0.11-containment.md)
 
 Evals 0.11.0 supplies `ContainmentEvaluator` and the six-scenario
 `adversarial-containment` pack. It scores actual dispatch/completion and denial
@@ -3099,7 +3698,7 @@ Sidecar still enforces dispatch, authority and stop/revoke. Its validation extra
 
 ## Historical integration note: Evals 0.12 API and report readiness
 
-Source: [website/docs/evals-0.12.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/evals-0.12.md)
+Source: [docs/evals-0.12.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/evals-0.12.md)
 
 Evals 0.12.0 captures its public root API candidate and current report/gate
 schemas in compatibility fixtures, executes all registered offline Python
@@ -3138,7 +3737,7 @@ and [executable examples](https://github.com/DeepAgentLabs/agentic-evals/blob/v0
 
 ## Historical integration note: Lens 0.13 readiness compatibility
 
-Source: [website/docs/lens-0.13.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/lens-0.13.md)
+Source: [docs/lens-0.13.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/lens-0.13.md)
 
 Lens 0.13.0 adds an opt-in single-node project artifact service, scoped bearer
 roles, atomic local audit, immutable model/prompt metadata registries, mandatory
@@ -3175,7 +3774,7 @@ Existing dependency ranges are sufficient; this compatibility documentation need
 
 ## Historical integration note: MCP Phase 6 coordinated containment release
 
-Source: [website/docs/phase6-containment.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/phase6-containment.md)
+Source: [docs/phase6-containment.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/phase6-containment.md)
 
 MCP 0.6.0 pairs with Chaos 0.10.0 and Sidecar 0.9.2. Lens 0.12.0,
 Evals 0.10.0, Tower 0.9.0 and AIOS 0.6.1 remain compatible. See the
@@ -3195,8 +3794,8 @@ Failed, unknown, incomplete or missing evidence cannot pass. Tests include an
 actual handler dispatch through a deliberately bypassed authorizer, which must
 fail containment assertions despite valid snapshot authentication. Recovery,
 output quality and resilience scores are separate. Evals v0.11 reusable
-containment scoring ships subsequently in 0.11.0; see
-[the updated matrix](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/evals-0.11-containment.md).
+containment scoring shipped subsequently in Evals 0.11.0; see
+[the updated matrix](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/evals-0.11-containment.md).
 
 MCP retains its native access records and adds `io.deepagentlabs.access`, defined
 in the spec-owned exploratory `drafts/access-evidence-v1` profile. No new
@@ -3217,7 +3816,7 @@ not the historical v0.6.1 tag. It is not promoted to a normative schema family.
 
 ## Historical integration note: Tower 0.10 capability contract compatibility
 
-Source: [website/docs/tower-0.10-compatibility.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/tower-0.10-compatibility.md)
+Source: [docs/tower-0.10-compatibility.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/tower-0.10-compatibility.md)
 
 Updated 2026-11-04.
 
@@ -3645,7 +4244,7 @@ compensation and escalation without optional siblings.
 
 Source: [docs/v0.10-contracts.md](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10-contracts.md)
 
-See the [contract and migration guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.10.md) and
+See the [contract and migration guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md) and
 [offline propagation example](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/examples/v0_10_contracts.py).
 
 ---

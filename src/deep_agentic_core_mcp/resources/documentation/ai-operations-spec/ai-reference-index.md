@@ -1,6 +1,6 @@
 # AI Reference capability index
 
-Open the generated [AI Reference (robust)](https://deepagentlabs.io/ai-operations-spec/docs/llms-full.md) for the complete reference. In that raw Markdown file, **Full reference** links to an included section; **Source** identifies the maintained document. Use the [Developer Guide (simple)](developer-guide.md#capability-index) for short workflows.
+Open the generated [AI Readable Documentation](https://deepagentlabs.io/ai-operations-spec/docs/llms-full.md) for the complete reference. The [API Reference (detailed)](api-reference.md) gives the field and rule tables for each artifact family. In that raw Markdown file, **Full reference** links to an included section; **Source** identifies the maintained document. Use the [Developer Guide (simple)](developer-guide.md#capability-index) for short workflows.
 
 ## Capability index
 

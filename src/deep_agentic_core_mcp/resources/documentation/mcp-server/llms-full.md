@@ -283,7 +283,7 @@ See [Limitations](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/lim
 
 - [Developer Guide (simple)](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/developer-guide.md): short task workflows and a capability index
 - [API Reference (detailed)](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/api-reference.md): every tool, resource, prompt, endpoint and entry point
-- [AI Readable Documentation](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/ai-reference-index.md): the full reference as one file for AI tools, with source declarations and schemas
+- [AI Readable Documentation](https://deepagentlabs.io/mcp/docs/llms-full.md): the full reference as one file for AI tools, with source declarations and schemas
 
 ---
 
@@ -605,7 +605,7 @@ Check the client's executable/environment, optional adapter readiness and select
 
 Source: [docs/api-reference.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/api-reference.md)
 
-**Version:** 1.1.1
+**Version:** 1.1.2
 
 The server's public interface is the MCP protocol: tools, resources and prompt templates, served over local stdio or authenticated HTTP. This page lists every interface in one place. For each tool's exact input schema, prerequisites and examples, see the [generated tool catalog](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md).
 
@@ -3881,7 +3881,7 @@ AuthorityRegistry; private configuration is not approval, remote authorization
 or a durable grant. Shared and exclusive restrictions all apply; conflicts
 fail, readers intersect and earliest expiry wins.
 
-See the [migration and supported-version guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.10.md),
+See the [migration and supported-version guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md),
 [offline propagation example](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/examples/v0_10_contracts.py)
 and [AIOS candidate mapping](https://github.com/DeepAgentLabs/ai-operations-spec/tree/main/drafts/sidecar-contracts-v1).
 

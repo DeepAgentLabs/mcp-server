@@ -5,26 +5,26 @@
       "product": "agenticlens",
       "name": "AgenticLens",
       "distribution": "agenticlens",
-      "version": "1.0.4",
-      "source_commit": "1ec10caf0fc50bf9bcaaef8d0ad0c768f43ed3d2",
+      "version": "1.1.0",
+      "source_commit": "8695d3106e1c5475a014a1d16dfeb6b2f5a1f443",
       "repository": "https://github.com/DeepAgentLabs/agenticlens",
       "source_path": "docs/llms-full.md",
-      "source_url": "https://github.com/DeepAgentLabs/agenticlens/blob/1ec10caf0fc50bf9bcaaef8d0ad0c768f43ed3d2/docs/llms-full.md",
+      "source_url": "https://github.com/DeepAgentLabs/agenticlens/blob/8695d3106e1c5475a014a1d16dfeb6b2f5a1f443/docs/llms-full.md",
       "assets": {
         "reference": {
           "file": "llms-full.md",
-          "sha256": "99576eef4017810ae0e7037da92208ffbfe30c185382a3953f541bbde8d7c0af",
-          "bytes": 715658
+          "sha256": "75518756a662744f9a3e98a31e519420ce37e891a3a57f834a875bcc9cc995cd",
+          "bytes": 738342
         },
         "index": {
           "file": "ai-reference-index.md",
-          "sha256": "157ccaeba1afdf3b9710e3161f9877bb1297e251666a2e24e0a2d5bc63a53c81",
-          "bytes": 7177
+          "sha256": "a752a9cd4bd584402b9c7760ab436785a10b654017ad159813d7b364d8c91653",
+          "bytes": 7510
         },
         "manifest": {
           "file": "ai-docs-manifest.json",
-          "sha256": "0cba5ee2e2f8ca97dd8f1ca98251d6b69a9b6906912656e0e1f709bebc6cda55",
-          "bytes": 45061
+          "sha256": "733f41d4c6a4ecaa11750a7e6f7142e85058e8ebd27fba7d586a2f9068c7d26a",
+          "bytes": 45215
         },
         "license": {
           "file": "LICENSE",
@@ -37,16 +37,16 @@
       "product": "agentic-evals",
       "name": "Agentic Evals",
       "distribution": "agentic-evals",
-      "version": "1.0.4",
-      "source_commit": "e2a0bf5028fcbc3da8435070d1e8fc272adc41c2",
+      "version": "1.1.0",
+      "source_commit": "31dc8f34b8544d5849cee8388b5112442b871880",
       "repository": "https://github.com/DeepAgentLabs/agentic-evals",
       "source_path": "docs/llms-full.md",
-      "source_url": "https://github.com/DeepAgentLabs/agentic-evals/blob/e2a0bf5028fcbc3da8435070d1e8fc272adc41c2/docs/llms-full.md",
+      "source_url": "https://github.com/DeepAgentLabs/agentic-evals/blob/31dc8f34b8544d5849cee8388b5112442b871880/docs/llms-full.md",
       "assets": {
         "reference": {
           "file": "llms-full.md",
-          "sha256": "66a4e67f1815368189663d5e086066f10d7f5c864ba7dc15216ad9ba2ef09dd1",
-          "bytes": 304270
+          "sha256": "e470e19390b9a3e4a13ff0719ce16b7a31d92811a91ff1f1b38264b865891da1",
+          "bytes": 339338
         },
         "index": {
           "file": "ai-reference-index.md",
@@ -55,8 +55,8 @@
         },
         "manifest": {
           "file": "ai-docs-manifest.json",
-          "sha256": "ef1b8d1c97ecc158752060a28eb6f7eb0bd7941cafaa92b201e563fea8c28917",
-          "bytes": 18244
+          "sha256": "b1569e325a30bb45914ad65b17aab5b0b3b881336f743ff2ea925f92cfa34407",
+          "bytes": 18558
         },
         "license": {
           "file": "LICENSE",
@@ -69,26 +69,26 @@
       "product": "agentic-chaos",
       "name": "Agentic Chaos",
       "distribution": "agentic-chaos",
-      "version": "1.0.4",
-      "source_commit": "a4c1ef8cc05946c3695f5892558f589cc7c7106b",
+      "version": "1.1.0",
+      "source_commit": "2ddd25391b65ef2cf84831ba854cd4bb4dcd010b",
       "repository": "https://github.com/DeepAgentLabs/agentic-chaos",
       "source_path": "docs/llms-full.md",
-      "source_url": "https://github.com/DeepAgentLabs/agentic-chaos/blob/a4c1ef8cc05946c3695f5892558f589cc7c7106b/docs/llms-full.md",
+      "source_url": "https://github.com/DeepAgentLabs/agentic-chaos/blob/2ddd25391b65ef2cf84831ba854cd4bb4dcd010b/docs/llms-full.md",
       "assets": {
         "reference": {
           "file": "llms-full.md",
-          "sha256": "99ca983ac532ee79008102467b62c41d92f680059687b0ad00666f5f72f9f80d",
-          "bytes": 328854
+          "sha256": "9ca7603b1c1ae972a553dbd173cf716d9529f1a3acefa296f8fc9da5b7254dd6",
+          "bytes": 363642
         },
         "index": {
           "file": "ai-reference-index.md",
-          "sha256": "de3cf17e627c7842f7b66ca6049fdd6c2854b32521641d0d3deb959955a4e61f",
-          "bytes": 7776
+          "sha256": "73ca38d65477797f8ecf8e04e7280d3fb04ab45803aa814ffedbdaf8d59349cc",
+          "bytes": 7990
         },
         "manifest": {
           "file": "ai-docs-manifest.json",
-          "sha256": "c792dcae2ca21fc147ba0904f72bf99d3824aaadb9dd3fffb38c9994a56516dd",
-          "bytes": 20500
+          "sha256": "ddb86dfb7714b988313640153045f7df3fab79394c2ac828299fa7f5dcb66d91",
+          "bytes": 20654
         },
         "license": {
           "file": "LICENSE",
@@ -101,26 +101,26 @@
       "product": "agentic-sidecar",
       "name": "Agentic Sidecar",
       "distribution": "agentic-sidecar",
-      "version": "1.0.4",
-      "source_commit": "185a85d215760270a57980a10d02ebb494e2602a",
+      "version": "1.1.0",
+      "source_commit": "11c8154df596da5ca0a8e2530f058733f839ed85",
       "repository": "https://github.com/DeepAgentLabs/agentic-sidecar",
-      "source_path": "website/docs/llms-full.md",
-      "source_url": "https://github.com/DeepAgentLabs/agentic-sidecar/blob/185a85d215760270a57980a10d02ebb494e2602a/website/docs/llms-full.md",
+      "source_path": "docs/llms-full.md",
+      "source_url": "https://github.com/DeepAgentLabs/agentic-sidecar/blob/11c8154df596da5ca0a8e2530f058733f839ed85/docs/llms-full.md",
       "assets": {
         "reference": {
           "file": "llms-full.md",
-          "sha256": "fc7ec6a7a8ad6dafcb6e02990152ca3b6152b0cef81e5f7ea5c67d446b914a6d",
-          "bytes": 262377
+          "sha256": "b0a6554c66b334a3efcb54addf5954509820f16c17146a72b827c17436a444b7",
+          "bytes": 292421
         },
         "index": {
           "file": "ai-reference-index.md",
-          "sha256": "abf218702a32d7a9d0292559034b303eec78532d1132cd06fd2da54e1b5efd2e",
-          "bytes": 7934
+          "sha256": "42e9dfa4db27dcc69cd01b1797cc6fd4511e6164553c0fae9c973effd56aeb20",
+          "bytes": 8238
         },
         "manifest": {
           "file": "ai-docs-manifest.json",
-          "sha256": "06fca625aeb9a10593f928d3291f62e7e4747f7b15549f06488cb4cc052f731f",
-          "bytes": 19711
+          "sha256": "0d3443617a70323facde5e0babf57a0b95ad54218a6d9a9d45c322d027a8d7f5",
+          "bytes": 19783
         },
         "license": {
           "file": "LICENSE",
@@ -133,16 +133,16 @@
       "product": "agenticops-control-tower",
       "name": "Control Tower",
       "distribution": "agenticops-control-tower",
-      "version": "1.0.4",
-      "source_commit": "7e44831835863d80aebef688e6b00b2dbb663f95",
+      "version": "1.1.0",
+      "source_commit": "d51552994a1201bb7d62cfc83670fb12d58065cf",
       "repository": "https://github.com/DeepAgentLabs/agenticops-control-tower",
       "source_path": "docs/llms-full.md",
-      "source_url": "https://github.com/DeepAgentLabs/agenticops-control-tower/blob/7e44831835863d80aebef688e6b00b2dbb663f95/docs/llms-full.md",
+      "source_url": "https://github.com/DeepAgentLabs/agenticops-control-tower/blob/d51552994a1201bb7d62cfc83670fb12d58065cf/docs/llms-full.md",
       "assets": {
         "reference": {
           "file": "llms-full.md",
-          "sha256": "31bf2d2c84a64976c95d9abaa9ca3442bd2dc4a62f0b47ad0153fa331ebd7176",
-          "bytes": 335368
+          "sha256": "613d941c77e9d372511f6a9c69aa059995479099687040cac4ccde6cdbfe9000",
+          "bytes": 358325
         },
         "index": {
           "file": "ai-reference-index.md",
@@ -151,8 +151,8 @@
         },
         "manifest": {
           "file": "ai-docs-manifest.json",
-          "sha256": "179b8d7e00faee503ca6a2cdf024557bde63a7c168777dfbe80d0124f62f5ba3",
-          "bytes": 20934
+          "sha256": "e89824ad6a2d212531f00d308c0af3f84b2eb96c3cfacd88589d8097b9bfd2cd",
+          "bytes": 21088
         },
         "license": {
           "file": "LICENSE",
@@ -165,26 +165,26 @@
       "product": "ai-operations-spec",
       "name": "AI Operations Specification",
       "distribution": "ai-operations-spec",
-      "version": "1.0.2",
-      "source_commit": "58e42592efc4ec30c3e05dec77bc114cdf4c85e4",
+      "version": "1.1.0",
+      "source_commit": "f72bec910664fd954be0b34d7319feac8f547abc",
       "repository": "https://github.com/DeepAgentLabs/ai-operations-spec",
       "source_path": "docs/llms-full.md",
-      "source_url": "https://github.com/DeepAgentLabs/ai-operations-spec/blob/58e42592efc4ec30c3e05dec77bc114cdf4c85e4/docs/llms-full.md",
+      "source_url": "https://github.com/DeepAgentLabs/ai-operations-spec/blob/f72bec910664fd954be0b34d7319feac8f547abc/docs/llms-full.md",
       "assets": {
         "reference": {
           "file": "llms-full.md",
-          "sha256": "d0a580b10a2424c4d43207d1125cd93df3565ece84c51dc13eb2e282db199061",
-          "bytes": 899653
+          "sha256": "9bbec39e078ff1d900d052699d2bb3b20a877159098eaf5e0210ccf91c50b743",
+          "bytes": 975756
         },
         "index": {
           "file": "ai-reference-index.md",
-          "sha256": "b50839d2cca474a15fb3733848e62af6f2a509ebec74f7c29e7e4543a980953d",
-          "bytes": 9072
+          "sha256": "ddda8d2cd93f984a91d2279e8c1744b261d5188a5623d9faa2e26318a754263c",
+          "bytes": 9183
         },
         "manifest": {
           "file": "ai-docs-manifest.json",
-          "sha256": "2cf5bbeb66f2652969940d00355bc42b779deaf298d86bbbd3345b083d05bac0",
-          "bytes": 46157
+          "sha256": "267a597980387c7d2a780d7875b242edf27a92a2ccdb2b0f768bf8ddca444e07",
+          "bytes": 46633
         },
         "license": {
           "file": "LICENSE",
@@ -197,16 +197,16 @@
       "product": "mcp-server",
       "name": "MCP Server",
       "distribution": "deep-agentic-core-mcp",
-      "version": "1.1.1",
-      "source_commit": "f78b98699a2217d2a41d8b8142201c39315839f1",
+      "version": "1.1.2",
+      "source_commit": "52615617783c3762a1292ad1cf1e2c112a5f5fa5",
       "repository": "https://github.com/DeepAgentLabs/mcp-server",
       "source_path": "docs/llms-full.md",
-      "source_url": "https://github.com/DeepAgentLabs/mcp-server/blob/f78b98699a2217d2a41d8b8142201c39315839f1/docs/llms-full.md",
+      "source_url": "https://github.com/DeepAgentLabs/mcp-server/blob/52615617783c3762a1292ad1cf1e2c112a5f5fa5/docs/llms-full.md",
       "assets": {
         "reference": {
           "file": "llms-full.md",
-          "sha256": "e6a4900b2b6fe45bb83eeeab4a6e26afdbbabf0780be10bd020cd52713283695",
-          "bytes": 343999
+          "sha256": "f493404244d24cf1fd39aff469ba51f0f6d38e3c73d7eb5abc49722fc3585e95",
+          "bytes": 343957
         },
         "index": {
           "file": "ai-reference-index.md",
@@ -215,7 +215,7 @@
         },
         "manifest": {
           "file": "ai-docs-manifest.json",
-          "sha256": "b63f3703146cdd407f2f67a4bf818f5bbb024881e3bcc307ec4eb7d81d59f439",
+          "sha256": "63bbf9bf5ef8de7e138eb34496581c235ae6b073296147019a927f3f4ef6dc9e",
           "bytes": 19772
         },
         "license": {
