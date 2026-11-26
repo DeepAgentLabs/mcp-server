@@ -4,7 +4,7 @@
   "distribution": "deep-agentic-core-mcp",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "a9dec3d87c74653fd66d90fb3a20408496f56577df962cb58c3f84feab30a2bb",
+  "sha256": "69d0c5c3dd63068eddb1ca918136231197f2642b8fe72b5c5440be4ff04dc7bd",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
@@ -16,7 +16,7 @@
     {
       "path": "docs/ai-docs.json",
       "kind": "source-selection",
-      "sha256": "8173d332daf497d189b7c633919ac103cf88c274d5eed2d2116e0788479c8f29"
+      "sha256": "8f4fb662b8c23fa4c60b8fc0f23061245f7dec5fe22e81316f25825f72306036"
     },
     {
       "path": "docs/ai-reference-index.md",
@@ -24,14 +24,24 @@
       "sha256": "0cdfe8840c515d6e29a447ebc425befd5b60b18ec7c71f218dc0ff0f5be1021d"
     },
     {
+      "path": "docs/index.md",
+      "kind": "reference",
+      "sha256": "41f01b4e97d74e39cb973d65ee0cce0df85bfdb66fe31b8982e93a94a3468e6c"
+    },
+    {
       "path": "docs/developer-guide.md",
       "kind": "reference",
-      "sha256": "a9305b0578c7b5c1758c3cf6f42c2a0215c3189a60b507917d0522a4edb417aa"
+      "sha256": "da29a3be956ee002dd87a48238d1061637cf6ae94ce25920abcb37d757b7a702"
+    },
+    {
+      "path": "docs/api-reference.md",
+      "kind": "reference",
+      "sha256": "e05aa942683d9e3e38401cfd6c8775ad937a68dcd5bf1848d60ba30c7ebdbf9b"
     },
     {
       "path": "docs/ecosystem-ai-reference.md",
       "kind": "reference",
-      "sha256": "5eb0f9594e1dfabaf9100539b80fb269d0498fd0543e26c536d7c5de08375df1"
+      "sha256": "4f4051c7c17925bc69f04045550cc44e9c37f404efe651926c196cd2fc23f485"
     },
     {
       "path": "docs/tools.md",
@@ -46,7 +56,7 @@
     {
       "path": "docs/cli-reference.md",
       "kind": "reference",
-      "sha256": "faa2a7cda0649ad28c5b5f616e6ff97a67e05ba51d5bcfaca5e8288006c56ebc"
+      "sha256": "ddaac9eba23266864d22720eb9f7ac4c214ca4e969b0fb2e1441d1bcef3b2c72"
     },
     {
       "path": "docs/configuration.md",

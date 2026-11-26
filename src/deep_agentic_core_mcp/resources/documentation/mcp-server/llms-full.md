@@ -109,6 +109,184 @@ The shared site publishes the robust pack verbatim as a raw Markdown download, s
 
 ---
 
+## Overview and capabilities map
+
+Source: [docs/index.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/index.md)
+
+How can an MCP client or coding agent use every DeepAgentLabs capability through one server?
+
+## What it does
+
+The server exposes 56 tools, documentation and schema resources, and six prompt templates over local stdio or hosted HTTP. They are grouped by area below. Each area links to its detailed guide; for runnable steps, see the [developer guide](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/developer-guide.md).
+
+### 1. Core: cross-product checks and server basics (`core.*`, 15 tools)
+
+- **Health, version and status**
+    - `core.health`, `core.version`, `core.verify` (are the integrations connected)
+    - `core.access_status`: the calling hosted key's effective permissions
+- **Setup**
+    - `core.onboard`: read-only setup steps with sibling readiness
+- **Release checks**
+    - `core.release_check`: fail-closed readiness from comparison, Evals and Chaos evidence
+    - `core.compatibility`: installed versions against the packaged candidate matrix
+    - `core.compare_runs`: baseline versus candidate runs, stored for the release check
+- **Incidents and reports**
+    - `core.incident_summary`, `core.export_report`
+    - `core.report_recall` (saved reports with cited notes), `core.session_state`
+- **Documentation for all seven products**
+    - `core.docs_catalog`, `core.docs_search`, `core.docs_read`
+
+Guides: [Unified workflows](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/unified-workflows.md) ·
+[Release readiness](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/release-readiness.md) · [Tool reference](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md#core)
+
+### 2. AgenticLens: analyse agent workflows (`lens.*`, 13 tools)
+
+- **Analyse and diagnose**
+    - `lens.analyze_workflow`, `lens.diagnose_run`, `lens.compare_runs`
+- **Optimise**
+    - `lens.optimization_analyze`
+    - `lens.modelfit_recommend` (which model fits each task)
+    - `lens.routing_decide`
+- **Score and report**
+    - `lens.score_analysis`, `lens.slo_summary`
+    - `lens.report_summary`, `lens.audit_report`
+- **Test suites**
+    - `lens.suite_check`, `lens.suite_from_traces`
+- **Evidence**
+    - `lens.execution_verify`: verify an execution bundle with host-held trust keys
+
+Guides: [Lens integration](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/integrations.md#agenticlens) ·
+[Lens execution evidence](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/lens-execution-evidence.md) · [Tool reference](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md#agenticlens-lens)
+
+### 3. Agentic Chaos: fault injection (`chaos.*`, 3 tools)
+
+- **Faults**
+    - `chaos.list_faults`
+- **Experiments**
+    - `chaos.run_experiment`: trusted local scripts only; hosted HTTP always refuses it
+- **Export**
+    - `chaos.export_aios_run`: turn a chaos report into an AIOS run
+
+Guides: [Chaos integration](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/integrations.md#agentic-chaos) ·
+[Configuration](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/configuration.md#local-chaos-script-policy) · [Tool reference](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md#agentic-chaos-chaos)
+
+### 4. Agentic Evals: report validation (`evals.*`, 1 tool)
+
+- `evals.validate_artifact`: check an eval report or gate decision against its schema
+
+Guides: [Evals report contract](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/evals-report-contract.md) · [Tool reference](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md#native-evals-evals)
+
+### 5. Agentic Sidecar: supervision inventory (`sidecar.*`, 2 tools)
+
+- `sidecar.status`, `sidecar.module_inventory`
+- Live stop and revoke run through a separate operator route, not a model tool
+
+Guides: [Sidecar integration](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/integrations.md#agentic-sidecar) ·
+[Phase 6 containment](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/phase6-containment.md) · [Tool reference](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md#agentic-sidecar-sidecar)
+
+### 6. AI Operations Specification: artifact validation (`spec.*`, 1 tool)
+
+- `spec.validate_artifact`: check an artifact against the AIOS schemas (v0.4, v0.6 and v0.8)
+- Schema and rule-catalog resources are bundled for offline use
+
+Guides: [Coordinated v1 readiness](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/coordinated-v1-readiness.md) ·
+[Resources and prompts](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/resources-and-prompts.md) · [Tool reference](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md#ai-operations-specification-spec)
+
+### 7. Control Tower: fleet operations (`tower.*`, 21 tools)
+
+- **Fleet**
+    - `tower.status`, `tower.agents`, `tower.posture`, `tower.versions`
+    - `tower.capability_contract`
+- **Incidents and evidence**
+    - `tower.detect`, `tower.incidents`, `tower.incident`, `tower.investigate`
+    - `tower.evidence`: an agent's evidence history
+- **Recovery actions**
+    - `tower.preview`, then `tower.execute`
+    - A human must approve the exact preview in Tower first
+    - `tower.verify`: confirm recovery with fresh Lens and Evals evidence
+- **Runbooks**
+    - `tower.runbooks`, `tower.runbook_recommendations`, `tower.runbook_preview`
+    - `tower.runbook_execute`, `tower.runbook_execution`, `tower.runbook_executions`
+    - `tower.runbook_verify`, `tower.runbook_cancel`
+
+Guides: [Tower runbooks](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tower-0.9-runbooks.md) ·
+[Tower compatibility](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tower-0.10-compatibility.md) · [Tool reference](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md#control-tower-tower)
+
+### 8. Built-in AI-readable documentation for all seven products
+
+The server bundles the full documentation for every DeepAgentLabs product, written for AI agents to read. GitHub Copilot, OpenAI Codex, Claude Code, Cursor or any MCP-compatible coding agent can use it to explore, understand, integrate and build with these tools from natural-language requests, without anyone navigating the documentation by hand.
+
+- **Products covered**
+    - AgenticLens, Agentic Evals, Agentic Chaos, Agentic Sidecar, Control Tower,
+      the AI Operations Specification and this MCP server
+- **Discover, search and read**
+    - `core.docs_catalog`, `core.docs_search` and `core.docs_read`
+    - Every answer cites its source commit, checksum and line
+- **Resources**
+    - `resource://docs/catalog`
+    - `resource://docs/{product}/reference`, `/index`, `/manifest` and `/license`
+- **Guided build prompt**
+    - `core.build_with_ecosystem` has the agent read the right docs before it writes integration code
+- **Works offline**
+    - No extra packages, network access or API keys are needed to read the docs locally
+
+Guides: [Build with the seven-product AI reference](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/ecosystem-ai-reference.md)
+
+### 9. Resources and prompt templates
+
+- **Resources**
+    - Sample workflow, chaos fault catalog and release-check guide
+    - AIOS JSON schemas and conformance-rule catalogs
+    - Saved sessions per user: `resource://sessions/{id}`
+- **Prompts (six templates)**
+    - `core.build_with_ecosystem`, `core.release_check`, `tower.investigation`
+    - `lens.workflow_summary`, `lens.compare_summary`, `chaos.experiment_brief`
+
+Guides: [Resources and prompts](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/resources-and-prompts.md)
+
+### 10. Local and hosted operation
+
+- **Transports**
+    - Local stdio: `deep-agentic-core-mcp`
+    - Authenticated Streamable HTTP: `deep-agentic-core-mcp-http` (`[http]` extra)
+- **Keys and access**
+    - Sign-up, key rotation and self-revocation
+    - Per-key allow and deny lists, expiry and task scope, enforced at dispatch
+    - Operator CLI: `deep-agentic-core-mcp-admin`
+- **Storage and isolation**
+    - Per-user sessions on memory, Redis or PostgreSQL, with quotas
+    - Per-user Control Tower credentials held by the host
+- **Evidence**
+    - Access-decision logs and AIOS audit-event projections
+
+Guides: [Remote hosting](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/remote-hosting.md) · [Hosted access control](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/access-control.md) ·
+[Configuration](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/configuration.md) · [CLI reference](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/cli-reference.md)
+
+## What you need
+
+An MCP client or coding agent, the server installed (or a hosted key), and the optional DeepAgentLabs packages for the capabilities you use.
+
+## Start here
+
+Connect locally and call `core.version`, `core.compatibility` and `core.verify`: [follow the quickstart](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/developer-guide.md#quickstart).
+
+## Limits
+
+- Installed versions, adapter readiness and runtime health are separate checks.
+- Optional producer tools report unavailable until that package is installed in the server environment.
+- MCP cannot grant human approval for Tower recovery actions.
+- Hosted HTTP always refuses `chaos.run_experiment`.
+
+See [Limitations](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/limitations.md).
+
+## Documentation
+
+- [Developer Guide (simple)](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/developer-guide.md): short task workflows and a capability index
+- [API Reference (detailed)](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/api-reference.md): every tool, resource, prompt, endpoint and entry point
+- [AI Readable Documentation](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/ai-reference-index.md): the full reference as one file for AI tools, with source declarations and schemas
+
+---
+
 ## Setup and task workflows
 
 Source: [docs/developer-guide.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/developer-guide.md)
@@ -191,6 +369,13 @@ Repository examples require a source checkout. Tool-call fragments run in an ini
 
 ### Seven-product AI documentation
 
+The server bundles AI-readable documentation for every DeepAgentLabs product:
+AgenticLens, Agentic Evals, Agentic Chaos, Agentic Sidecar, Control Tower, the AI
+Operations Specification and this MCP server. GitHub Copilot, OpenAI Codex, Claude
+Code, Cursor or any MCP-compatible coding agent can use it to explore, understand,
+integrate and build with these tools from natural-language requests, without anyone
+navigating the documentation by hand.
+
 Use `core.docs_catalog {}` to discover all seven products and pinned documentation
 versions, then `core.docs_search` to find an API or example. Pass a returned product
 and section ID to `core.docs_read`; follow `next_offset` for complete source. The
@@ -214,13 +399,13 @@ Use `core.health`, `core.version`, `core.verify` and `core.compatibility`. Compa
 
 ### Tool catalog and discovery
 
-Use MCP `tools/list` to inspect the current surface. The [generated catalog](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md) covers all 53 registered tools, exact input schemas, prerequisites, expected duration and session mutations. Hosted discovery is filtered by access policy, and dispatch rechecks authorization; hiding a tool is not the enforcement mechanism. A listed tool can still report an unavailable producer.
+Use MCP `tools/list` to inspect the current surface. The [generated catalog](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md) covers all 56 registered tools, exact input schemas, prerequisites, expected duration and session mutations. Hosted discovery is filtered by access policy, and dispatch rechecks authorization; hiding a tool is not the enforcement mechanism. A listed tool can still report an unavailable producer.
 
 <span id="resources"></span>
 
 ### Resources and prompt templates
 
-Use MCP `resources/list` / `resources/read` for the sample workflow, fault catalog, release-check guide, AIOS schemas/rule catalogs and authorized saved sessions. Use `prompts/list` / `prompts/get` for five templates: `tower.investigation`, `lens.workflow_summary`, `lens.compare_summary`, `chaos.experiment_brief` and `core.release_check`.
+Use MCP `resources/list` / `resources/read` for the sample workflow, fault catalog, release-check guide, AIOS schemas/rule catalogs, the seven-product documentation (`resource://docs/catalog` and `resource://docs/{product}/reference`, `/index`, `/manifest`, `/license`) and authorized saved sessions. Use `prompts/list` / `prompts/get` for six templates: `core.build_with_ecosystem`, `core.release_check`, `tower.investigation`, `lens.workflow_summary`, `lens.compare_summary` and `chaos.experiment_brief`.
 
 Prompt retrieval supplies text; it does not execute tools or approve recovery. See [the complete resource and prompt inventory, arguments and protocol examples](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/resources-and-prompts.md).
 
@@ -228,7 +413,7 @@ Prompt retrieval supplies text; it does not execute tools or approve recovery. S
 
 ### Lens analysis and diagnosis
 
-Install AgenticLens in the server environment, restart, and verify availability. Read `resource://examples/sample_workflow`; pass that JSON object as `artifact` to `lens.analyze_workflow` with a chosen session ID, then call `lens.report_summary` for that session. Structured run tools provide comparison, diagnosis, score analysis, evidence auditing and SLO summaries.
+Install AgenticLens in the server environment, restart, and verify availability. Read `resource://examples/sample_workflow`; pass that JSON object as `artifact` to `lens.analyze_workflow` with a chosen session ID, then call `lens.report_summary` for that session. Structured run tools provide comparison (`lens.compare_runs`), diagnosis (`lens.diagnose_run`), score analysis (`lens.score_analysis`), evidence auditing (`lens.audit_report`) and SLO summaries (`lens.slo_summary`).
 
 Use the exact artifact family each tool requests: profiling workflows, structured runs and evaluation reports differ. See [Lens tool schemas](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md) and [producer integration contracts](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/integrations.md#agenticlens).
 
@@ -347,7 +532,12 @@ Configure `DEEP_AGENTIC_CORE_MCP_TOWER_BINDINGS` on the host with per-user HTTPS
 
 ### Tower investigation and recovery tools
 
-`tower.*` exposes status, agents, versions, posture, incidents/evidence, detection/investigation, permitted recovery preview/execute/verify and runbook discovery/preview/execution/cancellation. `tower.capability_contract` discovers the remote contract. Use the generated schemas to select exact IDs and parameters.
+`tower.*` exposes 21 tools:
+
+- Fleet: `tower.status`, `tower.agents`, `tower.versions`, `tower.posture`; `tower.capability_contract` discovers the remote contract.
+- Incidents and evidence: `tower.detect`, `tower.incidents`, `tower.incident`, `tower.investigate`, `tower.evidence` (an agent's evidence history).
+- Recovery: `tower.preview`, then `tower.execute` after a human approves that exact preview in Tower; `tower.verify` checks recovery against fresh Lens and Evals evidence.
+- Runbooks: `tower.runbooks`, `tower.runbook_recommendations`, `tower.runbook_preview`, `tower.runbook_execute`, `tower.runbook_execution`, `tower.runbook_executions`, `tower.runbook_verify`, `tower.runbook_cancel`. Use the generated schemas to select exact IDs and parameters.
 
 MCP cannot grant human approval. Execution consumes separately approved Tower previews, and successful execution alone does not establish verified recovery. See [runbook workflows](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tower-0.9-runbooks.md), [capability readiness](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tower-0.10-compatibility.md), and [all Tower tool inputs](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md).
 
@@ -405,9 +595,214 @@ Check the client's executable/environment, optional adapter readiness and select
 
 ## Reference
 
-- [Generated 53-tool catalog](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md), [resources/prompts](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/resources-and-prompts.md), and [entry points/admin CLI](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/cli-reference.md).
+- [API reference](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/api-reference.md), [generated 56-tool catalog](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md), [resources/prompts](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/resources-and-prompts.md), and [entry points/admin CLI](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/cli-reference.md).
 - [AI Reference (robust)](https://deepagentlabs.io/mcp/docs/llms-full.md) and [capability/source index](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/ai-reference-index.md).
 - [Source manifest and checksums](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/ai-docs-manifest.json).
+
+---
+
+## API reference
+
+Source: [docs/api-reference.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/api-reference.md)
+
+**Version:** 1.1.0
+
+The server's public interface is the MCP protocol: tools, resources and prompt templates, served over local stdio or authenticated HTTP. This page lists every interface in one place. For each tool's exact input schema, prerequisites and examples, see the [generated tool catalog](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md).
+
+Call tools from an initialized MCP client (`tools/call`), not as shell commands. Hosted keys see only the tools their access policy allows, and dispatch rechecks that policy on every call.
+
+---
+
+## MCP protocol methods
+
+| Method | What it returns |
+| --- | --- |
+| `tools/list` | The 56 tools below, with input schemas (filtered by access policy when hosted) |
+| `tools/call` | A tool's JSON result |
+| `resources/list` | Reference, schema, documentation and authorized session resources |
+| `resources/read` | One resource's content |
+| `prompts/list` | The six prompt templates and their arguments |
+| `prompts/get` | A rendered prompt message |
+
+---
+
+## Tools
+
+"Duration" is the registered expectation (`instant`, `fast` or `slow`). "Changes session" means the call stores results in the named session for later tools such as `core.release_check`.
+
+### Core (`core.*`, 15 tools)
+
+| Tool | What it does | Duration | Changes session |
+| --- | --- | --- | --- |
+| `core.access_status` | Report the calling hosted key's effective access policy: allow and deny globs, task scope, expiry, and the tools it may call right now | instant | no |
+| `core.compare_runs` | Compare baseline and candidate trace runs for regressions, storing the comparison for core.release_check | fast | yes |
+| `core.compatibility` | Inspect the packaged candidate acceptance matrix and local installed distribution versions | instant | no |
+| `core.docs_catalog` | Discover all seven DeepAgentLabs products, bundled documentation versions, commit-pinned sources and resource URIs | fast | no |
+| `core.docs_read` | Read the robust AI reference for a product or cited section: APIs, CLI, configuration, schemas and complete examples | fast | no |
+| `core.docs_search` | Search robust AI references across all seven products, optionally filtered by product | fast | no |
+| `core.export_report` | Export the session's workflow, analysis, comparison, chaos, release-check and incident evidence as one MCP-local JSON envelope (mcp.unified-report.v1; not an AIOS artifact) | instant | no |
+| `core.health` | Return rich server diagnostics: adapter availability, loaded tools/resources/prompts, and recent successful calls | instant | no |
+| `core.incident_summary` | Collect regressions, chaos crashes or timeouts, failed evaluation cases and blocked release gates from supplied or session evidence for investigation | fast | yes |
+| `core.onboard` | Read-only setup steps with sibling readiness | fast | no |
+| `core.release_check` | Decide release readiness from a Lens comparison, an Evals report (judged by the Evals release gate) and a chaos.run_experiment report | fast | yes |
+| `core.report_recall` | Browse saved artifacts and history with source-cited investigation notes | fast | no |
+| `core.session_state` | Inspect the artifacts and call history accumulated in a session | instant | no |
+| `core.verify` | Check connectivity to agenticlens, agentic-chaos, agentic-sidecar, and ai-operations-spec, and report readiness | instant | no |
+| `core.version` | Return the current server package version | instant | no |
+
+### AgenticLens (`lens.*`, 13 tools)
+
+| Tool | What it does | Duration | Changes session |
+| --- | --- | --- | --- |
+| `lens.analyze_workflow` | Analyze an AgenticLens-compatible workflow artifact | fast | yes |
+| `lens.audit_report` | Return case-by-case evaluation detail for an audit trail | fast | no |
+| `lens.compare_runs` | Compare baseline and candidate trace runs for regressions | fast | yes |
+| `lens.diagnose_run` | Diagnose a trace run: failure taxonomy, faulty step and agent with confidence and supporting spans, incident timeline, anomalies against optional baseline runs, and an investigation narrative | fast | no |
+| `lens.execution_verify` | Verify a Lens AIOS execution bundle with host-configured keys | fast | no |
+| `lens.modelfit_recommend` | Recommend a model per task category from supplied AgenticLens experiment reports, under hard quality, cost, latency, safety, provider and deployment constraints that fail closed | fast | no |
+| `lens.optimization_analyze` | Rank evidence-backed optimizations from AgenticLens Run traces: prompt caching and compression, retrieval pruning and reranking, memory summarization, tool caching, retry policy, redundant steps, unnecessary handoffs and quality-cost trade-offs between variants | fast | no |
+| `lens.report_summary` | Render a Markdown workflow report and recommendation summary | fast | yes |
+| `lens.routing_decide` | Explain a model route from a saved ModelFit report and routing policy | fast | no |
+| `lens.score_analysis` | Report deterministic and model-based scores separately, judge cost (kept apart from agent cost), and evaluator disagreement for an evaluation report | fast | no |
+| `lens.slo_summary` | Apply release-gate style SLO thresholds to an evaluation report | fast | no |
+| `lens.suite_check` | Check a test suite before approval: counts by split, domain, tag, source and review status; exact, near and conflicting duplicates; unmasked PII (types and locations only); and the approval checks AgenticLens would run | fast | no |
+| `lens.suite_from_traces` | Convert successful trace runs into a draft regression suite: each case expects the run's tool trajectory and latency/cost within a margin, is marked needs_review, and has PII masked unless 'mask' is false | fast | no |
+
+### Agentic Chaos (`chaos.*`, 3 tools)
+
+| Tool | What it does | Duration | Changes session |
+| --- | --- | --- | --- |
+| `chaos.export_aios_run` | Convert a chaos report into an AI Operations v0.4-draft run artifact (via agentic-chaos>=0.5.1) and validate it with rule-cited conformance | fast | no |
+| `chaos.list_faults` | List the supported fault types for chaos experiments | instant | no |
+| `chaos.run_experiment` | Run a workspace-sandboxed target script under selected chaos faults and report the resulting events | slow | yes |
+
+### Agentic Evals (`evals.*`, 1 tools)
+
+| Tool | What it does | Duration | Changes session |
+| --- | --- | --- | --- |
+| `evals.validate_artifact` | Validate native evaluation reports or gate decisions against the published Evals 1.0 schemas | fast | no |
+
+### Agentic Sidecar (`sidecar.*`, 2 tools)
+
+| Tool | What it does | Duration | Changes session |
+| --- | --- | --- | --- |
+| `sidecar.module_inventory` | List installed modules, framework adapter files, and integration placeholders present in agentic-sidecar | instant | no |
+| `sidecar.status` | Report whether agentic-sidecar is importable and whether its decision runtime APIs are installed; no live task connection is implied | instant | no |
+
+### AI Operations Specification (`spec.*`, 1 tools)
+
+| Tool | What it does | Duration | Changes session |
+| --- | --- | --- | --- |
+| `spec.validate_artifact` | Validate an AIOS artifact against the schema set its `spec_version` names (v0.5 compatibility rules), returning a conformance report that cites AI Operations rule IDs separately from server presentation | fast | no |
+
+### Control Tower (`tower.*`, 21 tools)
+
+| Tool | What it does | Duration | Changes session |
+| --- | --- | --- | --- |
+| `tower.agents` | Registered agents, filtered by status, environment or capability | fast | no |
+| `tower.capability_contract` | Tower capability descriptor, schemas and status meanings | fast | no |
+| `tower.detect` | Open an incident from an agent's evidence record | fast | no |
+| `tower.evidence` | An agent's evidence history, optionally by source | fast | no |
+| `tower.execute` | Run a recovery action whose exact preview a human approved | fast | no |
+| `tower.incident` | Read one incident | fast | no |
+| `tower.incidents` | List incidents | fast | no |
+| `tower.investigate` | Assemble a cited investigation for an incident | fast | no |
+| `tower.posture` | Evidence freshness and availability posture | fast | no |
+| `tower.preview` | Preview a permitted recovery action for human approval | fast | no |
+| `tower.runbook_cancel` | Cancel a runbook run between steps | fast | no |
+| `tower.runbook_execute` | Run an approved runbook preview | slow | no |
+| `tower.runbook_execution` | Read one runbook run | fast | no |
+| `tower.runbook_executions` | Runbook runs for an incident | fast | no |
+| `tower.runbook_preview` | Preview a runbook run for an incident, for human approval | fast | no |
+| `tower.runbook_recommendations` | Runbooks recommended for an incident | fast | no |
+| `tower.runbook_verify` | Verify a runbook run's outcome with fresh Lens and Evals evidence | fast | no |
+| `tower.runbooks` | List installed versioned runbooks | fast | no |
+| `tower.status` | Fleet status, optionally for one environment | fast | no |
+| `tower.verify` | Verify an incident's recovery with fresh Lens and Evals evidence | fast | no |
+| `tower.versions` | Agents whose reported capability version meets a minimum | fast | no |
+
+---
+
+## Resources
+
+| URI | Content |
+| --- | --- |
+| `resource://examples/sample_workflow` | Sample workflow artifact for `lens.analyze_workflow` |
+| `resource://catalogs/chaos_faults` | Chaos fault catalog |
+| `resource://workflows/release-check` | Ordered release-check guide |
+| `resource://schemas/aiops/v0.4/{common,run,workflow}` | AIOS v0.4 JSON schemas |
+| `resource://schemas/aiops/v0.6/provenance` | AIOS v0.6 provenance schema |
+| `resource://schemas/aiops/v0.8/{common,audit_event,investigation_report,verification_signal}` | AIOS v0.8 JSON schemas |
+| `resource://specs/aiops/{v0.4,v0.6,v0.8}/conformance-rules` | AIOS conformance-rule catalogs |
+| `resource://specs/aiops/v0.5/compatibility` | AIOS version compatibility catalog |
+| `resource://docs/catalog` | The seven products' documentation versions, source commits and URIs |
+| `resource://docs/{product}/reference` | A product's full AI-readable reference (Markdown) |
+| `resource://docs/{product}/index` | A product's capability index (Markdown) |
+| `resource://docs/{product}/manifest` | Source selection and checksums (JSON) |
+| `resource://docs/{product}/license` | The product's license notice |
+| `resource://sessions/{encoded-session-id}` | Saved evidence and history for one of your sessions |
+
+Product IDs: `agenticlens`, `agentic-evals`, `agentic-chaos`, `agentic-sidecar`, `agenticops-control-tower`, `ai-operations-spec`, `mcp-server`. See [Resources and prompts](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/resources-and-prompts.md) and [Build with the seven-product AI reference](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/ecosystem-ai-reference.md).
+
+---
+
+## Prompt templates
+
+| Prompt | Arguments | Purpose |
+| --- | --- | --- |
+| `core.build_with_ecosystem` | `task` (required), `products` | Build from the product references using search and complete reads |
+| `core.release_check` | `session_id` | Walk a host through the unified release check |
+| `tower.investigation` | `incident_id` (required) | Investigate an incident with Tower evidence tools |
+| `lens.workflow_summary` | `workflow_name` (required), `recommendation_count`, `estimated_savings_pct` | Summarize an analyzed workflow for an operator |
+| `lens.compare_summary` | `baseline_label`, `candidate_label` | Summarize a baseline-versus-candidate comparison |
+| `chaos.experiment_brief` | `faults` (required), `script` | Explain the intent and expected impact of a chaos run |
+
+Prompts return text only. They don't run tools or grant approval.
+
+---
+
+## HTTP endpoints (hosted)
+
+Served by `deep-agentic-core-mcp-http` (install the `[http]` extra).
+
+| Route | Method | Purpose |
+| --- | --- | --- |
+| `/mcp` | Streamable HTTP | MCP endpoint; requires a bearer key and MCP protocol headers |
+| `/healthz` | GET | Storage readiness (not every optional adapter) |
+| `/signup`, `/api/signup` | GET, POST | Create a hosted identity and one-time key, when a signup store is configured |
+| `/api/account` | GET, POST, DELETE | Read the profile, replace the key or self-revoke, using the current key |
+| `/control/tasks/{task_id}/stop` | POST | Operator-only Sidecar stop/revoke; needs separate operator credentials and host bindings |
+
+See [Remote hosting](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/remote-hosting.md) and [Hosted access control](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/access-control.md).
+
+---
+
+## Console entry points
+
+| Command | Purpose |
+| --- | --- |
+| `deep-agentic-core-mcp` | Local stdio MCP server |
+| `deep-agentic-core-mcp-http` | Authenticated Streamable HTTP server |
+| `deep-agentic-core-mcp-admin show USER_ID` | Read a user's state and effective access policy |
+| `deep-agentic-core-mcp-admin set-permissions USER_ID` | Replace the stored access policy |
+| `deep-agentic-core-mcp-admin clear-permissions USER_ID` | Restore the default hosted surface |
+| `deep-agentic-core-mcp-admin revoke USER_ID` | Revoke a user's key |
+
+See [CLI reference](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/cli-reference.md) and [Configuration](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/configuration.md).
+
+---
+
+## Python integration points
+
+These are for hosts embedding the server. They aren't MCP tools.
+
+| Symbol | Purpose |
+| --- | --- |
+| `transport_http.create_app(...)` | Build the HTTP app, optionally with Sidecar stop/revoke bindings |
+| `adapters.ai_operations_spec.resolve_provenance(record, subjects)` | Resolve AIOS provenance against bytes the caller holds, without fetching URIs |
+| `services.access_evidence.export_audit_event(...)` | Project access observations to an AIOS `0.8-draft` audit event |
+
+See [Coordinated v1 readiness](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/coordinated-v1-readiness.md), [Phase 6 containment](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/phase6-containment.md) and [AIOS 0.8 operational artifacts](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/aios-0.8-operational-artifacts.md).
 
 ---
 
@@ -416,7 +811,10 @@ Check the client's executable/environment, optional adapter readiness and select
 Source: [docs/ecosystem-ai-reference.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/ecosystem-ai-reference.md)
 
 Connect your copilot to `deep-agentic-core-mcp`, then ask it to build with any
-DeepAgentLabs product. The base server bundles each product's **AI Reference
+DeepAgentLabs product. GitHub Copilot, OpenAI Codex, Claude Code, Cursor or any
+MCP-compatible coding agent can explore, understand, integrate and build with the
+tools from natural-language requests, without anyone navigating the documentation
+by hand. The base server bundles each product's **AI Reference
 (robust)**: complete documentation, declared APIs, CLI usage, configuration,
 schemas and examples. No optional producer package, sibling checkout, network
 fetch or API credential is needed to retrieve these public references locally.
@@ -2552,7 +2950,7 @@ The package installs three console entry points. MCP tools and reusable prompts 
 | `deep-agentic-core-mcp-http` | Authenticated Streamable HTTP server | `[http]`, authentication/shared storage and host/origin configuration |
 | `deep-agentic-core-mcp-admin` | Operator key-policy and revocation interface | `[http]` dependencies and configured database/DynamoDB store credentials |
 
-The server entry points read their [environment configuration](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/configuration.md). MCP clients use the [53-tool catalog](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md) and [resource/prompt interfaces](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/resources-and-prompts.md). The administrative CLI has four subcommands:
+The server entry points read their [environment configuration](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/configuration.md). MCP clients use the [56-tool catalog](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md) and [resource/prompt interfaces](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/resources-and-prompts.md). The administrative CLI has four subcommands:
 
 | Subcommand | Purpose |
 | --- | --- |
