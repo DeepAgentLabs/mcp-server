@@ -33,7 +33,8 @@ def test_human_docs_state_the_current_tool_count():
     count = len(_tool_names())
     for name in ("index.md", "developer-guide.md", "cli-reference.md", "api-reference.md"):
         text = (DOCS / name).read_text(encoding="utf-8")
-        stated = {int(a or b) for a, b in re.findall(r"(?:all|server exposes) (\d+) tool|\b(\d+)(?: registered|-tool)", text)}
+        pattern = r"(?:all|server exposes) (\d+) tool|\b(\d+)(?: registered|-tool)"
+        stated = {int(a or b) for a, b in re.findall(pattern, text)}
         assert stated <= {count}, (name, stated)
 
 
