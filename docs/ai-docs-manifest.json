@@ -4,7 +4,7 @@
   "distribution": "deep-agentic-core-mcp",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "e6a4900b2b6fe45bb83eeeab4a6e26afdbbabf0780be10bd020cd52713283695",
+  "sha256": "c244fb1d1fcfac07ffd007ef3db2995ebe36b79fece084b146d89becf8886bdf",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
@@ -26,7 +26,7 @@
     {
       "path": "docs/index.md",
       "kind": "reference",
-      "sha256": "41f01b4e97d74e39cb973d65ee0cce0df85bfdb66fe31b8982e93a94a3468e6c"
+      "sha256": "824361d67c5f1c2c09ae31418340eda194817dbd077d2f580cd6ca39c5b50e4e"
     },
     {
       "path": "docs/developer-guide.md",
