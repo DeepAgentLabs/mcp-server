@@ -44,5 +44,5 @@ def test_sidebar_matches_the_product_documentation_layout():
         "index.md",
         "developer-guide.md",
         "api-reference.md",
-        "ai-reference-index.md",
+        "llms-full.md",
     ]
