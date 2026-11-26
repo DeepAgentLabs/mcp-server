@@ -78,6 +78,13 @@ Repository examples require a source checkout. Tool-call fragments run in an ini
 
 ### Seven-product AI documentation
 
+The server bundles AI-readable documentation for every DeepAgentLabs product:
+AgenticLens, Agentic Evals, Agentic Chaos, Agentic Sidecar, Control Tower, the AI
+Operations Specification and this MCP server. GitHub Copilot, OpenAI Codex, Claude
+Code, Cursor or any MCP-compatible coding agent can use it to explore, understand,
+integrate and build with these tools from natural-language requests, without anyone
+navigating the documentation by hand.
+
 Use `core.docs_catalog {}` to discover all seven products and pinned documentation
 versions, then `core.docs_search` to find an API or example. Pass a returned product
 and section ID to `core.docs_read`; follow `next_offset` for complete source. The
@@ -101,13 +108,13 @@ Use `core.health`, `core.version`, `core.verify` and `core.compatibility`. Compa
 
 ### Tool catalog and discovery
 
-Use MCP `tools/list` to inspect the current surface. The [generated catalog](tools.md) covers all 53 registered tools, exact input schemas, prerequisites, expected duration and session mutations. Hosted discovery is filtered by access policy, and dispatch rechecks authorization; hiding a tool is not the enforcement mechanism. A listed tool can still report an unavailable producer.
+Use MCP `tools/list` to inspect the current surface. The [generated catalog](tools.md) covers all 56 registered tools, exact input schemas, prerequisites, expected duration and session mutations. Hosted discovery is filtered by access policy, and dispatch rechecks authorization; hiding a tool is not the enforcement mechanism. A listed tool can still report an unavailable producer.
 
 <span id="resources"></span>
 
 ### Resources and prompt templates
 
-Use MCP `resources/list` / `resources/read` for the sample workflow, fault catalog, release-check guide, AIOS schemas/rule catalogs and authorized saved sessions. Use `prompts/list` / `prompts/get` for five templates: `tower.investigation`, `lens.workflow_summary`, `lens.compare_summary`, `chaos.experiment_brief` and `core.release_check`.
+Use MCP `resources/list` / `resources/read` for the sample workflow, fault catalog, release-check guide, AIOS schemas/rule catalogs, the seven-product documentation (`resource://docs/catalog` and `resource://docs/{product}/reference`, `/index`, `/manifest`, `/license`) and authorized saved sessions. Use `prompts/list` / `prompts/get` for six templates: `core.build_with_ecosystem`, `core.release_check`, `tower.investigation`, `lens.workflow_summary`, `lens.compare_summary` and `chaos.experiment_brief`.
 
 Prompt retrieval supplies text; it does not execute tools or approve recovery. See [the complete resource and prompt inventory, arguments and protocol examples](resources-and-prompts.md).
 
@@ -115,7 +122,7 @@ Prompt retrieval supplies text; it does not execute tools or approve recovery. S
 
 ### Lens analysis and diagnosis
 
-Install AgenticLens in the server environment, restart, and verify availability. Read `resource://examples/sample_workflow`; pass that JSON object as `artifact` to `lens.analyze_workflow` with a chosen session ID, then call `lens.report_summary` for that session. Structured run tools provide comparison, diagnosis, score analysis, evidence auditing and SLO summaries.
+Install AgenticLens in the server environment, restart, and verify availability. Read `resource://examples/sample_workflow`; pass that JSON object as `artifact` to `lens.analyze_workflow` with a chosen session ID, then call `lens.report_summary` for that session. Structured run tools provide comparison (`lens.compare_runs`), diagnosis (`lens.diagnose_run`), score analysis (`lens.score_analysis`), evidence auditing (`lens.audit_report`) and SLO summaries (`lens.slo_summary`).
 
 Use the exact artifact family each tool requests: profiling workflows, structured runs and evaluation reports differ. See [Lens tool schemas](tools.md) and [producer integration contracts](integrations.md#agenticlens).
 
@@ -234,7 +241,12 @@ Configure `DEEP_AGENTIC_CORE_MCP_TOWER_BINDINGS` on the host with per-user HTTPS
 
 ### Tower investigation and recovery tools
 
-`tower.*` exposes status, agents, versions, posture, incidents/evidence, detection/investigation, permitted recovery preview/execute/verify and runbook discovery/preview/execution/cancellation. `tower.capability_contract` discovers the remote contract. Use the generated schemas to select exact IDs and parameters.
+`tower.*` exposes 21 tools:
+
+- Fleet: `tower.status`, `tower.agents`, `tower.versions`, `tower.posture`; `tower.capability_contract` discovers the remote contract.
+- Incidents and evidence: `tower.detect`, `tower.incidents`, `tower.incident`, `tower.investigate`, `tower.evidence` (an agent's evidence history).
+- Recovery: `tower.preview`, then `tower.execute` after a human approves that exact preview in Tower; `tower.verify` checks recovery against fresh Lens and Evals evidence.
+- Runbooks: `tower.runbooks`, `tower.runbook_recommendations`, `tower.runbook_preview`, `tower.runbook_execute`, `tower.runbook_execution`, `tower.runbook_executions`, `tower.runbook_verify`, `tower.runbook_cancel`. Use the generated schemas to select exact IDs and parameters.
 
 MCP cannot grant human approval. Execution consumes separately approved Tower previews, and successful execution alone does not establish verified recovery. See [runbook workflows](tower-0.9-runbooks.md), [capability readiness](tower-0.10-compatibility.md), and [all Tower tool inputs](tools.md).
 
@@ -292,6 +304,6 @@ Check the client's executable/environment, optional adapter readiness and select
 
 ## Reference
 
-- [Generated 53-tool catalog](tools.md), [resources/prompts](resources-and-prompts.md), and [entry points/admin CLI](cli-reference.md).
+- [API reference](api-reference.md), [generated 56-tool catalog](tools.md), [resources/prompts](resources-and-prompts.md), and [entry points/admin CLI](cli-reference.md).
 - [AI Reference (robust)](https://deepagentlabs.io/mcp/docs/llms-full.md) and [capability/source index](ai-reference-index.md).
 - [Source manifest and checksums](ai-docs-manifest.json).

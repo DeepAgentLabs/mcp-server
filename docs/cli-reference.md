@@ -8,7 +8,7 @@ The package installs three console entry points. MCP tools and reusable prompts 
 | `deep-agentic-core-mcp-http` | Authenticated Streamable HTTP server | `[http]`, authentication/shared storage and host/origin configuration |
 | `deep-agentic-core-mcp-admin` | Operator key-policy and revocation interface | `[http]` dependencies and configured database/DynamoDB store credentials |
 
-The server entry points read their [environment configuration](configuration.md). MCP clients use the [53-tool catalog](tools.md) and [resource/prompt interfaces](resources-and-prompts.md). The administrative CLI has four subcommands:
+The server entry points read their [environment configuration](configuration.md). MCP clients use the [56-tool catalog](tools.md) and [resource/prompt interfaces](resources-and-prompts.md). The administrative CLI has four subcommands:
 
 | Subcommand | Purpose |
 | --- | --- |

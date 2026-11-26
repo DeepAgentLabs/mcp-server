@@ -1,7 +1,10 @@
 # Build with the seven-product AI reference
 
 Connect your copilot to `deep-agentic-core-mcp`, then ask it to build with any
-DeepAgentLabs product. The base server bundles each product's **AI Reference
+DeepAgentLabs product. GitHub Copilot, OpenAI Codex, Claude Code, Cursor or any
+MCP-compatible coding agent can explore, understand, integrate and build with the
+tools from natural-language requests, without anyone navigating the documentation
+by hand. The base server bundles each product's **AI Reference
 (robust)**: complete documentation, declared APIs, CLI usage, configuration,
 schemas and examples. No optional producer package, sibling checkout, network
 fetch or API credential is needed to retrieve these public references locally.

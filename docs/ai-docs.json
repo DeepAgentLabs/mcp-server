@@ -7,8 +7,16 @@
       "path": "docs/ai-reference-index.md"
     },
     {
+      "title": "Overview and capabilities map",
+      "path": "docs/index.md"
+    },
+    {
       "title": "Setup and task workflows",
       "path": "docs/developer-guide.md"
+    },
+    {
+      "title": "API reference",
+      "path": "docs/api-reference.md"
     },
     {
       "title": "Build with the seven-product AI reference",
