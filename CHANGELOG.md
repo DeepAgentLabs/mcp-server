@@ -6,12 +6,19 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 1.2.0 - 2026-11-26
+
 ### Documentation
 
 - Rewrite the overview as a grouped capability list, matching the AgenticLens documentation layout.
 - Add an API reference covering every tool, resource, prompt, HTTP route, entry point and Python integration point, and pin it with the AI-readable documentation in the sidebar.
 - Correct stale tool and prompt counts (56 tools, six prompts), name every Lens and Tower tool in the developer guide, and document the seven-product documentation resources for coding agents.
+- Bring the limitations page up to date: bundled documentation snapshots, Lens recommendation tools, prompts and resources, and hosted session and key limits.
 - Refresh the bundled MCP Server AI reference snapshot.
+
+### Compatibility
+
+- No runtime, tool, schema or authorization changes from 1.1.0.
 
 ## 1.1.0 - 2026-11-20
 

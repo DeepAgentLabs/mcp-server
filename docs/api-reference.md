@@ -1,6 +1,6 @@
 # API Reference (detailed)
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 
 The server's public interface is the MCP protocol: tools, resources and prompt templates, served over local stdio or authenticated HTTP. This page lists every interface in one place. For each tool's exact input schema, prerequisites and examples, see the [generated tool catalog](tools.md).
 
