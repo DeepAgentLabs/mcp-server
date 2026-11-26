@@ -9,7 +9,7 @@ AuthorityRegistry; private configuration is not approval, remote authorization
 or a durable grant. Shared and exclusive restrictions all apply; conflicts
 fail, readers intersect and earliest expiry wins.
 
-See the [migration and supported-version guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/website/docs/v0.10.md),
+See the [migration and supported-version guide](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/docs/v0.10.md),
 [offline propagation example](https://github.com/DeepAgentLabs/agentic-sidecar/blob/main/examples/v0_10_contracts.py)
 and [AIOS candidate mapping](https://github.com/DeepAgentLabs/ai-operations-spec/tree/main/drafts/sidecar-contracts-v1).
 

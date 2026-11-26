@@ -20,8 +20,9 @@ entry below have been updated accordingly; see the audit for full detail.
 
 ## Release Status
 
-Release version: `1.1.1` (2026-11-26) — see [CHANGELOG.md](CHANGELOG.md).
-The 1.1.1 documentation patch adopts the AgenticLens documentation layout
+Release version: `1.1.2` (2026-11-26) — see [CHANGELOG.md](CHANGELOG.md).
+The 1.1.2 documentation patch refreshes the bundled AI references for all seven
+products. The 1.1.1 documentation patch adopted the AgenticLens documentation layout
 (capability overview, API reference, AI-readable reference) on top of 1.1.0.
 The v0.8 companion-adoption increment adds offline validation and native access
 audit exports over the completed v0.7 local readiness milestone: packaged candidate matrix,
