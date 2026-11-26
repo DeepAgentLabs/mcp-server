@@ -605,7 +605,7 @@ Check the client's executable/environment, optional adapter readiness and select
 
 Source: [docs/api-reference.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/api-reference.md)
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 
 The server's public interface is the MCP protocol: tools, resources and prompt templates, served over local stdio or authenticated HTTP. This page lists every interface in one place. For each tool's exact input schema, prerequisites and examples, see the [generated tool catalog](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md).
 
@@ -4768,6 +4768,28 @@ schema/catalog assets; schemas remain draft. `core.compatibility` reads installe
 distribution metadata, which may differ from explicit workspace source imports.
 It does not probe the remote Tower server or make a readiness verdict.
 
+## Bundled product documentation
+
+The seven product references are commit-pinned snapshots. Their versions can
+differ from the producer packages installed in the server environment, and they
+change only when a new MCP release refreshes them. `core.docs_search` is literal,
+case-insensitive term matching, not semantic search: an empty result is not proof
+that a feature is absent. Documentation tools read text only; they never run
+product code or fetch newer documentation over the network.
+
+## Lens analysis and recommendations
+
+Lens tools read the artifacts you supply. `lens.modelfit_recommend`,
+`lens.routing_decide` and `lens.optimization_analyze` compose recorded evidence
+and do not call provider models or adopt a recommendation. `lens.execution_verify`
+needs a host-configured trust store; callers cannot supply keys or verdicts.
+
+## Prompts and resources
+
+Prompt templates return text for the host to use. They do not run tools, fill in
+missing analysis or grant approval. Resource URIs are references, not artifacts:
+read the resource and pass its content to a tool.
+
 ## Local chaos execution
 
 `chaos.run_experiment` executes trusted local Python scripts. Workspace confinement
@@ -4787,6 +4809,14 @@ Sidecar actions already reserved may complete with side effects. There is no
 automatic distributed runtime discovery, fleet atomicity or guaranteed downstream
 cancellation. Redis guards fail closed; a worker crash requires operator
 reconciliation before clearing an orphaned guard.
+
+## Hosted sessions and keys
+
+Each user is limited to 100 sessions and 4 MiB of serialized state, with a
+one-hour idle TTL; save results you need to keep. Rate and concurrency counters
+are per worker, so add a hosting-layer limit for fleet-wide caps. Signup keys are
+shown once and cannot be recovered, and display names are unverified labels.
+`/healthz` checks storage readiness, not every optional adapter.
 
 ## Evidence
 
