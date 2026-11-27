@@ -3425,13 +3425,14 @@ Run the isolated browser regression (no live accounts or credentials):
 ```sh
 uv sync --extra dev --extra http --extra browser
 uv run --no-sync playwright install chromium
-uv run --no-sync python scripts/smoke_oauth_browser.py
+uv run --no-sync python scripts/smoke_oauth_browser.py --provider chatgpt
+uv run --no-sync python scripts/smoke_oauth_browser.py --provider claude
 ```
 
 
 The consent header and connection diagram display the existing DeepAgentLabs
 logo. Registered clients with a `chatgpt.com` callback display OpenAI's official
-Blossom beside two parallel dotted lines pointing in opposite directions. Other clients keep their initial badge.
+Blossom beside two parallel dotted lines pointing in opposite directions. Registered `claude.ai` clients display Anthropic’s official Claude mark with the same diagram. Other clients keep their initial badge.
 Brand assets are served from a fixed allowlist under `/oauth-assets/`; no
 third-party image requests are made. A CSS content hash in the stylesheet URL
 ensures branding updates load when the consent form is reopened.

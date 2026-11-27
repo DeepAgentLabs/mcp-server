@@ -585,6 +585,7 @@ async def test_consent_page_headers_styles_and_retry(setup):
         for name, media_type, signature in [
             ("deepagentlabs.png", "image/png", b"\x89PNG"),
             ("openai.svg", "image/svg+xml", b"<svg"),
+            ("claude.svg", "image/svg+xml", b"<svg"),
         ]:
             asset = await client.get("/oauth-assets/" + name)
             assert asset.status_code == 200
@@ -622,18 +623,21 @@ def test_consent_escapes_client_name_without_recursive_template_expansion():
     assert "&lt;script&gt;{{pending}}&lt;/script&gt;" in rendered
 
 
-def test_non_chatgpt_consent_does_not_show_openai_mark():
-    config = OAuthConfig(
-        ORIGIN,
-        {
-            "claude": {
-                "name": "Claude",
-                "redirect_uris": ["https://claude.ai/api/mcp/auth_callback"],
-            }
-        },
-    )
+@pytest.mark.parametrize(
+    "callback,logo",
+    [
+        ("https://chatgpt.com/connector_platform_oauth_redirect", "openai.svg"),
+        ("https://claude.ai/api/mcp/auth_callback", "claude.svg"),
+        ("https://other.example/callback", None),
+        ("https://claude.ai.other.example/callback", None),
+    ],
+)
+def test_consent_uses_registered_host_logo_or_initial(callback, logo):
+    config = OAuthConfig(ORIGIN, {"test": {"name": "Host", "redirect_uris": [callback]}})
     server = OAuthServer(config, MemoryOAuthStore(), StaticKeyStore({"alice": KEY}))
-    rendered = server.consent_response("claude", "pending-test").body.decode()
-    assert "/oauth-assets/openai.svg" not in rendered
-    assert '<span class="client-icon">C</span>' in rendered
+    rendered = server.consent_response("test", "pending-test").body.decode()
     assert "/oauth-assets/deepagentlabs.png" in rendered
+    for candidate in ("openai.svg", "claude.svg"):
+        assert ("/oauth-assets/" + candidate in rendered) == (candidate == logo)
+    if logo is None:
+        assert '<span class="client-icon">H</span>' in rendered

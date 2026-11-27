@@ -256,12 +256,16 @@ class OAuthServer:
         """Render a script-free, browser-compatible consent form."""
         client = self.config.clients[client_id]
         content = files("deep_agentic_core_mcp").joinpath("web/oauth.html").read_text()
-        is_chatgpt = any(urlsplit(uri).hostname == "chatgpt.com" for uri in client["redirect_uris"])
-        client_icon = (
-            '<img src="/oauth-assets/openai.svg" alt="" width="36" height="36">'
-            if is_chatgpt
-            else html.escape(client["name"][:1].upper(), quote=True)
-        )
+        client_hosts = {urlsplit(uri).hostname for uri in client["redirect_uris"]}
+        if "chatgpt.com" in client_hosts:
+            client_icon = '<img src="/oauth-assets/openai.svg" alt="" width="36" height="36">'
+        elif "claude.ai" in client_hosts:
+            client_icon = (
+                '<img class="claude-logo" src="/oauth-assets/claude.svg" '
+                'alt="" width="32" height="32">'
+            )
+        else:
+            client_icon = html.escape(client["name"][:1].upper(), quote=True)
         values = {
             "client_name": html.escape(client["name"], quote=True),
             "client_icon": client_icon,
@@ -298,7 +302,11 @@ class OAuthServer:
         )
 
     async def branding_asset(self, request: Request) -> Response:
-        assets = {"deepagentlabs.png": "image/png", "openai.svg": "image/svg+xml"}
+        assets = {
+            "deepagentlabs.png": "image/png",
+            "openai.svg": "image/svg+xml",
+            "claude.svg": "image/svg+xml",
+        }
         name = request.path_params["name"]
         if name not in assets:
             return Response(status_code=404)

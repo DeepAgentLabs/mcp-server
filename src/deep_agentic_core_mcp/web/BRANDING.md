@@ -12,5 +12,13 @@ registered consent flow. See https://openai.com/brand/ for usage terms.
 The mark is not used as DeepAgentLabs public plugin branding.
 
 The consent page serves these packaged files locally; it does not load remote
-brand assets. Only registered clients with a chatgpt.com callback display the
-OpenAI mark. Other clients retain their initial badge.
+brand assets. Registered clients with a chatgpt.com callback display the OpenAI mark.
+Registered clients with a claude.ai callback display the Claude mark. Other
+clients retain their initial badge.
+
+`claude.svg` is the Claude logo file supplied by Anthropic in the official
+branding samples at
+https://platform.claude.com/docs/en/manage-claude/oauth-apps/linked-billing/link-button,
+retrieved 2026-11-26. The original path, proportions and #D97757 color are
+preserved. The Claude name and logo are owned by Anthropic and are used to
+identify the registered Claude consent flow, not as DeepAgentLabs plugin branding.
