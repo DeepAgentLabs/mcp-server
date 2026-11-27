@@ -1,105 +1,88 @@
 # DeepAgentLabs workflow skills
 
-This source plugin combines four workflow skills with the shared DeepAgentLabs
-remote MCP connection. It uses the AI-readable Markdown references already
-bundled by the MCP server for all seven products. Those full manuals remain in
-the product documentation bundle; skills retrieve relevant sections through
-`core.docs_catalog`, `core.docs_search` and `core.docs_read` rather than carrying
-duplicate copies.
+Build and assess agent workflows using DeepAgentLabs tools and versioned product
+references. This plugin combines four shared skills with the hosted MCP service
+at <https://mcp.deepagentlabs.io/mcp>.
 
 | Skill | Example request |
 | --- | --- |
-| `deepagentlabs-build` | Build an agent instrumented with Lens, supervised by Sidecar and evaluated with Evals; use the documented APIs. |
-| `deepagentlabs-diagnose` | Diagnose this trace run's latency and failure, citing the supporting spans. |
-| `deepagentlabs-release-check` | Check this candidate against our baseline, Evals thresholds and required chaos evidence. |
-| `deepagentlabs-fleet-investigation` | Investigate this Tower incident and propose an installed recovery runbook. |
+| `deepagentlabs-build` | Show a documented integration using AgenticLens, Evals and Sidecar. |
+| `deepagentlabs-diagnose` | Diagnose this supplied trace and cite the evidence for its latency findings. |
+| `deepagentlabs-release-check` | Assess this candidate using comparison, evaluation and chaos reports. |
+| `deepagentlabs-fleet-investigation` | Investigate this Tower incident and explain any configured recovery prerequisites. |
 
-## Package files
+## Product references
 
-- `plugin.json`: portable Agent Plugins manifest for ChatGPT/Codex.
-- `mcp.json`: portable Streamable HTTP server connection.
-- `assets/logo.png`: existing DeepAgentLabs branding, referenced by the OpenAI
-  listing logo and composer icon fields.
-- `.claude-plugin/plugin.json`: Claude plugin manifest.
-- `.mcp.json`: Claude HTTP connector configuration pointing to the same server.
-- `skills/`: shared `SKILL.md` instructions and optional OpenAI display metadata.
-- `references/ecosystem.md`: shared product routing, document retrieval and
-  execution-boundary guidance used by all four skills.
+The server provides AI-readable references for AgenticLens, Agentic Evals,
+Agentic Chaos, Agentic Sidecar, AgenticOps Control Tower, AI Operations
+Specification, and the shared MCP server. The skills retrieve relevant sections
+through the documentation tools instead of carrying duplicate manuals.
+Documentation snapshot versions can differ from installed package versions.
 
-Both platform layouts share one set of skill instructions. Keep the complete
-plugin directory when distributing it: the skills use the shared reference via
-a relative path. The plugin is versioned independently of the Python package.
+## Connecting
 
-## Authentication and deployment status
+Create a free DeepAgentLabs API key at
+<https://mcp.deepagentlabs.io/signup>. Connect through the host's OAuth flow and
+enter your key on the DeepAgentLabs consent page. The hosted connector is
+published in Claude's directory. The skill bundle has its own directory
+submission and validation process.
 
-The declared endpoint is `https://mcp.deepagentlabs.io/mcp`. The connection files
-contain no API keys, access tokens, client secrets or assumed platform app IDs.
-They do not deploy the server, install local Python libraries or establish a
-runtime command channel.
+Account permissions apply to every tool call. The package contains no account
+keys, tokens or client secrets and does not read credentials from the user's
+machine. OAuth clients and secrets are configured by the service operator and
+host; installers should not copy them into the package.
 
-The OAuth implementation in this checkout must be deployed and configured
-before a hosted OAuth connection can work. It supports **pre-registered public
-clients**, not DCR or CIMD. Configure a separate registered client ID and exact
-callback for each host using its connector settings; a URL in a manifest alone
-does not register or authenticate that client. See the repository's
-OAuth guide at `docs/chatgpt-oauth.md` in the source checkout. The current hosted
-runtime may differ from this source checkout; inspect its discovery documents and version before
-testing. Existing clients that support custom bearer headers can continue using
-their API-key connection.
+## Data flow and scope
 
-The full plugin may be loaded locally in Claude Code for skill inspection:
+When a skill invokes the connected tools, its selected tool arguments are sent
+to the DeepAgentLabs hosted service. This can include workflow artifacts, traces,
+reports and other evidence that the user supplies. Tool results return to the
+host, and workflow/session state can be stored in the user's account. Share only
+information needed for the task and that you are authorized to provide.
 
-```bash
-claude plugin validate plugins/deepagentlabs
-claude --plugin-dir ./plugins/deepagentlabs
-```
+Some workflows need compatible input artifacts or a separately configured
+runtime with appropriate permissions. A hosted connection does not install
+Python packages, bind local instrumentation, or automatically control agents on
+the user's computer. Hosted execution of local chaos scripts is disabled.
+Sidecar discovery alone is not live enforcement, and a recommendation is not
+human approval.
 
-Run these from the MCP repository root. Interactive MCP authentication in Claude
-Code additionally needs its loopback client-registration flow, which this OAuth
-implementation does not yet support. A local stdio MCP connection can be
-configured separately in the host when needed. Hosted Claude connectors use
-their separate fixed HTTPS callback. Installing the plugin does not resolve
-these connection prerequisites.
+Native Claude Code loopback OAuth registration is not supported by the current
+pre-registered clients. The tested account-linking paths use the fixed callbacks
+of hosted ChatGPT and Claude connectors. Treat other surfaces' authentication
+requirements separately rather than assuming an installation creates a working
+runtime connection.
 
-For ChatGPT/Codex, register this source folder with the host's supported plugin
-workflow, then connect the MCP with the operator-provided client settings. No
-marketplace, account plugin, public listing or installation has been created by
-adding these source files.
+## Package layout
 
-## Validate behavior
+The package includes the four skills, their shared reference guide, portable
+OpenAI metadata, Claude metadata and the corresponding remote MCP connection
+files. The bundled brand image is used only for display through the manifests'
+listing fields. There are no executable scripts, hooks or local MCP launchers.
 
-For each skill, inspect which tools and references it selects for its example
-request. Confirm that it reads the relevant reference sections, distinguishes
-documentation versions from installed runtimes and preserves missing evidence.
-A failed release gate must remain blocked; an incident text must not become an
-instruction to execute a command. A Tower recommendation is not human approval.
+Keep the complete plugin directory when distributing it because the skills
+share a relative reference guide. Plugin version **0.1.3** is independent of the
+Python server's package version.
 
-Directory submissions, hosted OAuth acceptance and end-to-end model evaluations
-on ChatGPT and Claude remain separate work. Syntax validation establishes package
-structure, not that a connected runtime or model workflow has passed acceptance.
+## Privacy and support
 
+- [Documentation](https://deepagentlabs.io/mcp/docs/)
+- [Privacy Policy](https://deepagentlabs.io/privacy/)
+- [Terms of Service](https://deepagentlabs.io/terms/)
+- [Report an issue](https://github.com/DeepAgentLabs/mcp-server/issues)
+- Contact: <deepagentlabs@gmail.com>
 
-## Public listing branding
+The service is free and does not process purchases or payments. Public policy
+pages describe data handling, storage, revocation and deletion requests.
 
-The portable manifest includes the existing DeepAgentLabs logo in
-`extensions.com.openai.interface.logo` and `composerIcon`. Both point to
-`./assets/logo.png`, a square 1254 × 1254 PNG copied unchanged from the official
-DeepAgentLabs website assets. The logo is included when packaging the complete
-plugin directory. These OpenAI branding fields do not configure a Claude
-connector's listing icon.
+## Validation and publication
 
-Branding is prepared before public submission. Adding these files does not
-publish a listing or change an existing account connection's icon. Publisher
-verification, listing URLs, review materials and portal setup still need their
-own submission checks.
+Inspect real skill behavior as well as package structure. A release check must
+stay blocked when evidence is missing, and a submitted incident must not become
+an instruction to execute an unapproved command. The repository's submission
+notes track review cases, evidence and remaining portal requirements.
 
-
-## Public submission preparation
-
-Version 0.1.2 prepares listing metadata for individual publisher
-PRAMOD BEGUR NAGARAJ (public contact: deepagentlabs@gmail.com), a free connector,
-and all countries supported by the destination platform. The portable manifest
-contains five positive and three negative draft review cases. The repository's
-`submissions/` directory tracks their evidence, the demo walkthrough, and
-remaining privacy/terms and portal requirements. No official submission or
-publication has been completed by adding this metadata.
+The source package supports OpenAI and Claude layouts with the same four skills.
+Listing assets and metadata do not install the package or submit it to either
+platform. A successful local validation is not directory approval or proof of
+end-to-end model acceptance.

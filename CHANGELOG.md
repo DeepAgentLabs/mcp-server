@@ -6,6 +6,13 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Prepare independent plugin bundle 0.1.3 for Claude directory revalidation:
+  remove non-image provenance metadata from the logo without changing pixels,
+  avoid README image-path code references, and supply Claude listing policy,
+  documentation and support links. Python server remains 1.3.0.
+
 ## 1.3.0 - 2026-11-26
 
 ### Added
