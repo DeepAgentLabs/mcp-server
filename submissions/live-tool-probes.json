@@ -1,0 +1,249 @@
+{
+  "runtime_version": "1.3.0",
+  "fixture_source": "Public synthetic examples in the checked-out DeepAgentLabs repositories; no production data",
+  "account_scope": "Dedicated directory reviewer account only",
+  "external_action_tools_called": false,
+  "model_review_cases": "Not run",
+  "results": [
+    {
+      "tool": "core.health",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": null
+    },
+    {
+      "tool": "core.version",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": null
+    },
+    {
+      "tool": "core.compatibility",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": null
+    },
+    {
+      "tool": "core.verify",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "core.access_status",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": null
+    },
+    {
+      "tool": "core.onboard",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "core.docs_catalog",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "core.docs_search",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "core.docs_read",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "lens.analyze_workflow",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "lens.report_summary",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "lens.compare_runs",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "core.compare_runs",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "evals.validate_artifact",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "lens.slo_summary",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "lens.audit_report",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "lens.diagnose_run",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "lens.score_analysis",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "lens.suite_from_traces",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "lens.suite_check",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "lens.modelfit_recommend",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "lens.routing_decide",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "lens.execution_verify",
+      "http_status": 200,
+      "status": "expected_fallback",
+      "tool_error": false,
+      "result_ok": false,
+      "note": "Host trust is not configured; unknown is reported without a verification claim."
+    },
+    {
+      "tool": "lens.optimization_analyze",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "chaos.list_faults",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": null
+    },
+    {
+      "tool": "chaos.export_aios_run",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "sidecar.status",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "sidecar.module_inventory",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "spec.validate_artifact",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "core.release_check",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "core.incident_summary",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "core.export_report",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "core.report_recall",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": true
+    },
+    {
+      "tool": "core.session_state",
+      "http_status": 200,
+      "status": "passed",
+      "tool_error": false,
+      "result_ok": null
+    }
+  ],
+  "scope_note": "Passed means a successful HTTP/structured tool result without an explicit tool error or ok=false. This is a synthetic server smoke, not exhaustive semantic validation or a model-level directory review."
+}
