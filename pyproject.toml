@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "deep-agentic-core-mcp"
-version = "1.2.0"
+version = "1.2.1"
 description = "Unified MCP server for AgenticLens and Agentic Chaos workflows."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -30,6 +30,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+browser = ["playwright==1.65.2"]
 dev = [
   "moto[dynamodb]>=5,<6",
   "pytest>=8.0",

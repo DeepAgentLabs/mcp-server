@@ -6,6 +6,19 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 1.2.1 - 2026-11-26
+
+### Fixed
+
+- Fix browser OAuth consent: preserve the same-origin POST header and allow
+  redirects to the registered client's callback origins under Content Security
+  Policy. Exact callback validation and browser CSRF checks remain enforced.
+- Replace plain consent markup with a responsive, accessible connection page,
+  clear permissions and inline API key retry errors. The account creation link
+  explicitly says “(open in new tab)” and opens separately from consent.
+- Add an isolated Chromium regression check for Allow access, Cancel, cookies,
+  callback state and authorization-code exchange to CI.
+
 ## 1.2.0 - 2026-11-26
 
 ### Added

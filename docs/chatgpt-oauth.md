@@ -145,3 +145,22 @@ registered client/callback. Check same-account workflow recall, denied tools,
 key rotation, automatic renewal, replay detection, token revocation and expiry. Public directory metadata, domain
 verification, review materials and OpenAI approval are separate from enabling
 OAuth. This repository change does not deploy or submit the service.
+
+
+### Browser consent checks
+
+The consent page keeps API key errors inline so users can retry. Its account
+creation link opens in a new tab, preserving the pending connection form.
+`/oauth.css` serves its script-free, responsive styles. The consent response uses
+`Referrer-Policy: same-origin` to preserve browser form Origins while withholding
+off-site referrers. Its CSP allows the registered client's callback origins so
+Chromium can follow the authorization redirect; the server still validates exact
+registered callback URLs and rejects missing, null or foreign form Origins.
+
+Run the isolated browser regression (no live accounts or credentials):
+
+```sh
+uv sync --extra dev --extra http --extra browser
+uv run --no-sync playwright install chromium
+uv run --no-sync python scripts/smoke_oauth_browser.py
+```
