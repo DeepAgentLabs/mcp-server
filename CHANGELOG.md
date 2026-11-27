@@ -6,6 +6,79 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 1.3.0 - 2026-11-26
+
+### Added
+
+- Support optional pre-registered confidential OAuth clients using SHA-256
+  client-secret digests and Basic or POST authentication. Require client
+  authentication before consuming authorization codes, refreshing connections
+  or revoking tokens. Existing public clients continue using PKCE without a
+  client secret. Discovery advertises the configured authentication methods.
+  A separate directory-client setting merges without overwriting public clients.
+- Prepare public plugin 0.1.2 metadata, worldwide availability and no-commerce
+  declarations, five positive and three negative draft review cases, a separate
+  candidate ZIP builder, demo walkthrough and factual privacy preparation notes.
+  No directory submission or publication is performed by these files.
+
+### Changed
+
+- Publish explicit boolean read-only, destructive and open-world tool hints.
+  Tools that change stored session state are marked as modifying data; runtime
+  actions retain their open-world hint. Authorization checks remain enforced.
+
+## 1.2.1 - 2026-11-26
+
+### Fixed
+
+- Fix browser OAuth consent: preserve the same-origin POST header and allow
+  redirects to the registered client's callback origins under Content Security
+  Policy. Exact callback validation and browser CSRF checks remain enforced.
+- Replace plain consent markup with a responsive, accessible connection page,
+  clear permissions and inline API key retry errors. The account creation link
+  explicitly says “(open in new tab)” and opens separately from consent.
+- Add an isolated Chromium regression check for Allow access, Cancel, cookies,
+  callback state and authorization-code exchange to CI.
+
+## 1.2.0 - 2026-11-26
+
+### Added
+
+- Add the `plugins/deepagentlabs` source package with portable and Claude
+  manifests, credential-free remote MCP configurations and four shared workflow
+  skills for building integrations, diagnosing runs, checking releases and
+  investigating fleet incidents. Skills retrieve the existing seven-product
+  AI-readable references rather than copying the manuals. Account installation,
+  live host evaluation and public submission remain separate work.
+
+- Opt-in ChatGPT OAuth account linking: authorization code with S256 PKCE,
+  pre-registered public clients, exact HTTPS callbacks, same-origin browser
+  consent using an existing API key, discovery, one-hour access tokens,
+  rotating refresh tokens and connection revocation. Automatic renewal uses
+  atomic rotation, ancestor replay detection and configurable 30-day inactivity /
+  90-day maximum connection lifetimes. Reusing a spent refresh token invalidates
+  its entire connection; local API keys and independent connections remain usable.
+- Shared, expiring PostgreSQL/Redis OAuth records with hashed secret indexes,
+  atomic single-use codes and per-peer endpoint limits. PostgreSQL deployments
+  must apply the updated `deploy/supabase/schema.sql` before enabling OAuth.
+- OAuth grants retain account identity and recheck the current API-key digest
+  and policy on every request and dispatch. Key rotation/revocation invalidates
+  linked tokens; existing local API-key authentication remains supported.
+- Protocol and storage tests plus a ChatGPT setup and deployment guide. OAuth
+  remains disabled until explicitly configured; no live deployment or directory
+  submission is included.
+
+### Compatibility and rollout
+
+- Existing API-key clients and local stdio behavior remain supported. OAuth is
+  opt-in and requires a hosted rollout, registered public clients and the SQL
+  migration; DCR/CIMD and Claude Code loopback callbacks are not implemented.
+- Refresh the MCP Server's bundled AI-readable reference for 1.2.0, including
+  OAuth lifecycle, shared skill workflows and the new source declarations.
+- Plugin 0.1.0 is distributed independently as source and a GitHub Release ZIP.
+  Package/registry publication does not deploy the server, install a plugin or
+  publish a ChatGPT/Claude directory listing. Live host acceptance remains open.
+
 ## 1.1.2 - 2026-11-26
 
 ### Documentation

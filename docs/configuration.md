@@ -45,6 +45,9 @@ The command starts `/mcp` using the environment below and refuses missing authen
 | `DEEP_AGENTIC_CORE_MCP_HTTP_PORT` | Port; falls back to `PORT`, then `8000` |
 | `DEEP_AGENTIC_CORE_MCP_ALLOWED_HOSTS` | Allowed request hosts; defaults include loopback; the entry point includes configured public/Render hosts |
 | `DEEP_AGENTIC_CORE_MCP_ALLOWED_ORIGINS` | Exact permitted browser origins; absent Origin is allowed |
+| `DEEP_AGENTIC_CORE_MCP_OAUTH_REFRESH_IDLE` | Refresh connection inactivity lifetime in seconds (default 2592000 / 30 days) |
+| `DEEP_AGENTIC_CORE_MCP_OAUTH_REFRESH_MAX` | Maximum refresh connection lifetime in seconds (default 7776000 / 90 days; cap one year) |
+| `DEEP_AGENTIC_CORE_MCP_OAUTH_CLIENTS` | Optional JSON mapping of registered client IDs to names and exact HTTPS redirect URIs; enables [OAuth](chatgpt-oauth.md) |
 | `DEEP_AGENTIC_CORE_MCP_PUBLIC_URL` | Public HTTPS origin for signup/client details and origin checks |
 | `DEEP_AGENTIC_CORE_MCP_TRUSTED_PROXY_HOPS` | Trusted suffix position in forwarded client addressing; configure for the actual proxy boundary |
 | `RENDER_EXTERNAL_HOSTNAME` | Hosting-provided hostname used by the HTTP entry point |

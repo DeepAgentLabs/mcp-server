@@ -231,3 +231,70 @@ def test_access_policies_and_operator_revocation(pool):
         keys.set_access_policy("missing", None)
     with pytest.raises(KeyError):
         keys.stored_access_policy("missing")
+
+
+def test_oauth_records_hashes_atomic_exchange_limits_and_expiry(pool):
+    from concurrent.futures import ThreadPoolExecutor
+
+    from deep_agentic_core_mcp.services.oauth_store import PostgresOAuthStore
+
+    first, second = PostgresOAuthStore(pool), PostgresOAuthStore(pool)
+    assert first.ping()
+    first.put("code", "secret-code", {"user": "alice"}, 120)
+    assert second.get("code", "secret-code") == {"user": "alice"}
+    with pool.connection() as conn:
+        stored = conn.execute("SELECT secret_hash, payload FROM mcp.oauth_records").fetchone()
+        assert "secret-code" not in repr(stored)
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        results = list(executor.map(lambda _: second.take("code", "secret-code"), range(8)))
+    assert results.count({"user": "alice"}) == 1
+    assert first.get("code", "secret-code") is None
+    first.put("access", "expired-token", {"user": "alice"}, -1)
+    assert second.get("access", "expired-token") is None
+    assert second.take("access", "expired-token") is None
+    assert all(first.allow("same-peer") for _ in range(60))
+    assert not second.allow("same-peer")
+    assert second.allow("different-peer")
+
+
+def test_oauth_digest_binding_follows_postgres_rotation_and_revocation(pool):
+    from deep_agentic_core_mcp.services.api_keys import key_digest
+    from deep_agentic_core_mcp.services.postgres_store import PostgresKeyStore
+
+    keys = PostgresKeyStore(pool)
+    issued = keys.issue("OAuth user")
+    user, key = issued["user_id"], issued["api_key"]
+    assert keys.authorize_digest(key_digest(key)).user == user
+    replacement = keys.rotate(user, key)["api_key"]
+    assert keys.authorize_digest(key_digest(key)) is None
+    assert keys.authorize_digest(key_digest(replacement)).user == user
+    keys.revoke(user, replacement)
+    assert keys.authorize_digest(key_digest(replacement)) is None
+
+
+def test_oauth_refresh_family_rotation_atomic_between_workers(pool):
+    from concurrent.futures import ThreadPoolExecutor
+
+    from deep_agentic_core_mcp.services.oauth_store import PostgresOAuthStore
+
+    first, second = PostgresOAuthStore(pool), PostgresOAuthStore(pool)
+    original = {"refresh_hash": "old", "client_id": "chatgpt"}
+    first.put("family", "connection", original, 60)
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        results = list(
+            executor.map(
+                lambda i: second.compare_swap(
+                    "family", "connection", original, {"refresh_hash": str(i)}, 60
+                ),
+                range(8),
+            )
+        )
+    assert results.count(True) == 1
+    assert first.get("family", "connection") != original
+    assert not second.compare_swap("family", "missing", original, {}, 60)
+    first.put("family", "expired", original, -1)
+    assert not second.compare_swap("family", "expired", original, {}, 60)
+    # Revocation must never be undone by a stale renewal.
+    latest = first.get("family", "connection")
+    second.take("family", "connection")
+    assert not first.compare_swap("family", "connection", latest, original, 60)

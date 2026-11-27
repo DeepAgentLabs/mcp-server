@@ -1,6 +1,6 @@
 # API Reference (detailed)
 
-**Version:** 1.1.2
+**Version:** 1.3.0
 
 The server's public interface is the MCP protocol: tools, resources and prompt templates, served over local stdio or authenticated HTTP. This page lists every interface in one place. For each tool's exact input schema, prerequisites and examples, see the [generated tool catalog](tools.md).
 
@@ -162,11 +162,14 @@ Served by `deep-agentic-core-mcp-http` (install the `[http]` extra).
 
 | Route | Method | Purpose |
 | --- | --- | --- |
-| `/mcp` | Streamable HTTP | MCP endpoint; requires a bearer key and MCP protocol headers |
+| `/mcp` | Streamable HTTP | MCP endpoint; requires an API key or enabled OAuth access token and MCP protocol headers |
 | `/healthz` | GET | Storage readiness (not every optional adapter) |
 | `/signup`, `/api/signup` | GET, POST | Create a hosted identity and one-time key, when a signup store is configured |
 | `/api/account` | GET, POST, DELETE | Read the profile, replace the key or self-revoke, using the current key |
 | `/control/tasks/{task_id}/stop` | POST | Operator-only Sidecar stop/revoke; needs separate operator credentials and host bindings |
+
+Opt-in OAuth adds metadata, authorization, token and revocation routes documented
+in [ChatGPT OAuth setup](chatgpt-oauth.md).
 
 See [Remote hosting](remote-hosting.md) and [Hosted access control](access-control.md).
 

@@ -90,7 +90,11 @@ class StaticKeyStore:
         return self.credentials.get(key_digest(token))
 
     def authorize(self, token: str) -> Principal | None:
-        user = self.authenticate(token)
+        return self.authorize_digest(key_digest(token))
+
+    def authorize_digest(self, digest: str) -> Principal | None:
+        """Resolve an OAuth grant without retaining the original API key."""
+        user = self.credentials.get(digest)
         return None if user is None else Principal(user, self.policies[user])
 
     def ping(self) -> bool:
@@ -135,7 +139,9 @@ class DynamoKeyStore:
     def _active_account(self, token: str) -> tuple[str, dict[str, Any]] | None:
         if len(token) < 32 or len(token) > 256 or any(c.isspace() for c in token):
             return None
-        digest = key_digest(token)
+        return self._active_digest(key_digest(token))
+
+    def _active_digest(self, digest: str) -> tuple[str, dict[str, Any]] | None:
         key = self._get("KEY#" + digest)
         user = key.get("user_id")
         if not isinstance(user, str):
@@ -153,6 +159,14 @@ class DynamoKeyStore:
         # Status, key and policy come from the same consistent USER# read, so a
         # revocation between two reads can never pair a revoked key with a policy.
         active = self._active_account(token)
+        if active is None:
+            return None
+        user, account = active
+        return Principal(user, AccessPolicy.load(account.get("permissions")))
+
+    def authorize_digest(self, digest: str) -> Principal | None:
+        """Revalidate OAuth against the current account, key and permissions."""
+        active = self._active_digest(digest)
         if active is None:
             return None
         user, account = active

@@ -37,6 +37,9 @@ Expose supported product capabilities through MCP. Local and hosted transports h
     "referencing>=0.35,<1"
   ],
   "optional_extras": {
+    "browser": [
+      "playwright==1.65.2"
+    ],
     "http": [
       "boto3>=1.34,<2",
       "psycopg[binary,pool]>=3.2,<4",
@@ -605,7 +608,7 @@ Check the client's executable/environment, optional adapter readiness and select
 
 Source: [docs/api-reference.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/api-reference.md)
 
-**Version:** 1.1.2
+**Version:** 1.3.0
 
 The server's public interface is the MCP protocol: tools, resources and prompt templates, served over local stdio or authenticated HTTP. This page lists every interface in one place. For each tool's exact input schema, prerequisites and examples, see the [generated tool catalog](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md).
 
@@ -767,11 +770,14 @@ Served by `deep-agentic-core-mcp-http` (install the `[http]` extra).
 
 | Route | Method | Purpose |
 | --- | --- | --- |
-| `/mcp` | Streamable HTTP | MCP endpoint; requires a bearer key and MCP protocol headers |
+| `/mcp` | Streamable HTTP | MCP endpoint; requires an API key or enabled OAuth access token and MCP protocol headers |
 | `/healthz` | GET | Storage readiness (not every optional adapter) |
 | `/signup`, `/api/signup` | GET, POST | Create a hosted identity and one-time key, when a signup store is configured |
 | `/api/account` | GET, POST, DELETE | Read the profile, replace the key or self-revoke, using the current key |
 | `/control/tasks/{task_id}/stop` | POST | Operator-only Sidecar stop/revoke; needs separate operator credentials and host bindings |
+
+Opt-in OAuth adds metadata, authorization, token and revocation routes documented
+in [ChatGPT OAuth setup](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/chatgpt-oauth.md).
 
 See [Remote hosting](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/remote-hosting.md) and [Hosted access control](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/access-control.md).
 
@@ -818,6 +824,11 @@ by hand. The base server bundles each product's **AI Reference
 (robust)**: complete documentation, declared APIs, CLI usage, configuration,
 schemas and examples. No optional producer package, sibling checkout, network
 fetch or API credential is needed to retrieve these public references locally.
+
+The optional [workflow skills](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/plugin-skills.md) use these same references for
+ecosystem implementation, run diagnosis, release checks and Tower investigation.
+Their source plugin includes portable and Claude manifests; it does not duplicate
+the full manuals or establish an authenticated connection by itself.
 
 ## Copilot workflow
 
@@ -3024,6 +3035,9 @@ The command starts `/mcp` using the environment below and refuses missing authen
 | `DEEP_AGENTIC_CORE_MCP_HTTP_PORT` | Port; falls back to `PORT`, then `8000` |
 | `DEEP_AGENTIC_CORE_MCP_ALLOWED_HOSTS` | Allowed request hosts; defaults include loopback; the entry point includes configured public/Render hosts |
 | `DEEP_AGENTIC_CORE_MCP_ALLOWED_ORIGINS` | Exact permitted browser origins; absent Origin is allowed |
+| `DEEP_AGENTIC_CORE_MCP_OAUTH_REFRESH_IDLE` | Refresh connection inactivity lifetime in seconds (default 2592000 / 30 days) |
+| `DEEP_AGENTIC_CORE_MCP_OAUTH_REFRESH_MAX` | Maximum refresh connection lifetime in seconds (default 7776000 / 90 days; cap one year) |
+| `DEEP_AGENTIC_CORE_MCP_OAUTH_CLIENTS` | Optional JSON mapping of registered client IDs to names and exact HTTPS redirect URIs; enables [OAuth](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/chatgpt-oauth.md) |
 | `DEEP_AGENTIC_CORE_MCP_PUBLIC_URL` | Public HTTPS origin for signup/client details and origin checks |
 | `DEEP_AGENTIC_CORE_MCP_TRUSTED_PROXY_HOPS` | Trusted suffix position in forwarded client addressing; configure for the actual proxy boundary |
 | `RENDER_EXTERNAL_HOSTNAME` | Hosting-provided hostname used by the HTTP entry point |
@@ -3128,8 +3142,9 @@ sharing a user identity.
 This supports MCP clients that can supply bearer credentials. The AWS deployment
 provides `/signup` for immediate key signup, replacement, and revocation using
 DynamoDB, without worker restarts. Display names are unverified labels; identities
-are generated UUIDs. Keys are shown once and cannot be recovered. OAuth discovery,
-verified email login, account recovery, and billing are not implemented.
+are generated UUIDs. Keys are shown once and cannot be recovered. Opt-in OAuth discovery and account
+linking are covered in [ChatGPT OAuth setup](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/chatgpt-oauth.md). Verified email
+login, account recovery and billing are not implemented.
 
 ## Container build
 
@@ -3241,6 +3256,330 @@ Free web services spin down when idle; the first request afterwards is slow.
 Free Supabase projects pause after a week without activity. Automatic deploys
 are disabled to avoid publishing later repository changes without an explicit
 deployment action. See [Render free-service limits](https://render.com/docs/free).
+
+---
+
+## ChatGPT OAuth account linking and refresh tokens
+
+Source: [docs/chatgpt-oauth.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/chatgpt-oauth.md)
+
+The HTTP server optionally supports OAuth authorization code with PKCE (`S256`)
+for pre-registered public clients. ChatGPT receives a separate, one-hour access
+token plus a rotating refresh token for automatic renewal. Local applications
+keep using their existing API key. Both credentials
+resolve to the same user and hosted workflow sessions.
+
+This is account linking to the hosted MCP. It does not install Python packages
+on a user's computer or establish a local runtime command channel. Tower and
+Sidecar control still require their documented host/runtime bindings.
+
+## Enable on the server
+
+1. For PostgreSQL/Supabase, apply the updated `deploy/supabase/schema.sql` before
+   enabling OAuth. It adds the private, RLS-protected `mcp.oauth_records` table.
+   Redis-backed deployments use separate expiring OAuth keys without a migration.
+2. Keep `DEEP_AGENTIC_CORE_MCP_PUBLIC_URL=https://mcp.deepagentlabs.io` configured.
+3. Register a public OAuth client with a stable ID you choose, for example
+   `deepagentlabs-chatgpt`. In the ChatGPT connection/submission configuration,
+   use that client ID and token endpoint authentication method **none** (no
+   client secret). Copy the exact HTTPS redirect URI shown by the OpenAI portal.
+4. Set `DEEP_AGENTIC_CORE_MCP_OAUTH_CLIENTS` to JSON with that ID and redirect URI:
+
+   ```json
+   {
+     "deepagentlabs-chatgpt": {
+       "name": "ChatGPT",
+       "redirect_uris": ["https://REPLACE-WITH-EXACT-OPENAI-CALLBACK"]
+     }
+   }
+   ```
+
+   The callback above is a placeholder, not a working OpenAI callback. Only
+   explicitly configured, exact HTTPS callback URLs are accepted. Register
+   multiple exact callbacks if testing and directory connections use different
+   URLs. No wildcard redirects, dynamic client registration or CIMD are enabled.
+5. Deploy the server with `[http]` installed. The existing key backend and shared
+   workflow store remain required. OAuth uses PostgreSQL when the app opens a
+   database pool, otherwise the configured Redis session client. There is no
+   automatic in-memory fallback. Startup and `/healthz` check OAuth storage too.
+6. Select OAuth in ChatGPT and connect to `https://mcp.deepagentlabs.io/mcp`.
+   Discovery advertises the authorization and token endpoints automatically.
+   Request resource `https://mcp.deepagentlabs.io/mcp` and scope `mcp:tools`.
+
+OAuth is disabled when `DEEP_AGENTIC_CORE_MCP_OAUTH_CLIENTS` is absent. Invalid
+client configuration fails startup. Remove that variable and restart to disable
+OAuth without disabling existing API keys. Short-lived OAuth tokens stored
+before disabling are no longer accepted while OAuth is disabled.
+
+## User flow
+
+ChatGPT opens the DeepAgentLabs consent page. The user enters their existing
+API key **on that page**, and selects Allow access. The service verifies that
+key, binds a single-use authorization code to the account, callback, client,
+resource and PKCE challenge, and redirects back to ChatGPT with the code and
+original `state`. ChatGPT exchanges it with its PKCE verifier and receives an
+access token. The original API key is never returned to ChatGPT or stored in
+an OAuth record.
+
+Use the key already configured in the local application to link the same
+account. Creating a new key through signup creates a separate account, even
+when the display name matches. There are no email/password accounts, recovery
+or social-login providers in this implementation.
+
+The scope `mcp:tools` delegates the current key's existing hosted tool permissions,
+including permitted writes. It cannot expand an allowlist, cross tenant
+boundaries, enable remote chaos execution or grant operator-only Sidecar access.
+
+## Routes and lifecycle
+
+| Route | Method | Purpose |
+| --- | --- | --- |
+| `/.well-known/oauth-protected-resource` | GET | MCP resource and issuer discovery |
+| `/.well-known/oauth-protected-resource/mcp` | GET | Path-specific resource discovery |
+| `/.well-known/oauth-authorization-server` | GET | Authorization server metadata |
+| `/oauth/authorize` | GET | Validate client, callback, scope, state, resource and PKCE; show consent |
+| `/oauth/authorize` | POST | Browser-bound, same-origin approval or cancellation |
+| `/oauth/token` | POST | Exchange a single-use code or rotate a refresh token for a fresh token pair |
+| `/oauth/revoke` | POST | Revoke a connection using its access or refresh token |
+
+Authorization codes expire after two minutes; pending consent after ten minutes.
+Access tokens expire after one hour. ChatGPT can renew them automatically using
+`grant_type=refresh_token`. Each successful renewal returns a new access token
+and a **new refresh token**; the client must replace its saved refresh token.
+The default connection expires after **30 days without renewal** or **90 days
+from consent**, whichever happens first. Renewal resets the inactivity window
+but never extends the maximum lifetime. Reconnect when either limit is reached.
+
+Operators can set `DEEP_AGENTIC_CORE_MCP_OAUTH_REFRESH_IDLE` (seconds; default
+`2592000`) and `DEEP_AGENTIC_CORE_MCP_OAUTH_REFRESH_MAX` (seconds; default
+`7776000`). The inactivity lifetime must cover the access token lifetime and
+cannot exceed the maximum, which is capped at one year. Lowering a setting does
+not rewrite existing records: new connections use the new maximum; subsequent
+renewals use the configured inactivity limit without extending their original
+maximum. Revoke existing connections when immediate removal is needed.
+
+Token exchange and revocation accept URL-encoded forms. Only authorization code
+with `S256` PKCE and the refresh-token grant are supported. A refresh request is:
+
+```text
+grant_type=refresh_token&client_id=deepagentlabs-chatgpt&refresh_token=<saved-refresh-token>
+```
+
+The resource and scope may be omitted on refresh; when provided, they must match
+the original grant. A refresh cannot change client, account, resource or scope.
+Only access tokens are accepted at `/mcp`; refresh tokens are used exclusively
+at `/oauth/token` and `/oauth/revoke`. Existing access tokens issued before
+refresh support do not acquire refresh tokens automatically: reconnect once.
+
+Every renewal uses an atomic compare-and-swap in PostgreSQL or Redis. Reuse of
+any previous refresh token revokes that entire connection, including its access
+tokens and latest refresh token. Token ancestry hashes remain until the original
+maximum expiry so reuse of older ancestors can still be detected. This follows
+[RFC 9700 refresh-token rotation](https://www.rfc-editor.org/rfc/rfc9700.html#section-4.14).
+Clients must serialize renewals: concurrent refreshes or retrying a spent token
+after losing its response require reconnecting. Separate connections for the
+same account are independent.
+
+Codes and tokens are indexed only by SHA-256 digests. OAuth records refer to the
+account's current key digest, never the original key. Every MCP request and tool
+dispatch rechecks token expiry, account status and current key policy. Rotating
+or revoking that API key invalidates all OAuth tokens linked through it; reconnect
+with the replacement key. Revoking either an access token or a refresh token
+ends that connection and its renewal chain, while leaving the API key and other
+independent connections usable. Revocation does not cancel work already running.
+
+Browser consent uses a Secure, HttpOnly, SameSite cookie and a server-side nonce;
+POST requires the canonical origin. OAuth responses are not cached or framed.
+The service accepts OAuth routes only on the canonical public hostname. Codes
+are consumed atomically across workers. OAuth endpoints share a 60 requests per
+minute limit per peer (PostgreSQL or Redis); configure trusted proxy hops only
+when ingress is restricted to that trusted proxy chain. Add ingress-level global
+limits for public traffic. Secrets must not be logged by proxies or request-body
+capture middleware.
+
+## Validation before public submission
+
+Run the protocol tests and shared-store tests. PostgreSQL integration tests use
+`DEEP_AGENTIC_CORE_MCP_TEST_DATABASE_URL`, a disposable superuser database: they
+drop and recreate the `mcp` schema. Never point that variable at a hosted service.
+
+Complete a real ChatGPT account-linking test after deployment with the exact
+registered client/callback. Check same-account workflow recall, denied tools,
+key rotation, automatic renewal, replay detection, token revocation and expiry. Public directory metadata, domain
+verification, review materials and OpenAI approval are separate from enabling
+OAuth. This repository change does not deploy or submit the service.
+
+
+### Browser consent checks
+
+The consent page keeps API key errors inline so users can retry. Its account
+creation link opens in a new tab, preserving the pending connection form.
+`/oauth.css` serves its script-free, responsive styles. The consent response uses
+`Referrer-Policy: same-origin` to preserve browser form Origins while withholding
+off-site referrers. Its CSP allows the registered client's callback origins so
+Chromium can follow the authorization redirect; the server still validates exact
+registered callback URLs and rejects missing, null or foreign form Origins.
+
+Run the isolated browser regression (no live accounts or credentials):
+
+```sh
+uv sync --extra dev --extra http --extra browser
+uv run --no-sync playwright install chromium
+uv run --no-sync python scripts/smoke_oauth_browser.py --provider chatgpt
+uv run --no-sync python scripts/smoke_oauth_browser.py --provider claude
+```
+
+
+The consent header and connection diagram display the existing DeepAgentLabs
+logo. Registered clients with a `chatgpt.com` callback display OpenAI's official
+Blossom beside two parallel dotted lines pointing in opposite directions. Registered `claude.ai` clients display Anthropic’s official Claude mark with the same diagram. Other clients keep their initial badge.
+Brand assets are served from a fixed allowlist under `/oauth-assets/`; no
+third-party image requests are made. A CSS content hash in the stylesheet URL
+ensures branding updates load when the consent form is reopened.
+
+
+## Directory clients and public submission
+
+Existing custom connectors can keep their public-client registrations. To
+configure a separate confidential client for a directory, add the optional
+`client_secret_sha256` field to that client's existing `name` and
+`redirect_uris` entry in `DEEP_AGENTIC_CORE_MCP_OAUTH_CLIENTS`. Its value is the
+64-character lowercase SHA-256 digest of a strong generated secret. Store the
+actual secret in a password manager and enter it only in the platform's secure
+OAuth client field, never in the plugin ZIP or public repository.
+
+Confidential clients authenticate token and revocation requests using
+`client_secret_basic` or `client_secret_post`. Basic credentials use form-URL
+encoding before Base64 encoding. Mixed methods, mismatched client IDs, missing
+or incorrect secrets are rejected before grant state changes. Public clients
+continue using `none`; they cannot use an arbitrary client secret to impersonate
+a confidential client. PKCE and exact registered redirects still apply.
+
+Anthropic's directory can hold the separate confidential client for the exact
+hosted URL and the fixed `https://claude.ai/api/mcp/auth_callback` callback.
+Claude Code's loopback/CIMD registration is a separate unsupported flow; do not
+claim that directory credentials make native Claude Code OAuth work. OpenAI's
+package declares its provided client and authentication method in `mcp.json`.
+Register the exact callback shown by the saved portal connection; never add a
+wildcard or assume a draft upload configured the running server.
+
+The `submissions/` directory contains preparation notes, review cases and the
+demo walkthrough. `scripts/prepare_submission.py` builds a separate candidate
+copy and reports missing materials. Public policy URLs, recording, reviewer
+access and platform attestations are still required before actual submission.
+
+
+For a separate directory registration without replacing existing custom-client
+settings, set `DEEP_AGENTIC_CORE_MCP_OAUTH_DIRECTORY_CLIENTS` to a JSON object
+with the same per-client fields and a required `client_secret_sha256`. The
+server merges these entries with `DEEP_AGENTIC_CORE_MCP_OAUTH_CLIENTS` at startup,
+rejects duplicate client IDs, and never overwrites a public-client registration.
+This optional setting contains only the digest; the plaintext secret belongs
+in the publisher's protected credential store and platform's secure field.
+
+---
+
+## Shared ChatGPT and Claude workflow skills
+
+Source: [docs/plugin-skills.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/plugin-skills.md)
+
+The source package in `plugins/deepagentlabs/` combines the shared remote MCP
+connection with four workflow skills. A portable Agent Plugins manifest supports
+ChatGPT/Codex authoring, and a Claude manifest and connector configuration support
+Claude authoring. Both use the same skill files; neither publishes a listing or
+creates an authenticated connection merely by existing in the repository.
+
+## Included workflows
+
+| Skill | When it applies | Product references |
+| --- | --- | --- |
+| `deepagentlabs-build` | Build or integrate an agent application with the requested ecosystem products | Relevant subset of all seven products |
+| `deepagentlabs-diagnose` | Explain a workflow/run failure, latency, cost or regression from recorded evidence | Lens, MCP and the owning artifact producer |
+| `deepagentlabs-release-check` | Assess a candidate against required comparison, native Evals and chaos evidence | MCP unified workflows, Lens, Evals, Chaos and AIOS as needed |
+| `deepagentlabs-fleet-investigation` | Investigate Tower incidents and recommend installed recovery runbooks | Tower and relevant Lens/Evals/Sidecar producers |
+
+Example requests:
+
+- “Build a support agent with Lens instrumentation, Sidecar supervision and an
+  Evals suite. Read the product APIs before implementing it.”
+- “Diagnose this trace run's timeout and cite the spans supporting the cause.”
+- “Check this release against our baseline, Evals thresholds and required chaos
+  evidence. Explain missing evidence without dropping its gate.”
+- “Investigate this Tower incident, build an evidence timeline and propose an
+  installed runbook. Do not execute recovery.”
+
+## Existing AI-readable Markdown is the source
+
+Skills explain the workflow and which product owns each decision. They do not
+replace or copy `docs/llms-full.md`, capability indexes or checksum manifests.
+The server already bundles these references for all seven products and exposes
+them through `core.docs_catalog`, `core.docs_search` and `core.docs_read`. See
+[the product-reference guide](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/ecosystem-ai-reference.md).
+
+The skills retrieve the actual section IDs, page through `next_offset`, and cite
+the returned source commit and line link. They compare documentation versions
+with installed dependencies before generating APIs. An empty literal search,
+an absent optional adapter or a denied tool is not evidence that an agent failed.
+
+A shared `references/ecosystem.md` inside the plugin keeps product routing,
+document discovery and host/runtime boundaries in one place. In a local product
+checkout without MCP, the skills can use the existing AI-readable files directly.
+Source paths are environment-dependent; the plugin does not ship another copy
+of the manuals or assume that the user's machine has a sibling checkout.
+
+## Source layout and authentication
+
+```text
+plugins/deepagentlabs/
+  plugin.json
+  mcp.json
+  .claude-plugin/plugin.json
+  .mcp.json
+  skills/<skill-name>/SKILL.md
+  skills/<skill-name>/agents/openai.yaml
+  references/ecosystem.md
+  README.md
+  LICENSE
+```
+
+The portable `mcp.json` uses Streamable HTTP; Claude's `.mcp.json` uses its `http`
+transport name. Both declare `https://mcp.deepagentlabs.io/mcp`, contain no secrets
+or assumed account app IDs, and rely on a separately configured authenticated
+connection. No account upload, local installation or marketplace change is part
+of adding these files.
+
+The OAuth source in this checkout must be deployed and given the correct
+registered client/callback settings before hosted OAuth can work. It currently
+supports pre-registered public clients, not automatic DCR/CIMD. Use host connector
+settings to supply the appropriate client ID. See [OAuth setup](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/chatgpt-oauth.md).
+Claude Code's loopback OAuth callback needs additional server support; loading
+skills locally does not prove that remote authentication is supported there.
+
+Skills do not broaden the account's tool policy, install local PyPI packages,
+create a local runtime command channel or replace Tower's human approval path.
+Hosted chaos execution remains excluded. Draft/candidate schema maturity and
+producer judgments are preserved.
+
+## Validation and acceptance
+
+Validate each skill with the Skill Creator `quick_validate.py`, and parse the
+JSON/YAML manifests as data. When Claude Code is installed, run from the MCP root:
+
+```bash
+claude plugin validate plugins/deepagentlabs
+```
+
+These checks validate structure, not model behavior. After installing a source
+package in the intended host, check skill discovery and authentication, then run
+the example requests with representative evidence. In particular, missing gates
+must remain blocked, a documentation snapshot must not be treated as an installed
+runtime, and an incident artifact must not authorize recovery execution. Live
+ChatGPT/Claude acceptance and public directory submission remain outstanding.
+
+Maintain the workflows in `SKILL.md`, shared reference guidance in
+`references/ecosystem.md`, and detailed APIs in their owning product docs. Refresh
+the existing MCP documentation bundle through its normal committed-source sync;
+adding a skill does not require recursively copying manuals into the plugin.
 
 ---
 
@@ -4119,7 +4458,7 @@ not new mandatory dependencies. Older integrations degrade according to their
 adapter capability checks; only Chaos 0.5 has an explicit minimum-version CI lane.
 
 Independent security/deployment acceptance, distributed runtime discovery,
-remote sandboxed chaos, verified-email recovery/OAuth/billing and stable API
+remote sandboxed chaos, verified-email recovery/billing and live ChatGPT OAuth acceptance and stable API
 freezing remain separate work. AIOS and producer-native schemas retain their
 own maturity and versioning. This release makes no production certification,
 exhaustive evidence coverage or guaranteed cancellation claim.
@@ -4161,8 +4500,11 @@ supported configuration format rather than assuming these keys are universal:
 }
 ```
 
-A client requiring OAuth discovery/login instead of custom bearer headers needs
-an additional integration: this server currently authenticates MCP API keys.
+Clients supporting custom authorization headers can keep using API keys.
+For ChatGPT, the operator can enable [OAuth account linking](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/chatgpt-oauth.md).
+Enter your existing key on the DeepAgentLabs consent page to link the same account;
+ChatGPT receives its own short-lived token. Availability depends on the hosted
+operator deploying and configuring OAuth.
 Start by asking your assistant to call `core.health` and list available tools.
 `core.verify` checks every adapter, so its overall `ok` can be false when optional
 integrations are absent, even while hosted analysis works.
@@ -4817,6 +5159,16 @@ one-hour idle TTL; save results you need to keep. Rate and concurrency counters
 are per worker, so add a hosting-layer limit for fleet-wide caps. Signup keys are
 shown once and cannot be recovered, and display names are unverified labels.
 `/healthz` checks storage readiness, not every optional adapter.
+
+## OAuth account linking
+
+OAuth is opt-in and requires registered clients, shared storage and a hosted
+rollout. Access tokens expire after one hour and can renew using rotating refresh
+tokens. Connections expire after 30 inactive days or 90 total days by default;
+replayed refresh tokens revoke the connection. Users authenticate the consent page using their existing API key. Key rotation
+or revocation invalidates linked OAuth tokens. OAuth links hosted accounts; it
+does not establish connectivity to a user's local Python runtime. Live ChatGPT
+acceptance remains an operator check. See [OAuth setup](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/chatgpt-oauth.md).
 
 ## Evidence
 
@@ -5600,6 +5952,52 @@ def script_policy() -> dict[str, tuple[str, ...]]: ...
 
 ---
 
+## Source declarations: src/deep_agentic_core_mcp/oauth.py
+
+Source: [src/deep_agentic_core_mcp/oauth.py](https://github.com/DeepAgentLabs/mcp-server/blob/main/src/deep_agentic_core_mcp/oauth.py)
+
+```python
+@dataclass(frozen=True)
+class OAuthConfig():
+    public_url: str
+    clients: Mapping[str, Any]
+    access_token_seconds: int = 3600
+    trusted_proxy_hops: int = 0
+    refresh_idle_seconds: int = 30 * 86400
+    refresh_max_seconds: int = 90 * 86400
+    @property
+    def origin(self) -> str: ...
+    @property
+    def resource(self) -> str: ...
+class OAuthKeyStore(KeyStore, Protocol):
+    def authorize_digest(self, digest: str) -> Principal | None: ...
+class OAuthServer():
+    def __init__(self, config: OAuthConfig, records: OAuthStore, keys: KeyStore) -> None: ...
+    @property
+    def challenge(self) -> str: ...
+    def authorize_token(self, token: str) -> Principal | None: ...
+    @staticmethod
+    def error(code: str, status: int=400) -> JSONResponse: ...
+    async def protected_metadata(self, request: Request) -> Response: ...
+    async def authorization_metadata(self, request: Request) -> Response: ...
+    async def authorize_page(self, request: Request) -> Response: ...
+    def consent_response(self, client_id: str, pending: str, *, error: str='', status: int=200) -> HTMLResponse: ...
+    async def stylesheet(self, request: Request) -> Response: ...
+    async def branding_asset(self, request: Request) -> Response: ...
+    async def approve(self, request: Request) -> Response: ...
+    def client_auth_methods(self) -> list[str]: ...
+    def authenticate_client(self, request: Request, form: dict[str, str]) -> bool: ...
+    def client_error(self) -> JSONResponse: ...
+    async def token(self, request: Request) -> Response: ...
+    async def issue_pair(self, grant: dict[str, Any], refresh: str) -> Response: ...
+    async def refresh(self, form: dict[str, str]) -> Response: ...
+    async def revoke(self, request: Request) -> Response: ...
+    def routes(self) -> list[Route]: ...
+def config_from_environment(public_url: str, raw_clients: str) -> OAuthConfig: ...
+```
+
+---
+
 ## Source declarations: src/deep_agentic_core_mcp/prompts/registry.py
 
 Source: [src/deep_agentic_core_mcp/prompts/registry.py](https://github.com/DeepAgentLabs/mcp-server/blob/main/src/deep_agentic_core_mcp/prompts/registry.py)
@@ -5744,12 +6142,14 @@ class StaticKeyStore():
     def __init__(self, api_keys: Mapping[str, Any]) -> None: ...
     def authenticate(self, token: str) -> str | None: ...
     def authorize(self, token: str) -> Principal | None: ...
+    def authorize_digest(self, digest: str) -> Principal | None: ...
     def ping(self) -> bool: ...
 class DynamoKeyStore():
     def __init__(self, table_name: str, *, client: Any=None) -> None: ...
     def ping(self) -> bool: ...
     def authenticate(self, token: str) -> str | None: ...
     def authorize(self, token: str) -> Principal | None: ...
+    def authorize_digest(self, digest: str) -> Principal | None: ...
     def stored_access_policy(self, user: str) -> Any: ...
     def set_access_policy(self, user: str, policy: AccessPolicy | None) -> None: ...
     def revoke_user(self, user: str) -> None: ...
@@ -5825,6 +6225,46 @@ def validate_evals_artifact(artifact: Any, kind: ArtifactKind) -> None: ...
 
 ---
 
+## Source declarations: src/deep_agentic_core_mcp/services/oauth_store.py
+
+Source: [src/deep_agentic_core_mcp/services/oauth_store.py](https://github.com/DeepAgentLabs/mcp-server/blob/main/src/deep_agentic_core_mcp/services/oauth_store.py)
+
+```python
+class OAuthStore(Protocol):
+    def put(self, kind: str, secret: str, value: dict[str, Any], ttl: int) -> None: ...
+    def get(self, kind: str, secret: str) -> dict[str, Any] | None: ...
+    def take(self, kind: str, secret: str) -> dict[str, Any] | None: ...
+    def compare_swap(self, kind: str, secret: str, expected: dict[str, Any], value: dict[str, Any], ttl: int) -> bool: ...
+    def ping(self) -> bool: ...
+    def allow(self, peer: str) -> bool: ...
+class MemoryOAuthStore():
+    def __init__(self) -> None: ...
+    def put(self, kind: str, secret: str, value: dict[str, Any], ttl: int) -> None: ...
+    def get(self, kind: str, secret: str) -> dict[str, Any] | None: ...
+    def take(self, kind: str, secret: str) -> dict[str, Any] | None: ...
+    def compare_swap(self, kind: str, secret: str, expected: dict[str, Any], value: dict[str, Any], ttl: int) -> bool: ...
+    def ping(self) -> bool: ...
+    def allow(self, peer: str) -> bool: ...
+class RedisOAuthStore():
+    def __init__(self, client: Any) -> None: ...
+    def put(self, kind: str, secret: str, value: dict[str, Any], ttl: int) -> None: ...
+    def get(self, kind: str, secret: str) -> dict[str, Any] | None: ...
+    def take(self, kind: str, secret: str) -> dict[str, Any] | None: ...
+    def compare_swap(self, kind: str, secret: str, expected: dict[str, Any], value: dict[str, Any], ttl: int) -> bool: ...
+    def ping(self) -> bool: ...
+    def allow(self, peer: str) -> bool: ...
+class PostgresOAuthStore():
+    def __init__(self, pool: Any) -> None: ...
+    def put(self, kind: str, secret: str, value: dict[str, Any], ttl: int) -> None: ...
+    def get(self, kind: str, secret: str) -> dict[str, Any] | None: ...
+    def take(self, kind: str, secret: str) -> dict[str, Any] | None: ...
+    def compare_swap(self, kind: str, secret: str, expected: dict[str, Any], value: dict[str, Any], ttl: int) -> bool: ...
+    def ping(self) -> bool: ...
+    def allow(self, peer: str) -> bool: ...
+```
+
+---
+
 ## Source declarations: src/deep_agentic_core_mcp/services/postgres_store.py
 
 Source: [src/deep_agentic_core_mcp/services/postgres_store.py](https://github.com/DeepAgentLabs/mcp-server/blob/main/src/deep_agentic_core_mcp/services/postgres_store.py)
@@ -5836,6 +6276,7 @@ class PostgresKeyStore():
     def ping(self) -> bool: ...
     def authenticate(self, token: str) -> str | None: ...
     def authorize(self, token: str) -> Principal | None: ...
+    def authorize_digest(self, digest: str) -> Principal | None: ...
     def stored_access_policy(self, user: str) -> Any: ...
     def set_access_policy(self, user: str, policy: AccessPolicy | None) -> None: ...
     def revoke_user(self, user: str) -> None: ...
@@ -6134,7 +6575,7 @@ def export_report(arguments: dict[str, Any] | None) -> dict[str, Any]: ...
 Source: [src/deep_agentic_core_mcp/transport_http.py](https://github.com/DeepAgentLabs/mcp-server/blob/main/src/deep_agentic_core_mcp/transport_http.py)
 
 ```python
-def create_app(*, operator_store: KeyStore | None=None, sidecar_bridge: SidecarBridge | None=None, api_keys: Mapping[str, Any] | None=None, key_store: KeyStore | None=None, store: SessionStore | None=None, allowed_hosts: list[str] | None=None, allowed_origins: list[str] | None=None, requests_per_minute: int=60, max_concurrent_per_user: int=2, max_concurrent_total: int=16) -> Starlette: ...
+def create_app(*, oauth_config: OAuthConfig | None=None, oauth_store: OAuthStore | None=None, operator_store: KeyStore | None=None, sidecar_bridge: SidecarBridge | None=None, api_keys: Mapping[str, Any] | None=None, key_store: KeyStore | None=None, store: SessionStore | None=None, allowed_hosts: list[str] | None=None, allowed_origins: list[str] | None=None, requests_per_minute: int=60, max_concurrent_per_user: int=2, max_concurrent_total: int=16) -> Starlette: ...
 def main() -> None: ...
 ```
 

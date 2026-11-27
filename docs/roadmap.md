@@ -3,10 +3,30 @@
 The DeepAgentLabs MCP Server roadmap focuses on expanding the unified MCP
 interface across the DeepAgentLabs ecosystem.
 
+## MCP 1.2.0: OAuth account linking
+
+Implemented in source: opt-in authorization code with S256 PKCE, explicit public
+client registration, browser consent using existing account keys, separate
+expiring access tokens, rotating refresh tokens with replay detection, shared
+PostgreSQL/Redis storage, revocation and live key
+policy checks. Existing local API-key clients remain supported. See
+[setup and acceptance requirements](chatgpt-oauth.md). Live ChatGPT acceptance,
+directory submission and local runtime connectivity remain
+separate work.
+
+## MCP 1.2.0: product-reference workflow skills
+
+Added source plugin manifests for portable Agent Plugins and Claude, plus four
+shared skills for ecosystem integration, workflow diagnosis, release checks and
+Tower incident investigation. Skills reuse the existing seven-product AI-readable
+reference tools and preserve hosted/runtime and approval boundaries. Host
+installation, live workflow evaluations and directory submissions remain
+outstanding. See [plugin skills](plugin-skills.md).
+
 ## Current Release
 
-**Version:** `0.7.0`
-**Released:** 2026-11-04
+**Version:** `1.2.0`
+**Released:** 2026-11-26
 
 ## Development Status
 

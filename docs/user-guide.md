@@ -31,8 +31,11 @@ supported configuration format rather than assuming these keys are universal:
 }
 ```
 
-A client requiring OAuth discovery/login instead of custom bearer headers needs
-an additional integration: this server currently authenticates MCP API keys.
+Clients supporting custom authorization headers can keep using API keys.
+For ChatGPT, the operator can enable [OAuth account linking](chatgpt-oauth.md).
+Enter your existing key on the DeepAgentLabs consent page to link the same account;
+ChatGPT receives its own short-lived token. Availability depends on the hosted
+operator deploying and configuring OAuth.
 Start by asking your assistant to call `core.health` and list available tools.
 `core.verify` checks every adapter, so its overall `ok` can be false when optional
 integrations are absent, even while hosted analysis works.

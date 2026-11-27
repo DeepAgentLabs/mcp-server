@@ -1,0 +1,3 @@
+interface:
+  display_name: "Investigate agent fleet incidents"
+  short_description: "Investigate Tower incidents and recovery evidence"

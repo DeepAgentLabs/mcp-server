@@ -47,8 +47,9 @@ sharing a user identity.
 This supports MCP clients that can supply bearer credentials. The AWS deployment
 provides `/signup` for immediate key signup, replacement, and revocation using
 DynamoDB, without worker restarts. Display names are unverified labels; identities
-are generated UUIDs. Keys are shown once and cannot be recovered. OAuth discovery,
-verified email login, account recovery, and billing are not implemented.
+are generated UUIDs. Keys are shown once and cannot be recovered. Opt-in OAuth discovery and account
+linking are covered in [ChatGPT OAuth setup](chatgpt-oauth.md). Verified email
+login, account recovery and billing are not implemented.
 
 ## Container build
 
