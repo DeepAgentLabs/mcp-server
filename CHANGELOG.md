@@ -8,6 +8,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Diagnose OAuth consent rejections with safe reason codes in logs and readable
+  error descriptions, without logging browser secrets, account keys or tokens.
+
 - Optional public OpenAI plugin domain-verification endpoint, configured by
   `DEEP_AGENTIC_CORE_MCP_OPENAI_APPS_CHALLENGE`. Unconfigured services return 404;
   MCP tool access continues requiring authentication.
@@ -18,6 +21,10 @@ This project follows [Semantic Versioning](https://semver.org/).
   AgenticOps in independent plugin bundle 0.1.4.
 
 ### Fixed
+
+- Permit the ChatGPT OAuth callback to return submission logins to the OpenAI
+  developer portal under the consent form CSP. Verify the full redirect chain
+  in Chromium, preventing a blocked first click followed by a consumed-form error.
 
 - Bind each OAuth consent attempt to its own secure browser cookie so opening
   or completing another sign-in tab does not invalidate pending consent.
