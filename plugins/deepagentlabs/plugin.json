@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "deepagentlabs",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Build, diagnose and assess agent workflows with DeepAgentLabs product references and MCP tools.",
   "author": {
     "name": "PRAMOD BEGUR NAGARAJ",
@@ -90,7 +90,7 @@
       },
       "publication": {
         "countries": [],
-        "release_notes": "Set the public plugin display name to DeepAgentLabs - AgenticOps for Claude and OpenAI. Four workflow skills and the hosted MCP connection are unchanged."
+        "release_notes": "Introduces DeepAgentLabs - AgenticOps for ChatGPT, with four workflow skills and an OAuth-connected MCP server for product documentation, integration guidance, diagnosis, and release-readiness checks."
       }
     }
   }
