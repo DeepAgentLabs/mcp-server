@@ -143,7 +143,7 @@ def main() -> None:
                 callback_url = redirected.value.url
                 page.close()
                 assert submitted[0]["origin"] == ORIGIN, "Browser suppressed the consent Origin"
-                assert COOKIE + "=" in submitted[0].get("cookie", ""), "Browser lost consent cookie"
+                assert COOKIE + "-" in submitted[0].get("cookie", ""), "Browser lost consent cookie"
                 result = parse_qs(urlsplit(callback_url).query)
                 assert result["state"] == ["browser-state"] and result["iss"] == [ORIGIN]
                 if decision == "allow":

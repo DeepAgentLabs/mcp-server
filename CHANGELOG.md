@@ -19,6 +19,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- Bind each OAuth consent attempt to its own secure browser cookie so opening
+  or completing another sign-in tab does not invalidate pending consent.
+
 - Prepare independent plugin bundle 0.1.3 for Claude directory revalidation:
   remove non-image provenance metadata from the logo without changing pixels,
   avoid README image-path code references, and supply Claude listing policy,

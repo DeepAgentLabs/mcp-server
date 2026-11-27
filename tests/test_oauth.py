@@ -347,7 +347,8 @@ async def test_canonical_host_rate_limit_and_consent_single_use(setup):
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url=ORIGIN) as client:
         page = await client.get("/oauth/authorize", params=params())
         pending = re.search(r'name="pending" value="([^"]+)"', page.text)[1]
-        browser = client.cookies.get(COOKIE)
+        cookie_name = page.headers["set-cookie"].split("=", 1)[0]
+        browser = client.cookies.get(cookie_name)
         form = {"pending": pending, "api_key": KEY, "decision": "allow"}
         assert (
             await client.post("/oauth/authorize", data=form, headers={"Origin": ORIGIN})
@@ -357,7 +358,7 @@ async def test_canonical_host_rate_limit_and_consent_single_use(setup):
             data=form,
             headers={
                 "Origin": ORIGIN,
-                "Cookie": COOKIE + "=" + browser,
+                "Cookie": cookie_name + "=" + browser,
             },
         )
         assert replay.status_code == 403
@@ -751,3 +752,36 @@ def test_reject_unsafe_directory_registration(monkeypatch, directory):
     monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_OAUTH_DIRECTORY_CLIENTS", json.dumps(directory))
     with pytest.raises(ValueError):
         config_from_environment(ORIGIN, json.dumps(CLIENTS))
+
+
+@pytest.mark.asyncio
+async def test_parallel_consent_pages_have_independent_browser_bindings(setup):
+    app, *_ = setup
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url=ORIGIN) as client:
+        attempts = []
+        for state in ("first-tab", "second-tab"):
+            page = await client.get("/oauth/authorize", params=params(state=state))
+            pending = re.search(r'name="pending" value="([^\"]+)"', page.text)[1]
+            cookie_name = page.headers["set-cookie"].split("=", 1)[0]
+            assert cookie_name.startswith(COOKIE + "-")
+            attempts.append((state, pending, cookie_name, client.cookies.get(cookie_name)))
+        assert attempts[0][2] != attempts[1][2]
+        first = attempts[0]
+        wrong_cookie = await client.post(
+            "/oauth/authorize",
+            headers={"Origin": ORIGIN, "Cookie": first[2] + "=" + attempts[1][3]},
+            data={"pending": first[1], "decision": "allow", "api_key": KEY},
+        )
+        assert wrong_cookie.status_code == 403
+        for index, (state, pending, cookie_name, _) in enumerate(attempts):
+            response = await client.post(
+                "/oauth/authorize",
+                headers={"Origin": ORIGIN},
+                data={"pending": pending, "decision": "allow", "api_key": KEY},
+            )
+            assert response.status_code == 303
+            query = parse_qs(urlsplit(response.headers["location"]).query)
+            assert query["state"] == [state] and query["code"]
+            assert client.cookies.get(cookie_name) is None
+            if index == 0:
+                assert client.cookies.get(attempts[1][2]) == attempts[1][3]

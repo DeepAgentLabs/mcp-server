@@ -239,6 +239,7 @@ class OAuthServer:
         if not 1 <= len(data.get("state", "")) <= 1024:
             return self.error("invalid_request")
         pending, browser = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
+        cookie_name = COOKIE + "-" + key_digest(pending)[:16]
         await asyncio.to_thread(
             self.records.put,
             "pending",
@@ -251,12 +252,13 @@ class OAuthServer:
                 "state": data["state"],
                 "code_challenge": challenge,
                 "browser_hash": key_digest(browser),
+                "cookie_name": cookie_name,
             },
             600,
         )
         response = self.consent_response(data["client_id"], pending)
         response.set_cookie(
-            COOKIE, browser, max_age=600, secure=True, httponly=True, samesite="lax"
+            cookie_name, browser, max_age=600, secure=True, httponly=True, samesite="lax"
         )
         return response
 
@@ -336,7 +338,9 @@ class OAuthServer:
         response = RedirectResponse(
             pending["redirect_uri"] + separator + urlencode(query), 303, headers=_HEADERS
         )
-        response.delete_cookie(COOKIE, secure=True, httponly=True, samesite="lax")
+        response.delete_cookie(
+            pending.get("cookie_name", COOKIE), secure=True, httponly=True, samesite="lax"
+        )
         return response
 
     async def approve(self, request: Request) -> Response:
@@ -347,7 +351,8 @@ class OAuthServer:
             return self.error("invalid_request")
         secret = form.get("pending", "")
         pending = await asyncio.to_thread(self.records.get, "pending", secret)
-        browser = request.cookies.get(COOKIE, "")
+        cookie_name = pending.get("cookie_name", COOKIE) if pending else COOKIE
+        browser = request.cookies.get(cookie_name, "")
         if (
             not pending
             or not browser
