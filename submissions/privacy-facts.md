@@ -41,15 +41,17 @@ publishing policy text. Public contact: deepagentlabs@gmail.com.
 - Actual production data retention and backup retention, including Render and
   Supabase logs; a TTL is not a universal deletion guarantee.
 - How users request deletion, what gets deleted, and the response procedure.
-- Whether data is used for analytics, marketing, model training or any other
-  purpose beyond delivering the service; confirm rather than assume.
+- The publisher confirmed service-only use of workflow data: no sale,
+  advertising or AI model-training use. The published policy separately
+  discloses existing website counters and optional newsletter/survey services.
 - Any additional subprocessors, enabled external runtimes, and storage regions.
-- Intended age audience and whether the service is directed at children.
+- The publisher selected age 13+. The service is not directed at under-13s;
+  the published terms also require the connected platform's age rules.
 - Applicable service terms, acceptable use, availability, support, and liability
   commitments chosen by the publisher. The repository MIT license does not
   replace hosted-service terms.
 
-Publish an accessible HTTPS privacy-policy page and terms page on a controlled
-site. Both must identify the service and publisher. Send the actual URLs so they
-can be checked and included in the package; current /privacy and /terms routes
-on deepagentlabs.io returned 404 during preparation.
+The pages are now published at https://deepagentlabs.io/privacy/ and
+https://deepagentlabs.io/terms/. Both returned HTTP 200 and were inspected for
+publisher, contact and actual policy content. The original missing routes have
+been resolved. These facts are preparation notes, not replacement policies.

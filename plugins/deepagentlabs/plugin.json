@@ -27,7 +27,9 @@
           "Show the available DeepAgentLabs product documentation.",
           "Help me instrument an agent workflow using the documented APIs.",
           "Check which product versions are installed on this hosted server."
-        ]
+        ],
+        "privacyPolicyURL": "https://deepagentlabs.io/privacy/",
+        "termsOfServiceURL": "https://deepagentlabs.io/terms/"
       },
       "review": {
         "prompts": [

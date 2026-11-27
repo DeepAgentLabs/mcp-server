@@ -11,7 +11,9 @@
     "suggested_slug": "deepagentlabs",
     "authentication_required": true,
     "oauth_client_id": "deepagentlabs-claude-directory",
-    "oauth_redirect_uri": "https://claude.ai/api/mcp/auth_callback"
+    "oauth_redirect_uri": "https://claude.ai/api/mcp/auth_callback",
+    "privacy_policy_url": "https://deepagentlabs.io/privacy/",
+    "terms_of_service_url": "https://deepagentlabs.io/terms/"
   },
   "plugin": {
     "repository": "https://github.com/DeepAgentLabs/mcp-server",

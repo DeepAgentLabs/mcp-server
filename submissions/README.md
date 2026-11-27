@@ -25,10 +25,10 @@ not an API payload and not an uploaded plugin manifest.
 
 ## Remaining preparation
 
-1. Publish a privacy policy and terms of service that cover this hosted service.
-   Add the verified URLs to `extensions.com.openai.interface.privacyPolicyURL`
-   and `termsOfServiceURL`; add the privacy URL to the Claude worksheet.
-   See `privacy-facts.md`. No placeholder URLs belong in a submission.
+1. Policy pages are published and verified at https://deepagentlabs.io/privacy/
+   and https://deepagentlabs.io/terms/. Both identify the publisher/contact and
+   cover the hosted service. Their URLs are included in the package and Claude
+   worksheet. Keep the policies consistent with future operational changes.
 2. Record and host the real demo described in `demo-walkthrough.md`. Enter its
    verified playable URL as `extensions.com.openai.review.demo_recording_url`.
 3. Rehearse every review case in the intended host. Track actual results in
