@@ -4,7 +4,7 @@
   "distribution": "deep-agentic-core-mcp",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "63257b032daf11781f0a525caed0f1c696b13a6e9a7850639f4d9cace019162d",
+  "sha256": "29bc338a78159d046bbbab0e95ad9d37c4ffe49fca2eb05f988f451f51a26b75",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
@@ -71,7 +71,7 @@
     {
       "path": "docs/chatgpt-oauth.md",
       "kind": "reference",
-      "sha256": "74596226cc35ec7a1d9b810c43b3738821b6a54bec16003c892c2ff87a538af4"
+      "sha256": "2a7650f7dcefcde6b3194eeb4cfeaf05435b9f10d00af2c9159f4a7a18464685"
     },
     {
       "path": "docs/plugin-skills.md",

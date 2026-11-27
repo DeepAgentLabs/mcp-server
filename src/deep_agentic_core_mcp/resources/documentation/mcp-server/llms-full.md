@@ -3431,7 +3431,7 @@ uv run --no-sync python scripts/smoke_oauth_browser.py
 
 The consent header and connection diagram display the existing DeepAgentLabs
 logo. Registered clients with a `chatgpt.com` callback display OpenAI's official
-Blossom beside a dotted two-way arrow. Other clients keep their initial badge.
+Blossom beside two parallel dotted lines pointing in opposite directions. Other clients keep their initial badge.
 Brand assets are served from a fixed allowlist under `/oauth-assets/`; no
 third-party image requests are made. A CSS content hash in the stylesheet URL
 ensures branding updates load when the consent form is reopened.
