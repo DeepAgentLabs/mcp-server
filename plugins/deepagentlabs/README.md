@@ -1,4 +1,4 @@
-# DeepAgentLabs workflow skills
+# DeepAgentLabs - AgenticOps
 
 Build and assess agent workflows using DeepAgentLabs tools and versioned product
 references. This plugin combines four shared skills with the hosted MCP service
@@ -61,7 +61,7 @@ files. The bundled brand image is used only for display through the manifests'
 listing fields. There are no executable scripts, hooks or local MCP launchers.
 
 Keep the complete plugin directory when distributing it because the skills
-share a relative reference guide. Plugin version **0.1.3** is independent of the
+share a relative reference guide. Plugin version **0.1.4** is independent of the
 Python server's package version.
 
 ## Privacy and support

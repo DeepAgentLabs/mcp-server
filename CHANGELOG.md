@@ -6,6 +6,11 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- Set the public Claude and OpenAI plugin display name to DeepAgentLabs -
+  AgenticOps in independent plugin bundle 0.1.4.
+
 ### Fixed
 
 - Prepare independent plugin bundle 0.1.3 for Claude directory revalidation:

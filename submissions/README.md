@@ -8,7 +8,7 @@ contact **deepagentlabs@gmail.com**, no payments/purchases, and all countries ea
 platform supports. The product name remains **DeepAgentLabs**. Identity and
 domain verification must still be checked in the actual portals.
 
-The canonical source is `plugins/deepagentlabs`, version 0.1.3. An OpenAI upload
+The canonical source is `plugins/deepagentlabs`, version 0.1.4. An OpenAI upload
 is a separate ZIP copy of that directory; the original stays in the repository.
 Claude reads the plugin folder from GitHub and accepts the hosted MCP server as
 a separate connector submission. `claude-listing.json` is a human worksheet,
