@@ -19,7 +19,7 @@
     "repository": "https://github.com/DeepAgentLabs/mcp-server",
     "plugin_path": "plugins/deepagentlabs",
     "tracked_branch": "main",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "publisher": "PRAMOD BEGUR NAGARAJ",
     "contact": "deepagentlabs@gmail.com",
     "display_name": "DeepAgentLabs - AgenticOps"

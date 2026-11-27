@@ -17,6 +17,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- Prepare plugin bundle 0.1.5 with ChatGPT-facing initial-release notes in the
+  OpenAI publication metadata.
+
 - Set the public Claude and OpenAI plugin display name to DeepAgentLabs -
   AgenticOps in independent plugin bundle 0.1.4.
 
