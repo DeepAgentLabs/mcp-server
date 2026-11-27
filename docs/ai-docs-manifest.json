@@ -4,7 +4,7 @@
   "distribution": "deep-agentic-core-mcp",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "35a6e0f39038e0e8be4a9ddb41e4c8489ab248db3b4668158c061d1b2a2b801b",
+  "sha256": "491c03bfcb372dfb92c3873a2ac37e5b19b3d3006f0a7949865eb5f0ce0e6b25",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
@@ -71,7 +71,7 @@
     {
       "path": "docs/chatgpt-oauth.md",
       "kind": "reference",
-      "sha256": "ad4e99d8f808d337b0cbcdbba4c821c161dd15e7ecb814e6ff2c2b6932a00249"
+      "sha256": "b3b80def91147d44235df6ac0b922d34fbe2117b9a0c5b931fc0a9065c013325"
     },
     {
       "path": "docs/plugin-skills.md",
@@ -306,7 +306,7 @@
     {
       "path": "src/deep_agentic_core_mcp/oauth.py",
       "kind": "source-contract",
-      "sha256": "3be5659648f6338460fc5c131e5d02fd5fd20a2f4c717658a2b9837de15a557b"
+      "sha256": "d4a10c5c5c45c3d04ba51f693437ae08df7c3110a07a9d6d40d9966bdb13adca"
     },
     {
       "path": "src/deep_agentic_core_mcp/prompts/__init__.py",

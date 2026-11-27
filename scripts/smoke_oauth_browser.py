@@ -22,7 +22,10 @@ from deep_agentic_core_mcp.services.remote_sessions import MemorySessionStore
 from deep_agentic_core_mcp.transport_http import create_app
 
 ORIGIN = "https://mcp.example.com"
-CALLBACK = "https://chatgpt.com/connector_platform_oauth_redirect"
+CALLBACKS = {
+    "chatgpt": "https://chatgpt.com/connector_platform_oauth_redirect",
+    "claude": "https://claude.ai/api/mcp/auth_callback",
+}
 KEY = "a" * 40
 VERIFIER = "v" * 64
 
@@ -30,10 +33,13 @@ VERIFIER = "v" * 64
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--browser-executable")
+    parser.add_argument("--provider", choices=tuple(CALLBACKS), default="chatgpt")
     parser.add_argument("--screenshot-dir")
     args = parser.parse_args()
+    callback = CALLBACKS[args.provider]
+    client_name = "ChatGPT" if args.provider == "chatgpt" else "Claude"
     config = OAuthConfig(
-        ORIGIN, {"browser-test": {"name": "Browser test", "redirect_uris": [CALLBACK]}}
+        ORIGIN, {"browser-test": {"name": client_name, "redirect_uris": [callback]}}
     )
     app = create_app(
         api_keys={"browser-user": KEY},
@@ -49,6 +55,7 @@ def main() -> None:
         try:
             for decision in ("allow", "deny"):
                 page = browser.new_page()
+                page.context.set_offline(True)
                 submitted = []
 
                 def bridge(
@@ -82,7 +89,7 @@ def main() -> None:
                 challenge = base64.urlsafe_b64encode(hashlib.sha256(VERIFIER.encode()).digest())
                 query = {
                     "client_id": "browser-test",
-                    "redirect_uri": CALLBACK,
+                    "redirect_uri": callback,
                     "response_type": "code",
                     "resource": config.resource,
                     "scope": "mcp:tools",
@@ -92,6 +99,14 @@ def main() -> None:
                 }
                 response = page.goto(ORIGIN + "/oauth/authorize?" + urlencode(query))
                 assert response is not None and response.status == 200
+                images = page.locator(".connection-icons img")
+                assert images.count() == 2
+                for element in images.all():
+                    assert element.evaluate("img => img.complete && img.naturalWidth > 0")
+                lines = page.locator(".connection-line")
+                assert lines.count() == 2
+                for line in lines.all():
+                    assert line.evaluate("el => getComputedStyle(el).borderTopStyle") == "dotted"
                 signup = page.get_by_role("link", name="Create New API Key")
                 assert signup.get_attribute("target") == "_blank"
                 assert signup.get_attribute("rel") == "noopener noreferrer"
@@ -111,13 +126,21 @@ def main() -> None:
                     "console",
                     lambda msg: print("Browser console:", msg.text.split("?")[0], flush=True),
                 )
-                page.get_by_role(
-                    "button", name="Allow access" if decision == "allow" else "Cancel", exact=True
-                ).click(no_wait_after=True)
-                page.wait_for_url(CALLBACK + "?**", timeout=10000)
+                # Host callbacks require a real host-initiated state, so assert the
+                # browser's outgoing redirect without loading either provider.
+                with page.expect_request(
+                    lambda request: request.url.startswith(callback + "?"), timeout=10000
+                ) as redirected:
+                    page.get_by_role(
+                        "button",
+                        name="Allow access" if decision == "allow" else "Cancel",
+                        exact=True,
+                    ).click(no_wait_after=True)
+                callback_url = redirected.value.url
+                page.close()
                 assert submitted[0]["origin"] == ORIGIN, "Browser suppressed the consent Origin"
                 assert COOKIE + "=" in submitted[0].get("cookie", ""), "Browser lost consent cookie"
-                result = parse_qs(urlsplit(page.url).query)
+                result = parse_qs(urlsplit(callback_url).query)
                 assert result["state"] == ["browser-state"] and result["iss"] == [ORIGIN]
                 if decision == "allow":
                     exchanged = client.post(
@@ -125,7 +148,7 @@ def main() -> None:
                         data={
                             "grant_type": "authorization_code",
                             "client_id": "browser-test",
-                            "redirect_uri": CALLBACK,
+                            "redirect_uri": callback,
                             "resource": config.resource,
                             "code": result["code"][0],
                             "code_verifier": VERIFIER,
@@ -135,8 +158,13 @@ def main() -> None:
                     assert exchanged.json().get("refresh_token")
                 else:
                     assert result["error"] == ["access_denied"]
-                page.close()
-                print("Chromium consent " + decision + ": origin, cookie and callback verified")
+                print(
+                    "Chromium "
+                    + args.provider
+                    + " consent "
+                    + decision
+                    + ": origin, cookie and callback verified"
+                )
         finally:
             browser.close()
 

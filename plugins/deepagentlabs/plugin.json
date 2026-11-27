@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "deepagentlabs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Build, diagnose and assess agent workflows with DeepAgentLabs product references and MCP tools.",
   "author": {
     "name": "DeepAgentLabs",
@@ -16,7 +16,9 @@
         "displayName": "DeepAgentLabs",
         "shortDescription": "Agent workflow operations",
         "longDescription": "Build, diagnose and assess agent workflows with DeepAgentLabs product references and MCP tools.",
-        "developerName": "DeepAgentLabs"
+        "developerName": "DeepAgentLabs",
+        "logo": "./assets/logo.png",
+        "composerIcon": "./assets/logo.png"
       }
     }
   }

@@ -18,6 +18,8 @@ duplicate copies.
 
 - `plugin.json`: portable Agent Plugins manifest for ChatGPT/Codex.
 - `mcp.json`: portable Streamable HTTP server connection.
+- `assets/logo.png`: existing DeepAgentLabs branding, referenced by the OpenAI
+  listing logo and composer icon fields.
 - `.claude-plugin/plugin.json`: Claude plugin manifest.
 - `.mcp.json`: Claude HTTP connector configuration pointing to the same server.
 - `skills/`: shared `SKILL.md` instructions and optional OpenAI display metadata.
@@ -75,3 +77,18 @@ instruction to execute a command. A Tower recommendation is not human approval.
 Directory submissions, hosted OAuth acceptance and end-to-end model evaluations
 on ChatGPT and Claude remain separate work. Syntax validation establishes package
 structure, not that a connected runtime or model workflow has passed acceptance.
+
+
+## Public listing branding
+
+The portable manifest includes the existing DeepAgentLabs logo in
+`extensions.com.openai.interface.logo` and `composerIcon`. Both point to
+`./assets/logo.png`, a square 1254 × 1254 PNG copied unchanged from the official
+DeepAgentLabs website assets. The logo is included when packaging the complete
+plugin directory. These OpenAI branding fields do not configure a Claude
+connector's listing icon.
+
+Branding is prepared before public submission. Adding these files does not
+publish a listing or change an existing account connection's icon. Publisher
+verification, listing URLs, review materials and portal setup still need their
+own submission checks.

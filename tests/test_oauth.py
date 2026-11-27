@@ -579,6 +579,20 @@ async def test_consent_page_headers_styles_and_retry(setup):
         csp = page.headers["Content-Security-Policy"]
         assert "form-action 'self' https://chatgpt.com" in csp
         assert "style-src 'self'" in csp and "default-src 'none'" in csp
+        assert "img-src 'self'" in csp
+        assert re.search(r"/oauth.css\?v=[a-f0-9]{12}", page.text)
+        assert "/oauth-assets/openai.svg" in page.text
+        for name, media_type, signature in [
+            ("deepagentlabs.png", "image/png", b"\x89PNG"),
+            ("openai.svg", "image/svg+xml", b"<svg"),
+            ("claude.svg", "image/svg+xml", b"<svg"),
+        ]:
+            asset = await client.get("/oauth-assets/" + name)
+            assert asset.status_code == 200
+            assert asset.headers["content-type"] == media_type
+            assert asset.content.startswith(signature)
+            assert asset.headers["X-Content-Type-Options"] == "nosniff"
+        assert (await client.get("/oauth-assets/BRANDING.md")).status_code == 404
         assert 'target="_blank" rel="noopener noreferrer"' in page.text
         assert "Create New API Key" in page.text
         assert "(open in new tab)" in page.text
@@ -607,3 +621,23 @@ def test_consent_escapes_client_name_without_recursive_template_expansion():
     rendered = server.consent_response("test", "pending-test").body.decode()
     assert "<script>" not in rendered
     assert "&lt;script&gt;{{pending}}&lt;/script&gt;" in rendered
+
+
+@pytest.mark.parametrize(
+    "callback,logo",
+    [
+        ("https://chatgpt.com/connector_platform_oauth_redirect", "openai.svg"),
+        ("https://claude.ai/api/mcp/auth_callback", "claude.svg"),
+        ("https://other.example/callback", None),
+        ("https://claude.ai.other.example/callback", None),
+    ],
+)
+def test_consent_uses_registered_host_logo_or_initial(callback, logo):
+    config = OAuthConfig(ORIGIN, {"test": {"name": "Host", "redirect_uris": [callback]}})
+    server = OAuthServer(config, MemoryOAuthStore(), StaticKeyStore({"alice": KEY}))
+    rendered = server.consent_response("test", "pending-test").body.decode()
+    assert "/oauth-assets/deepagentlabs.png" in rendered
+    for candidate in ("openai.svg", "claude.svg"):
+        assert ("/oauth-assets/" + candidate in rendered) == (candidate == logo)
+    if logo is None:
+        assert '<span class="client-icon">H</span>' in rendered

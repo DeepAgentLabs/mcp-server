@@ -198,15 +198,15 @@
       "name": "MCP Server",
       "distribution": "deep-agentic-core-mcp",
       "version": "1.2.1",
-      "source_commit": "a97d6ba9f0eed042acac3877e62eaa63ab3d00f6",
+      "source_commit": "32c04139bda459063c0db5b93468b7031e37c1fe",
       "repository": "https://github.com/DeepAgentLabs/mcp-server",
       "source_path": "docs/llms-full.md",
-      "source_url": "https://github.com/DeepAgentLabs/mcp-server/blob/a97d6ba9f0eed042acac3877e62eaa63ab3d00f6/docs/llms-full.md",
+      "source_url": "https://github.com/DeepAgentLabs/mcp-server/blob/32c04139bda459063c0db5b93468b7031e37c1fe/docs/llms-full.md",
       "assets": {
         "reference": {
           "file": "llms-full.md",
-          "sha256": "35a6e0f39038e0e8be4a9ddb41e4c8489ab248db3b4668158c061d1b2a2b801b",
-          "bytes": 365574
+          "sha256": "491c03bfcb372dfb92c3873a2ac37e5b19b3d3006f0a7949865eb5f0ce0e6b25",
+          "bytes": 366324
         },
         "index": {
           "file": "ai-reference-index.md",
@@ -215,7 +215,7 @@
         },
         "manifest": {
           "file": "ai-docs-manifest.json",
-          "sha256": "dc6c80bba82e50355e0c659ed2fc3559f818cd784bad1fcb375233de303436eb",
+          "sha256": "8313f659e4967a69d220f95b7b5475cab17af61020db758f81e93b68d5a89364",
           "bytes": 20473
         },
         "license": {

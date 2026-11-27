@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Connect {{client_name}} · DeepAgentLabs</title>
-  <link rel="stylesheet" href="/oauth.css">
+  <link rel="stylesheet" href="/oauth.css?v={{asset_version}}">
 </head>
 <body>
   <header class="site-header">
-    <div class="brand"><span class="brand-mark" aria-hidden="true">DL</span><span>DeepAgentLabs<span class="brand-subtitle">AGENTICOPS</span></span></div>
+    <div class="brand"><span class="brand-mark" aria-hidden="true"><img src="/oauth-assets/deepagentlabs.png" alt="" width="44" height="44"></span><span>DeepAgentLabs<span class="brand-subtitle">AGENTICOPS</span></span></div>
     <span class="secure-label"><span class="secure-dot" aria-hidden="true"></span>Secure account connection</span>
   </header>
   <main>
     <section class="consent-card" aria-labelledby="connection-title">
-      <div class="connection-icons" aria-hidden="true"><span class="product-icon">DL</span><span class="connection-arrow">→</span><span class="client-icon">{{client_initial}}</span></div>
+      <div class="connection-icons" aria-hidden="true"><span class="product-icon"><img src="/oauth-assets/deepagentlabs.png" alt="" width="72" height="72"></span><span class="connection-arrow"><span class="connection-line to-client"></span><span class="connection-line from-client"></span></span><span class="client-icon">{{client_icon}}</span></div>
       <p class="eyebrow">CONNECT YOUR WORKSPACE</p>
       <h1 id="connection-title">Connect {{client_name}}</h1>
       <p class="intro">Bring your DeepAgentLabs tools and workflows into {{client_name}}.</p>

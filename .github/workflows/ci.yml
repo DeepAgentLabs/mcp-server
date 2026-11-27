@@ -142,7 +142,9 @@ jobs:
       - name: Install Chromium
         run: uv run --no-sync playwright install --with-deps chromium
       - name: Verify browser consent, cookies, callbacks and token exchange
-        run: uv run --no-sync python scripts/smoke_oauth_browser.py
+        run: |
+          uv run --no-sync python scripts/smoke_oauth_browser.py --provider chatgpt
+          uv run --no-sync python scripts/smoke_oauth_browser.py --provider claude
 
   package:
     runs-on: ubuntu-latest
