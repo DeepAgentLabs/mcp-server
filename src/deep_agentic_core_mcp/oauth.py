@@ -11,6 +11,7 @@ import base64
 import hashlib
 import html
 import json
+import logging
 import os
 import re
 import secrets
@@ -33,6 +34,7 @@ SCOPE = "mcp:tools"
 TOKEN_PREFIX = "dal_oauth_"
 REFRESH_PREFIX = "dal_refresh_"
 COOKIE = "__Host-dal-oauth"
+_LOGGER = logging.getLogger(__name__)
 _HEADERS = {
     "Cache-Control": "no-store",
     "Pragma": "no-cache",
@@ -343,22 +345,38 @@ class OAuthServer:
         )
         return response
 
+    def consent_error(self, reason: str, status: int = 403) -> JSONResponse:
+        descriptions = {
+            "origin_mismatch": "The browser did not send the expected sign-in origin.",
+            "invalid_form": "The consent form submission was incomplete or malformed.",
+            "pending_missing": "This consent attempt expired or was already completed.",
+            "cookie_missing": "The browser did not send the cookie for this consent attempt.",
+            "cookie_mismatch": "The browser cookie does not match this consent attempt.",
+            "already_completed": "Another submission already completed this consent attempt.",
+        }
+        _LOGGER.warning("OAuth consent rejected: %s", reason)
+        return JSONResponse(
+            {"error": "invalid_request", "error_description": descriptions[reason]},
+            status_code=status,
+            headers=_HEADERS,
+        )
+
     async def approve(self, request: Request) -> Response:
         if request.headers.get("origin") != self.config.origin:
-            return self.error("invalid_request", 403)
+            return self.consent_error("origin_mismatch")
         form = await self._form(request)
         if not form or form.get("decision") not in {"allow", "deny"}:
-            return self.error("invalid_request")
+            return self.consent_error("invalid_form", 400)
         secret = form.get("pending", "")
         pending = await asyncio.to_thread(self.records.get, "pending", secret)
-        cookie_name = pending.get("cookie_name", COOKIE) if pending else COOKIE
+        if pending is None:
+            return self.consent_error("pending_missing")
+        cookie_name = pending.get("cookie_name", COOKIE)
         browser = request.cookies.get(cookie_name, "")
-        if (
-            not pending
-            or not browser
-            or not secrets.compare_digest(pending["browser_hash"], key_digest(browser))
-        ):
-            return self.error("invalid_request", 403)
+        if not browser:
+            return self.consent_error("cookie_missing")
+        if not secrets.compare_digest(pending["browser_hash"], key_digest(browser)):
+            return self.consent_error("cookie_mismatch")
         principal = None
         key = form.get("api_key", "")
         if form["decision"] == "allow":
@@ -379,7 +397,7 @@ class OAuthServer:
                 )
         pending = await asyncio.to_thread(self.records.take, "pending", secret)
         if pending is None:
-            return self.error("invalid_request")
+            return self.consent_error("already_completed", 400)
         if form["decision"] == "deny":
             return self._redirect(pending, error="access_denied")
         assert principal is not None

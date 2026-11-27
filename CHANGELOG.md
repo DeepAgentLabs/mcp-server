@@ -8,6 +8,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Diagnose OAuth consent rejections with safe reason codes in logs and readable
+  error descriptions, without logging browser secrets, account keys or tokens.
+
 - Optional public OpenAI plugin domain-verification endpoint, configured by
   `DEEP_AGENTIC_CORE_MCP_OPENAI_APPS_CHALLENGE`. Unconfigured services return 404;
   MCP tool access continues requiring authentication.

@@ -785,3 +785,34 @@ async def test_parallel_consent_pages_have_independent_browser_bindings(setup):
             assert client.cookies.get(cookie_name) is None
             if index == 0:
                 assert client.cookies.get(attempts[1][2]) == attempts[1][3]
+
+
+@pytest.mark.asyncio
+async def test_consent_failure_diagnostics_do_not_expose_credentials(setup, caplog):
+    app, _, records, _ = setup
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url=ORIGIN) as client:
+        page = await client.get("/oauth/authorize", params=params())
+        pending = re.search(r'name="pending" value="([^\"]+)"', page.text)[1]
+        cookie_name = page.headers["set-cookie"].split("=", 1)[0]
+        browser = client.cookies.get(cookie_name)
+        form = {"pending": pending, "api_key": KEY, "decision": "allow"}
+        response = await client.post("/oauth/authorize", data=form)
+        assert "origin" in response.json()["error_description"]
+        client.cookies.clear()
+        response = await client.post("/oauth/authorize", headers={"Origin": ORIGIN}, data=form)
+        assert "did not send the cookie" in response.json()["error_description"]
+        response = await client.post(
+            "/oauth/authorize",
+            headers={"Origin": ORIGIN, "Cookie": cookie_name + "=wrong"},
+            data=form,
+        )
+        assert "does not match" in response.json()["error_description"]
+        records.take("pending", pending)
+        response = await client.post("/oauth/authorize", headers={"Origin": ORIGIN}, data=form)
+        assert "expired or was already completed" in response.json()["error_description"]
+        assert KEY not in caplog.text and pending not in caplog.text and browser not in caplog.text
+        assert (
+            KEY not in response.text
+            and pending not in response.text
+            and browser not in response.text
+        )
