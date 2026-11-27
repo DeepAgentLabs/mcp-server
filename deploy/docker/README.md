@@ -41,3 +41,14 @@ Live Sidecar controls require explicit host runtime bindings and independent
 operator authorization. See [the current matrix and rollback guide](../../docs/release-readiness.md).
 
 AIOS schema bundles and image assets retain their MIT notice. MCP 0.8.0 also carries schemas/catalogs inside the wheel for standalone offline validation; see [coordinated readiness](../../docs/coordinated-v1-readiness.md).
+
+
+### OpenAI plugin domain verification
+
+Set `DEEP_AGENTIC_CORE_MCP_OPENAI_APPS_CHALLENGE` on the hosted service to the
+exact public verification token shown in the OpenAI plugin portal. The service
+returns it as unauthenticated plain text at
+`/.well-known/openai-apps-challenge`, with caching disabled. Without the setting,
+that URL returns 404. This is an ownership challenge, not an API key or OAuth
+client secret; never populate it with account credentials. MCP authentication
+is still required. Deploy the setting and route before selecting Verify Domain.

@@ -350,3 +350,24 @@ async def test_native_evals_validation_over_authenticated_http():
         invalid = tool_payload(await rpc(client, "tools/call", params))
         assert invalid["ok"] is False
         assert invalid["valid"] is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("token", [None, "test-public-domain-challenge"])
+async def test_openai_domain_verification_without_mcp_access(monkeypatch, token):
+    setting = "DEEP_AGENTIC_CORE_MCP_OPENAI_APPS_CHALLENGE"
+    if token is None:
+        monkeypatch.delenv(setting, raising=False)
+    else:
+        monkeypatch.setenv(setting, token)
+    app = app_for_test()
+    async with httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=app), base_url="http://testserver"
+    ) as client:
+        response = await client.get("/.well-known/openai-apps-challenge")
+        assert response.status_code == (200 if token else 404)
+        if token:
+            assert response.text == token
+            assert response.headers["content-type"].startswith("text/plain")
+            assert response.headers["cache-control"] == "no-store"
+        assert (await client.post("/mcp", json={})).status_code == 401

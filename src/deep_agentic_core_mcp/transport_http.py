@@ -269,8 +269,21 @@ def _build_app(
             if pool is not None:
                 await asyncio.to_thread(pool.close)
 
+    verification_token = os.environ.get("DEEP_AGENTIC_CORE_MCP_OPENAI_APPS_CHALLENGE", "")
+
+    async def openai_apps_challenge(request: Request) -> Response:
+        del request
+        if not verification_token:
+            return PlainTextResponse("Not found", status_code=404)
+        return PlainTextResponse(verification_token, headers={"Cache-Control": "no-store"})
+
     endpoint = MCPEndpoint()
-    routes = [Route("/healthz", healthz), Route("/mcp", endpoint), Route("/mcp/", endpoint)]
+    routes = [
+        Route("/healthz", healthz),
+        Route("/.well-known/openai-apps-challenge", openai_apps_challenge),
+        Route("/mcp", endpoint),
+        Route("/mcp/", endpoint),
+    ]
     if oauth is not None:
         routes += oauth.routes()
     if isinstance(auth_store, (DynamoKeyStore, PostgresKeyStore)):
