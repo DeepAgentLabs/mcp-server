@@ -94,12 +94,10 @@ def main() -> None:
                 assert images.count() == 2
                 for element in images.all():
                     assert element.evaluate("img => img.complete && img.naturalWidth > 0")
-                assert (
-                    page.locator(".connection-arrow").evaluate(
-                        "el => getComputedStyle(el).borderTopStyle"
-                    )
-                    == "dotted"
-                )
+                lines = page.locator(".connection-line")
+                assert lines.count() == 2
+                for line in lines.all():
+                    assert line.evaluate("el => getComputedStyle(el).borderTopStyle") == "dotted"
                 signup = page.get_by_role("link", name="Create New API Key")
                 assert signup.get_attribute("target") == "_blank"
                 assert signup.get_attribute("rel") == "noopener noreferrer"
