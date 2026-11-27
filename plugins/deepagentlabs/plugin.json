@@ -67,7 +67,7 @@
               "description": "Validate an inline draft AIOS workflow artifact using the real schema and rule report.",
               "prompt": "Validate this workflow artifact and explain any schema or conformance findings. Keep its draft status explicit.\n{\"spec_version\": \"0.4-draft\", \"artifact_type\": \"workflow\", \"id\": \"review-workflow\", \"name\": \"Directory review workflow\", \"revision\": \"1\", \"status\": \"active\"}",
               "tools_triggered": "spec.validate_artifact",
-              "expected_behavior": "Call spec.validate_artifact with artifact equal to the supplied JSON. Report ok, schema_valid, and returned conformance issues with rule IDs where present. Do not claim v1.0 certification or evaluate unrelated artifacts."
+              "expected_behavior": "Call spec.validate_artifact with artifact equal to the supplied JSON. Report ok, schema_errors, semantic_errors and conformance.aligned, including rule IDs for returned issues. Do not claim v1.0 certification or evaluate unrelated artifacts."
             }
           ],
           "negative": [

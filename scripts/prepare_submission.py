@@ -63,7 +63,7 @@ def main() -> None:
         width, height = struct.unpack(">II", data[16:24])
         assert (256 if key == "logo" else 48) <= width == height <= 4096
     cases = settings["review"]["test_cases"]
-    assert len(cases["positive"]) >= 5 and len(cases["negative"]) >= 3
+    assert len(cases["positive"]) == 5 and len(cases["negative"]) == 3
     for group, entries in cases.items():
         fields = ["description", "prompt"]
         if group == "positive":
