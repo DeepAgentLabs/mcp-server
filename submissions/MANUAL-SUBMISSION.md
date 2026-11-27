@@ -2,7 +2,7 @@
 
 The publisher confirmed the Claude MCP connector is Published. The Claude plugin
 bundle is in validation; the OpenAI plugin has not been submitted.
-Source plugin version: 0.1.3. Hosted runtime tested: 1.3.0.
+Source plugin version: 0.1.4. Hosted runtime tested: 1.3.0.
 
 ## 1. Finish the real demo and review rehearsal
 
@@ -83,7 +83,7 @@ In the same portal select **Submit new → Plugin bundle**:
 - Repository: `https://github.com/DeepAgentLabs/mcp-server`
 - Plugin path: `plugins/deepagentlabs`
 - Tracked branch: `main`
-- Plugin version: `0.1.3`
+- Plugin version: `0.1.4`
 
 Connect a GitHub account with push access, validate the current commit, inspect
 the imported listing and four skills, and fill in accurate data-handling and
