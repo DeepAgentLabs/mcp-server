@@ -38,4 +38,28 @@ outside source and ZIPs; enter them only through the secure review fields.
 
 Required later: readable demo recording URL, final saved submission version,
 secure reviewer access, domain/developer verification, scans and publisher
-attestations. Neither platform has received a submission from this preparation.
+attestations. The publisher subsequently confirmed that the Claude MCP connector
+is Published; the separate plugin bundle is still in validation.
+
+
+## Plugin directory validation: 0.1.3
+
+On 2026-11-27, Claude Code 2.1.332 reported Validation passed for the plugin
+folder: four skills and one HTTP MCP server, with no directory-check findings.
+Its only advice was to add a marketplace install command once a marketplace
+exists. This local command does not run the portal's security scan or policy
+review. The installed older CLI 2.1.92 rejects the newer directory listing
+fields; validation used an isolated current CLI without changing that install.
+
+The logo's C2PA provenance chunk contained printable `curl` and environment-like
+references that appeared to cause the portal's image findings. Only that chunk
+was removed. The remaining PNG chunks, compressed image data and decoded pixel
+stream are byte-identical to the original; the brand image is unchanged. The
+README no longer presents the image path as code. The Claude manifest now
+provides the icon, documentation, support, privacy and terms fields described in
+Anthropic's manifest reference. Revalidate the updated main commit in the portal
+to determine whether its findings are resolved.
+
+GitHub reports admin and push access for pramodbn27 on DeepAgentLabs/mcp-server.
+The portal's access failure therefore needs a fresh Claude GitHub authorization
+or permission check; changing repository collaborators is not indicated.

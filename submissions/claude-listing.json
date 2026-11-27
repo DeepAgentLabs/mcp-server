@@ -1,14 +1,14 @@
 {
-  "status": "Preparation only; not submitted",
+  "status": "Publisher confirmed MCP connector Published; plugin bundle in validation",
   "connector": {
-    "name": "DeepAgentLabs",
+    "name": "DeepAgentLabs - AgenticOps",
     "one_liner": "Build and assess agent workflows with DeepAgentLabs tools and versioned product references.",
     "description": "Use DeepAgentLabs tools and versioned product references to build and assess agent workflows. Discover documentation for AgenticLens, Agentic Evals, Agentic Chaos, Agentic Sidecar, AgenticOps Control Tower, AI Operations Specification, and the MCP server. Search complete API sections, inspect hosted compatibility, view fault catalogs, and validate supported operational artifacts. Four bundled skills guide integration, diagnosis, release checks, and fleet incident investigation. Sign in with an existing DeepAgentLabs API key through OAuth. Access follows your account permissions. Some workflows require uploaded evidence or a separately configured backend. Connecting does not install local packages or create a live runtime bridge; hosted execution of local chaos scripts is disabled.",
     "server_url": "https://mcp.deepagentlabs.io/mcp",
     "documentation_url": "https://deepagentlabs.io/mcp/docs/",
     "support_contact": "deepagentlabs@gmail.com",
-    "icon": "../../plugins/deepagentlabs/assets/logo.png",
-    "suggested_slug": "deepagentlabs",
+    "icon": "../plugins/deepagentlabs/assets/logo.png",
+    "suggested_slug": "deepagentlabs-agenticops",
     "authentication_required": true,
     "oauth_client_id": "deepagentlabs-claude-directory",
     "oauth_redirect_uri": "https://claude.ai/api/mcp/auth_callback",
@@ -19,7 +19,7 @@
     "repository": "https://github.com/DeepAgentLabs/mcp-server",
     "plugin_path": "plugins/deepagentlabs",
     "tracked_branch": "main",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "publisher": "PRAMOD BEGUR NAGARAJ",
     "contact": "deepagentlabs@gmail.com"
   },
@@ -29,8 +29,8 @@
   },
   "notes": [
     "Submit the remote MCP connector and the plugin bundle separately so the four skills are included.",
-    "The suggested slug is not reserved; check the portal before publication.",
-    "Custom connector success is confirmed by the user. The directory version and all tools still need portal validation.",
+    "The publisher confirmed connector slug deepagentlabs-agenticops in the portal.",
+    "Custom connector success and MCP directory publication confirmed by the publisher; plugin bundle requires its own portal validation.",
     "Do not copy credentials into this worksheet or a public ZIP.",
     "Legal and policy acknowledgments must be completed by the publisher after reading them."
   ]
