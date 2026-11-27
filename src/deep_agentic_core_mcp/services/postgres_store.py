@@ -60,11 +60,15 @@ class PostgresKeyStore:
         """Key, status and policy in one read, so a dispatch sees one consistent row."""
         if len(token) < 32 or len(token) > 256 or any(c.isspace() for c in token):
             return None
+        return self.authorize_digest(key_digest(token))
+
+    def authorize_digest(self, digest: str) -> Principal | None:
+        """Revalidate OAuth grants against the current account and key policy."""
         with self.pool.connection() as conn:
             row = conn.execute(
                 "SELECT user_id, permissions FROM mcp.users"
                 " WHERE key_hash = %s AND status = 'active'",
-                (key_digest(token),),
+                (digest,),
             ).fetchone()
         return Principal(str(row[0]), AccessPolicy.load(row[1])) if row else None
 

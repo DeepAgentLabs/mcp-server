@@ -1,12 +1,12 @@
 # deep-agentic-core-mcp
 
-## Current release: 1.1.2
+## Current release: 1.2.0
 
-The 1.1.2 documentation patch refreshes the bundled AI-readable references for
-all seven products to their 1.1.0 documentation (MCP Server: 1.1.2), so coding
-agents reading through `core.docs_*` see current docs. Runtime behavior is
-unchanged from 1.1.0.
-
+Version 1.2.0 adds opt-in OAuth account linking with rotating refresh tokens and
+four shared workflow skills for ChatGPT/Codex and Claude. Local API-key clients
+remain supported. The MCP AI-readable reference includes the new APIs and setup.
+OAuth requires an operator rollout and registered clients; publishing this release
+does not deploy the hosted service or establish live host acceptance.
 
 The local integration candidate adds offline validation for AIOS 0.4/0.6/0.8
 draft families, held-byte provenance resolution and native access audit exports.
@@ -39,6 +39,26 @@ core.docs_read {"product":"agentic-evals","limit":12000}
 See [the seven-product reference guide](docs/ecosystem-ai-reference.md) for resource
 URIs, pagination, source pins, version boundaries and a copilot build example.
 Hosted users receive these capabilities when the operator deploys this MCP version.
+
+## ChatGPT account linking (1.2.0)
+
+The hosted HTTP server can opt in to OAuth authorization code with PKCE for
+ChatGPT while keeping API keys for local applications. Both credentials use the
+same account and hosted permissions. Rotating refresh tokens renew access
+automatically, with 30-day inactivity and 90-day maximum limits by default.
+See [ChatGPT OAuth setup](docs/chatgpt-oauth.md)
+for exact client registration, shared storage, consent and token lifecycle.
+This source change is not a hosted rollout or directory publication.
+
+## Workflow skills (plugin 0.1.0)
+
+The source plugin at `plugins/deepagentlabs/` adds four workflows: build with the
+ecosystem, diagnose a workflow, check release readiness and investigate a fleet
+incident. Shared ChatGPT/Codex and Claude skill instructions retrieve the existing
+seven-product AI-readable references through the documentation tools, with no
+second copy of the manuals. See [plugin skills and setup](docs/plugin-skills.md).
+Plugin source and a ZIP are distributed with this release; installation, directory
+publication and live host acceptance remain separate work.
 
 ## Coordinated 1.0.0 milestone
 

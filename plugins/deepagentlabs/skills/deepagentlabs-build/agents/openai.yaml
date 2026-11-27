@@ -1,0 +1,3 @@
+interface:
+  display_name: "Build with DeepAgentLabs"
+  short_description: "Build integrations from product AI references"

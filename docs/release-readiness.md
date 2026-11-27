@@ -84,7 +84,7 @@ not new mandatory dependencies. Older integrations degrade according to their
 adapter capability checks; only Chaos 0.5 has an explicit minimum-version CI lane.
 
 Independent security/deployment acceptance, distributed runtime discovery,
-remote sandboxed chaos, verified-email recovery/OAuth/billing and stable API
+remote sandboxed chaos, verified-email recovery/billing and live ChatGPT OAuth acceptance and stable API
 freezing remain separate work. AIOS and producer-native schemas retain their
 own maturity and versioning. This release makes no production certification,
 exhaustive evidence coverage or guaranteed cancellation claim.

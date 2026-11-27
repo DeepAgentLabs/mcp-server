@@ -52,3 +52,17 @@ DROP POLICY IF EXISTS service_access ON mcp.signup_counters;
 CREATE POLICY service_access ON mcp.users TO mcp_service USING (true) WITH CHECK (true);
 CREATE POLICY service_access ON mcp.sessions TO mcp_service USING (true) WITH CHECK (true);
 CREATE POLICY service_access ON mcp.signup_counters TO mcp_service USING (true) WITH CHECK (true);
+
+-- Opt-in OAuth: codes, tokens, ancestry and connection records use hashed indexes.
+CREATE TABLE IF NOT EXISTS mcp.oauth_records (
+  kind text NOT NULL,
+  secret_hash text NOT NULL,
+  payload text NOT NULL,
+  expires_at timestamptz NOT NULL,
+  PRIMARY KEY (kind, secret_hash)
+);
+CREATE INDEX IF NOT EXISTS oauth_records_expires_at ON mcp.oauth_records (expires_at);
+ALTER TABLE mcp.oauth_records ENABLE ROW LEVEL SECURITY;
+GRANT SELECT, INSERT, UPDATE, DELETE ON mcp.oauth_records TO mcp_service;
+DROP POLICY IF EXISTS service_access ON mcp.oauth_records;
+CREATE POLICY service_access ON mcp.oauth_records TO mcp_service USING (true) WITH CHECK (true);

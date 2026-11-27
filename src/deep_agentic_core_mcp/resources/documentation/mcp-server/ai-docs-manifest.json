@@ -4,19 +4,19 @@
   "distribution": "deep-agentic-core-mcp",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "f493404244d24cf1fd39aff469ba51f0f6d38e3c73d7eb5abc49722fc3585e95",
+  "sha256": "8aadb242bc235cf7a922b87d5f8fa5eab25ec99fba995158f626341b3eb34e76",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
     {
       "path": "pyproject.toml",
       "kind": "package-metadata",
-      "sha256": "2e6d77b7cc5dec727ddb674175c1e88f4473e6b1ba95a5ff951855bd89319fd4"
+      "sha256": "78b0ed1bccce798917c09b07ad3e43dee76b483c694a1f063c3ca20fecddab9b"
     },
     {
       "path": "docs/ai-docs.json",
       "kind": "source-selection",
-      "sha256": "8f4fb662b8c23fa4c60b8fc0f23061245f7dec5fe22e81316f25825f72306036"
+      "sha256": "c7076ff5fe1aeb17c2c43816c22d711407bf154cbccbe2370cffcb9df2419c47"
     },
     {
       "path": "docs/ai-reference-index.md",
@@ -36,12 +36,12 @@
     {
       "path": "docs/api-reference.md",
       "kind": "reference",
-      "sha256": "153be873423c016d61db56e7474c4c1f6f577ee39c1cbc289165052b2592eb3e"
+      "sha256": "b2e3adbe083b6d365b15a30d71bfc24ebf5cf9c27ab7d542c401455a0d98a931"
     },
     {
       "path": "docs/ecosystem-ai-reference.md",
       "kind": "reference",
-      "sha256": "4f4051c7c17925bc69f04045550cc44e9c37f404efe651926c196cd2fc23f485"
+      "sha256": "40faef39677e2aa6576d1c8d07713b608fda6fec3c37c21527b826814f9eb97c"
     },
     {
       "path": "docs/tools.md",
@@ -61,12 +61,22 @@
     {
       "path": "docs/configuration.md",
       "kind": "reference",
-      "sha256": "efc23257a02b9a336d3f1cb5b3cc8848ec19c69bd17e3160d5d1a954a842ea62"
+      "sha256": "ff80ab593e8d8c50f6188f3e6127e9ebbd66f0026e0e0b50f1aaa32f0a84f45e"
     },
     {
       "path": "docs/remote-hosting.md",
       "kind": "reference",
-      "sha256": "bb3f9560f134630cb6deefff92eab9920475d579f07f2754d4b87073d9ee0128"
+      "sha256": "37f2cf60f0cf3e25494d3a8fcb5d2d3383592aaeebfe545a257f40a74ad6289e"
+    },
+    {
+      "path": "docs/chatgpt-oauth.md",
+      "kind": "reference",
+      "sha256": "56256b0b7115ee1e76d8cec707928939cc5a4733106129d480a477b534fdb527"
+    },
+    {
+      "path": "docs/plugin-skills.md",
+      "kind": "reference",
+      "sha256": "f4c6d496d0790bda4fabcce2dac23738c9eff2ec2216f42abe7a1ea65b3b2c5b"
     },
     {
       "path": "docs/access-control.md",
@@ -121,12 +131,12 @@
     {
       "path": "docs/release-readiness.md",
       "kind": "reference",
-      "sha256": "08c4c6355e35081f9b2781218e43e074b27edac53301b9a593d9721870713f0a"
+      "sha256": "6249c130795892edf155a851c3efeff3ff67484e5b05ab2e690e794d17d9265f"
     },
     {
       "path": "docs/user-guide.md",
       "kind": "reference",
-      "sha256": "e85a8d87275f7b14870756ea54b35ec63a77d4b0e72f31983d2e3190fe54424d"
+      "sha256": "8325b883842ae45e47e36dabbdbc0475fbe1c520ffa8a77c2593a871ee1f6a65"
     },
     {
       "path": "docs/getting-started.md",
@@ -156,7 +166,7 @@
     {
       "path": "docs/limitations.md",
       "kind": "reference",
-      "sha256": "88aad001a94534568fd2cf865fe6b791ef95cdaad06bb251d6e1cd1577095ab8"
+      "sha256": "4cf18456d08d5a92df1d3dd6fe0d2b158b61dc573d3343aabe4dfa136e9662b8"
     },
     {
       "path": "docs/aios-0.6.1.md",
@@ -251,7 +261,7 @@
     {
       "path": "src/deep_agentic_core_mcp/__init__.py",
       "kind": "source-contract",
-      "sha256": "899a56152dee55ab0781278dda2e950f68e8eb7f969eccebc4e5cb5c2dcee481"
+      "sha256": "15e8278354748051560b9e26121704674bf43e8fa4c927ad7abe106c4229a6ce"
     },
     {
       "path": "src/deep_agentic_core_mcp/adapters/__init__.py",
@@ -292,6 +302,11 @@
       "path": "src/deep_agentic_core_mcp/config.py",
       "kind": "source-contract",
       "sha256": "ab135751eaa90e16facbba46c231e380cf8baa8c252014d983fd9b0852660e5c"
+    },
+    {
+      "path": "src/deep_agentic_core_mcp/oauth.py",
+      "kind": "source-contract",
+      "sha256": "64e36d4a6f5881b56dc385b0445d303ab85881166400c52120e3b91107864320"
     },
     {
       "path": "src/deep_agentic_core_mcp/prompts/__init__.py",
@@ -351,7 +366,7 @@
     {
       "path": "src/deep_agentic_core_mcp/services/api_keys.py",
       "kind": "source-contract",
-      "sha256": "47765f3e28946c9981a5d1064fe17caabb2afe0385e114609347581952604672"
+      "sha256": "0ff9d26ea7179a55ad1f007fc9260af5592bce67b29a528f69b4885a2bb89974"
     },
     {
       "path": "src/deep_agentic_core_mcp/services/compatibility.py",
@@ -374,9 +389,14 @@
       "sha256": "b4d35be5be7d455f3f823c14d1deb0575bb9028499c380f902947e1d926b3c58"
     },
     {
+      "path": "src/deep_agentic_core_mcp/services/oauth_store.py",
+      "kind": "source-contract",
+      "sha256": "7b996222fdb98eedfde84d93e6db754a7243d7825334ebfc7bc6db3fb8af55b1"
+    },
+    {
       "path": "src/deep_agentic_core_mcp/services/postgres_store.py",
       "kind": "source-contract",
-      "sha256": "bf575952d3b8a5859b6f090e51e3c0b2364bc82af541909e83bc827e472af93c"
+      "sha256": "d62604a7c464a9691d861286b645ec4c6cfd5f97304c95e19e001f3021d21088"
     },
     {
       "path": "src/deep_agentic_core_mcp/services/registry.py",
@@ -481,7 +501,7 @@
     {
       "path": "src/deep_agentic_core_mcp/transport_http.py",
       "kind": "source-contract",
-      "sha256": "69d0050326ba31548ff742d4ac5429634ba5704620bba1eec1985f806a28b8a3"
+      "sha256": "1a5680226caebdf4bb98e32e0bfb1d465a8d8315a8298bc06fb23f9c84f7427c"
     },
     {
       "path": "src/deep_agentic_core_mcp/resources/aios/specification/v0.4/schemas/common.schema.json",

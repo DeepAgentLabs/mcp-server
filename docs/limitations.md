@@ -62,6 +62,16 @@ are per worker, so add a hosting-layer limit for fleet-wide caps. Signup keys ar
 shown once and cannot be recovered, and display names are unverified labels.
 `/healthz` checks storage readiness, not every optional adapter.
 
+## OAuth account linking
+
+OAuth is opt-in and requires registered clients, shared storage and a hosted
+rollout. Access tokens expire after one hour and can renew using rotating refresh
+tokens. Connections expire after 30 inactive days or 90 total days by default;
+replayed refresh tokens revoke the connection. Users authenticate the consent page using their existing API key. Key rotation
+or revocation invalidates linked OAuth tokens. OAuth links hosted accounts; it
+does not establish connectivity to a user's local Python runtime. Live ChatGPT
+acceptance remains an operator check. See [OAuth setup](chatgpt-oauth.md).
+
 ## Evidence
 
 Lens snapshot authentication verifies supplied evidence. Coverage remains

@@ -9,6 +9,11 @@ by hand. The base server bundles each product's **AI Reference
 schemas and examples. No optional producer package, sibling checkout, network
 fetch or API credential is needed to retrieve these public references locally.
 
+The optional [workflow skills](plugin-skills.md) use these same references for
+ecosystem implementation, run diagnosis, release checks and Tower investigation.
+Their source plugin includes portable and Claude manifests; it does not duplicate
+the full manuals or establish an authenticated connection by itself.
+
 ## Copilot workflow
 
 For example, ask your connected copilot:

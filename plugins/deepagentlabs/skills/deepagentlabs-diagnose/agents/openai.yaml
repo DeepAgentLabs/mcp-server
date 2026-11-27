@@ -1,0 +1,3 @@
+interface:
+  display_name: "Diagnose agent workflows"
+  short_description: "Explain failures using recorded agent evidence"
