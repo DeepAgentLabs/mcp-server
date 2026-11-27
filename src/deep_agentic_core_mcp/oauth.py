@@ -256,16 +256,25 @@ class OAuthServer:
         """Render a script-free, browser-compatible consent form."""
         client = self.config.clients[client_id]
         content = files("deep_agentic_core_mcp").joinpath("web/oauth.html").read_text()
+        is_chatgpt = any(urlsplit(uri).hostname == "chatgpt.com" for uri in client["redirect_uris"])
+        client_icon = (
+            '<img src="/oauth-assets/openai.svg" alt="" width="36" height="36">'
+            if is_chatgpt
+            else html.escape(client["name"][:1].upper(), quote=True)
+        )
         values = {
             "client_name": html.escape(client["name"], quote=True),
-            "client_initial": html.escape(client["name"][:1].upper(), quote=True),
+            "client_icon": client_icon,
+            "asset_version": hashlib.sha256(
+                files("deep_agentic_core_mcp").joinpath("web/oauth.css").read_bytes()
+            ).hexdigest()[:12],
             "pending": html.escape(pending, quote=True),
             "error": '<p class="form-error" role="alert">' + html.escape(error) + "</p>"
             if error
             else "",
         }
         content = re.sub(
-            r"\{\{(client_name|client_initial|pending|error)\}\}",
+            r"\{\{(client_name|client_icon|asset_version|pending|error)\}\}",
             lambda match: values[match[1]],
             content,
         )
@@ -275,7 +284,9 @@ class OAuthServer:
         # Chromium also checks form redirects against form-action. Permit only
         # the registered client's callback origins; exact redirects are validated separately.
         callbacks = sorted({"https://" + urlsplit(uri).netloc for uri in client["redirect_uris"]})
-        headers["Content-Security-Policy"] += " " + " ".join(callbacks) + "; style-src 'self'"
+        headers["Content-Security-Policy"] += (
+            " " + " ".join(callbacks) + "; style-src 'self'; img-src 'self'"
+        )
         return HTMLResponse(content, status_code=status, headers=headers)
 
     async def stylesheet(self, request: Request) -> Response:
@@ -284,6 +295,21 @@ class OAuthServer:
             files("deep_agentic_core_mcp").joinpath("web/oauth.css").read_text(),
             media_type="text/css",
             headers={"Cache-Control": "public, max-age=3600", "X-Content-Type-Options": "nosniff"},
+        )
+
+    async def branding_asset(self, request: Request) -> Response:
+        assets = {"deepagentlabs.png": "image/png", "openai.svg": "image/svg+xml"}
+        name = request.path_params["name"]
+        if name not in assets:
+            return Response(status_code=404)
+        return Response(
+            files("deep_agentic_core_mcp").joinpath("web/" + name).read_bytes(),
+            media_type=assets[name],
+            headers={
+                "Cache-Control": "public, max-age=3600",
+                "X-Content-Type-Options": "nosniff",
+                "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'",
+            },
         )
 
     def _redirect(self, pending: dict[str, Any], **result: str) -> Response:
@@ -519,6 +545,7 @@ class OAuthServer:
             Route("/.well-known/oauth-protected-resource/mcp", guarded(self.protected_metadata)),
             Route("/.well-known/oauth-authorization-server", guarded(self.authorization_metadata)),
             Route("/oauth.css", guarded(self.stylesheet)),
+            Route("/oauth-assets/{name}", guarded(self.branding_asset)),
             Route("/oauth/authorize", guarded(self.authorize_page), methods=["GET"]),
             Route("/oauth/authorize", guarded(self.approve), methods=["POST"]),
             Route("/oauth/token", guarded(self.token), methods=["POST"]),

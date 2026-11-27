@@ -32,9 +32,7 @@ def main() -> None:
     parser.add_argument("--browser-executable")
     parser.add_argument("--screenshot-dir")
     args = parser.parse_args()
-    config = OAuthConfig(
-        ORIGIN, {"browser-test": {"name": "Browser test", "redirect_uris": [CALLBACK]}}
-    )
+    config = OAuthConfig(ORIGIN, {"browser-test": {"name": "ChatGPT", "redirect_uris": [CALLBACK]}})
     app = create_app(
         api_keys={"browser-user": KEY},
         store=MemorySessionStore(),
@@ -92,6 +90,16 @@ def main() -> None:
                 }
                 response = page.goto(ORIGIN + "/oauth/authorize?" + urlencode(query))
                 assert response is not None and response.status == 200
+                images = page.locator(".connection-icons img")
+                assert images.count() == 2
+                for element in images.all():
+                    assert element.evaluate("img => img.complete && img.naturalWidth > 0")
+                assert (
+                    page.locator(".connection-arrow").evaluate(
+                        "el => getComputedStyle(el).borderTopStyle"
+                    )
+                    == "dotted"
+                )
                 signup = page.get_by_role("link", name="Create New API Key")
                 assert signup.get_attribute("target") == "_blank"
                 assert signup.get_attribute("rel") == "noopener noreferrer"
