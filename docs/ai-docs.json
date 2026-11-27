@@ -43,6 +43,14 @@
       "path": "docs/remote-hosting.md"
     },
     {
+      "title": "ChatGPT OAuth account linking and refresh tokens",
+      "path": "docs/chatgpt-oauth.md"
+    },
+    {
+      "title": "Shared ChatGPT and Claude workflow skills",
+      "path": "docs/plugin-skills.md"
+    },
+    {
       "title": "Hosted access control",
       "path": "docs/access-control.md"
     },

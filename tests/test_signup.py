@@ -237,3 +237,16 @@ async def test_dynamic_key_authentication_and_mcp_identity(backend, monkeypatch)
 
         monkeypatch.setattr(backend, "authorize", unavailable)
         assert (await call(second["api_key"])).status_code == 503
+
+
+def test_oauth_digest_binding_follows_dynamo_rotation_and_revocation(backend):
+    from deep_agentic_core_mcp.services.api_keys import key_digest
+
+    issued = backend.issue("OAuth user")
+    user, key = issued["user_id"], issued["api_key"]
+    assert backend.authorize_digest(key_digest(key)).user == user
+    replacement = backend.rotate(user, key)["api_key"]
+    assert backend.authorize_digest(key_digest(key)) is None
+    assert backend.authorize_digest(key_digest(replacement)).user == user
+    backend.revoke(user, replacement)
+    assert backend.authorize_digest(key_digest(replacement)) is None

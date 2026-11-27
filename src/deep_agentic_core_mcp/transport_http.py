@@ -1,7 +1,7 @@
 """Authenticated, stateless HTTP access to the shared MCP tool surface.
 
-TLS terminates at the hosting layer. Keys are provisioned per user; this is
-bearer-key authentication, not an OAuth authorization server.
+TLS terminates at the hosting layer. Per-user API keys remain supported;
+opt-in OAuth links ChatGPT to the same account and tool policy.
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ import json
 import os
 import time
 from collections.abc import AsyncIterator, Mapping
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from urllib.parse import urlsplit
 
 from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
@@ -30,6 +30,7 @@ from deep_agentic_core_mcp.services import access_evidence
 from deep_agentic_core_mcp.services.access_policy import authorize
 from deep_agentic_core_mcp.services.api_keys import DynamoKeyStore, KeyStore, StaticKeyStore
 from deep_agentic_core_mcp.services.containment import SidecarBridge
+from deep_agentic_core_mcp.services.oauth_store import OAuthStore
 from deep_agentic_core_mcp.services.postgres_store import (
     PostgresKeyStore,
     PostgresSessionStore,
@@ -38,9 +39,14 @@ from deep_agentic_core_mcp.services.postgres_store import (
 )
 from deep_agentic_core_mcp.services.remote_sessions import RedisSessionStore, SessionStore
 
+if TYPE_CHECKING:
+    from deep_agentic_core_mcp.oauth import OAuthConfig
+
 
 def create_app(
     *,
+    oauth_config: OAuthConfig | None = None,
+    oauth_store: OAuthStore | None = None,
     operator_store: KeyStore | None = None,
     sidecar_bridge: SidecarBridge | None = None,
     api_keys: Mapping[str, Any] | None = None,
@@ -78,6 +84,8 @@ def create_app(
         pool = connect(database_url, max_size=max_concurrent_total + 4)
     try:
         return _build_app(
+            oauth_config=oauth_config,
+            oauth_store=oauth_store,
             operator_store=operator_store,
             sidecar_bridge=sidecar_bridge,
             pool=pool,
@@ -98,6 +106,8 @@ def create_app(
 
 def _build_app(
     *,
+    oauth_config: OAuthConfig | None,
+    oauth_store: OAuthStore | None,
     operator_store: KeyStore | None,
     sidecar_bridge: SidecarBridge | None,
     pool: Any,
@@ -133,6 +143,29 @@ def _build_app(
                 " for shared session storage"
             )
     session_store = store
+    oauth = None
+    raw_clients = os.environ.get("DEEP_AGENTIC_CORE_MCP_OAUTH_CLIENTS")
+    if oauth_config is not None or raw_clients is not None:
+        from deep_agentic_core_mcp.oauth import OAuthServer, config_from_environment
+        from deep_agentic_core_mcp.services.oauth_store import PostgresOAuthStore, RedisOAuthStore
+
+        if oauth_config is None:
+            oauth_config = config_from_environment(
+                os.environ.get("DEEP_AGENTIC_CORE_MCP_PUBLIC_URL", ""), raw_clients or ""
+            )
+        if oauth_store is None:
+            if pool is not None:
+                oauth_store = PostgresOAuthStore(pool)
+            elif isinstance(session_store, RedisSessionStore):
+                oauth_store = RedisOAuthStore(session_store.client)
+            else:
+                raise ValueError("OAuth requires PostgreSQL or Redis shared storage")
+        oauth = OAuthServer(oauth_config, oauth_store, auth_store)
+    elif oauth_store is not None:
+        raise ValueError("OAuth storage requires OAuth configuration")
+    authenticate = (
+        oauth.authorize_token if oauth is not None else functools.partial(authorize, auth_store)
+    )
     config.enable_remote_transport()
     security_settings = TransportSecuritySettings(
         allowed_hosts=[host.lower() for host in allowed_hosts]
@@ -160,7 +193,7 @@ def _build_app(
             scheme, _, token = authorization.partition(" ")
             try:
                 principal = (
-                    await asyncio.to_thread(authorize, auth_store, token)
+                    await asyncio.to_thread(authenticate, token)
                     if scheme.lower() == "bearer"
                     else None
                 )
@@ -173,7 +206,9 @@ def _build_app(
                 await PlainTextResponse(
                     "Authentication required",
                     status_code=401,
-                    headers={"WWW-Authenticate": 'Bearer realm="mcp"'},
+                    headers={
+                        "WWW-Authenticate": oauth.challenge if oauth else 'Bearer realm="mcp"'
+                    },
                 )(scope, receive, send)
                 return
             user = principal.user
@@ -198,7 +233,7 @@ def _build_app(
             scope["deep_agentic_store"] = session_store
             scope["deep_agentic_principal"] = principal
             # Tool dispatch calls this again, after any wait, to re-check the key.
-            scope["deep_agentic_authorizer"] = functools.partial(authorize, auth_store, token)
+            scope["deep_agentic_authorizer"] = functools.partial(authenticate, token)
             try:
                 await session_manager.handle_request(scope, receive, send)
             finally:
@@ -210,6 +245,8 @@ def _build_app(
         try:
             ready = await asyncio.to_thread(session_store.ping)
             ready = ready and await asyncio.to_thread(auth_store.ping)
+            if oauth is not None:
+                ready = ready and await asyncio.to_thread(oauth.records.ping)
         except Exception:
             ready = False
         return PlainTextResponse(
@@ -224,6 +261,8 @@ def _build_app(
                 raise RuntimeError("Session storage is unavailable")
             if not await asyncio.to_thread(auth_store.ping):
                 raise RuntimeError("Authentication storage is unavailable")
+            if oauth is not None and not await asyncio.to_thread(oauth.records.ping):
+                raise RuntimeError("OAuth storage is unavailable")
             async with session_manager.run():
                 yield
         finally:
@@ -232,6 +271,8 @@ def _build_app(
 
     endpoint = MCPEndpoint()
     routes = [Route("/healthz", healthz), Route("/mcp", endpoint), Route("/mcp/", endpoint)]
+    if oauth is not None:
+        routes += oauth.routes()
     if isinstance(auth_store, (DynamoKeyStore, PostgresKeyStore)):
         from deep_agentic_core_mcp.signup import RedisSignupLimiter, SignupLimiter, signup_routes
 

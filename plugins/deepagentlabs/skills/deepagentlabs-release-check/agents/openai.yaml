@@ -1,0 +1,3 @@
+interface:
+  display_name: "Check agent release readiness"
+  short_description: "Assess release gates without weakening evidence"
