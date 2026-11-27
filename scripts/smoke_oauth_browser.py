@@ -9,6 +9,8 @@ from __future__ import annotations
 import argparse
 import base64
 import hashlib
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from threading import Thread
 from urllib.parse import parse_qs, urlencode, urlsplit
 
 from playwright.sync_api import Request as BrowserRequest
@@ -28,6 +30,61 @@ CALLBACKS = {
 }
 KEY = "a" * 40
 VERIFIER = "v" * 64
+
+
+def check_portal_return(browser, csp: str) -> None:
+    """Follow actual HTTP redirects; routed browser mocks bypass later hops."""
+
+    class Handler(BaseHTTPRequestHandler):
+        def log_message(self, *args):
+            pass
+
+        def do_GET(self):
+            if self.path == "/callback":
+                self.send_response(303)
+                self.send_header("Location", portal)
+                self.end_headers()
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Cache-Control", "no-store")
+            if self.path == "/":
+                self.send_header("Content-Security-Policy", local_csp)
+            self.end_headers()
+            self.wfile.write(
+                b"Portal return received"
+                if self.path == "/portal"
+                else b'<form method="post"><button>Allow access</button></form>'
+            )
+
+        def do_POST(self):
+            self.send_response(303)
+            self.send_header("Location", callback)
+            self.end_headers()
+
+    server = ThreadingHTTPServer(("0.0.0.0", 0), Handler)
+    server.daemon_threads = True
+    port = server.server_port
+    origin = f"http://127.0.0.1:{port}"
+    callback = f"http://localhost:{port}/callback"
+    portal = f"http://127.0.0.2:{port}/portal"
+    local_csp = csp.replace("https://chatgpt.com", f"http://localhost:{port}").replace(
+        "https://platform.openai.com", f"http://127.0.0.2:{port}"
+    )
+    thread = Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    page = browser.new_page()
+    try:
+        page.goto(origin + "/")
+        page.get_by_role("button", name="Allow access").click(no_wait_after=True)
+        page.wait_for_url(portal, timeout=5000)
+        assert page.locator("body").inner_text() == "Portal return received"
+        print("Chromium ChatGPT callback-to-portal redirect chain verified")
+    finally:
+        page.close()
+        server.shutdown()
+        server.server_close()
+        thread.join()
 
 
 def main() -> None:
@@ -99,6 +156,8 @@ def main() -> None:
                 }
                 response = page.goto(ORIGIN + "/oauth/authorize?" + urlencode(query))
                 assert response is not None and response.status == 200
+                if args.provider == "chatgpt" and decision == "allow":
+                    check_portal_return(browser, response.headers["content-security-policy"])
                 images = page.locator(".connection-icons img")
                 assert images.count() == 2
                 for element in images.all():

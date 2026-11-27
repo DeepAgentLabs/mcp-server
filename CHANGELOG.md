@@ -22,6 +22,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+- Permit the ChatGPT OAuth callback to return submission logins to the OpenAI
+  developer portal under the consent form CSP. Verify the full redirect chain
+  in Chromium, preventing a blocked first click followed by a consumed-form error.
+
 - Bind each OAuth consent attempt to its own secure browser cookie so opening
   or completing another sign-in tab does not invalidate pending consent.
 

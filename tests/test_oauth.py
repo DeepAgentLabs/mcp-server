@@ -578,7 +578,7 @@ async def test_consent_page_headers_styles_and_retry(setup):
         page = await client.get("/oauth/authorize", params=params())
         assert page.headers["Referrer-Policy"] == "same-origin"
         csp = page.headers["Content-Security-Policy"]
-        assert "form-action 'self' https://chatgpt.com" in csp
+        assert "form-action 'self' https://chatgpt.com https://platform.openai.com;" in csp
         assert "style-src 'self'" in csp and "default-src 'none'" in csp
         assert "img-src 'self'" in csp
         assert re.search(r"/oauth.css\?v=[a-f0-9]{12}", page.text)

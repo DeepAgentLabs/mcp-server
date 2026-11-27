@@ -301,7 +301,12 @@ class OAuthServer:
         headers = {**_HEADERS, "Referrer-Policy": "same-origin"}
         # Chromium also checks form redirects against form-action. Permit only
         # the registered client's callback origins; exact redirects are validated separately.
-        callbacks = sorted({"https://" + urlsplit(uri).netloc for uri in client["redirect_uris"]})
+        callback_origins = {"https://" + urlsplit(uri).netloc for uri in client["redirect_uris"]}
+        if "https://chatgpt.com" in callback_origins:
+            # The ChatGPT callback relays submission logins back to the developer
+            # portal. Chromium checks every hop of a form's redirect chain.
+            callback_origins.add("https://platform.openai.com")
+        callbacks = sorted(callback_origins)
         headers["Content-Security-Policy"] += (
             " " + " ".join(callbacks) + "; style-src 'self'; img-src 'self'"
         )
