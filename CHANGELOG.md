@@ -15,6 +15,7 @@ This project follows [Semantic Versioning](https://semver.org/).
   authentication before consuming authorization codes, refreshing connections
   or revoking tokens. Existing public clients continue using PKCE without a
   client secret. Discovery advertises the configured authentication methods.
+  A separate directory-client setting merges without overwriting public clients.
 - Prepare public plugin 0.1.2 metadata, worldwide availability and no-commerce
   declarations, five positive and three negative draft review cases, a separate
   candidate ZIP builder, demo walkthrough and factual privacy preparation notes.

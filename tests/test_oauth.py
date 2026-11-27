@@ -12,7 +12,7 @@ import fakeredis
 import httpx
 import pytest
 
-from deep_agentic_core_mcp.oauth import COOKIE, OAuthConfig, OAuthServer
+from deep_agentic_core_mcp.oauth import COOKIE, OAuthConfig, OAuthServer, config_from_environment
 from deep_agentic_core_mcp.services.access_policy import AccessPolicy
 from deep_agentic_core_mcp.services.api_keys import StaticKeyStore, key_digest
 from deep_agentic_core_mcp.services.oauth_store import MemoryOAuthStore, RedisOAuthStore
@@ -729,3 +729,25 @@ def test_reject_invalid_confidential_secret_digest(digest):
             ORIGIN,
             {"test": {"name": "Test", "redirect_uris": [CALLBACK], "client_secret_sha256": digest}},
         )
+
+
+def test_separate_directory_registration_preserves_existing_public_clients(monkeypatch):
+    directory = {
+        "directory": {
+            "name": "Claude",
+            "redirect_uris": ["https://claude.ai/api/mcp/auth_callback"],
+            "client_secret_sha256": hashlib.sha256(CLIENT_SECRET.encode()).hexdigest(),
+        }
+    }
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_OAUTH_DIRECTORY_CLIENTS", json.dumps(directory))
+    config = config_from_environment(ORIGIN, json.dumps(CLIENTS))
+    assert config.clients["chatgpt-test"] == CLIENTS["chatgpt-test"]
+    assert config.clients["directory"] == directory["directory"]
+    assert "directory" not in CLIENTS
+
+
+@pytest.mark.parametrize("directory", [[], {"x": {}}, {"chatgpt-test": {}}])
+def test_reject_unsafe_directory_registration(monkeypatch, directory):
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_OAUTH_DIRECTORY_CLIENTS", json.dumps(directory))
+    with pytest.raises(ValueError):
+        config_from_environment(ORIGIN, json.dumps(CLIENTS))

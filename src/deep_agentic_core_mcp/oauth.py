@@ -620,9 +620,19 @@ class OAuthServer:
 def config_from_environment(public_url: str, raw_clients: str) -> OAuthConfig:
     """Validate opt-in operator settings; no implicit or wildcard callback registration."""
     clients = json.loads(raw_clients)
+    directory = json.loads(os.environ.get("DEEP_AGENTIC_CORE_MCP_OAUTH_DIRECTORY_CLIENTS", "{}"))
+    if not isinstance(clients, dict) or not isinstance(directory, dict):
+        raise ValueError("OAuth client registrations must be objects")
+    if clients.keys() & directory.keys():
+        raise ValueError("Directory OAuth clients cannot overwrite existing clients")
+    if any(
+        not isinstance(entry, dict) or "client_secret_sha256" not in entry
+        for entry in directory.values()
+    ):
+        raise ValueError("Directory OAuth clients require a client-secret digest")
     return OAuthConfig(
         public_url,
-        clients,
+        {**clients, **directory},
         trusted_proxy_hops=int(os.environ.get("DEEP_AGENTIC_CORE_MCP_TRUSTED_PROXY_HOPS", "0")),
         refresh_idle_seconds=int(
             os.environ.get("DEEP_AGENTIC_CORE_MCP_OAUTH_REFRESH_IDLE", "2592000")

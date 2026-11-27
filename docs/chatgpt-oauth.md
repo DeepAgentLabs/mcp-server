@@ -204,3 +204,12 @@ The `submissions/` directory contains preparation notes, review cases and the
 demo walkthrough. `scripts/prepare_submission.py` builds a separate candidate
 copy and reports missing materials. Public policy URLs, recording, reviewer
 access and platform attestations are still required before actual submission.
+
+
+For a separate directory registration without replacing existing custom-client
+settings, set `DEEP_AGENTIC_CORE_MCP_OAUTH_DIRECTORY_CLIENTS` to a JSON object
+with the same per-client fields and a required `client_secret_sha256`. The
+server merges these entries with `DEEP_AGENTIC_CORE_MCP_OAUTH_CLIENTS` at startup,
+rejects duplicate client IDs, and never overwrites a public-client registration.
+This optional setting contains only the digest; the plaintext secret belongs
+in the publisher's protected credential store and platform's secure field.
