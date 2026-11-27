@@ -107,6 +107,10 @@ def main() -> None:
                 assert lines.count() == 2
                 for line in lines.all():
                     assert line.evaluate("el => getComputedStyle(el).borderTopStyle") == "dotted"
+                for label, path in [("Privacy Policy", "privacy"), ("Terms of Service", "terms")]:
+                    link = page.get_by_role("link", name=label, exact=True)
+                    assert link.get_attribute("href") == "https://deepagentlabs.io/" + path + "/"
+                    assert link.get_attribute("target") == "_blank"
                 signup = page.get_by_role("link", name="Create New API Key")
                 assert signup.get_attribute("target") == "_blank"
                 assert signup.get_attribute("rel") == "noopener noreferrer"

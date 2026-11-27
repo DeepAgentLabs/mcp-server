@@ -608,7 +608,7 @@ Check the client's executable/environment, optional adapter readiness and select
 
 Source: [docs/api-reference.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/api-reference.md)
 
-**Version:** 1.2.1
+**Version:** 1.3.0
 
 The server's public interface is the MCP protocol: tools, resources and prompt templates, served over local stdio or authenticated HTTP. This page lists every interface in one place. For each tool's exact input schema, prerequisites and examples, see the [generated tool catalog](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md).
 
@@ -3437,6 +3437,46 @@ Brand assets are served from a fixed allowlist under `/oauth-assets/`; no
 third-party image requests are made. A CSS content hash in the stylesheet URL
 ensures branding updates load when the consent form is reopened.
 
+
+## Directory clients and public submission
+
+Existing custom connectors can keep their public-client registrations. To
+configure a separate confidential client for a directory, add the optional
+`client_secret_sha256` field to that client's existing `name` and
+`redirect_uris` entry in `DEEP_AGENTIC_CORE_MCP_OAUTH_CLIENTS`. Its value is the
+64-character lowercase SHA-256 digest of a strong generated secret. Store the
+actual secret in a password manager and enter it only in the platform's secure
+OAuth client field, never in the plugin ZIP or public repository.
+
+Confidential clients authenticate token and revocation requests using
+`client_secret_basic` or `client_secret_post`. Basic credentials use form-URL
+encoding before Base64 encoding. Mixed methods, mismatched client IDs, missing
+or incorrect secrets are rejected before grant state changes. Public clients
+continue using `none`; they cannot use an arbitrary client secret to impersonate
+a confidential client. PKCE and exact registered redirects still apply.
+
+Anthropic's directory can hold the separate confidential client for the exact
+hosted URL and the fixed `https://claude.ai/api/mcp/auth_callback` callback.
+Claude Code's loopback/CIMD registration is a separate unsupported flow; do not
+claim that directory credentials make native Claude Code OAuth work. OpenAI's
+package declares its provided client and authentication method in `mcp.json`.
+Register the exact callback shown by the saved portal connection; never add a
+wildcard or assume a draft upload configured the running server.
+
+The `submissions/` directory contains preparation notes, review cases and the
+demo walkthrough. `scripts/prepare_submission.py` builds a separate candidate
+copy and reports missing materials. Public policy URLs, recording, reviewer
+access and platform attestations are still required before actual submission.
+
+
+For a separate directory registration without replacing existing custom-client
+settings, set `DEEP_AGENTIC_CORE_MCP_OAUTH_DIRECTORY_CLIENTS` to a JSON object
+with the same per-client fields and a required `client_secret_sha256`. The
+server merges these entries with `DEEP_AGENTIC_CORE_MCP_OAUTH_CLIENTS` at startup,
+rejects duplicate client IDs, and never overwrites a public-client registration.
+This optional setting contains only the digest; the plaintext secret belongs
+in the publisher's protected credential store and platform's secure field.
+
 ---
 
 ## Shared ChatGPT and Claude workflow skills
@@ -5945,6 +5985,9 @@ class OAuthServer():
     async def stylesheet(self, request: Request) -> Response: ...
     async def branding_asset(self, request: Request) -> Response: ...
     async def approve(self, request: Request) -> Response: ...
+    def client_auth_methods(self) -> list[str]: ...
+    def authenticate_client(self, request: Request, form: dict[str, str]) -> bool: ...
+    def client_error(self) -> JSONResponse: ...
     async def token(self, request: Request) -> Response: ...
     async def issue_pair(self, grant: dict[str, Any], refresh: str) -> Response: ...
     async def refresh(self, form: dict[str, str]) -> Response: ...

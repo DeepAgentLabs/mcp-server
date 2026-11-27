@@ -1,9 +1,10 @@
 {
   "name": "deepagentlabs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Build, diagnose and assess agent workflows with DeepAgentLabs product references and MCP tools.",
   "author": {
-    "name": "DeepAgentLabs",
+    "name": "PRAMOD BEGUR NAGARAJ",
+    "email": "deepagentlabs@gmail.com",
     "url": "https://deepagentlabs.io"
   },
   "homepage": "https://deepagentlabs.io",

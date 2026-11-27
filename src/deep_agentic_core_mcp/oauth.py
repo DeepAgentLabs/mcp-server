@@ -19,7 +19,7 @@ from collections.abc import Awaitable, Callable, Mapping
 from dataclasses import dataclass
 from importlib.resources import files
 from typing import Any, Protocol, cast
-from urllib.parse import parse_qsl, urlencode, urlsplit
+from urllib.parse import parse_qsl, unquote_plus, urlencode, urlsplit
 
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
@@ -87,8 +87,18 @@ class OAuthConfig:
         for client_id, entry in self.clients.items():
             if not isinstance(client_id, str) or not 1 <= len(client_id) <= 256:
                 raise ValueError("OAuth client IDs must be strings of 1–256 characters")
-            if not isinstance(entry, dict) or set(entry) != {"name", "redirect_uris"}:
+            required = {"name", "redirect_uris"}
+            if (
+                not isinstance(entry, dict)
+                or not required <= set(entry)
+                or set(entry) - required - {"client_secret_sha256"}
+            ):
                 raise ValueError("OAuth clients require name and redirect_uris")
+            if "client_secret_sha256" in entry and (
+                not isinstance(entry["client_secret_sha256"], str)
+                or not re.fullmatch(r"[a-f0-9]{64}", entry["client_secret_sha256"])
+            ):
+                raise ValueError("OAuth client secret must be a lowercase SHA-256 digest")
             if not isinstance(entry["name"], str) or not 1 <= len(entry["name"]) <= 100:
                 raise ValueError("OAuth client name must have 1–100 characters")
             uris = entry["redirect_uris"]
@@ -197,8 +207,8 @@ class OAuthServer:
                 "revocation_endpoint": self.config.origin + "/oauth/revoke",
                 "response_types_supported": ["code"],
                 "grant_types_supported": ["authorization_code", "refresh_token"],
-                "token_endpoint_auth_methods_supported": ["none"],
-                "revocation_endpoint_auth_methods_supported": ["none"],
+                "token_endpoint_auth_methods_supported": self.client_auth_methods(),
+                "revocation_endpoint_auth_methods_supported": self.client_auth_methods(),
                 "code_challenge_methods_supported": ["S256"],
                 "scopes_supported": [SCOPE],
                 "authorization_response_iss_parameter_supported": True,
@@ -377,14 +387,60 @@ class OAuthServer:
         await asyncio.to_thread(self.records.put, "code", code, grant, 120)
         return self._redirect(pending, code=code)
 
+    def client_auth_methods(self) -> list[str]:
+        methods = []
+        if any("client_secret_sha256" not in client for client in self.config.clients.values()):
+            methods.append("none")
+        if any("client_secret_sha256" in client for client in self.config.clients.values()):
+            methods += ["client_secret_basic", "client_secret_post"]
+        return methods
+
+    def authenticate_client(self, request: Request, form: dict[str, str]) -> bool:
+        """Authenticate before consuming a code, rotating tokens or revoking a family."""
+        headers = request.headers.getlist("authorization")
+        if len(headers) > 1:
+            return False
+        secret = form.get("client_secret", "")
+        if headers:
+            scheme, separator, encoded = headers[0].partition(" ")
+            if not separator or scheme.lower() != "basic" or len(encoded) > 2048:
+                return False
+            if "client_secret" in form:
+                return False  # RFC 6749: never combine authentication methods.
+            try:
+                decoded = base64.b64decode(encoded, validate=True).decode("utf-8")
+                client_id, colon, password = decoded.partition(":")
+                if not colon:
+                    return False
+                client_id = unquote_plus(client_id, errors="strict")
+                secret = unquote_plus(password, errors="strict")
+            except (ValueError, UnicodeError):
+                return False
+            if "client_id" in form and form["client_id"] != client_id:
+                return False
+            form["client_id"] = client_id
+        client = self.config.clients.get(form.get("client_id", ""))
+        if client is None:
+            return False
+        expected = client.get("client_secret_sha256")
+        if expected is None:
+            return not headers and not secret
+        return bool(
+            1 <= len(secret) <= 512
+            and secrets.compare_digest(hashlib.sha256(secret.encode()).hexdigest(), expected)
+        )
+
+    def client_error(self) -> JSONResponse:
+        response = self.error("invalid_client", 401)
+        response.headers["WWW-Authenticate"] = 'Basic realm="oauth"'
+        return response
+
     async def token(self, request: Request) -> Response:
         form = await self._form(request)
         if not form:
             return self.error("invalid_request")
-        if request.headers.get("authorization"):
-            return self.error("invalid_client", 401)
-        if form.get("client_id") not in self.config.clients:
-            return self.error("invalid_client", 401)
+        if not self.authenticate_client(request, form):
+            return self.client_error()
         if form.get("grant_type") == "refresh_token":
             return await self.refresh(form)
         if form.get("grant_type") != "authorization_code":
@@ -507,8 +563,8 @@ class OAuthServer:
         form = await self._form(request)
         if not form or len(form.get("token", "")) > 256:
             return self.error("invalid_request")
-        if form.get("client_id") not in self.config.clients or request.headers.get("authorization"):
-            return self.error("invalid_client", 401)
+        if not self.authenticate_client(request, form):
+            return self.client_error()
         token = form.get("token", "")
         kind = "refresh" if token.startswith(REFRESH_PREFIX) else "access"
         grant = await asyncio.to_thread(self.records.get, kind, token)
@@ -564,9 +620,19 @@ class OAuthServer:
 def config_from_environment(public_url: str, raw_clients: str) -> OAuthConfig:
     """Validate opt-in operator settings; no implicit or wildcard callback registration."""
     clients = json.loads(raw_clients)
+    directory = json.loads(os.environ.get("DEEP_AGENTIC_CORE_MCP_OAUTH_DIRECTORY_CLIENTS", "{}"))
+    if not isinstance(clients, dict) or not isinstance(directory, dict):
+        raise ValueError("OAuth client registrations must be objects")
+    if clients.keys() & directory.keys():
+        raise ValueError("Directory OAuth clients cannot overwrite existing clients")
+    if any(
+        not isinstance(entry, dict) or "client_secret_sha256" not in entry
+        for entry in directory.values()
+    ):
+        raise ValueError("Directory OAuth clients require a client-secret digest")
     return OAuthConfig(
         public_url,
-        clients,
+        {**clients, **directory},
         trusted_proxy_hops=int(os.environ.get("DEEP_AGENTIC_CORE_MCP_TRUSTED_PROXY_HOPS", "0")),
         refresh_idle_seconds=int(
             os.environ.get("DEEP_AGENTIC_CORE_MCP_OAUTH_REFRESH_IDLE", "2592000")

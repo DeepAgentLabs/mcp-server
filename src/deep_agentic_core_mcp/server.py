@@ -153,6 +153,7 @@ def _build_tools() -> list[Tool]:
         if entry["name"] not in _TOOL_DISPATCH:
             continue
         open_world = entry["name"] in _OPEN_WORLD_TOOLS
+        mutates = bool(entry.get("mutates_session", False) or open_world)
         tools.append(
             Tool(
                 name=entry["name"],
@@ -160,9 +161,9 @@ def _build_tools() -> list[Tool]:
                 description=str(entry["description"]),
                 input_schema=entry["input_schema"],
                 annotations=ToolAnnotations(
-                    read_only_hint=not (entry.get("mutates_session", False) or open_world),
-                    destructive_hint=open_world or None,
-                    open_world_hint=open_world or None,
+                    read_only_hint=not mutates,
+                    destructive_hint=mutates,
+                    open_world_hint=open_world,
                 ),
                 _meta={
                     "category": entry.get("category"),

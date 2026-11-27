@@ -3,7 +3,25 @@
   "mcpServers": {
     "deepagentlabs": {
       "type": "streamable-http",
-      "url": "https://mcp.deepagentlabs.io/mcp"
+      "url": "https://mcp.deepagentlabs.io/mcp",
+      "extensions": {
+        "com.openai": {
+          "auth": {
+            "type": "oauth",
+            "client": {
+              "mode": "provided",
+              "clientId": "deepagentlabs-chatgpt",
+              "tokenEndpointAuthMethod": "none"
+            },
+            "baseScopes": [
+              "mcp:tools"
+            ],
+            "defaultScopes": [
+              "mcp:tools"
+            ]
+          }
+        }
+      }
     }
   }
 }

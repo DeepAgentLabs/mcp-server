@@ -6,13 +6,13 @@ import json
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qs, quote_plus, urlsplit
 
 import fakeredis
 import httpx
 import pytest
 
-from deep_agentic_core_mcp.oauth import COOKIE, OAuthConfig, OAuthServer
+from deep_agentic_core_mcp.oauth import COOKIE, OAuthConfig, OAuthServer, config_from_environment
 from deep_agentic_core_mcp.services.access_policy import AccessPolicy
 from deep_agentic_core_mcp.services.api_keys import StaticKeyStore, key_digest
 from deep_agentic_core_mcp.services.oauth_store import MemoryOAuthStore, RedisOAuthStore
@@ -641,3 +641,113 @@ def test_consent_uses_registered_host_logo_or_initial(callback, logo):
         assert ("/oauth-assets/" + candidate in rendered) == (candidate == logo)
     if logo is None:
         assert '<span class="client-icon">H</span>' in rendered
+
+
+CLIENT_SECRET = "directory secret:+/" + "s" * 40
+
+
+def basic_client(secret=CLIENT_SECRET, client_id="chatgpt-test"):
+    encoded = base64.b64encode((quote_plus(client_id) + ":" + quote_plus(secret)).encode()).decode()
+    return {"Authorization": "Basic " + encoded}
+
+
+@pytest.mark.parametrize("method", ["basic", "post"])
+async def test_confidential_client_code_refresh_and_revocation(setup, method):
+    app, _, _, config = setup
+    config.clients["chatgpt-test"]["client_secret_sha256"] = hashlib.sha256(
+        CLIENT_SECRET.encode()
+    ).hexdigest()
+    async with (
+        app.router.lifespan_context(app),
+        httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url=ORIGIN) as client,
+    ):
+        metadata = (await client.get("/.well-known/oauth-authorization-server")).json()
+        assert set(metadata["token_endpoint_auth_methods_supported"]) == {
+            "client_secret_basic",
+            "client_secret_post",
+        }
+        code = await code_for(client)
+        for data, headers in [
+            (exchange(code), {}),
+            (exchange(code, client_secret="wrong"), {}),
+            (exchange(code), basic_client("wrong")),
+            (exchange(code, client_secret=CLIENT_SECRET), basic_client()),
+            (exchange(code, client_id="other"), basic_client()),
+            (exchange(code), {"Authorization": "Basic invalid!"}),
+        ]:
+            denied = await client.post("/oauth/token", data=data, headers=headers)
+            assert denied.status_code == 401 and denied.json()["error"] == "invalid_client"
+            assert denied.headers["WWW-Authenticate"].startswith("Basic ")
+        headers = basic_client() if method == "basic" else {}
+        data = exchange(code)
+        if method == "basic":
+            data.pop("client_id")
+        else:
+            data["client_secret"] = CLIENT_SECRET
+        exchanged = await client.post("/oauth/token", data=data, headers=headers)
+        assert exchanged.status_code == 200
+        pair = exchanged.json()
+        refresh_data = {
+            "grant_type": "refresh_token",
+            "client_id": "chatgpt-test",
+            "refresh_token": pair["refresh_token"],
+        }
+        assert (await client.post("/oauth/token", data=refresh_data)).status_code == 401
+        rotated = await client.post(
+            "/oauth/token", data={**refresh_data, "client_secret": CLIENT_SECRET}
+        )
+        assert rotated.status_code == 200
+        current = rotated.json()
+        token = current["access_token"]
+        revoke_data = {"client_id": "chatgpt-test", "token": current["refresh_token"]}
+        assert (await client.post("/oauth/revoke", data=revoke_data)).status_code == 401
+        assert (await rpc(client, token)).status_code == 200
+        assert (
+            await client.post("/oauth/revoke", data=revoke_data, headers=basic_client())
+        ).status_code == 200
+        assert (await rpc(client, token)).status_code == 401
+        assert CLIENT_SECRET not in json.dumps(pair)
+
+
+async def test_public_client_rejects_secret_authentication_without_consuming_code(setup):
+    app, *_ = setup
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url=ORIGIN) as client:
+        code = await code_for(client)
+        assert (
+            await client.post("/oauth/token", data=exchange(code, client_secret=CLIENT_SECRET))
+        ).status_code == 401
+        assert (
+            await client.post("/oauth/token", data=exchange(code), headers=basic_client())
+        ).status_code == 401
+        assert (await client.post("/oauth/token", data=exchange(code))).status_code == 200
+
+
+@pytest.mark.parametrize("digest", [None, 1, "f" * 63, "F" * 64, "not-a-hash"])
+def test_reject_invalid_confidential_secret_digest(digest):
+    with pytest.raises(ValueError, match="SHA-256"):
+        OAuthConfig(
+            ORIGIN,
+            {"test": {"name": "Test", "redirect_uris": [CALLBACK], "client_secret_sha256": digest}},
+        )
+
+
+def test_separate_directory_registration_preserves_existing_public_clients(monkeypatch):
+    directory = {
+        "directory": {
+            "name": "Claude",
+            "redirect_uris": ["https://claude.ai/api/mcp/auth_callback"],
+            "client_secret_sha256": hashlib.sha256(CLIENT_SECRET.encode()).hexdigest(),
+        }
+    }
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_OAUTH_DIRECTORY_CLIENTS", json.dumps(directory))
+    config = config_from_environment(ORIGIN, json.dumps(CLIENTS))
+    assert config.clients["chatgpt-test"] == CLIENTS["chatgpt-test"]
+    assert config.clients["directory"] == directory["directory"]
+    assert "directory" not in CLIENTS
+
+
+@pytest.mark.parametrize("directory", [[], {"x": {}}, {"chatgpt-test": {}}])
+def test_reject_unsafe_directory_registration(monkeypatch, directory):
+    monkeypatch.setenv("DEEP_AGENTIC_CORE_MCP_OAUTH_DIRECTORY_CLIENTS", json.dumps(directory))
+    with pytest.raises(ValueError):
+        config_from_environment(ORIGIN, json.dumps(CLIENTS))
