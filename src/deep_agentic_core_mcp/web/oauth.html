@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Connect {{client_name}} · DeepAgentLabs</title>
+  <link rel="stylesheet" href="/oauth.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">DL</span><span>DeepAgentLabs<span class="brand-subtitle">AGENTICOPS</span></span></div>
+    <span class="secure-label"><span class="secure-dot" aria-hidden="true"></span>Secure account connection</span>
+  </header>
+  <main>
+    <section class="consent-card" aria-labelledby="connection-title">
+      <div class="connection-icons" aria-hidden="true"><span class="product-icon">DL</span><span class="connection-arrow">→</span><span class="client-icon">{{client_initial}}</span></div>
+      <p class="eyebrow">CONNECT YOUR WORKSPACE</p>
+      <h1 id="connection-title">Connect {{client_name}}</h1>
+      <p class="intro">Bring your DeepAgentLabs tools and workflows into {{client_name}}.</p>
+      <div class="permissions">
+        <h2>With your permission, {{client_name}} can</h2>
+        <ul>
+          <li><span class="check" aria-hidden="true">✓</span><div><strong>Work with your agent workflows</strong><p>Read saved workflows and use your permitted tools, including write actions.</p></div></li>
+          <li><span class="check" aria-hidden="true">✓</span><div><strong>Stay connected between sessions</strong><p>Renew access automatically. You can revoke the connection at any time.</p></div></li>
+        </ul>
+      </div>
+      <form method="post" action="/oauth/authorize">
+        <input type="hidden" name="pending" value="{{pending}}">
+        <label for="api-key">API key</label>
+        <input id="api-key" name="api_key" type="password" required minlength="32" maxlength="256" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Paste your DeepAgentLabs API key" aria-describedby="key-help key-privacy">
+        <p id="key-help" class="field-help">Use your existing key to connect the same account as your local application.</p>
+        {{error}}
+        <div class="form-actions"><button class="primary" name="decision" value="allow">Allow access <span aria-hidden="true">→</span></button><button class="secondary" name="decision" value="deny" formnovalidate>Cancel</button></div>
+        <p id="key-privacy" class="key-privacy">Your API key stays with DeepAgentLabs.<br>It is never shared with {{client_name}}.</p>
+      </form>
+      <div class="signup-link"><span>New to DeepAgentLabs?</span><a href="/signup" target="_blank" rel="noopener noreferrer">Create an account and API key <span class="new-tab">(open in new tab)</span> <span aria-hidden="true">↗</span></a></div>
+    </section>
+    <p class="connection-note">This connection follows your existing account permissions.</p>
+  </main>
+  <footer>DeepAgentLabs <span aria-hidden="true">·</span> Agent operations, connected.</footer>
+</body>
+</html>

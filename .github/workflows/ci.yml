@@ -132,9 +132,21 @@ jobs:
           DEEP_AGENTIC_CORE_MCP_TEST_DATABASE_URL: postgresql://postgres:pw@localhost:5432/postgres
         run: uv run --no-sync pytest tests/test_postgres_store.py
 
+  test-oauth-browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+      - name: Install hosted and browser test dependencies
+        run: uv sync --frozen --extra dev --extra http --extra browser --python 3.12
+      - name: Install Chromium
+        run: uv run --no-sync playwright install --with-deps chromium
+      - name: Verify browser consent, cookies, callbacks and token exchange
+        run: uv run --no-sync python scripts/smoke_oauth_browser.py
+
   package:
     runs-on: ubuntu-latest
-    needs: [test, test-chaos-v05, test-postgres]
+    needs: [test, test-chaos-v05, test-postgres, test-oauth-browser]
     steps:
       - uses: actions/checkout@v7
         with:

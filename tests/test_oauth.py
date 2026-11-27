@@ -211,6 +211,9 @@ async def test_browser_binding_origin_and_consent_denial(setup):
                 "/oauth/authorize", data=form, headers={"Origin": "https://evil.example"}
             )
         ).status_code == 403
+        assert (
+            await client.post("/oauth/authorize", data=form, headers={"Origin": "null"})
+        ).status_code == 403
         client.cookies.clear()
         assert (
             await client.post("/oauth/authorize", data=form, headers={"Origin": ORIGIN})
@@ -565,3 +568,41 @@ def test_refresh_family_rotation_is_atomic_between_workers(kind):
 def test_reject_invalid_refresh_lifetime_configuration(idle, maximum):
     with pytest.raises(ValueError, match="refresh"):
         OAuthConfig(ORIGIN, CLIENTS, refresh_idle_seconds=idle, refresh_max_seconds=maximum)
+
+
+@pytest.mark.asyncio
+async def test_consent_page_headers_styles_and_retry(setup):
+    app, *_ = setup
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url=ORIGIN) as client:
+        page = await client.get("/oauth/authorize", params=params())
+        assert page.headers["Referrer-Policy"] == "same-origin"
+        csp = page.headers["Content-Security-Policy"]
+        assert "form-action 'self' https://chatgpt.com" in csp
+        assert "style-src 'self'" in csp and "default-src 'none'" in csp
+        assert 'target="_blank" rel="noopener noreferrer"' in page.text
+        assert "(open in new tab)" in page.text
+        stylesheet = await client.get("/oauth.css")
+        assert stylesheet.status_code == 200
+        assert stylesheet.headers["content-type"].startswith("text/css")
+        assert ".consent-card" in stylesheet.text
+        pending = re.search(r'name="pending" value="([^"]+)"', page.text)[1]
+        form = {"pending": pending, "api_key": "wrong" * 10, "decision": "allow"}
+        failed = await client.post("/oauth/authorize", data=form, headers={"Origin": ORIGIN})
+        assert failed.status_code == 401
+        assert 'role="alert"' in failed.text and "try again" in failed.text
+        assert form["api_key"] not in failed.text
+        assert pending in failed.text
+        retried = await client.post(
+            "/oauth/authorize", data={**form, "api_key": KEY}, headers={"Origin": ORIGIN}
+        )
+        assert retried.status_code == 303
+
+
+def test_consent_escapes_client_name_without_recursive_template_expansion():
+    config = OAuthConfig(
+        ORIGIN, {"test": {"name": "<script>{{pending}}</script>", "redirect_uris": [CALLBACK]}}
+    )
+    server = OAuthServer(config, MemoryOAuthStore(), StaticKeyStore({"alice": KEY}))
+    rendered = server.consent_response("test", "pending-test").body.decode()
+    assert "<script>" not in rendered
+    assert "&lt;script&gt;{{pending}}&lt;/script&gt;" in rendered

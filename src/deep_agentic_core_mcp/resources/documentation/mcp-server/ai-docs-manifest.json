@@ -4,14 +4,14 @@
   "distribution": "deep-agentic-core-mcp",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "8aadb242bc235cf7a922b87d5f8fa5eab25ec99fba995158f626341b3eb34e76",
+  "sha256": "35a6e0f39038e0e8be4a9ddb41e4c8489ab248db3b4668158c061d1b2a2b801b",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
     {
       "path": "pyproject.toml",
       "kind": "package-metadata",
-      "sha256": "78b0ed1bccce798917c09b07ad3e43dee76b483c694a1f063c3ca20fecddab9b"
+      "sha256": "4c23ee66550ce3d3d19da7db5f8deb8273333ecb0e19e597aadeb3fc0bee039b"
     },
     {
       "path": "docs/ai-docs.json",
@@ -36,7 +36,7 @@
     {
       "path": "docs/api-reference.md",
       "kind": "reference",
-      "sha256": "b2e3adbe083b6d365b15a30d71bfc24ebf5cf9c27ab7d542c401455a0d98a931"
+      "sha256": "68e30f72b6b02e11f8ffd97b4635163126c39d8e9fe7720492847ec1a9336726"
     },
     {
       "path": "docs/ecosystem-ai-reference.md",
@@ -71,7 +71,7 @@
     {
       "path": "docs/chatgpt-oauth.md",
       "kind": "reference",
-      "sha256": "56256b0b7115ee1e76d8cec707928939cc5a4733106129d480a477b534fdb527"
+      "sha256": "ad4e99d8f808d337b0cbcdbba4c821c161dd15e7ecb814e6ff2c2b6932a00249"
     },
     {
       "path": "docs/plugin-skills.md",
@@ -261,7 +261,7 @@
     {
       "path": "src/deep_agentic_core_mcp/__init__.py",
       "kind": "source-contract",
-      "sha256": "15e8278354748051560b9e26121704674bf43e8fa4c927ad7abe106c4229a6ce"
+      "sha256": "97117ca66c52f4cd6abe8b7d498c3c86b6680fd81147476bc626b9fa4ada3222"
     },
     {
       "path": "src/deep_agentic_core_mcp/adapters/__init__.py",
@@ -306,7 +306,7 @@
     {
       "path": "src/deep_agentic_core_mcp/oauth.py",
       "kind": "source-contract",
-      "sha256": "64e36d4a6f5881b56dc385b0445d303ab85881166400c52120e3b91107864320"
+      "sha256": "3be5659648f6338460fc5c131e5d02fd5fd20a2f4c717658a2b9837de15a557b"
     },
     {
       "path": "src/deep_agentic_core_mcp/prompts/__init__.py",

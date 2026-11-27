@@ -17,6 +17,7 @@ import secrets
 import time
 from collections.abc import Awaitable, Callable, Mapping
 from dataclasses import dataclass
+from importlib.resources import files
 from typing import Any, Protocol, cast
 from urllib.parse import parse_qsl, urlencode, urlsplit
 
@@ -243,31 +244,47 @@ class OAuthServer:
             },
             600,
         )
-        # Only operator-controlled client names and generated nonces enter the HTML.
-        content = (
-            '<!doctype html><html lang="en"><meta charset="utf-8">'
-            '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            "<title>Connect DeepAgentLabs</title><body><main>"
-            f"<h1>Connect {html.escape(client['name'])}</h1>"
-            "<p>Allow this client to use hosted MCP tools with your current account "
-            "permissions, including permitted write actions. It can access workflows "
-            "stored under this account.</p>"
-            "<p>Enter your existing DeepAgentLabs API key to link the same account "
-            "used by your local application. Your key stays on this service.</p>"
-            '<form method="post" action="/oauth/authorize">'
-            f'<input type="hidden" name="pending" value="{pending}">'
-            '<label>API key <input type="password" name="api_key" required '
-            'autocomplete="off" maxlength="256"></label>'
-            '<button name="decision" value="allow">Allow access</button>'
-            '<button name="decision" value="deny" formnovalidate>Cancel</button>'
-            '</form><p><a href="/signup" target="_blank" rel="noopener noreferrer">'
-            "Create an account and API key</a></p></main></body></html>"
-        )
-        response = HTMLResponse(content, headers=_HEADERS)
+        response = self.consent_response(data["client_id"], pending)
         response.set_cookie(
             COOKIE, browser, max_age=600, secure=True, httponly=True, samesite="lax"
         )
         return response
+
+    def consent_response(
+        self, client_id: str, pending: str, *, error: str = "", status: int = 200
+    ) -> HTMLResponse:
+        """Render a script-free, browser-compatible consent form."""
+        client = self.config.clients[client_id]
+        content = files("deep_agentic_core_mcp").joinpath("web/oauth.html").read_text()
+        values = {
+            "client_name": html.escape(client["name"], quote=True),
+            "client_initial": html.escape(client["name"][:1].upper(), quote=True),
+            "pending": html.escape(pending, quote=True),
+            "error": '<p class="form-error" role="alert">' + html.escape(error) + "</p>"
+            if error
+            else "",
+        }
+        content = re.sub(
+            r"\{\{(client_name|client_initial|pending|error)\}\}",
+            lambda match: values[match[1]],
+            content,
+        )
+        # A browser form inherits this policy. no-referrer causes Origin: null
+        # on POST and fails the same-origin CSRF check. Keep off-site referrers private.
+        headers = {**_HEADERS, "Referrer-Policy": "same-origin"}
+        # Chromium also checks form redirects against form-action. Permit only
+        # the registered client's callback origins; exact redirects are validated separately.
+        callbacks = sorted({"https://" + urlsplit(uri).netloc for uri in client["redirect_uris"]})
+        headers["Content-Security-Policy"] += " " + " ".join(callbacks) + "; style-src 'self'"
+        return HTMLResponse(content, status_code=status, headers=headers)
+
+    async def stylesheet(self, request: Request) -> Response:
+        del request
+        return Response(
+            files("deep_agentic_core_mcp").joinpath("web/oauth.css").read_text(),
+            media_type="text/css",
+            headers={"Cache-Control": "public, max-age=3600", "X-Content-Type-Options": "nosniff"},
+        )
 
     def _redirect(self, pending: dict[str, Any], **result: str) -> Response:
         query = {**result, "state": pending["state"], "iss": self.config.origin}
@@ -297,10 +314,20 @@ class OAuthServer:
         key = form.get("api_key", "")
         if form["decision"] == "allow":
             if not 32 <= len(key) <= 256:
-                return self.error("access_denied", 401)
+                return self.consent_response(
+                    pending["client_id"],
+                    secret,
+                    error="That API key wasn't accepted. Check your key and try again.",
+                    status=401,
+                )
             principal = await asyncio.to_thread(authorize, self.keys, key)
             if principal is None or principal.policy.error or principal.policy.expired():
-                return self.error("access_denied", 401)
+                return self.consent_response(
+                    pending["client_id"],
+                    secret,
+                    error="That API key wasn't accepted. Check your key and try again.",
+                    status=401,
+                )
         pending = await asyncio.to_thread(self.records.take, "pending", secret)
         if pending is None:
             return self.error("invalid_request")
@@ -491,6 +518,7 @@ class OAuthServer:
             Route("/.well-known/oauth-protected-resource", guarded(self.protected_metadata)),
             Route("/.well-known/oauth-protected-resource/mcp", guarded(self.protected_metadata)),
             Route("/.well-known/oauth-authorization-server", guarded(self.authorization_metadata)),
+            Route("/oauth.css", guarded(self.stylesheet)),
             Route("/oauth/authorize", guarded(self.authorize_page), methods=["GET"]),
             Route("/oauth/authorize", guarded(self.approve), methods=["POST"]),
             Route("/oauth/token", guarded(self.token), methods=["POST"]),

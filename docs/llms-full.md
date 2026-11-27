@@ -37,6 +37,9 @@ Expose supported product capabilities through MCP. Local and hosted transports h
     "referencing>=0.35,<1"
   ],
   "optional_extras": {
+    "browser": [
+      "playwright==1.65.2"
+    ],
     "http": [
       "boto3>=1.34,<2",
       "psycopg[binary,pool]>=3.2,<4",
@@ -605,7 +608,7 @@ Check the client's executable/environment, optional adapter readiness and select
 
 Source: [docs/api-reference.md](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/api-reference.md)
 
-**Version:** 1.2.0
+**Version:** 1.2.1
 
 The server's public interface is the MCP protocol: tools, resources and prompt templates, served over local stdio or authenticated HTTP. This page lists every interface in one place. For each tool's exact input schema, prerequisites and examples, see the [generated tool catalog](https://github.com/DeepAgentLabs/mcp-server/blob/main/docs/tools.md).
 
@@ -3406,6 +3409,25 @@ key rotation, automatic renewal, replay detection, token revocation and expiry. 
 verification, review materials and OpenAI approval are separate from enabling
 OAuth. This repository change does not deploy or submit the service.
 
+
+### Browser consent checks
+
+The consent page keeps API key errors inline so users can retry. Its account
+creation link opens in a new tab, preserving the pending connection form.
+`/oauth.css` serves its script-free, responsive styles. The consent response uses
+`Referrer-Policy: same-origin` to preserve browser form Origins while withholding
+off-site referrers. Its CSP allows the registered client's callback origins so
+Chromium can follow the authorization redirect; the server still validates exact
+registered callback URLs and rejects missing, null or foreign form Origins.
+
+Run the isolated browser regression (no live accounts or credentials):
+
+```sh
+uv sync --extra dev --extra http --extra browser
+uv run --no-sync playwright install chromium
+uv run --no-sync python scripts/smoke_oauth_browser.py
+```
+
 ---
 
 ## Shared ChatGPT and Claude workflow skills
@@ -5910,6 +5932,8 @@ class OAuthServer():
     async def protected_metadata(self, request: Request) -> Response: ...
     async def authorization_metadata(self, request: Request) -> Response: ...
     async def authorize_page(self, request: Request) -> Response: ...
+    def consent_response(self, client_id: str, pending: str, *, error: str='', status: int=200) -> HTMLResponse: ...
+    async def stylesheet(self, request: Request) -> Response: ...
     async def approve(self, request: Request) -> Response: ...
     async def token(self, request: Request) -> Response: ...
     async def issue_pair(self, grant: dict[str, Any], refresh: str) -> Response: ...
