@@ -6,6 +6,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Optional public OpenAI plugin domain-verification endpoint, configured by
+  `DEEP_AGENTIC_CORE_MCP_OPENAI_APPS_CHALLENGE`. Unconfigured services return 404;
+  MCP tool access continues requiring authentication.
+
 ### Changed
 
 - Set the public Claude and OpenAI plugin display name to DeepAgentLabs -
