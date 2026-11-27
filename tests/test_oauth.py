@@ -580,6 +580,7 @@ async def test_consent_page_headers_styles_and_retry(setup):
         assert "form-action 'self' https://chatgpt.com" in csp
         assert "style-src 'self'" in csp and "default-src 'none'" in csp
         assert 'target="_blank" rel="noopener noreferrer"' in page.text
+        assert "Create New API Key" in page.text
         assert "(open in new tab)" in page.text
         stylesheet = await client.get("/oauth.css")
         assert stylesheet.status_code == 200

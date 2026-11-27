@@ -92,7 +92,7 @@ def main() -> None:
                 }
                 response = page.goto(ORIGIN + "/oauth/authorize?" + urlencode(query))
                 assert response is not None and response.status == 200
-                signup = page.get_by_role("link", name="Create an account and API key")
+                signup = page.get_by_role("link", name="Create New API Key")
                 assert signup.get_attribute("target") == "_blank"
                 assert signup.get_attribute("rel") == "noopener noreferrer"
                 assert "(open in new tab)" in signup.inner_text()
