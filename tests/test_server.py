@@ -502,3 +502,23 @@ async def test_capability_contract_is_registered_read_only():
 
     tools = {tool.name: tool for tool in await handle_list_tools()}
     assert tools["tower.capability_contract"].annotations.read_only_hint
+
+
+async def test_tool_annotations_explicitly_describe_reads_session_writes_and_external_writes():
+    from deep_agentic_core_mcp.server import _build_tools
+
+    tools = {tool.name: tool for tool in _build_tools()}
+    for tool in tools.values():
+        assert tool.title
+        annotation = tool.annotations
+        assert annotation is not None
+        assert type(annotation.read_only_hint) is bool
+        assert type(annotation.destructive_hint) is bool
+        assert type(annotation.open_world_hint) is bool
+    assert tools["core.docs_catalog"].annotations.read_only_hint is True
+    assert tools["core.docs_catalog"].annotations.destructive_hint is False
+    assert tools["lens.analyze_workflow"].annotations.read_only_hint is False
+    assert tools["lens.analyze_workflow"].annotations.destructive_hint is True
+    assert tools["lens.analyze_workflow"].annotations.open_world_hint is False
+    assert tools["tower.execute"].annotations.destructive_hint is True
+    assert tools["tower.execute"].annotations.open_world_hint is True

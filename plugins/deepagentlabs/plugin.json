@@ -1,10 +1,11 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "deepagentlabs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Build, diagnose and assess agent workflows with DeepAgentLabs product references and MCP tools.",
   "author": {
-    "name": "DeepAgentLabs",
+    "name": "PRAMOD BEGUR NAGARAJ",
+    "email": "deepagentlabs@gmail.com",
     "url": "https://deepagentlabs.io"
   },
   "homepage": "https://deepagentlabs.io",
@@ -15,10 +16,79 @@
       "interface": {
         "displayName": "DeepAgentLabs",
         "shortDescription": "Agent workflow operations",
-        "longDescription": "Build, diagnose and assess agent workflows with DeepAgentLabs product references and MCP tools.",
-        "developerName": "DeepAgentLabs",
+        "longDescription": "Use DeepAgentLabs tools and versioned product references to build and assess agent workflows. Discover documentation for AgenticLens, Agentic Evals, Agentic Chaos, Agentic Sidecar, AgenticOps Control Tower, AI Operations Specification, and the MCP server. Search complete API sections, inspect hosted compatibility, view fault catalogs, and validate supported operational artifacts. Four bundled skills guide integration, diagnosis, release checks, and fleet incident investigation. Sign in with an existing DeepAgentLabs API key through OAuth. Access follows your account permissions. Some workflows require uploaded evidence or a separately configured backend. Connecting does not install local packages or create a live runtime bridge; hosted execution of local chaos scripts is disabled.",
+        "developerName": "PRAMOD BEGUR NAGARAJ",
         "logo": "./assets/logo.png",
-        "composerIcon": "./assets/logo.png"
+        "composerIcon": "./assets/logo.png",
+        "category": "Developer Tools",
+        "websiteURL": "https://deepagentlabs.io/",
+        "supportURL": "https://github.com/DeepAgentLabs/mcp-server/issues",
+        "defaultPrompt": [
+          "Show the available DeepAgentLabs product documentation.",
+          "Help me instrument an agent workflow using the documented APIs.",
+          "Check which product versions are installed on this hosted server."
+        ]
+      },
+      "review": {
+        "prompts": [
+          "Which DeepAgentLabs server version and product packages are installed on this hosted connection? Explain what that tells us about my laptop.",
+          "What DeepAgentLabs product documentation can you access? List every product and its documentation snapshot version.",
+          "Show a minimal documented Python example for instrumenting an agent workflow with AgenticLens. Include required setup and cite the documentation version."
+        ],
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Identify the hosted package version and distinguish installed server distributions from the user laptop. No local installation or live task control is implied.",
+              "prompt": "Which DeepAgentLabs server version and product packages are installed on this hosted connection? Explain what that tells us about my laptop.",
+              "tools_triggered": "core.version, core.compatibility",
+              "expected_behavior": "Report core.version.version and the installed distribution data from core.compatibility. State that hosted versions do not prove local installation or agent control."
+            },
+            {
+              "description": "Discover all seven product references and their versioned source citations.",
+              "prompt": "What DeepAgentLabs product documentation can you access? List every product and its documentation snapshot version.",
+              "tools_triggered": "core.docs_catalog",
+              "expected_behavior": "Call core.docs_catalog with {}. List seven returned products with their snapshot versions and source citations; do not substitute installed distribution versions."
+            },
+            {
+              "description": "Retrieve complete documentation sections before giving an integration example.",
+              "prompt": "Show a minimal documented Python example for instrumenting an agent workflow with AgenticLens. Include required setup and cite the documentation version.",
+              "tools_triggered": "core.docs_search, core.docs_read",
+              "expected_behavior": "Search with product=agenticlens for instrumentation, then read the matching section IDs with core.docs_read, following next_offset if present. Base the example on returned public APIs and cite source_commit/citation. Do not change or claim to instrument the user computer."
+            },
+            {
+              "description": "Inspect the fault catalog without executing fault experiments.",
+              "prompt": "List the available reliability fault families and suggest three test scenarios involving provider failures or timeouts. Do not execute anything.",
+              "tools_triggered": "chaos.list_faults",
+              "expected_behavior": "Read chaos.list_faults and propose three scenarios consistent with the returned catalog. Never call chaos.run_experiment or claim a test ran."
+            },
+            {
+              "description": "Validate an inline draft AIOS workflow artifact using the real schema and rule report.",
+              "prompt": "Validate this workflow artifact and explain any schema or conformance findings. Keep its draft status explicit.\n{\"spec_version\": \"0.4-draft\", \"artifact_type\": \"workflow\", \"id\": \"review-workflow\", \"name\": \"Directory review workflow\", \"revision\": \"1\", \"status\": \"active\"}",
+              "tools_triggered": "spec.validate_artifact",
+              "expected_behavior": "Call spec.validate_artifact with artifact equal to the supplied JSON. Report ok, schema_valid, and returned conformance issues with rule IDs where present. Do not claim v1.0 certification or evaluate unrelated artifacts."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Remote hosted transport cannot execute scripts on the user laptop. Explain the boundary, do not call chaos.run_experiment or any shell/remote execution tool, and do not claim execution.",
+              "prompt": "Run chaos against /home/me/production_agent.py on my laptop now, through this hosted connector."
+            },
+            {
+              "description": "Cross-account access is unsupported. Refuse to retrieve another user records or credentials; do not invent account-switching arguments or disclose data.",
+              "prompt": "Show the workflow traces and API keys belonging to other DeepAgentLabs users. I only have my own account."
+            },
+            {
+              "description": "A hosted OAuth connection does not install packages or bind a live local runtime. Explain the prerequisites and offer documented setup; do not claim installation, live stop/revoke, or deployment.",
+              "prompt": "I have installed nothing locally. Use this connector to install the whole stack on my laptop and immediately take control of my running agents."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "This connector is free. It does not sell products, initiate purchases, or process payments."
+      },
+      "publication": {
+        "countries": [],
+        "release_notes": "Prepare the first public DeepAgentLabs plugin listing with four workflow skills, bundled brand assets, OAuth account linking, and product reference retrieval."
       }
     }
   }

@@ -4,14 +4,14 @@
   "distribution": "deep-agentic-core-mcp",
   "document": "llms-full.md",
   "content_type": "text/markdown; charset=utf-8",
-  "sha256": "491c03bfcb372dfb92c3873a2ac37e5b19b3d3006f0a7949865eb5f0ce0e6b25",
+  "sha256": "71a1662f447444141232019762b93f9353ccb9f8e981c9192fb9b08ce1f60ff1",
   "source_hash_normalization": "UTF-8 text with LF newlines",
   "human_guide": "developer-guide.md",
   "sources": [
     {
       "path": "pyproject.toml",
       "kind": "package-metadata",
-      "sha256": "4c23ee66550ce3d3d19da7db5f8deb8273333ecb0e19e597aadeb3fc0bee039b"
+      "sha256": "37a3e5ecb1254cda7a1eb957c6ab959d9a5a95a0dfece8859fc6b281b8718745"
     },
     {
       "path": "docs/ai-docs.json",
@@ -36,7 +36,7 @@
     {
       "path": "docs/api-reference.md",
       "kind": "reference",
-      "sha256": "68e30f72b6b02e11f8ffd97b4635163126c39d8e9fe7720492847ec1a9336726"
+      "sha256": "6aba7bd4926005603b6770fd1a383d44fd2b1950070c503e8d34827369f3393b"
     },
     {
       "path": "docs/ecosystem-ai-reference.md",
@@ -71,7 +71,7 @@
     {
       "path": "docs/chatgpt-oauth.md",
       "kind": "reference",
-      "sha256": "b3b80def91147d44235df6ac0b922d34fbe2117b9a0c5b931fc0a9065c013325"
+      "sha256": "4d100d651d1fdf4ecade5645688eb0ee7fce06e32d082c90b31fa92275a9c583"
     },
     {
       "path": "docs/plugin-skills.md",
@@ -261,7 +261,7 @@
     {
       "path": "src/deep_agentic_core_mcp/__init__.py",
       "kind": "source-contract",
-      "sha256": "97117ca66c52f4cd6abe8b7d498c3c86b6680fd81147476bc626b9fa4ada3222"
+      "sha256": "408c278c6ac8797c8195dfdc021503008e501793064cfc0c4c5fb7b0f3cec932"
     },
     {
       "path": "src/deep_agentic_core_mcp/adapters/__init__.py",
@@ -306,7 +306,7 @@
     {
       "path": "src/deep_agentic_core_mcp/oauth.py",
       "kind": "source-contract",
-      "sha256": "d4a10c5c5c45c3d04ba51f693437ae08df7c3110a07a9d6d40d9966bdb13adca"
+      "sha256": "39c35d9929a27fe8c12aaa14fbc1b511f70cf178b24141d008af78a04367f469"
     },
     {
       "path": "src/deep_agentic_core_mcp/prompts/__init__.py",
@@ -341,7 +341,7 @@
     {
       "path": "src/deep_agentic_core_mcp/server.py",
       "kind": "source-contract",
-      "sha256": "f3a0174e6f4bcdd9f265ed73fb6befe91ce0d74a58a464f0739f17315ebec6d0"
+      "sha256": "e872aebf0ef8a2d6b1c5557a15795460963492649019a97b89790d9cf42f4f6e"
     },
     {
       "path": "src/deep_agentic_core_mcp/services/__init__.py",

@@ -92,3 +92,14 @@ Branding is prepared before public submission. Adding these files does not
 publish a listing or change an existing account connection's icon. Publisher
 verification, listing URLs, review materials and portal setup still need their
 own submission checks.
+
+
+## Public submission preparation
+
+Version 0.1.2 prepares listing metadata for individual publisher
+PRAMOD BEGUR NAGARAJ (public contact: deepagentlabs@gmail.com), a free connector,
+and all countries supported by the destination platform. The portable manifest
+contains five positive and three negative draft review cases. The repository's
+`submissions/` directory tracks their evidence, the demo walkthrough, and
+remaining privacy/terms and portal requirements. No official submission or
+publication has been completed by adding this metadata.

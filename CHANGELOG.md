@@ -6,6 +6,26 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 1.3.0 - 2026-11-26
+
+### Added
+
+- Support optional pre-registered confidential OAuth clients using SHA-256
+  client-secret digests and Basic or POST authentication. Require client
+  authentication before consuming authorization codes, refreshing connections
+  or revoking tokens. Existing public clients continue using PKCE without a
+  client secret. Discovery advertises the configured authentication methods.
+- Prepare public plugin 0.1.2 metadata, worldwide availability and no-commerce
+  declarations, five positive and three negative draft review cases, a separate
+  candidate ZIP builder, demo walkthrough and factual privacy preparation notes.
+  No directory submission or publication is performed by these files.
+
+### Changed
+
+- Publish explicit boolean read-only, destructive and open-world tool hints.
+  Tools that change stored session state are marked as modifying data; runtime
+  actions retain their open-world hint. Authorization checks remain enforced.
+
 ## 1.2.1 - 2026-11-26
 
 ### Fixed

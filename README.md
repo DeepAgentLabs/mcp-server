@@ -921,3 +921,12 @@ See [the implementation and migration guide](docs/coordinated-v1-readiness.md)
 for the current candidate scope, interoperability evidence and remaining gates.
 Current version: 1.0.0. Internal tests do not close independent review,
 live-provider/deployment acceptance or the coordinated stable freeze.
+
+
+### Public directory preparation
+
+The source plugin in `plugins/deepagentlabs` bundles four workflow skills and
+the hosted connection. See [submission preparation](submissions/README.md) for
+public listing metadata, the candidate ZIP builder, review cases, demo steps
+and remaining policy/portal requirements. Custom connection success does not
+mean a public listing has been submitted or approved.
